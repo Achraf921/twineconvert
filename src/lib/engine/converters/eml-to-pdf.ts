@@ -44,6 +44,40 @@ const emlToPdf: Converter = {
   },
 };
 
+// Re-exported here so eml-to-html / mbox-to-html (which still produce
+// HTML output) can render the email with sanitization. The HTML body
+// from the source email is run through DOMPurify before embedding.
+export async function renderEmailHtml(email: ParsedEmail): Promise<string> {
+  const { sanitizeHtml } = await import("../util/html-sanitize");
+  const headerRows: string[] = [];
+  const addRow = (label: string, value?: string) => {
+    if (value) headerRows.push(`<tr><td style="font-weight:600;color:#555;padding:2px 8px 2px 0;">${label}</td><td>${escapeHtml(value)}</td></tr>`);
+  };
+  addRow("From", email.from);
+  addRow("To", email.to);
+  addRow("Cc", email.cc);
+  addRow("Date", email.date);
+  addRow("Subject", email.subject);
+
+  const body = email.htmlBody
+    ? await sanitizeHtml(email.htmlBody)
+    : email.textBody
+    ? `<pre style="font-family: ui-monospace, monospace; white-space: pre-wrap; font-size: 12px;">${escapeHtml(email.textBody)}</pre>`
+    : `<p style="color:#999;font-style:italic;">(no message body)</p>`;
+
+  const attachmentsList = email.attachments.length
+    ? `<hr><p style="font-size:11px;color:#555;"><strong>Attachments (${email.attachments.length}):</strong> ${email.attachments.map((a) => escapeHtml(a.filename)).join(", ")}</p>`
+    : "";
+
+  return `<table style="border-collapse:collapse;font-size:12px;margin-bottom:12px;">${headerRows.join("")}</table><hr style="margin:12px 0;">${body}${attachmentsList}`;
+}
+
+function escapeHtml(s: string): string {
+  return s.replace(/[&<>"']/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!),
+  );
+}
+
 function buildEmailSections(email: ParsedEmail): PdfTextSection[] {
   const meta: string[] = [];
   if (email.from) meta.push(`From: ${email.from}`);
@@ -64,37 +98,6 @@ function buildEmailSections(email: ParsedEmail): PdfTextSection[] {
   }
 
   return sections;
-}
-
-function escapeHtml(s: string): string {
-  return s.replace(/[&<>"']/g, (c) =>
-    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!),
-  );
-}
-
-export function renderEmailHtml(email: ParsedEmail): string {
-  const headerRows: string[] = [];
-  const addRow = (label: string, value?: string) => {
-    if (value) headerRows.push(`<tr><td style="font-weight:600;color:#555;padding:2px 8px 2px 0;">${label}</td><td>${escapeHtml(value)}</td></tr>`);
-  };
-  addRow("From", email.from);
-  addRow("To", email.to);
-  addRow("Cc", email.cc);
-  addRow("Date", email.date);
-  addRow("Subject", email.subject);
-
-  // Use the HTML body when present; otherwise fall back to text wrapped in <pre>.
-  const body = email.htmlBody
-    ? email.htmlBody
-    : email.textBody
-    ? `<pre style="font-family: ui-monospace, monospace; white-space: pre-wrap; font-size: 12px;">${escapeHtml(email.textBody)}</pre>`
-    : `<p style="color:#999;font-style:italic;">(no message body)</p>`;
-
-  const attachmentsList = email.attachments.length
-    ? `<hr><p style="font-size:11px;color:#555;"><strong>Attachments (${email.attachments.length}):</strong> ${email.attachments.map((a) => escapeHtml(a.filename)).join(", ")}</p>`
-    : "";
-
-  return `<table style="border-collapse:collapse;font-size:12px;margin-bottom:12px;">${headerRows.join("")}</table><hr style="margin:12px 0;">${body}${attachmentsList}`;
 }
 
 export default emlToPdf;

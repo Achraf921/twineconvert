@@ -18,7 +18,7 @@ const emlToHtml: Converter = {
     try {
       const text = await input.text();
       const email = await parseEml(text);
-      const body = renderEmailHtml(email);
+      const body = await renderEmailHtml(email);
       // Wrap in a full document so it's openable in a browser standalone.
       html = `<!DOCTYPE html>
 <html lang="en">

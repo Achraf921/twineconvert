@@ -117,18 +117,26 @@ export async function renderTextPdf(
   return new Blob([arrayBuffer], { type: "application/pdf" });
 }
 
-/** Strip HTML and return plain text approximation. Preserves paragraph breaks. */
+/** Strip HTML and return plain text approximation. Preserves paragraph
+ *  breaks. DOMParser builds an inert document, scripts don't execute,
+ *  textContent never returns markup, so this is safe to feed any
+ *  user-provided HTML (email body, etc.). */
 export function htmlToPlainText(html: string): string {
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, "text/html");
-  // Remove script + style outright
+  // Remove script + style outright (their textContent would otherwise
+  // appear as mojibake in the output).
   doc.querySelectorAll("script, style").forEach((el) => el.remove());
-  // Convert <br> to \n and block elements to \n\n boundaries
+  // Convert <br> to \n. replaceWith with a string creates a text node
+  // in the correct ownerDocument automatically.
   doc.querySelectorAll("br").forEach((el) => el.replaceWith("\n"));
+  // Append \n\n inside each block element so that block-level boundaries
+  // survive the textContent flatten. Use doc.createTextNode (NOT global
+  // document) to keep nodes in the parsed document's tree.
   const blockTags = ["p", "div", "section", "article", "li", "h1", "h2", "h3", "h4", "h5", "h6", "tr", "blockquote"];
   for (const tag of blockTags) {
     doc.querySelectorAll(tag).forEach((el) => {
-      el.appendChild(document.createTextNode("\n\n"));
+      el.appendChild(doc.createTextNode("\n\n"));
     });
   }
   const text = doc.body.textContent || "";

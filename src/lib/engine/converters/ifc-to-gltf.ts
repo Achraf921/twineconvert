@@ -33,42 +33,46 @@ const ifcToGltf: Converter = {
     let glb: ArrayBuffer;
     try {
       const { api, modelID } = await openIfcModel(input);
-      opts?.onProgress?.(0.2);
+      try {
+        opts?.onProgress?.(0.2);
 
-      type CollectedMesh = {
-        positions: Float32Array;
-        indices: Uint32Array;
-        transform: number[];
-      };
-      const meshes: CollectedMesh[] = [];
+        type CollectedMesh = {
+          positions: Float32Array;
+          indices: Uint32Array;
+          transform: number[];
+        };
+        const meshes: CollectedMesh[] = [];
 
-      api.StreamAllMeshes(modelID, (flatMesh) => {
-        const placedGeoms = flatMesh.geometries;
-        for (let i = 0; i < placedGeoms.size(); i++) {
-          const placed = placedGeoms.get(i);
-          const geom = api.GetGeometry(modelID, placed.geometryExpressID);
-          // web-ifc returns interleaved [px, py, pz, nx, ny, nz] floats.
-          const vertData = api.GetVertexArray(geom.GetVertexData(), geom.GetVertexDataSize());
-          const indexData = api.GetIndexArray(geom.GetIndexData(), geom.GetIndexDataSize());
-          const vertexCount = vertData.length / 6;
-          const positions = new Float32Array(vertexCount * 3);
-          for (let v = 0; v < vertexCount; v++) {
-            positions[v * 3] = vertData[v * 6];
-            positions[v * 3 + 1] = vertData[v * 6 + 1];
-            positions[v * 3 + 2] = vertData[v * 6 + 2];
+        api.StreamAllMeshes(modelID, (flatMesh) => {
+          const placedGeoms = flatMesh.geometries;
+          for (let i = 0; i < placedGeoms.size(); i++) {
+            const placed = placedGeoms.get(i);
+            const geom = api.GetGeometry(modelID, placed.geometryExpressID);
+            // web-ifc returns interleaved [px, py, pz, nx, ny, nz] floats.
+            const vertData = api.GetVertexArray(geom.GetVertexData(), geom.GetVertexDataSize());
+            const indexData = api.GetIndexArray(geom.GetIndexData(), geom.GetIndexDataSize());
+            const vertexCount = vertData.length / 6;
+            const positions = new Float32Array(vertexCount * 3);
+            for (let v = 0; v < vertexCount; v++) {
+              positions[v * 3] = vertData[v * 6];
+              positions[v * 3 + 1] = vertData[v * 6 + 1];
+              positions[v * 3 + 2] = vertData[v * 6 + 2];
+            }
+            meshes.push({
+              positions,
+              indices: new Uint32Array(indexData),
+              transform: Array.from(placed.flatTransformation),
+            });
           }
-          meshes.push({
-            positions,
-            indices: new Uint32Array(indexData),
-            transform: Array.from(placed.flatTransformation),
-          });
-        }
-      });
+        });
 
-      opts?.onProgress?.(0.7);
-      api.CloseModel(modelID);
-
-      glb = buildGlb(meshes);
+        opts?.onProgress?.(0.7);
+        glb = buildGlb(meshes);
+      } finally {
+        // Always close the model, even if mesh extraction threw, to
+        // free the WASM-side memory.
+        api.CloseModel(modelID);
+      }
     } catch (err) {
       throw new ConvertFailedError(
         err instanceof Error ? err.message : "Could not convert IFC to glTF",

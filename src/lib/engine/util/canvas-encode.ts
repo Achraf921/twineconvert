@@ -60,8 +60,24 @@ export async function canvasEncode(
     return await new Promise<Blob>((resolve, reject) => {
       canvas.toBlob(
         (blob) => {
-          if (blob) resolve(blob);
-          else reject(new Error(`Canvas could not encode ${opts.toMime}`));
+          if (!blob) {
+            reject(new Error(`Canvas could not encode ${opts.toMime}`));
+            return;
+          }
+          // Defense-in-depth: Canvas.toBlob silently falls back to image/png
+          // when given an unsupported MIME (e.g. image/bmp, image/gif).
+          // Without this guard, the caller gets PNG bytes labelled as the
+          // requested format, a classic source of "the converter passes but
+          // the output is wrong" bugs (we caught BMP and GIF this way).
+          if (blob.type && blob.type !== opts.toMime) {
+            reject(
+              new Error(
+                `Canvas falls back to ${blob.type} when asked for ${opts.toMime}; use a specialized encoder for this format.`,
+              ),
+            );
+            return;
+          }
+          resolve(blob);
         },
         opts.toMime,
         opts.quality,

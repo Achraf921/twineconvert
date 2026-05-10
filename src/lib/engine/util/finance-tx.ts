@@ -35,11 +35,13 @@ export interface ParsedFinanceFile {
   currency?: string;
 }
 
-/** Format an OFX-style YYYYMMDD[HHMMSS] timestamp into ISO YYYY-MM-DD. */
+/** Format an OFX-style YYYYMMDD[HHMMSS][gmtoffset:tz] timestamp into ISO
+ *  YYYY-MM-DD. Anchored regex so unusual prefixes like "[20240101]"
+ *  (some non-compliant exporters) don't produce garbage like "[202-4010-1". */
 export function parseOfxDate(raw: string): string {
-  const cleaned = raw.trim().slice(0, 8);
-  if (cleaned.length < 8) return raw;
-  return `${cleaned.slice(0, 4)}-${cleaned.slice(4, 6)}-${cleaned.slice(6, 8)}`;
+  const m = raw.trim().match(/^(\d{4})(\d{2})(\d{2})/);
+  if (!m) return raw;
+  return `${m[1]}-${m[2]}-${m[3]}`;
 }
 
 /** Format an ISO date into OFX YYYYMMDD000000. */

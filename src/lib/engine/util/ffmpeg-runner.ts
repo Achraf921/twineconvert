@@ -59,10 +59,34 @@ export interface FFmpegConvertOptions {
   onProgress?: (fraction: number) => void;
 }
 
+/**
+ * Serialise concurrent FFmpeg invocations.
+ *
+ * FFmpeg.wasm exposes a single shared instance + a single in-memory
+ * filesystem. Two conversions running at the same time would:
+ *   1. Race on writeFile (B overwrites A's input mid-flight)
+ *   2. Cross-fire progress events (A's onProgress receives B's
+ *      progress because the "progress" listener is registered on the
+ *      shared instance and fires for any active invocation)
+ *
+ * We serialise everything through a single promise chain. A typical
+ * conversion takes 0.1-2 s for tiny test inputs and up to ~30 s for
+ * a long video. Sequential is fine for in-browser use; the user can
+ * only initiate one conversion via the Dropzone anyway.
+ */
+let queue: Promise<unknown> = Promise.resolve();
+
 export async function ffmpegConvert(
   input: File | Blob,
   opts: FFmpegConvertOptions,
 ): Promise<Blob> {
+  const job = queue.then(() => runOne(input, opts));
+  // Don't propagate this job's error to the next queued job.
+  queue = job.catch(() => undefined);
+  return job;
+}
+
+async function runOne(input: File | Blob, opts: FFmpegConvertOptions): Promise<Blob> {
   const instance = await getFFmpeg();
   const { fetchFile } = await import("@ffmpeg/util");
 
@@ -90,7 +114,7 @@ export async function ffmpegConvert(
       bytes.byteOffset + bytes.byteLength,
     ) as ArrayBuffer;
 
-    // Best-effort cleanup so repeated conversions don't accumulate FS entries.
+    // Cleanup so repeated conversions don't accumulate FS entries.
     try {
       await instance.deleteFile(opts.inputName);
       await instance.deleteFile(opts.outputName);

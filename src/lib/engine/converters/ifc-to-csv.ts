@@ -43,52 +43,57 @@ const ifcToCsv: Converter = {
     let csv: string;
     try {
       const { api, modelID } = await openIfcModel(input);
-      opts?.onProgress?.(0.3);
+      try {
+        opts?.onProgress?.(0.3);
 
-      // IfcBuildingElement type id (from web-ifc's schema constants).
-      // Using GetLineIDsWithType with includeInherited collects every subclass.
-      const webIfc = await import("web-ifc");
-      const elementIds = api.GetLineIDsWithType(modelID, webIfc.IFCBUILDINGELEMENT, true);
-      const spaceIds = api.GetLineIDsWithType(modelID, webIfc.IFCSPACE, true);
+        // IfcBuildingElement type id (from web-ifc's schema constants).
+        // Using GetLineIDsWithType with includeInherited collects every subclass.
+        const webIfc = await import("web-ifc");
+        const elementIds = api.GetLineIDsWithType(modelID, webIfc.IFCBUILDINGELEMENT, true);
+        const spaceIds = api.GetLineIDsWithType(modelID, webIfc.IFCSPACE, true);
 
-      const rows: ElementRow[] = [];
-      const total = elementIds.size() + spaceIds.size();
-      let processed = 0;
+        const rows: ElementRow[] = [];
+        const total = elementIds.size() + spaceIds.size();
+        let processed = 0;
 
-      const handleElement = (id: number) => {
-        const line = api.GetLine(modelID, id);
-        const row: ElementRow = {
-          globalId: String(line?.GlobalId?.value ?? ""),
-          type: String(api.GetLineType(modelID, id) ?? ""),
-          name: String(line?.Name?.value ?? ""),
-          material: extractMaterial(api, modelID, id, webIfc) ?? "",
-          netVolume: "",
-          netArea: "",
-          length: "",
-          width: "",
-          height: "",
-          storey: "",
+        const handleElement = (id: number) => {
+          const line = api.GetLine(modelID, id);
+          const row: ElementRow = {
+            globalId: String(line?.GlobalId?.value ?? ""),
+            type: String(api.GetLineType(modelID, id) ?? ""),
+            name: String(line?.Name?.value ?? ""),
+            material: extractMaterial(api, modelID, id, webIfc) ?? "",
+            netVolume: "",
+            netArea: "",
+            length: "",
+            width: "",
+            height: "",
+            storey: "",
+          };
+          const quantities = extractQuantities(api, modelID, id, webIfc);
+          if (quantities.netVolume !== undefined) row.netVolume = quantities.netVolume.toFixed(4);
+          if (quantities.netArea !== undefined) row.netArea = quantities.netArea.toFixed(4);
+          if (quantities.length !== undefined) row.length = quantities.length.toFixed(4);
+          if (quantities.width !== undefined) row.width = quantities.width.toFixed(4);
+          if (quantities.height !== undefined) row.height = quantities.height.toFixed(4);
+          rows.push(row);
+          processed++;
+          if (processed % 50 === 0) {
+            opts?.onProgress?.(0.3 + (processed / total) * 0.6);
+          }
         };
-        const quantities = extractQuantities(api, modelID, id, webIfc);
-        if (quantities.netVolume !== undefined) row.netVolume = quantities.netVolume.toFixed(4);
-        if (quantities.netArea !== undefined) row.netArea = quantities.netArea.toFixed(4);
-        if (quantities.length !== undefined) row.length = quantities.length.toFixed(4);
-        if (quantities.width !== undefined) row.width = quantities.width.toFixed(4);
-        if (quantities.height !== undefined) row.height = quantities.height.toFixed(4);
-        rows.push(row);
-        processed++;
-        if (processed % 50 === 0) {
-          opts?.onProgress?.(0.3 + (processed / total) * 0.6);
-        }
-      };
 
-      for (let i = 0; i < elementIds.size(); i++) handleElement(elementIds.get(i));
-      for (let i = 0; i < spaceIds.size(); i++) handleElement(spaceIds.get(i));
+        for (let i = 0; i < elementIds.size(); i++) handleElement(elementIds.get(i));
+        for (let i = 0; i < spaceIds.size(); i++) handleElement(spaceIds.get(i));
 
-      api.CloseModel(modelID);
-
-      const Papa = (await import("papaparse")).default;
-      csv = Papa.unparse(rows);
+        const Papa = (await import("papaparse")).default;
+        csv = Papa.unparse(rows);
+      } finally {
+        // Always close the model, even if extraction threw mid-walk.
+        // Without this, the WASM-side memory for the model leaks until
+        // the page reloads. Bad for long-running sessions / batch use.
+        api.CloseModel(modelID);
+      }
     } catch (err) {
       throw new ConvertFailedError(
         err instanceof Error ? err.message : "Could not parse IFC",

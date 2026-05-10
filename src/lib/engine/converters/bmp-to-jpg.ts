@@ -13,6 +13,9 @@ const bmpToJpg: Converter = {
     const blob = await canvasEncode(input, {
       toMime: "image/jpeg",
       quality: opts?.quality ?? 0.92,
+      // Our 32-bit BMP encoder writes ARGB; if the source had alpha,
+      // flatten on white (JPEG can't carry transparency).
+      background: "#ffffff",
     });
     opts?.onProgress?.(1);
     return { blob, filename: swapExtension(input.name, "jpg") };
