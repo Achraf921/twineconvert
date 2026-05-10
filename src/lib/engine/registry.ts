@@ -111,6 +111,57 @@ export const registry: Record<string, ConverterLoader> = {
     import("./converters/tiff-to-png").then((m) => m.default),
   "tiff-to-pdf": () =>
     import("./converters/tiff-to-pdf").then((m) => m.default),
+
+  // FFmpeg.wasm family — single-threaded core via CDN (no COOP/COEP needed,
+  // keeps the SEO/ad surface free of cross-origin isolation constraints)
+  "mp4-to-mp3": () =>
+    import("./converters/mp4-to-mp3").then((m) => m.default),
+  "mp4-to-gif": () =>
+    import("./converters/mp4-to-gif").then((m) => m.default),
+  "mov-to-mp4": () =>
+    import("./converters/mov-to-mp4").then((m) => m.default),
+  "webm-to-mp4": () =>
+    import("./converters/webm-to-mp4").then((m) => m.default),
+  "avi-to-mp4": () =>
+    import("./converters/avi-to-mp4").then((m) => m.default),
+  "mkv-to-mp4": () =>
+    import("./converters/mkv-to-mp4").then((m) => m.default),
+  "mp3-to-wav": () =>
+    import("./converters/mp3-to-wav").then((m) => m.default),
+  "wav-to-mp3": () =>
+    import("./converters/wav-to-mp3").then((m) => m.default),
+  "m4a-to-mp3": () =>
+    import("./converters/m4a-to-mp3").then((m) => m.default),
+  "flac-to-mp3": () =>
+    import("./converters/flac-to-mp3").then((m) => m.default),
+  "ogg-to-mp3": () =>
+    import("./converters/ogg-to-mp3").then((m) => m.default),
+
+  // Office documents — mammoth (DOCX), SheetJS (XLSX), Papa Parse (CSV)
+  "docx-to-html": () =>
+    import("./converters/docx-to-html").then((m) => m.default),
+  "docx-to-txt": () =>
+    import("./converters/docx-to-txt").then((m) => m.default),
+  "docx-to-pdf": () =>
+    import("./converters/docx-to-pdf").then((m) => m.default),
+  "xlsx-to-csv": () =>
+    import("./converters/xlsx-to-csv").then((m) => m.default),
+  "xlsx-to-json": () =>
+    import("./converters/xlsx-to-json").then((m) => m.default),
+  "csv-to-xlsx": () =>
+    import("./converters/csv-to-xlsx").then((m) => m.default),
+  "csv-to-json": () =>
+    import("./converters/csv-to-json").then((m) => m.default),
+  "json-to-csv": () =>
+    import("./converters/json-to-csv").then((m) => m.default),
+
+  // EPUB — JSZip + DOMParser (lighter than epubjs for headless extraction)
+  "epub-to-text": () =>
+    import("./converters/epub-to-text").then((m) => m.default),
+  "epub-to-html": () =>
+    import("./converters/epub-to-html").then((m) => m.default),
+  "epub-to-pdf": () =>
+    import("./converters/epub-to-pdf").then((m) => m.default),
 };
 
 /** All converter IDs — useful for sitemap generation later. */
