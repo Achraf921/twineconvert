@@ -109,3 +109,58 @@ describe("DOCX converters (browser)", () => {
     await expectMagic(result.blob, MAGIC.PDF);
   });
 });
+
+async function makeTinyEpub(): Promise<File> {
+  const JSZip = (await import("jszip")).default;
+  const zip = new JSZip();
+  // mimetype must be the FIRST file in the zip and STORED (not deflated)
+  zip.file("mimetype", "application/epub+zip");
+  zip.file(
+    "META-INF/container.xml",
+    `<?xml version="1.0"?>
+<container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">
+  <rootfiles><rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/></rootfiles>
+</container>`,
+  );
+  zip.file(
+    "OEBPS/content.opf",
+    `<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="bookid">
+  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <dc:identifier id="bookid">tiny-epub-1</dc:identifier>
+    <dc:title>Tiny twineconvert EPUB</dc:title>
+    <dc:language>en</dc:language>
+  </metadata>
+  <manifest>
+    <item id="ch1" href="ch1.xhtml" media-type="application/xhtml+xml"/>
+  </manifest>
+  <spine>
+    <itemref idref="ch1"/>
+  </spine>
+</package>`,
+  );
+  zip.file(
+    "OEBPS/ch1.xhtml",
+    `<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>Chapter 1</title></head>
+<body><h1>Chapter 1</h1><p>Hello twineconvert from a tiny EPUB.</p></body>
+</html>`,
+  );
+  const blob = await zip.generateAsync({
+    type: "blob",
+    mimeType: "application/epub+zip",
+    compression: "DEFLATE",
+  });
+  return new File([blob], "tiny.epub", { type: "application/epub+zip" });
+}
+
+describe("EPUB converters (browser)", () => {
+  it("epub-to-pdf produces a real PDF", async () => {
+    const epub = await makeTinyEpub();
+    const result = await run("epub-to-pdf", epub);
+    expect(result.blob.size).toBeGreaterThan(0);
+    await expectMagic(result.blob, MAGIC.PDF);
+  }, 60000);
+});

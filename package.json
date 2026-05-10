@@ -4,14 +4,15 @@
   "private": true,
   "scripts": {
     "dev": "next dev --webpack",
-    "prebuild": "tsx scripts/generate-registry-meta.ts",
+    "prebuild": "tsx scripts/generate-registry-meta.ts && npm run copy-ffmpeg-core",
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "test:browser": "vitest run --config vitest.browser.config.ts"
+    "test:browser": "npm run copy-ffmpeg-core && vitest run --config vitest.browser.config.ts",
+    "copy-ffmpeg-core": "cp node_modules/@ffmpeg/core/dist/umd/ffmpeg-core.js public/ffmpeg/ && cp node_modules/@ffmpeg/core/dist/umd/ffmpeg-core.wasm public/ffmpeg/"
   },
   "dependencies": {
     "@ffmpeg/ffmpeg": "^0.12.15",
@@ -23,6 +24,7 @@
     "docx": "^9.6.1",
     "epubjs": "^0.3.93",
     "geist": "^1.7.0",
+    "gifenc": "^1.0.3",
     "heic2any": "^0.0.4",
     "html2canvas": "^1.4.1",
     "jspdf": "^4.2.1",

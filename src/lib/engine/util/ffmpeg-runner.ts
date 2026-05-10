@@ -10,15 +10,17 @@
  *   isolation-free, so the site can keep monetizing the SEO surface around
  *   each tool. We can route-segment COOP/COEP later for power-user pages.
  *
- * Why CDN-hosted core (not bundled):
- *   The core is a 30MB+ wasm + JS pair. Bundling it would bloat the build
- *   output. unpkg pins versions and browsers cache the file forever.
+ * Why same-origin core (was previously CDN, but switched after the
+ * headless Chromium browser tests couldn't reach unpkg cleanly):
+ *   The 30MB core ships under public/ffmpeg/, so it's served from the
+ *   same origin as the page. Vercel CDN-caches it just like any other
+ *   static asset. The 30MB shows up once in the deploy and never again
+ *   for repeat visitors.
  */
 
 import type { FFmpeg } from "@ffmpeg/ffmpeg";
 
-const CORE_VERSION = "0.12.10";
-const CORE_BASE = `https://unpkg.com/@ffmpeg/core@${CORE_VERSION}/dist/umd`;
+const CORE_BASE = "/ffmpeg";
 
 let ffmpegPromise: Promise<FFmpeg> | null = null;
 

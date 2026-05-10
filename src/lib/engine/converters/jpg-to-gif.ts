@@ -1,10 +1,10 @@
 import type { Converter } from "../types";
-import { canvasEncode, swapExtension } from "../util/canvas-encode";
+import { encodeGifFromImage } from "../util/gif-encode";
+import { swapExtension } from "../util/canvas-encode";
 
 /**
- * JPG → GIF. Single-frame GIF, animated GIF generation requires a
- * separate gif-encoder lib and is outside scope for the static-image
- * routes. For animated GIFs from video, see mp4-to-gif.
+ * JPG to GIF. Single-frame static GIF via gifenc (Canvas.toBlob does
+ * not support image/gif). For animated GIFs from video, see mp4-to-gif.
  */
 const jpgToGif: Converter = {
   id: "jpg-to-gif",
@@ -15,7 +15,7 @@ const jpgToGif: Converter = {
 
   async convert(input, opts) {
     opts?.onProgress?.(0.1);
-    const blob = await canvasEncode(input, { toMime: "image/gif" });
+    const blob = await encodeGifFromImage(input);
     opts?.onProgress?.(1);
     return { blob, filename: swapExtension(input.name, "gif") };
   },

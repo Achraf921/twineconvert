@@ -138,4 +138,22 @@ describe("canvas image converters (browser)", () => {
       await expectMagic(result.blob, MAGIC.PDF);
     });
   });
+
+  describe("png-to-gif", () => {
+    it("produces a real GIF (not a silently-fallback PNG)", async () => {
+      const png = fileFromBlob(await makePngBlob(16, 16), "input.png", "image/png");
+      const result = await run("png-to-gif", png);
+      expect(result.blob.size).toBeGreaterThan(0);
+      await expectMagic(result.blob, MAGIC.GIF);
+    });
+  });
+
+  describe("jpg-to-gif", () => {
+    it("produces a real GIF from a JPEG", async () => {
+      const jpg = fileFromBlob(await makeJpegBlob(16, 16), "input.jpg", "image/jpeg");
+      const result = await run("jpg-to-gif", jpg);
+      expect(result.blob.size).toBeGreaterThan(0);
+      await expectMagic(result.blob, MAGIC.GIF);
+    });
+  });
 });

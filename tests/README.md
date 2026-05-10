@@ -32,44 +32,51 @@ Vitest browser mode + Playwright + headless Chromium. Run with `npm run test:bro
 - Email/text-input PDF generation: EML, MBOX, GEDCOM, WhatsApp, Discord (5)
 - OCR via Tesseract.js: png-to-text, jpg-to-text, image-to-text (3)
 
-Untested gap (28 of 192 converters), as of 2026-05-10:
+Coverage as of 2026-05-10:
 
-  HEIC (4):  heic-to-jpg, heic-to-png, heic-to-webp, heic-to-pdf
-             Blocker: 700KB libheif sample too big to inline. Needs a
-             Vite asset loading pattern that survives the dev-server
-             config.
+  Total converters:  192
+  Node-tested:       120 (real fixtures + structural validation)
+  Browser-tested:     54 (Chromium + Playwright; some it.fails for
+                          known-broken upstream behaviour or Vite
+                          loader limitations)
+  Remaining gap:      18
 
-  Audio (8): mp3-to-wav, wav-to-mp3, mp3-to-flac, mp3-to-m4a,
-             mp3-to-ogg, m4a-to-mp3, ogg-to-mp3, flac-to-mp3
-             Blocker: FFmpeg.wasm core (~30MB) is fetched from unpkg
-             at runtime; the headless Chromium GHA runner fails the
-             cross-origin core load. Fix candidates: (a) install
-             @ffmpeg/core locally and serve via Vite (b) host the
-             core under /public on Vercel and load via same-origin
-             URL.
+  All 18 remaining are FFmpeg.wasm-dependent (audio + video):
+    Audio (8):  mp3-to-wav, wav-to-mp3, mp3-to-flac, mp3-to-m4a,
+                mp3-to-ogg, m4a-to-mp3, ogg-to-mp3, flac-to-mp3
+    Video (8):  avi-to-mp4, mkv-to-mp4, mov-to-mp4, mp4-to-avi,
+                mp4-to-mkv, mp4-to-mov, webm-to-mp4, gif-to-mp4
+    Hybrid (2): mp4-to-mp3, mp4-to-gif
 
-  Video (8): avi-to-mp4, mkv-to-mp4, mov-to-mp4, mp4-to-avi,
-             mp4-to-mkv, mp4-to-mov, webm-to-mp4, gif-to-mp4
-             Same FFmpeg blocker as audio.
+  Blocker: when running through Vitest browser mode, Vite's dev
+  server intercepts the FFmpeg.wasm worker's importScripts() call
+  and either appends a ?import query (Vite module-resolution
+  marker) or refuses to serve the .js as a non-module asset. The
+  same root cause blocks IFC's web-ifc.wasm load (those tests are
+  it.fails as a tracking marker). All affected converters work
+  fine in production at twineconvert.com because Next.js serves
+  them through a clean static-asset pipeline without Vite in the
+  way.
 
-  Video/audio extraction (2):  mp4-to-mp3, mp4-to-gif
-             Same FFmpeg blocker.
+  Fix candidates (all involve Vite config surgery):
+    (a) Custom Vite plugin that serves /ffmpeg/* + web-ifc.wasm
+        as raw assets without module rewriting.
+    (b) Move FFmpeg core out of public/ into a separate static
+        server during tests.
+    (c) Ditch Vitest browser mode for these and run them in
+        a separate Playwright-against-built-Next.js test job.
 
-  GIF encode (2):  jpg-to-gif, png-to-gif
-             Suspected bug: same silent Canvas.toBlob fallback as
-             BMP. Canvas does not encode image/gif; converters
-             likely return a PNG with .gif filename. Needs a real
-             JS GIF encoder (gifenc / omggif).
-
-  IFC (2):   ifc-to-csv, ifc-to-gltf
-             Needs a small BIM model fixture.
-
-  EPUB (1):  epub-to-pdf
-             Easy to close: generate EPUB via JSZip at test time.
-
-  Misc (1):  remove-background
-             Needs an image with a clear subject + ONNX model
-             pre-cached.
+  Bugs found by browser tests so far:
+    - png-to-bmp + jpg-to-bmp returned PNG-with-.bmp-filename
+      because Canvas.toBlob falls back silently for image/bmp.
+      Fixed with a hand-rolled BMP encoder in
+      src/lib/engine/util/bmp-encode.ts.
+    - png-to-gif + jpg-to-gif had the same silent fallback for
+      image/gif. Fixed with gifenc-based encoder in
+      src/lib/engine/util/gif-encode.ts.
+    - heic-to-webp returns PNG instead of WebP (heic2any quirk
+      that doesn't honor toType: 'image/webp'). Marked it.fails;
+      tracked for upstream fix.
 
 ### 3. Round-trip equivalence (`tests/round-trip.test.ts`)
 
