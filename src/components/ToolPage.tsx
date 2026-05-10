@@ -20,6 +20,7 @@ import { getProfilesForToolId, type FormatProfile } from "@/lib/formats";
 import { getOtherInputsForOutput, getOtherOutputsForInput } from "@/lib/related-tools";
 import { buildFormatGraph } from "@/lib/dropzone-routes";
 import { getExtendedCopy } from "@/lib/tool-extended-copy";
+import { EmbedSnippet } from "./EmbedSnippet";
 
 // Build the format graph once at module load; it's pure-data so safe to
 // memoize at the file level.
@@ -213,6 +214,12 @@ export function ToolPage({ toolId, meta }: Props) {
           <SectionLabel>FAQ</SectionLabel>
           <h2 className="text-2xl font-bold mt-2 mb-8">Common questions</h2>
           <FAQList items={faqItems(meta.label, inputProfile, outputProfile)} />
+        </div>
+      </section>
+
+      <section className="border-t border-[var(--color-border)]">
+        <div className="mx-auto max-w-3xl px-6 py-12">
+          <EmbedSnippet toolId={toolId} toolLabel={meta.label} />
         </div>
       </section>
     </>
