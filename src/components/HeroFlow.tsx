@@ -89,7 +89,7 @@ export function HeroFlow({ graph, initialInput, initialOutput }: Props) {
   };
 
   return (
-    <div className="relative w-full max-w-md mx-auto">
+    <div className="relative w-full max-w-md">
       {/* Concentric pink rings backdrop, matches CloudConvert's visual treatment */}
       <div className="rings absolute -inset-32 pointer-events-none" aria-hidden />
 

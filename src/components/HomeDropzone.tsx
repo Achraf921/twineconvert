@@ -87,7 +87,7 @@ export function HomeDropzone({ routes, acceptAll }: Props) {
         onDragLeave={() => setIsDragging(false)}
         onDrop={onDrop}
       >
-        <div className="px-6 py-14 sm:py-20 text-center">
+        <div className="px-6 py-10 sm:py-12 text-center">
           <CloudArrowUp />
           <h2 className="mt-6 text-2xl sm:text-3xl font-bold tracking-tight text-[var(--color-ink)]">
             Select your file here to get started

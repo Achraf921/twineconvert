@@ -46,9 +46,10 @@ export function ToolPage({ toolId, meta }: Props) {
         <div className="relative mx-auto max-w-7xl px-6 pt-10 pb-14 sm:pt-14 sm:pb-20">
           <Breadcrumbs label={meta.label} />
 
-          {/* Hero row: copy LEFT, chip widget RIGHT, side by side (CC pattern) */}
-          <div className="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-            <div className="lg:col-span-7 fade-up text-center lg:text-left">
+          {/* Hero row: copy LEFT, chip widget RIGHT, side by side. md+
+           *  breakpoint so common laptops get the 2-column layout. */}
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8 items-center">
+            <div className="md:col-span-7 fade-up text-center md:text-left">
               <p className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-[var(--color-pink-200)] text-[var(--color-pink-700)] text-[11px] font-bold tracking-[0.18em] uppercase shadow-[var(--shadow-xs)]">
                 <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-pink-600)] pink-pulse" />
                 free &middot; in-browser &middot; no upload
@@ -58,13 +59,13 @@ export function ToolPage({ toolId, meta }: Props) {
                 <br />
                 <span className="text-[var(--color-pink-600)]">Converter</span>
               </h1>
-              <p className="mt-6 text-lg sm:text-xl text-[var(--color-ink-2)] max-w-xl mx-auto lg:mx-0 leading-relaxed">
+              <p className="mt-6 text-lg sm:text-xl text-[var(--color-ink-2)] max-w-xl mx-auto md:mx-0 leading-relaxed">
                 {heroSubhead(meta.label, inputProfile, outputProfile)}
               </p>
             </div>
 
             {pairFromLabel(meta.label) && (
-              <div className="lg:col-span-5 fade-up fade-up-delay-2 flex justify-center lg:justify-end">
+              <div className="md:col-span-5 fade-up fade-up-delay-2 flex justify-center md:justify-end">
                 <HeroFlow
                   graph={FORMAT_GRAPH}
                   initialInput={pairFromLabel(meta.label)?.[0]}
@@ -75,7 +76,7 @@ export function ToolPage({ toolId, meta }: Props) {
           </div>
 
           {/* Below the hero row: divider + centered dropzone */}
-          <div className="fade-up fade-up-delay-3 mt-16 flex items-center gap-4 max-w-md mx-auto">
+          <div className="fade-up fade-up-delay-3 mt-12 flex items-center gap-4 max-w-md mx-auto">
             <span className="flex-1 h-px bg-[var(--color-border)]" aria-hidden />
             <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[var(--color-ink-3)]">
               or drop your file
@@ -83,7 +84,7 @@ export function ToolPage({ toolId, meta }: Props) {
             <span className="flex-1 h-px bg-[var(--color-border)]" aria-hidden />
           </div>
 
-          <div className="fade-up fade-up-delay-3 mt-6 max-w-3xl mx-auto">
+          <div className="fade-up fade-up-delay-3 mt-5 max-w-2xl mx-auto">
             <Dropzone
               toolId={toolId}
               toolLabel={meta.label}

@@ -115,7 +115,7 @@ export function Dropzone({ toolId, toolLabel, accept }: Props) {
         onChange={(e) => e.target.files && onFiles(e.target.files)}
       />
 
-      <div className="px-6 py-12 sm:py-16 text-center">
+      <div className="px-6 py-10 sm:py-12 text-center">
         {phase === "idle" && <IdleState onPick={() => inputRef.current?.click()} accept={accept} />}
         {phase === "ready" && file && (
           <ReadyState file={file} toolLabel={toolLabel} onConvert={startConversion} onCancel={reset} />
