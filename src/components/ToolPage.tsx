@@ -46,61 +46,62 @@ export function ToolPage({ toolId, meta }: Props) {
         <div className="relative mx-auto max-w-7xl px-6 pt-10 pb-14 sm:pt-14 sm:pb-20">
           <Breadcrumbs label={meta.label} />
 
-          {/* Hero row: copy LEFT, chip widget RIGHT, side by side. md+
-           *  breakpoint so common laptops get the 2-column layout. */}
-          <div className="mt-6 grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8 items-center">
-            <div className="md:col-span-7 fade-up text-center md:text-left">
-              <p className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-[var(--color-pink-200)] text-[var(--color-pink-700)] text-[11px] font-bold tracking-[0.18em] uppercase shadow-[var(--shadow-xs)]">
-                <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-pink-600)] pink-pulse" />
-                free &middot; in-browser &middot; no upload
-              </p>
-              <h1 className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.02] text-[var(--color-ink)]">
-                {meta.label.replace(/→/g, "to")}
-                <br />
-                <span className="text-[var(--color-pink-600)]">Converter</span>
-              </h1>
-              <p className="mt-6 text-lg sm:text-xl text-[var(--color-ink-2)] max-w-xl mx-auto md:mx-0 leading-relaxed">
-                {heroSubhead(meta.label, inputProfile, outputProfile)}
-              </p>
-            </div>
+          {/* Top: headline + paragraph (full-width, left-aligned) */}
+          <div className="mt-6 fade-up max-w-4xl">
+            <p className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-[var(--color-pink-200)] text-[var(--color-pink-700)] text-[11px] font-bold tracking-[0.18em] uppercase shadow-[var(--shadow-xs)]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-pink-600)] pink-pulse" />
+              free &middot; in-browser &middot; no upload
+            </p>
+            <h1 className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.02] text-[var(--color-ink)]">
+              {meta.label.replace(/→/g, "to")}
+              <br />
+              <span className="text-[var(--color-pink-600)]">Converter</span>
+            </h1>
+            <p className="mt-6 text-lg sm:text-xl text-[var(--color-ink-2)] max-w-2xl leading-relaxed">
+              {heroSubhead(meta.label, inputProfile, outputProfile)}
+            </p>
+          </div>
 
-            {pairFromLabel(meta.label) && (
-              <div className="md:col-span-5 fade-up fade-up-delay-2 flex justify-center md:justify-end">
+          {/* Below: dropzone LEFT + chip widget RIGHT, side by side at lg+.
+           *  Single-action tools (no chip pair) get a full-width dropzone. */}
+          {pairFromLabel(meta.label) ? (
+            <div className="fade-up fade-up-delay-2 mt-10 grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-8 lg:gap-12 items-center">
+              <div className="w-full">
+                <Dropzone
+                  toolId={toolId}
+                  toolLabel={meta.label}
+                  accept={meta.accept}
+                />
+              </div>
+              <div className="flex items-center justify-center lg:justify-end">
                 <HeroFlow
                   graph={FORMAT_GRAPH}
                   initialInput={pairFromLabel(meta.label)?.[0]}
                   initialOutput={pairFromLabel(meta.label)?.[1]}
                 />
               </div>
-            )}
-          </div>
-
-          {/* Below the hero row: divider + centered dropzone */}
-          <div className="fade-up fade-up-delay-3 mt-12 flex items-center gap-4 max-w-md mx-auto">
-            <span className="flex-1 h-px bg-[var(--color-border)]" aria-hidden />
-            <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[var(--color-ink-3)]">
-              or drop your file
-            </span>
-            <span className="flex-1 h-px bg-[var(--color-border)]" aria-hidden />
-          </div>
-
-          <div className="fade-up fade-up-delay-3 mt-5 max-w-2xl mx-auto">
-            <Dropzone
-              toolId={toolId}
-              toolLabel={meta.label}
-              accept={meta.accept}
-            />
-            <div className="mt-6 flex items-center justify-center flex-wrap gap-x-6 gap-y-2 text-[11px] font-mono uppercase tracking-[0.18em] text-[var(--color-ink-3)]">
-              <span className="inline-flex items-center gap-1.5">
-                <CheckMark /> nothing uploaded
-              </span>
-              <span className="inline-flex items-center gap-1.5">
-                <CheckMark /> no file size cap
-              </span>
-              <span className="inline-flex items-center gap-1.5">
-                <CheckMark /> no signup
-              </span>
             </div>
+          ) : (
+            <div className="fade-up fade-up-delay-2 mt-10">
+              <Dropzone
+                toolId={toolId}
+                toolLabel={meta.label}
+                accept={meta.accept}
+              />
+            </div>
+          )}
+
+          {/* Trust strip below */}
+          <div className="fade-up fade-up-delay-3 mt-8 flex items-center flex-wrap gap-x-6 gap-y-2 text-[11px] font-mono uppercase tracking-[0.18em] text-[var(--color-ink-3)]">
+            <span className="inline-flex items-center gap-1.5">
+              <CheckMark /> nothing uploaded
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <CheckMark /> no file size cap
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <CheckMark /> no signup
+            </span>
           </div>
         </div>
       </section>
