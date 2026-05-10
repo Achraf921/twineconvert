@@ -162,6 +162,30 @@ export const registry: Record<string, ConverterLoader> = {
     import("./converters/epub-to-html").then((m) => m.default),
   "epub-to-pdf": () =>
     import("./converters/epub-to-pdf").then((m) => m.default),
+
+  // Finance family — OFX/QFX/QBO share one parser (structurally identical
+  // formats); QIF is a separate text format. CSV is the universal bridge.
+  // Beachhead niche: weak SERP competition + privacy-conscious audience.
+  "ofx-to-csv": () =>
+    import("./converters/ofx-to-csv").then((m) => m.default),
+  "qfx-to-csv": () =>
+    import("./converters/qfx-to-csv").then((m) => m.default),
+  "qbo-to-csv": () =>
+    import("./converters/qbo-to-csv").then((m) => m.default),
+  "qif-to-csv": () =>
+    import("./converters/qif-to-csv").then((m) => m.default),
+  "csv-to-ofx": () =>
+    import("./converters/csv-to-ofx").then((m) => m.default),
+  "csv-to-qfx": () =>
+    import("./converters/csv-to-qfx").then((m) => m.default),
+  "csv-to-qbo": () =>
+    import("./converters/csv-to-qbo").then((m) => m.default),
+  "csv-to-qif": () =>
+    import("./converters/csv-to-qif").then((m) => m.default),
+  "ofx-to-qif": () =>
+    import("./converters/ofx-to-qif").then((m) => m.default),
+  "qif-to-ofx": () =>
+    import("./converters/qif-to-ofx").then((m) => m.default),
 };
 
 /** All converter IDs — useful for sitemap generation later. */
