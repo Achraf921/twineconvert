@@ -91,6 +91,9 @@ export function Footer() {
             © {new Date().getFullYear()} twineconvert. Open source — every conversion runs in your browser.
           </p>
           <div className="flex items-center gap-5">
+            <Link href="/about" className="hover:text-[var(--color-text)] transition-colors">
+              About
+            </Link>
             <Link href="/privacy" className="hover:text-[var(--color-text)] transition-colors">
               Privacy
             </Link>
