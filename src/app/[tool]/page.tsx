@@ -54,12 +54,29 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   if (!meta) return { title: "Tool not found" };
 
   const profiles = getProfilesForToolId(tool);
-  const inputName = profiles?.input.name ?? tool.split("-to-")[0]?.toUpperCase() ?? "file";
-  const outputName = profiles?.output.name ?? tool.split("-to-")[1]?.toUpperCase() ?? "file";
-
-  const title = `${inputName} to ${outputName} converter — free, in your browser`;
-  const description = `Convert ${inputName} to ${outputName} for free. Runs entirely in your browser — your file never leaves your device. No upload, no signup, no file size limit.`;
+  const isBidir = tool.includes("-to-");
   const url = `https://twineconvert.com/${tool}`;
+
+  let title: string;
+  let description: string;
+
+  if (profiles) {
+    const inputName = profiles.input.name;
+    const outputName = profiles.output.name;
+    title = `${inputName} to ${outputName} converter — free, in your browser`;
+    description = `Convert ${inputName} to ${outputName} for free. Runs entirely in your browser — your file never leaves your device. No upload, no signup, no file size limit.`;
+  } else if (isBidir) {
+    const [inKey, outKey] = tool.split("-to-");
+    const inputName = inKey.toUpperCase();
+    const outputName = outKey.toUpperCase();
+    title = `${inputName} to ${outputName} converter — free, in your browser`;
+    description = `Convert ${inputName} to ${outputName} for free. Runs entirely in your browser — your file never leaves your device. No upload, no signup, no file size limit.`;
+  } else {
+    // Single-action tools: compress-pdf, remove-background, image-to-text-equivalent.
+    // Use the human-curated label from the registry instead of slug-mangling.
+    title = `${meta.label} — free, in your browser`;
+    description = `${meta.label} for free. Runs entirely in your browser — your file never leaves your device. No upload, no signup, no file size limit.`;
+  }
 
   return {
     title,
