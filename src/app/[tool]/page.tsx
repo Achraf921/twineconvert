@@ -9,7 +9,7 @@ import { getProfilesForToolId } from "@/lib/formats";
  * routes at build time (small set), and let the long tail render on
  * first visit and cache forever after (`dynamicParams: true`).
  *
- * Why: pre-rendering all 193 routes blew up local builds with 10G+
+ * Why: pre-rendering all 192 routes blew up local builds with 10G+
  * memory pressure as the bundler tried to chunk every WASM-heavy
  * lazy-loaded converter at once. ISR gives us the SEO benefit of
  * static HTML for high-traffic pages without paying the upfront cost
