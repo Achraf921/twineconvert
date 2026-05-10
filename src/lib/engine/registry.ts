@@ -69,6 +69,48 @@ export const registry: Record<string, ConverterLoader> = {
     import("./converters/svg-to-png").then((m) => m.default),
   "svg-to-jpg": () =>
     import("./converters/svg-to-jpg").then((m) => m.default),
+
+  // PDF family — pdfjs-dist for rendering, pdf-lib for assembly + manipulation
+  "pdf-to-jpg": () =>
+    import("./converters/pdf-to-jpg").then((m) => m.default),
+  "pdf-to-png": () =>
+    import("./converters/pdf-to-png").then((m) => m.default),
+  "jpg-to-pdf": () =>
+    import("./converters/jpg-to-pdf").then((m) => m.default),
+  "png-to-pdf": () =>
+    import("./converters/png-to-pdf").then((m) => m.default),
+  "heic-to-pdf": () =>
+    import("./converters/heic-to-pdf").then((m) => m.default),
+  "webp-to-pdf": () =>
+    import("./converters/webp-to-pdf").then((m) => m.default),
+  "compress-pdf": () =>
+    import("./converters/compress-pdf").then((m) => m.default),
+
+  // OCR family — tesseract.js (lazy-loaded; ~10MB language model on first use)
+  "image-to-text": () =>
+    import("./converters/image-to-text").then((m) => m.default),
+  "jpg-to-text": () =>
+    import("./converters/jpg-to-text").then((m) => m.default),
+  "png-to-text": () =>
+    import("./converters/png-to-text").then((m) => m.default),
+  "pdf-to-text": () =>
+    import("./converters/pdf-to-text").then((m) => m.default),
+
+  // AVIF encoding — @jsquash/avif WASM (browser AVIF encode is unreliable)
+  "jpg-to-avif": () =>
+    import("./converters/jpg-to-avif").then((m) => m.default),
+  "png-to-avif": () =>
+    import("./converters/png-to-avif").then((m) => m.default),
+  "webp-to-avif": () =>
+    import("./converters/webp-to-avif").then((m) => m.default),
+
+  // TIFF — utif (browsers don't decode TIFF natively)
+  "tiff-to-jpg": () =>
+    import("./converters/tiff-to-jpg").then((m) => m.default),
+  "tiff-to-png": () =>
+    import("./converters/tiff-to-png").then((m) => m.default),
+  "tiff-to-pdf": () =>
+    import("./converters/tiff-to-pdf").then((m) => m.default),
 };
 
 /** All converter IDs — useful for sitemap generation later. */
