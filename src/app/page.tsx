@@ -178,14 +178,15 @@ function HeroSection() {
           </p>
         </div>
 
-        {/* Below: compact chip widget LEFT, horizontal dropzone RIGHT, side
-         *  by side from lg+ where there's enough room for the row layout. */}
-        <div className="fade-up fade-up-delay-2 mt-12 grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-8 lg:gap-12 items-center">
-          <div className="flex items-center justify-center lg:justify-start">
-            <HeroFlow graph={FORMAT_GRAPH} initialInput="HEIC" initialOutput="JPG" />
-          </div>
+        {/* Below: dropzone LEFT (takes the big column), chip widget RIGHT
+         *  (compact, content-sized). Side by side from lg+; below that they
+         *  stack with the dropzone first so the primary CTA stays on top. */}
+        <div className="fade-up fade-up-delay-2 mt-12 grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-8 lg:gap-12 items-center">
           <div className="w-full">
             <HomeDropzone routes={DROPZONE_ROUTES} acceptAll={DROPZONE_ACCEPT} />
+          </div>
+          <div className="flex items-center justify-center lg:justify-end">
+            <HeroFlow graph={FORMAT_GRAPH} initialInput="HEIC" initialOutput="JPG" />
           </div>
         </div>
 
