@@ -87,31 +87,98 @@ body {
   border-radius: var(--radius-sm);
 }
 
-/* Subtle dotted-grid background pattern for the hero */
+/* Bold dotted-grid background, denser than before for more texture */
 .hero-grid {
   background-image:
-    radial-gradient(circle at 1px 1px, var(--color-pink-100) 1px, transparent 0);
-  background-size: 24px 24px;
+    radial-gradient(circle at 1px 1px, var(--color-pink-200) 1px, transparent 0);
+  background-size: 18px 18px;
 }
 
-/* Soft pink wash for the homepage hero */
+/* Vivid hero gradient with animated motion (subtle, slow) */
 .hero-glow {
   background:
-    radial-gradient(ellipse 80% 60% at 90% 0%, rgb(252 231 243 / 0.6) 0%, transparent 50%),
-    radial-gradient(ellipse 60% 50% at 10% 100%, rgb(252 231 243 / 0.4) 0%, transparent 60%);
+    radial-gradient(ellipse 60% 80% at 85% 0%, rgb(224 41 123 / 0.18) 0%, transparent 55%),
+    radial-gradient(ellipse 55% 70% at 15% 90%, rgb(244 114 182 / 0.15) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 50% at 50% 50%, rgb(252 231 243 / 0.4) 0%, transparent 70%);
+  background-size: 200% 200%;
+  animation: hero-shift 18s var(--ease-out) infinite alternate;
 }
 
-/* Dropzone hover/drag state, pink glow that we trigger via class swap */
+@keyframes hero-shift {
+  0%   { background-position: 0% 0%; }
+  100% { background-position: 100% 50%; }
+}
+
+/* Conic gradient ring used behind the dropzone for the "frame" effect */
+.dropzone-ring {
+  background:
+    conic-gradient(from 180deg at 50% 50%,
+      rgb(224 41 123 / 0.0) 0deg,
+      rgb(224 41 123 / 0.4) 90deg,
+      rgb(244 114 182 / 0.5) 180deg,
+      rgb(224 41 123 / 0.4) 270deg,
+      rgb(224 41 123 / 0.0) 360deg);
+  filter: blur(24px);
+  animation: dropzone-spin 20s linear infinite;
+}
+
+@keyframes dropzone-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Dropzone hover/drag state, vivid pink glow */
 .dropzone-active {
   background: var(--color-pink-50);
   border-color: var(--color-pink-600);
-  box-shadow: 0 0 0 4px rgb(224 41 123 / 0.1);
+  box-shadow: 0 0 0 6px rgb(224 41 123 / 0.15), 0 16px 48px -12px rgb(224 41 123 / 0.4);
+  transform: translateY(-2px);
 }
 
+/* Pink underline scribble (svg-shape stroke) used on H1 callouts */
+.pink-underline {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+.pink-underline::after {
+  content: "";
+  position: absolute;
+  left: -0.05em;
+  right: -0.05em;
+  bottom: -0.08em;
+  height: 0.18em;
+  background: var(--color-pink-600);
+  border-radius: 999px;
+  transform: skewX(-6deg);
+  z-index: -1;
+  box-shadow: 0 4px 16px rgb(224 41 123 / 0.35);
+}
+
+/* Sticker / chip with hover lift */
+.lift {
+  transition: transform 200ms var(--ease-spring), box-shadow 200ms var(--ease-spring), border-color 200ms;
+}
+.lift:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-pink-400);
+}
+
+/* Section-divider svg-shape, pink scribble */
+.scribble-divider {
+  height: 12px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 12' fill='none' stroke='%23E0297B' stroke-width='1.5' stroke-linecap='round' preserveAspectRatio='none'><path d='M0 6 Q 10 0 20 6 T 40 6 T 60 6 T 80 6 T 100 6'/></svg>");
+  background-repeat: repeat-x;
+  background-size: 80px 12px;
+  opacity: 0.5;
+}
+
+/* Animated marquee tag for the hero badge */
 @keyframes fade-up {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
@@ -120,16 +187,39 @@ body {
 }
 
 .fade-up {
-  animation: fade-up 0.5s var(--ease-spring) both;
+  animation: fade-up 0.7s var(--ease-spring) both;
 }
 
+.fade-up-delay-1 { animation-delay: 100ms; }
+.fade-up-delay-2 { animation-delay: 200ms; }
+.fade-up-delay-3 { animation-delay: 300ms; }
+.fade-up-delay-4 { animation-delay: 400ms; }
+
 @keyframes pink-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgb(224 41 123 / 0.4); }
-  50% { box-shadow: 0 0 0 8px rgb(224 41 123 / 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgb(224 41 123 / 0.5); }
+  50% { box-shadow: 0 0 0 12px rgb(224 41 123 / 0); }
 }
 
 .pink-pulse {
-  animation: pink-pulse 2s var(--ease-out) infinite;
+  animation: pink-pulse 2.5s var(--ease-out) infinite;
+}
+
+/* Big number callout style */
+.big-number {
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  background: linear-gradient(180deg, var(--color-pink-600) 0%, var(--color-pink-700) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Subtle marquee for ad surfaces (keeps banner ads from looking dead) */
+.gradient-border {
+  background: linear-gradient(white, white) padding-box,
+              linear-gradient(135deg, var(--color-pink-400) 0%, var(--color-pink-600) 100%) border-box;
+  border: 2px solid transparent;
 }
 
 @media (prefers-reduced-motion: reduce) {

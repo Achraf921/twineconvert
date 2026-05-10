@@ -93,19 +93,21 @@ export function Dropzone({ toolId, toolLabel, accept }: Props) {
   }, []);
 
   return (
-    <div
-      className={`relative rounded-2xl border-2 border-dashed transition-all duration-200 ${
-        isDragging
-          ? "dropzone-active"
-          : "border-[var(--color-border-2)] bg-[var(--color-surface)] hover:border-[var(--color-pink-400)] hover:bg-[var(--color-pink-50)]"
-      }`}
-      onDragOver={(e) => {
-        e.preventDefault();
-        setIsDragging(true);
-      }}
-      onDragLeave={() => setIsDragging(false)}
-      onDrop={onDrop}
-    >
+    <div className="relative">
+      <div className="absolute -inset-3 dropzone-ring rounded-[2rem] pointer-events-none opacity-60" />
+      <div
+        className={`relative rounded-2xl border-2 border-dashed transition-all duration-200 ${
+          isDragging
+            ? "dropzone-active"
+            : "border-[var(--color-pink-200)] bg-white hover:border-[var(--color-pink-400)] hover:bg-[var(--color-pink-50)] shadow-[var(--shadow-md)]"
+        }`}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setIsDragging(true);
+        }}
+        onDragLeave={() => setIsDragging(false)}
+        onDrop={onDrop}
+      >
       <input
         ref={inputRef}
         type="file"
@@ -132,6 +134,7 @@ export function Dropzone({ toolId, toolLabel, accept }: Props) {
           <ErrorState message={error ?? "Conversion failed."} onReset={reset} />
         )}
       </div>
+      </div>
     </div>
   );
 }
@@ -140,26 +143,29 @@ export function Dropzone({ toolId, toolLabel, accept }: Props) {
 
 function IdleState({ onPick, accept }: { onPick: () => void; accept: string[] }) {
   return (
-    <div className="flex flex-col items-center gap-4">
+    <div className="flex flex-col items-center gap-5">
       <CloudIcon />
       <div>
-        <p className="text-lg font-semibold text-[var(--color-text)]">
-          Select your file here to get started
+        <p className="text-xl sm:text-2xl font-extrabold text-[var(--color-text)] tracking-tight">
+          Drop your file here
         </p>
-        <p className="text-sm text-[var(--color-text-3)] mt-1">
-          or drop your file here.
+        <p className="text-sm text-[var(--color-text-3)] mt-1.5">
+          or click to pick from your device
         </p>
       </div>
       <button
         onClick={onPick}
-        className="mt-2 inline-flex items-center gap-2 bg-[var(--color-pink-600)] text-white font-medium px-6 py-3 rounded-lg shadow-[var(--shadow-pink)] hover:bg-[var(--color-pink-700)] transition-colors"
+        className="mt-1 inline-flex items-center gap-2 bg-[var(--color-pink-600)] text-white font-bold px-7 py-3.5 rounded-xl shadow-[var(--shadow-pink)] hover:bg-[var(--color-pink-700)] hover:scale-[1.02] active:scale-[0.98] transition-all"
       >
         <FileIcon />
-        Select File
+        Choose file
       </button>
-      <p className="text-xs text-[var(--color-text-3)] mt-3">
-        Accepts: {accept.join(", ")}
-      </p>
+      <div className="flex items-center gap-2 text-xs text-[var(--color-text-3)]">
+        <span className="px-2 py-0.5 rounded-md bg-[var(--color-pink-50)] border border-[var(--color-pink-100)] text-[var(--color-pink-700)] font-mono font-semibold">
+          {accept.slice(0, 3).join(" / ")}
+        </span>
+        {accept.length > 3 && <span>+{accept.length - 3}</span>}
+      </div>
     </div>
   );
 }
@@ -284,23 +290,26 @@ function ErrorState({ message, onReset }: { message: string; onReset: () => void
 
 function CloudIcon() {
   return (
-    <div className="w-14 h-14 rounded-full bg-[var(--color-pink-100)] flex items-center justify-center">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+    <div className="relative w-20 h-20 rounded-2xl bg-gradient-to-br from-[var(--color-pink-50)] to-[var(--color-pink-100)] border-2 border-[var(--color-pink-200)] flex items-center justify-center shadow-[var(--shadow-md)]">
+      <svg width="40" height="40" viewBox="0 0 48 48" fill="none">
         <path
-          d="M16 16l-4-4-4 4M12 12v9"
+          d="M14 28a8 8 0 0 1 1.5 -15.85 12 12 0 0 1 22.5 4 7 7 0 0 1 -2 13.85"
           stroke="#E0297B"
-          strokeWidth="2"
+          strokeWidth="2.5"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
         <path
-          d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"
+          d="M24 21v18M16 29l8 -8 8 8"
           stroke="#E0297B"
-          strokeWidth="2"
+          strokeWidth="2.5"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
       </svg>
+      <span className="absolute -top-2 -right-2 px-2 py-0.5 rounded-full bg-[var(--color-pink-600)] text-white text-[10px] font-bold tracking-wider uppercase shadow-[var(--shadow-pink)]">
+        Local
+      </span>
     </div>
   );
 }

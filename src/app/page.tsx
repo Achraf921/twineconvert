@@ -135,67 +135,116 @@ const ALL_TOOLS_FOR_SEARCH = listToolIds().map((id) => ({
 export default function HomePage() {
   return (
     <>
-      <section className="relative hero-glow border-b border-[var(--color-border)]">
-        <div className="hero-grid absolute inset-0 opacity-50 pointer-events-none" />
-        <div className="relative mx-auto max-w-5xl px-6 pt-20 pb-24 text-center">
-          <p className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--color-pink-100)] text-[var(--color-pink-700)] text-xs font-semibold tracking-wider uppercase mb-6">
-            <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-pink-600)] pink-pulse" />
-            {TOTAL_TOOLS} converters · runs in your browser · open source
-          </p>
-          <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight max-w-3xl mx-auto leading-[1.05]">
-            Convert files in your browser.
-            <br />
-            <span className="text-[var(--color-pink-600)]">Nothing uploaded.</span>
-          </h1>
-          <p className="text-lg text-[var(--color-text-2)] mt-6 max-w-2xl mx-auto">
-            HEIC, PDF, MP4, DOCX, OFX, EPUB, IFC, MIDI, {TOTAL_TOOLS} converters across {CATEGORIES.length} categories. No upload, no signup, no file size limit. Your file never leaves your device.
-          </p>
+      <section className="relative hero-glow overflow-hidden">
+        <div className="hero-grid absolute inset-0 opacity-40 pointer-events-none" />
+        <div className="relative mx-auto max-w-6xl px-6 pt-16 pb-20 sm:pt-20 sm:pb-24">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
+            <div className="lg:col-span-7 fade-up">
+              <p className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-[var(--color-pink-200)] text-[var(--color-pink-700)] text-[11px] font-bold tracking-wider uppercase shadow-[var(--shadow-sm)]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-pink-600)] pink-pulse" />
+                {TOTAL_TOOLS} converters &middot; in-browser &middot; open source
+              </p>
+              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mt-6 leading-[0.98]">
+                Convert files
+                <br />
+                <span className="pink-underline text-[var(--color-text)]">without uploading</span>
+                <br />
+                them.
+              </h1>
+              <p className="text-lg sm:text-xl text-[var(--color-text-2)] mt-8 max-w-xl leading-relaxed">
+                HEIC, PDF, MP4, DOCX, OFX, EPUB, IFC, MIDI. <span className="font-semibold text-[var(--color-text)]">{TOTAL_TOOLS} converters</span> across {CATEGORIES.length} categories. Nothing uploaded, no signup, no file size cap.
+              </p>
+              <div className="mt-8 fade-up fade-up-delay-2">
+                <ToolSearch tools={ALL_TOOLS_FOR_SEARCH} />
+              </div>
+              <div className="mt-5 flex flex-wrap items-center gap-2 text-sm text-[var(--color-text-3)]">
+                <span className="font-medium">Popular:</span>
+                {[
+                  { id: "heic-to-jpg", label: "HEIC → JPG" },
+                  { id: "pdf-to-docx", label: "PDF → DOCX" },
+                  { id: "mp4-to-mp3", label: "MP4 → MP3" },
+                  { id: "ofx-to-csv", label: "OFX → CSV" },
+                  { id: "compress-pdf", label: "Compress PDF" },
+                ].map((p) => (
+                  <Link
+                    key={p.id}
+                    href={`/${p.id}`}
+                    className="lift px-3 py-1 rounded-full bg-white border border-[var(--color-border)] text-[var(--color-text-2)] font-medium hover:text-[var(--color-pink-700)]"
+                  >
+                    {p.label}
+                  </Link>
+                ))}
+              </div>
+              <div className="mt-10 grid grid-cols-3 gap-6 max-w-md fade-up fade-up-delay-3">
+                <HeroStat number={TOTAL_TOOLS.toString()} label="converters" />
+                <HeroStat number="0" label="bytes uploaded" />
+                <HeroStat number="∞" label="file size cap" />
+              </div>
+            </div>
 
-          <div className="mt-10 flex justify-center">
-            <HeroFlow />
-          </div>
-
-          <div className="mt-10">
-            <ToolSearch tools={ALL_TOOLS_FOR_SEARCH} />
-          </div>
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm text-[var(--color-text-3)]">
-            <span>Popular:</span>
-            {[
-              { id: "heic-to-jpg", label: "HEIC → JPG" },
-              { id: "pdf-to-docx", label: "PDF → DOCX" },
-              { id: "mp4-to-mp3", label: "MP4 → MP3" },
-              { id: "ofx-to-csv", label: "OFX → CSV" },
-            ].map((p) => (
-              <Link
-                key={p.id}
-                href={`/${p.id}`}
-                className="px-3 py-1 rounded-full bg-white border border-[var(--color-border)] hover:border-[var(--color-pink-400)] hover:text-[var(--color-pink-700)] transition-colors"
-              >
-                {p.label}
-              </Link>
-            ))}
+            <div className="lg:col-span-5 fade-up fade-up-delay-1">
+              <div className="relative">
+                <div className="absolute -inset-8 dropzone-ring rounded-[3rem] pointer-events-none" />
+                <div className="relative bg-white rounded-3xl border border-[var(--color-border-2)] p-8 shadow-[var(--shadow-lg)]">
+                  <div className="flex items-center justify-between mb-5">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--color-pink-600)]">Live preview</span>
+                    <span className="flex gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-[var(--color-border-2)]" />
+                      <span className="w-2 h-2 rounded-full bg-[var(--color-pink-300)]" />
+                      <span className="w-2 h-2 rounded-full bg-[var(--color-pink-600)]" />
+                    </span>
+                  </div>
+                  <HeroFlow />
+                  <p className="mt-6 text-sm text-[var(--color-text-3)] text-center leading-relaxed">
+                    Every conversion below runs in <strong className="text-[var(--color-text-2)]">this tab</strong>, not on a server. Click any to start.
+                  </p>
+                </div>
+                <DecorativeArrow />
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      <section id="privacy" className="bg-[var(--color-surface)] border-b border-[var(--color-border)]">
-        <div className="mx-auto max-w-5xl px-6 py-14 grid grid-cols-1 md:grid-cols-3 gap-8">
-          <Pillar title="No upload." body="Every conversion runs in your browser via WebAssembly. Files never travel to a server because we don't have one." />
-          <Pillar title="No file size limit." body="The 1-2 GB caps that paid converters use don't apply here. Your limit is whatever your browser can handle." />
-          <Pillar title="No signup. No watermark. No queue." body="Open source, every line of conversion code is on GitHub. We can't see what you convert, even if we wanted to." />
+      <section id="privacy" className="relative bg-gradient-to-b from-[var(--color-pink-50)]/40 to-[var(--color-bg)] border-y border-[var(--color-pink-100)]">
+        <div className="mx-auto max-w-6xl px-6 py-14 grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-0 md:divide-x divide-[var(--color-pink-100)]">
+          <Pillar
+            badge="01"
+            title="Nothing uploaded."
+            body="Every conversion runs in your browser via WebAssembly. Files never travel to a server because there is no server."
+          />
+          <Pillar
+            badge="02"
+            title="No file size limit."
+            body="The 1-2 GB caps that paid converters use don't apply. Your limit is whatever your browser can handle."
+          />
+          <Pillar
+            badge="03"
+            title="No signup. No watermark. No queue."
+            body="Open source. Every line of conversion code is on GitHub. We can't see what you convert, even if we wanted to."
+          />
         </div>
       </section>
 
-      <section id="tools" className="mx-auto max-w-5xl px-6 py-20">
-        <div className="text-center mb-14">
-          <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--color-pink-600)]">All tools</p>
-          <h2 className="text-3xl sm:text-4xl font-extrabold mt-2">Pick what you need to convert</h2>
-          <p className="text-[var(--color-text-2)] mt-3 max-w-2xl mx-auto">
-            Every link below is a dedicated tool page with the full conversion UI, format explainer, and FAQ.
-          </p>
+      <section id="tools" className="mx-auto max-w-6xl px-6 py-20">
+        <div className="flex items-end justify-between mb-12 flex-wrap gap-4">
+          <div>
+            <p className="text-[11px] font-bold uppercase tracking-wider text-[var(--color-pink-600)]">Browse the engine</p>
+            <h2 className="text-4xl sm:text-5xl font-extrabold mt-2 tracking-tight">Pick a converter.</h2>
+            <p className="text-[var(--color-text-2)] mt-3 max-w-xl">
+              Every tile is a dedicated page with the conversion UI, format guide, and FAQ.
+            </p>
+          </div>
+          <Link
+            href="/all-tools"
+            className="lift inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-white border border-[var(--color-border-2)] text-sm font-semibold text-[var(--color-text)]"
+          >
+            See all 192 alphabetically
+            <span className="text-[var(--color-pink-600)]">→</span>
+          </Link>
         </div>
-        <div className="space-y-12">
-          {CATEGORIES.map((cat) => <Category key={cat.label} category={cat} />)}
+        <div className="space-y-10">
+          {CATEGORIES.map((cat, i) => <Category key={cat.label} category={cat} index={i} />)}
         </div>
       </section>
 
@@ -225,35 +274,89 @@ export default function HomePage() {
   );
 }
 
-function Pillar({ title, body }: { title: string; body: string }) {
+function HeroStat({ number, label }: { number: string; label: string }) {
   return (
     <div>
-      <h3 className="font-bold text-[var(--color-text)] text-lg">{title}</h3>
-      <p className="mt-2 text-sm text-[var(--color-text-2)] leading-relaxed">{body}</p>
+      <div className="big-number text-4xl sm:text-5xl">{number}</div>
+      <div className="text-xs uppercase tracking-wider font-semibold text-[var(--color-text-3)] mt-1">{label}</div>
     </div>
   );
 }
 
-function Category({ category }: { category: (typeof CATEGORIES)[number] }) {
+function DecorativeArrow() {
   return (
-    <div>
-      <header className="mb-5">
-        <h3 className="text-xl font-bold text-[var(--color-text)]">{category.label}</h3>
-        <p className="text-sm text-[var(--color-text-2)] mt-1 max-w-2xl">{category.description}</p>
+    <svg
+      aria-hidden
+      className="hidden lg:block absolute -left-12 top-1/2 -translate-y-1/2 w-12 h-12 text-[var(--color-pink-400)]"
+      viewBox="0 0 48 48"
+      fill="none"
+    >
+      <path
+        d="M2 24 Q 14 14 24 24 T 46 24 M40 18 L46 24 L40 30"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function Pillar({ badge, title, body }: { badge: string; title: string; body: string }) {
+  return (
+    <div className="px-6 py-2 md:px-10">
+      <div className="text-[10px] font-bold tracking-[0.2em] text-[var(--color-pink-600)]">— {badge}</div>
+      <h3 className="font-extrabold text-[var(--color-text)] text-xl mt-3 tracking-tight">{title}</h3>
+      <p className="mt-3 text-[15px] text-[var(--color-text-2)] leading-relaxed">{body}</p>
+    </div>
+  );
+}
+
+const CATEGORY_ICONS: Record<string, string> = {
+  Image: "🖼",
+  "PDF & Documents": "📄",
+  "Audio & Video": "🎬",
+  "EPUB & E-readers": "📚",
+  "Personal data exports": "🔐",
+  "Email & finance": "✉️",
+  "Genealogy, citations, ham radio, chess": "🌳",
+  "Design, color, 3D, music notation, embroidery": "🎨",
+  "Architecture, legal, security, B2B": "🏛",
+};
+
+function Category({ category, index }: { category: (typeof CATEGORIES)[number]; index: number }) {
+  const icon = CATEGORY_ICONS[category.label] ?? "•";
+  return (
+    <article className="bg-white rounded-2xl border border-[var(--color-border)] p-6 sm:p-8 hover:border-[var(--color-pink-200)] transition-colors">
+      <header className="flex items-start gap-4 mb-6">
+        <div className="shrink-0 flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-[var(--color-pink-50)] to-[var(--color-pink-100)] border border-[var(--color-pink-200)] text-2xl">
+          <span aria-hidden>{icon}</span>
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-baseline gap-3 flex-wrap">
+            <h3 className="text-xl sm:text-2xl font-extrabold text-[var(--color-text)] tracking-tight">
+              {String(index + 1).padStart(2, "0")} &nbsp; {category.label}
+            </h3>
+            <span className="text-xs font-semibold tabular-nums text-[var(--color-pink-700)] bg-[var(--color-pink-50)] px-2 py-0.5 rounded-md border border-[var(--color-pink-100)]">
+              {category.ids.length} tools
+            </span>
+          </div>
+          <p className="text-sm text-[var(--color-text-2)] mt-2 leading-relaxed">{category.description}</p>
+        </div>
       </header>
       <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
         {category.ids.map((id) => (
           <li key={id}>
             <Link
               href={`/${id}`}
-              className="block px-3 py-2 rounded-lg border border-[var(--color-border)] bg-white hover:border-[var(--color-pink-400)] hover:bg-[var(--color-pink-50)] hover:text-[var(--color-pink-700)] transition-all text-sm font-medium text-[var(--color-text-2)]"
+              className="lift block px-3 py-2.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] hover:bg-white hover:text-[var(--color-pink-700)] text-sm font-semibold text-[var(--color-text-2)]"
             >
               {idToLabel(id)}
             </Link>
           </li>
         ))}
       </ul>
-    </div>
+    </article>
   );
 }
 
