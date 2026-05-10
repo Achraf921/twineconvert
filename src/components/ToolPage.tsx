@@ -35,23 +35,21 @@ export function ToolPage({ toolId, meta }: Props) {
       <StructuredData toolId={toolId} meta={meta} inputProfile={inputProfile} outputProfile={outputProfile} />
 
       <section className="relative hero-glow overflow-hidden">
-        <div className="hero-grid absolute inset-0 opacity-40 pointer-events-none" />
-        <div className="relative mx-auto max-w-4xl px-6 pt-12 pb-16 text-center">
+        <div className="dot-grid-pink absolute inset-0 opacity-40 pointer-events-none" aria-hidden />
+        <div className="relative mx-auto max-w-4xl px-6 pt-10 pb-16 sm:pt-14 sm:pb-20 text-center">
           <Breadcrumbs label={meta.label} />
-          <div className="mt-5 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-[var(--color-pink-200)] text-[var(--color-pink-700)] text-[11px] font-bold tracking-wider uppercase shadow-[var(--shadow-sm)]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-pink-600)] pink-pulse" />
-            Free &middot; in-browser &middot; no upload
-          </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mt-5 leading-[1.02]">
-            <span className="pink-underline">{meta.label.replace(/→/g, "to")}</span>
-            <br />
-            Converter
+          <p className="fade-up mt-5 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-[var(--color-pink-200)] text-[var(--color-pink-700)] text-[11px] font-bold tracking-[0.18em] uppercase shadow-[var(--shadow-xs)]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-pink-500)] pink-pulse" />
+            free &middot; in-browser &middot; no upload
+          </p>
+          <h1 className="fade-up fade-up-delay-1 h-display text-4xl sm:text-5xl lg:text-7xl mt-6 leading-[0.96]">
+            <ToolFormula label={meta.label} />
           </h1>
-          <p className="text-lg sm:text-xl text-[var(--color-text-2)] mt-6 max-w-2xl mx-auto leading-relaxed">
+          <p className="fade-up fade-up-delay-2 text-lg sm:text-xl text-[var(--color-ink-2)] mt-7 max-w-2xl mx-auto leading-relaxed">
             {heroSubhead(meta.label, inputProfile, outputProfile)}
           </p>
 
-          <div className="mt-12 max-w-2xl mx-auto">
+          <div className="fade-up fade-up-delay-3 mt-12 max-w-2xl mx-auto">
             <Dropzone
               toolId={toolId}
               toolLabel={meta.label}
@@ -59,15 +57,15 @@ export function ToolPage({ toolId, meta }: Props) {
             />
           </div>
 
-          <div className="mt-8 flex items-center justify-center gap-5 text-xs font-semibold tracking-wider uppercase text-[var(--color-text-3)]">
-            <span className="flex items-center gap-1.5">
-              <CheckMark /> Nothing uploaded
+          <div className="fade-up fade-up-delay-4 mt-9 flex items-center justify-center flex-wrap gap-x-6 gap-y-2 text-[11px] font-mono uppercase tracking-[0.18em] text-[var(--color-ink-3)]">
+            <span className="inline-flex items-center gap-1.5">
+              <CheckMark /> nothing uploaded
             </span>
-            <span className="flex items-center gap-1.5">
-              <CheckMark /> No file size cap
+            <span className="inline-flex items-center gap-1.5">
+              <CheckMark /> no file size cap
             </span>
-            <span className="flex items-center gap-1.5">
-              <CheckMark /> Open source
+            <span className="inline-flex items-center gap-1.5">
+              <CheckMark /> open source
             </span>
           </div>
         </div>
@@ -207,6 +205,58 @@ function faqItems(label: string, input?: FormatProfile, output?: FormatProfile) 
   });
 
   return items;
+}
+
+/** Big editorial title rendered as a "X → Y" formula. The arrow gets
+ *  the marker treatment; the format names use the italic display variant
+ *  to play with the formula composition. */
+function ToolFormula({ label }: { label: string }) {
+  // meta.label is in the form "HEIC → JPG" or "Compress PDF" (single-action).
+  if (label.includes("→")) {
+    const [from, to] = label.split("→").map((s) => s.trim());
+    return (
+      <>
+        <span>{from}</span>
+        <span className="inline-block mx-3 sm:mx-4 align-middle text-[var(--color-pink-500)]">
+          <ArrowKnot />
+        </span>
+        <span className="h-display-italic">{to}</span>
+      </>
+    );
+  }
+  return <span className="marker">{label}</span>;
+}
+
+/** Inline arrow with a small twine knot mid-line — "→" but on-brand. */
+function ArrowKnot() {
+  return (
+    <svg
+      width="0.95em"
+      height="0.6em"
+      viewBox="0 0 80 50"
+      fill="none"
+      aria-hidden
+      className="inline-block"
+    >
+      <path
+        d="M2 25 Q 22 8, 38 25 T 72 25"
+        stroke="currentColor"
+        strokeWidth="4"
+        strokeLinecap="round"
+        fill="none"
+      />
+      <path
+        d="M64 14 L 76 25 L 64 36"
+        stroke="currentColor"
+        strokeWidth="4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+      <circle cx="38" cy="25" r="6" fill="currentColor" />
+      <circle cx="38" cy="25" r="2.5" fill="white" />
+    </svg>
+  );
 }
 
 function Breadcrumbs({ label }: { label: string }) {

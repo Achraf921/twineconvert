@@ -1,6 +1,18 @@
 import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
+import { Fraunces } from "next/font/google";
+
+// Display serif for the editorial hero treatment. Fraunces is a
+// modern variable serif with knot-like swashes that visually echo
+// the twine-knot logo. Body stays Geist Sans for readability.
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-display",
+  style: ["normal", "italic"],
+  axes: ["opsz", "SOFT"],
+});
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import "./globals.css";
@@ -83,7 +95,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
+    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable} ${fraunces.variable}`}>
       <body className="min-h-screen flex flex-col">
         <script
           type="application/ld+json"
