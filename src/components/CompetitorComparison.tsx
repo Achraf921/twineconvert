@@ -83,37 +83,47 @@ const ROWS: Row[] = [
 
 export function CompetitorComparison() {
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-sm border-collapse">
-        <thead>
-          <tr className="border-b border-[var(--color-border)]">
-            <th className="text-left font-semibold text-[var(--color-text-3)] uppercase text-[11px] tracking-wider py-3 px-2">Feature</th>
-            <th className="font-semibold py-3 px-2 text-center bg-[var(--color-pink-50)] text-[var(--color-pink-700)] rounded-t-lg">
-              twineconvert
-            </th>
-            <th className="font-medium py-3 px-2 text-center text-[var(--color-text-2)]">CloudConvert</th>
-            <th className="font-medium py-3 px-2 text-center text-[var(--color-text-2)]">iLovePDF</th>
-            <th className="font-medium py-3 px-2 text-center text-[var(--color-text-2)]">FreeConvert</th>
-            <th className="font-medium py-3 px-2 text-center text-[var(--color-text-2)]">Smallpdf</th>
-          </tr>
-        </thead>
-        <tbody>
-          {ROWS.map((row) => (
-            <tr key={row.feature} className="border-b border-[var(--color-border)]/50">
-              <td className="py-3 px-2 text-[var(--color-text-2)]">{row.feature}</td>
-              <td className="py-3 px-2 text-center bg-[var(--color-pink-50)]/40">
-                <Cell value={row.twine} highlight />
-              </td>
-              <td className="py-3 px-2 text-center"><Cell value={row.cloudConvert} /></td>
-              <td className="py-3 px-2 text-center"><Cell value={row.iLovePDF} /></td>
-              <td className="py-3 px-2 text-center"><Cell value={row.freeConvert} /></td>
-              <td className="py-3 px-2 text-center"><Cell value={row.smallpdf} /></td>
+    <div className="rounded-2xl border border-[var(--color-border)] bg-white shadow-[var(--shadow-md)] overflow-hidden">
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm border-collapse">
+          <thead>
+            <tr className="bg-[var(--color-surface)] border-b border-[var(--color-border)]">
+              <th className="text-left font-bold text-[var(--color-text-3)] uppercase text-[10px] tracking-wider py-4 px-4">Feature</th>
+              <th className="py-4 px-3 text-center bg-gradient-to-b from-[var(--color-pink-600)] to-[var(--color-pink-700)] text-white relative">
+                <span className="absolute -top-2 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-white text-[var(--color-pink-700)] text-[9px] font-bold tracking-wider uppercase rounded-full border border-[var(--color-pink-200)] shadow-[var(--shadow-sm)]">
+                  Us
+                </span>
+                <span className="font-extrabold text-base">twineconvert</span>
+              </th>
+              <th className="font-semibold py-4 px-3 text-center text-[var(--color-text-2)]">CloudConvert</th>
+              <th className="font-semibold py-4 px-3 text-center text-[var(--color-text-2)]">iLovePDF</th>
+              <th className="font-semibold py-4 px-3 text-center text-[var(--color-text-2)]">FreeConvert</th>
+              <th className="font-semibold py-4 px-3 text-center text-[var(--color-text-2)]">Smallpdf</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-      <p className="text-[11px] text-[var(--color-text-3)] mt-3 italic">
-        Comparison data from each competitor&apos;s own pricing and FAQ pages, last verified May 2026. Limits and pricing change frequently.
+          </thead>
+          <tbody>
+            {ROWS.map((row, i) => (
+              <tr
+                key={row.feature}
+                className={`border-b border-[var(--color-border)] last:border-b-0 ${
+                  i % 2 ? "bg-[var(--color-surface)]/50" : "bg-white"
+                }`}
+              >
+                <td className="py-3.5 px-4 font-medium text-[var(--color-text)]">{row.feature}</td>
+                <td className="py-3.5 px-3 text-center bg-[var(--color-pink-50)]">
+                  <Cell value={row.twine} highlight />
+                </td>
+                <td className="py-3.5 px-3 text-center"><Cell value={row.cloudConvert} /></td>
+                <td className="py-3.5 px-3 text-center"><Cell value={row.iLovePDF} /></td>
+                <td className="py-3.5 px-3 text-center"><Cell value={row.freeConvert} /></td>
+                <td className="py-3.5 px-3 text-center"><Cell value={row.smallpdf} /></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className="text-[11px] text-[var(--color-text-3)] py-3 px-4 bg-[var(--color-surface)] border-t border-[var(--color-border)]">
+        Last verified May 2026 from each competitor&apos;s pricing and FAQ pages. Limits and pricing change frequently.
       </p>
     </div>
   );

@@ -34,23 +34,41 @@ export function ToolPage({ toolId, meta }: Props) {
     <>
       <StructuredData toolId={toolId} meta={meta} inputProfile={inputProfile} outputProfile={outputProfile} />
 
-      <section className="relative hero-glow">
-        <div className="hero-grid absolute inset-0 opacity-50 pointer-events-none" />
-        <div className="relative mx-auto max-w-4xl px-6 pt-16 pb-12 text-center">
+      <section className="relative hero-glow overflow-hidden">
+        <div className="hero-grid absolute inset-0 opacity-40 pointer-events-none" />
+        <div className="relative mx-auto max-w-4xl px-6 pt-12 pb-16 text-center">
           <Breadcrumbs label={meta.label} />
-          <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight mt-4">
-            {meta.label.replace(/→/g, "to")} Converter
+          <div className="mt-5 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-[var(--color-pink-200)] text-[var(--color-pink-700)] text-[11px] font-bold tracking-wider uppercase shadow-[var(--shadow-sm)]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-pink-600)] pink-pulse" />
+            Free &middot; in-browser &middot; no upload
+          </div>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mt-5 leading-[1.02]">
+            <span className="pink-underline">{meta.label.replace(/→/g, "to")}</span>
+            <br />
+            Converter
           </h1>
-          <p className="text-lg text-[var(--color-text-2)] mt-4 max-w-2xl mx-auto">
+          <p className="text-lg sm:text-xl text-[var(--color-text-2)] mt-6 max-w-2xl mx-auto leading-relaxed">
             {heroSubhead(meta.label, inputProfile, outputProfile)}
           </p>
 
-          <div className="mt-10">
+          <div className="mt-12 max-w-2xl mx-auto">
             <Dropzone
               toolId={toolId}
               toolLabel={meta.label}
               accept={meta.accept}
             />
+          </div>
+
+          <div className="mt-8 flex items-center justify-center gap-5 text-xs font-semibold tracking-wider uppercase text-[var(--color-text-3)]">
+            <span className="flex items-center gap-1.5">
+              <CheckMark /> Nothing uploaded
+            </span>
+            <span className="flex items-center gap-1.5">
+              <CheckMark /> No file size cap
+            </span>
+            <span className="flex items-center gap-1.5">
+              <CheckMark /> Open source
+            </span>
           </div>
         </div>
       </section>
@@ -199,9 +217,21 @@ function Breadcrumbs({ label }: { label: string }) {
           <Link href="/" className="hover:text-[var(--color-text-2)] transition-colors">Home</Link>
         </li>
         <li aria-hidden>/</li>
+        <li>
+          <Link href="/all-tools" className="hover:text-[var(--color-text-2)] transition-colors">Tools</Link>
+        </li>
+        <li aria-hidden>/</li>
         <li className="text-[var(--color-text-2)] font-medium">{label}</li>
       </ol>
     </nav>
+  );
+}
+
+function CheckMark() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="text-[var(--color-pink-600)]">
+      <path d="M20 6L9 17l-5-5" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }
 
