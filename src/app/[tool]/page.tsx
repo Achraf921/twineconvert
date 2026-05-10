@@ -70,7 +70,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
     const outputName = profiles.output.name;
     const inputUse = profiles.input.primaryUse.replace(/\.$/, "");
     const outputUse = profiles.output.primaryUse.replace(/\.$/, "");
-    title = `${inputName} to ${outputName} converter, free, in your browser`;
+    title = `${inputName} to ${outputName} Converter, Free, in Your Browser`;
     description = `Convert ${inputName} (${inputUse}) to ${outputName} (${outputUse}) in your browser. No upload, no signup, no file size limit.`;
     keywords = [
       `${inputName} to ${outputName}`,
@@ -86,7 +86,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
     const [inKey, outKey] = tool.split("-to-");
     const inputName = inKey.toUpperCase();
     const outputName = outKey.toUpperCase();
-    title = `${inputName} to ${outputName} converter, free, in your browser`;
+    title = `${inputName} to ${outputName} Converter, Free, in Your Browser`;
     description = `Convert ${inputName} files to ${outputName} in your browser. Your file never uploads, no signup, no file size cap.`;
     keywords = [
       `${inputName} to ${outputName}`,
@@ -96,7 +96,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
       "no upload",
     ];
   } else {
-    title = `${meta.label}, free, in your browser`;
+    title = `${meta.label}, Free, in Your Browser`;
     description = `${meta.label} in your browser. Your file never uploads, no signup, no file size cap, no watermark.`;
     keywords = [meta.label.toLowerCase(), "free", "in-browser", "no upload"];
   }
@@ -107,14 +107,14 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
     keywords,
     alternates: { canonical: url },
     openGraph: {
-      title: `${meta.label} converter, twineconvert`,
+      title: `${meta.label} Converter, twineconvert`,
       description,
       url,
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
-      title: `${meta.label} converter, twineconvert`,
+      title: `${meta.label} Converter, twineconvert`,
       description,
     },
   };

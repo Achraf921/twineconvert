@@ -8,7 +8,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL("https://twineconvert.com"),
   title: {
-    default: "twineconvert, convert files in your browser",
+    default: "twineconvert, Convert Files in Your Browser",
     template: "%s · twineconvert",
   },
   description:
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "twineconvert",
-    title: "twineconvert, convert files in your browser",
+    title: "twineconvert, Convert Files in Your Browser",
     description:
       "Free file converter that runs entirely in your browser. Your files never leave your device.",
     url: "https://twineconvert.com",
