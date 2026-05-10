@@ -9,7 +9,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 backdrop-blur-md bg-white/85 border-b border-[var(--color-border)]">
       <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2.5 group" aria-label="twineconvert home">
+        <Link href="/" className="flex items-center gap-1 group" aria-label="twineconvert home">
           <Logo />
           <span className="font-bold text-[15px] tracking-tight text-[var(--color-ink)]">
             twineconvert
@@ -51,8 +51,8 @@ function Logo() {
     <Image
       src="/logo.png"
       alt=""
-      width={32}
-      height={32}
+      width={44}
+      height={44}
       priority
       className="transition-transform duration-300 group-hover:rotate-12"
     />
