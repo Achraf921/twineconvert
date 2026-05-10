@@ -22,18 +22,30 @@ src/lib/engine/
                          registry.ts via dynamic import.
 
 src/app/
-├── layout.tsx         — root layout with header + footer + metadata
-├── page.tsx           — homepage: hero + tool directory
-├── [tool]/page.tsx    — per-tool dynamic route (192 URLs, ISR)
-├── sitemap.ts         — programmatic sitemap from registry-meta
-├── robots.ts          — robots.txt
-└── not-found.tsx      — branded 404 with popular-route suggestions
+├── layout.tsx                   — root layout + Organization/WebSite JSON-LD
+├── page.tsx                     — homepage: hero + tool directory + FAQ
+├── [tool]/page.tsx              — per-tool dynamic route (192 URLs, ISR)
+├── [tool]/opengraph-image.tsx   — per-tool 1200×630 OG card (edge runtime)
+├── opengraph-image.tsx          — homepage OG card
+├── all-tools/page.tsx           — alphabetical 192-tool inventory
+├── about/page.tsx               — what this is + why it exists
+├── privacy/page.tsx             — privacy policy (AdSense-required)
+├── terms/page.tsx               — terms of use
+├── error.tsx                    — global error boundary
+├── not-found.tsx                — branded 404 with popular-route suggestions
+├── sitemap.ts                   — programmatic sitemap from registry-meta
+├── manifest.ts                  — PWA manifest
+└── robots.ts                    — robots.txt
 
 src/components/
-├── Header, Footer     — shared layout chrome
-├── Dropzone (client)  — file picker + state machine + progress
-└── ToolPage (server)  — per-tool template (hero + how-to + format cards
-                         + cross-link grids + FAQ + JSON-LD)
+├── Header, Footer, MobileMenu   — shared layout chrome
+├── Dropzone (client)            — file picker + state machine + progress
+├── ToolSearch (client)          — fuzzy search over 192 tool IDs
+├── HeroFlow (client)            — animated INPUT → OUTPUT carousel
+├── HomeFAQ                      — homepage FAQ + FAQPage JSON-LD
+├── CompetitorComparison         — per-tool feature table vs competitors
+└── ToolPage (server)            — per-tool template (hero + how-to + format
+                                   cards + cross-link grids + FAQ + JSON-LD)
 
 src/lib/
 ├── formats.ts         — format profile catalog (descriptions reused

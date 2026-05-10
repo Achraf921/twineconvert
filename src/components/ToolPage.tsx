@@ -88,7 +88,9 @@ export function ToolPage({ toolId, meta }: Props) {
         <section className="mx-auto max-w-4xl px-6 py-16">
           <SectionLabel>Formats involved</SectionLabel>
           <h2 className="text-2xl font-bold mt-2 mb-8">
-            About {inputProfile?.name} and {outputProfile?.name}
+            {inputProfile && outputProfile
+              ? `About ${inputProfile.name} and ${outputProfile.name}`
+              : `About ${inputProfile?.name ?? outputProfile?.name}`}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {inputProfile && <FormatCard profile={inputProfile} />}
