@@ -15,6 +15,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { FormatGraph } from "@/lib/dropzone-routes";
+import { groupByCategory, type FormatCategory } from "@/lib/format-categories";
 
 interface Props {
   graph: FormatGraph;
@@ -145,15 +146,61 @@ function FormatChip({
   onSelect: (format: string) => void;
 }) {
   const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
+
+  // Group the options into categories for the left sidebar.
+  const grouped = useMemo(() => groupByCategory(options), [options]);
+
+  // The category whose formats are visible in the right pane. Defaults to
+  // the category containing the currently selected format, falling back to
+  // the first category.
+  const initialCategory = useMemo<FormatCategory | null>(() => {
+    if (!grouped.length) return null;
+    const owner = grouped.find((g) => g.formats.includes(current));
+    return owner?.category ?? grouped[0].category;
+  }, [grouped, current]);
+
+  const [activeCategory, setActiveCategory] = useState<FormatCategory | null>(
+    initialCategory,
+  );
+  // Track the last "initial" category so we can reset activeCategory when
+  // the option set changes (e.g. input changes and the output dropdown
+  // gets a new filtered list). Setting state during render — guarded by an
+  // equality check — is the React-recommended pattern for this.
+  const [prevInitial, setPrevInitial] = useState(initialCategory);
+  if (prevInitial !== initialCategory) {
+    setPrevInitial(initialCategory);
+    setActiveCategory(initialCategory);
+  }
+
+  // Search overrides the category selection: when the user types, show
+  // every matching format in a single flat grid regardless of category.
+  const searchResults = useMemo(() => {
+    if (!search.trim()) return null;
+    const q = search.trim().toUpperCase();
+    return options.filter((o) => o.toUpperCase().includes(q));
+  }, [options, search]);
+
+  const visibleFormats =
+    searchResults ??
+    grouped.find((g) => g.category === activeCategory)?.formats ??
+    [];
+
+  const close = () => {
+    setOpen(false);
+    setSearch("");
+  };
 
   useEffect(() => {
     if (!open) return;
+    searchRef.current?.focus();
     const handler = (e: MouseEvent) => {
-      if (!wrapperRef.current?.contains(e.target as Node)) setOpen(false);
+      if (!wrapperRef.current?.contains(e.target as Node)) close();
     };
     const escHandler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") close();
     };
     document.addEventListener("mousedown", handler);
     document.addEventListener("keydown", escHandler);
@@ -168,7 +215,7 @@ function FormatChip({
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        aria-haspopup="listbox"
+        aria-haspopup="dialog"
         aria-expanded={open}
         aria-label={`Change ${accented ? "output" : "input"} format`}
         className={`relative flex flex-col items-center justify-center w-28 h-28 sm:w-32 sm:h-32 rounded-2xl border transition-all duration-200 hover:-translate-y-0.5 ${
@@ -193,34 +240,93 @@ function FormatChip({
 
       {open && (
         <div
-          role="listbox"
-          className="absolute z-30 left-1/2 -translate-x-1/2 mt-2 w-44 max-h-72 overflow-y-auto bg-white border border-[var(--color-border)] rounded-xl shadow-[var(--shadow-lg)] py-1.5"
+          role="dialog"
+          aria-label={`Pick ${accented ? "output" : "input"} format`}
+          className={`absolute z-30 mt-2 w-[min(calc(100vw-2rem),28rem)] bg-white border border-[var(--color-border)] rounded-xl shadow-[var(--shadow-lg)] overflow-hidden ${
+            accented ? "right-0" : "left-0"
+          }`}
         >
-          {options.length === 0 ? (
-            <div className="px-3 py-2 text-xs text-[var(--color-ink-3)]">
-              No formats available
+          {/* Search bar */}
+          <div className="flex items-center gap-2 px-3 py-2.5 border-b border-[var(--color-border)]">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden className="text-[var(--color-ink-3)] shrink-0">
+              <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
+              <path d="M20 20l-3-3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+            <input
+              ref={searchRef}
+              type="search"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search format"
+              className="flex-1 bg-transparent text-sm placeholder:text-[var(--color-ink-3)] focus:outline-none"
+              aria-label="Search formats"
+            />
+          </div>
+
+          {/* Two-pane body */}
+          <div className="flex h-64">
+            {/* Left: categories */}
+            <div className="w-32 border-r border-[var(--color-border)] overflow-y-auto py-1 bg-[var(--color-paper)]/50">
+              {searchResults !== null ? (
+                <div className="px-3 py-2 text-[11px] font-semibold uppercase tracking-wider text-[var(--color-ink-3)]">
+                  Results
+                </div>
+              ) : grouped.length === 0 ? (
+                <div className="px-3 py-2 text-xs text-[var(--color-ink-3)]">
+                  No formats
+                </div>
+              ) : (
+                grouped.map(({ category }) => (
+                  <button
+                    key={category}
+                    type="button"
+                    onMouseEnter={() => setActiveCategory(category)}
+                    onClick={() => setActiveCategory(category)}
+                    className={`w-full text-left px-3 py-2 text-sm font-medium transition-colors ${
+                      category === activeCategory
+                        ? "bg-white text-[var(--color-pink-700)] border-l-2 border-[var(--color-pink-600)]"
+                        : "text-[var(--color-ink-2)] hover:bg-white hover:text-[var(--color-pink-700)] border-l-2 border-transparent"
+                    }`}
+                  >
+                    {category}
+                  </button>
+                ))
+              )}
             </div>
-          ) : (
-            options.map((opt) => (
-              <button
-                key={opt}
-                type="button"
-                onClick={() => {
-                  onSelect(opt);
-                  setOpen(false);
-                }}
-                className={`w-full text-left px-3 py-1.5 text-sm font-medium transition-colors ${
-                  opt === current
-                    ? "bg-[var(--color-pink-50)] text-[var(--color-pink-700)]"
-                    : "hover:bg-[var(--color-pink-50)] hover:text-[var(--color-pink-700)] text-[var(--color-ink-2)]"
-                }`}
-                role="option"
-                aria-selected={opt === current}
-              >
-                {opt}
-              </button>
-            ))
-          )}
+
+            {/* Right: format grid */}
+            <div className="flex-1 overflow-y-auto p-2">
+              {visibleFormats.length === 0 ? (
+                <div className="px-3 py-2 text-xs text-[var(--color-ink-3)]">
+                  {searchResults !== null
+                    ? `No format matches "${search}"`
+                    : "No formats in this category"}
+                </div>
+              ) : (
+                <div className="grid grid-cols-3 gap-1.5" role="listbox">
+                  {visibleFormats.map((opt) => (
+                    <button
+                      key={opt}
+                      type="button"
+                      onClick={() => {
+                        onSelect(opt);
+                        close();
+                      }}
+                      role="option"
+                      aria-selected={opt === current}
+                      className={`text-center px-2 py-2 text-xs font-bold tracking-wide rounded-md border transition-colors ${
+                        opt === current
+                          ? "bg-[var(--color-pink-600)] border-[var(--color-pink-600)] text-white"
+                          : "bg-white border-[var(--color-border)] text-[var(--color-ink-2)] hover:border-[var(--color-pink-400)] hover:bg-[var(--color-pink-50)] hover:text-[var(--color-pink-700)]"
+                      }`}
+                    >
+                      {opt}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       )}
     </div>
