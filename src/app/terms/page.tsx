@@ -16,7 +16,7 @@ export default function TermsPage() {
       <h1 className="text-4xl font-extrabold tracking-tight mb-2">
         The rules — short version
       </h1>
-      <p className="text-sm text-[var(--color-text-3)] mb-10">Last updated 2025</p>
+      <p className="text-sm text-[var(--color-text-3)] mb-10">Last updated May 2026</p>
 
       <Section title="Use the tool">
         <p>
