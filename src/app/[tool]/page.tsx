@@ -59,28 +59,52 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
 
   let title: string;
   let description: string;
+  let keywords: string[];
 
   if (profiles) {
+    // Use the per-format primaryUse strings to compose a description
+    // that's actually unique to this conversion, instead of a template
+    // shared across all 192 pages. Google flags near-identical meta
+    // descriptions on large sites as thin content.
     const inputName = profiles.input.name;
     const outputName = profiles.output.name;
+    const inputUse = profiles.input.primaryUse.replace(/\.$/, "");
+    const outputUse = profiles.output.primaryUse.replace(/\.$/, "");
     title = `${inputName} to ${outputName} converter, free, in your browser`;
-    description = `Convert ${inputName} to ${outputName} for free. Runs entirely in your browser, your file never leaves your device. No upload, no signup, no file size limit.`;
+    description = `Convert ${inputName} (${inputUse}) to ${outputName} (${outputUse}) in your browser. No upload, no signup, no file size limit.`;
+    keywords = [
+      `${inputName} to ${outputName}`,
+      `convert ${inputName} to ${outputName}`,
+      `${inputName.toLowerCase()} to ${outputName.toLowerCase()} converter`,
+      `free ${inputName} to ${outputName}`,
+      `${profiles.input.fullName}`,
+      `${profiles.output.fullName}`,
+      "in-browser converter",
+      "no upload",
+    ];
   } else if (isBidir) {
     const [inKey, outKey] = tool.split("-to-");
     const inputName = inKey.toUpperCase();
     const outputName = outKey.toUpperCase();
     title = `${inputName} to ${outputName} converter, free, in your browser`;
-    description = `Convert ${inputName} to ${outputName} for free. Runs entirely in your browser, your file never leaves your device. No upload, no signup, no file size limit.`;
+    description = `Convert ${inputName} files to ${outputName} in your browser. Your file never uploads, no signup, no file size cap.`;
+    keywords = [
+      `${inputName} to ${outputName}`,
+      `convert ${inputName} to ${outputName}`,
+      `free ${inputName} converter`,
+      "in-browser converter",
+      "no upload",
+    ];
   } else {
-    // Single-action tools: compress-pdf, remove-background, image-to-text-equivalent.
-    // Use the human-curated label from the registry instead of slug-mangling.
     title = `${meta.label}, free, in your browser`;
-    description = `${meta.label} for free. Runs entirely in your browser, your file never leaves your device. No upload, no signup, no file size limit.`;
+    description = `${meta.label} in your browser. Your file never uploads, no signup, no file size cap, no watermark.`;
+    keywords = [meta.label.toLowerCase(), "free", "in-browser", "no upload"];
   }
 
   return {
     title,
     description,
+    keywords,
     alternates: { canonical: url },
     openGraph: {
       title: `${meta.label} converter, twineconvert`,
