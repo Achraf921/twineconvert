@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { listToolIds, getMeta } from "@/lib/engine/registry-meta";
 import { ToolSearch } from "@/components/ToolSearch";
+import { HeroFlow } from "@/components/HeroFlow";
 
 /**
  * Homepage. Hero + the full directory of tools, grouped by category.
@@ -148,6 +149,11 @@ export default function HomePage() {
           <p className="text-lg text-[var(--color-text-2)] mt-6 max-w-2xl mx-auto">
             HEIC, PDF, MP4, DOCX, OFX, EPUB, IFC, MIDI — {TOTAL_TOOLS} converters across {CATEGORIES.length} categories. No upload, no signup, no file size limit. Your file never leaves your device.
           </p>
+
+          <div className="mt-10 flex justify-center">
+            <HeroFlow />
+          </div>
+
           <div className="mt-10">
             <ToolSearch tools={ALL_TOOLS_FOR_SEARCH} />
           </div>
