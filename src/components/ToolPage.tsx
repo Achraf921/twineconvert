@@ -43,37 +43,40 @@ export function ToolPage({ toolId, meta }: Props) {
 
       <section className="relative hero-wash overflow-hidden">
         <div className="subtle-grid absolute inset-0 opacity-60 pointer-events-none" aria-hidden />
-        <div className="relative mx-auto max-w-3xl px-6 pt-10 pb-14 sm:pt-14 sm:pb-20 text-center">
+        <div className="relative mx-auto max-w-7xl px-6 pt-10 pb-14 sm:pt-14 sm:pb-20">
           <Breadcrumbs label={meta.label} />
 
-          <p className="fade-up mt-5 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-[var(--color-pink-200)] text-[var(--color-pink-700)] text-[11px] font-bold tracking-[0.18em] uppercase shadow-[var(--shadow-xs)]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-pink-600)] pink-pulse" />
-            free &middot; in-browser &middot; no upload
-          </p>
-
-          <h1 className="fade-up fade-up-delay-1 mt-6 text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.02] text-[var(--color-ink)]">
-            {meta.label.replace(/→/g, "to")}
-            <br />
-            <span className="text-[var(--color-pink-600)]">Converter</span>
-          </h1>
-          <p className="fade-up fade-up-delay-2 mt-6 text-lg sm:text-xl text-[var(--color-ink-2)] max-w-2xl mx-auto leading-relaxed">
-            {heroSubhead(meta.label, inputProfile, outputProfile)}
-          </p>
-
-          {/* Interactive chip-pair picker, defaulted to THIS tool's pair.
-              Lets the user pivot to a different input/output without
-              navigating back to the homepage. */}
-          {pairFromLabel(meta.label) && (
-            <div className="fade-up fade-up-delay-2 mt-14">
-              <HeroFlow
-                graph={FORMAT_GRAPH}
-                initialInput={pairFromLabel(meta.label)?.[0]}
-                initialOutput={pairFromLabel(meta.label)?.[1]}
-              />
+          {/* Hero row: copy LEFT, chip widget RIGHT, side by side. md+
+           *  breakpoint so common laptops get the 2-column layout. */}
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8 items-center">
+            <div className="md:col-span-7 fade-up text-center md:text-left">
+              <p className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-[var(--color-pink-200)] text-[var(--color-pink-700)] text-[11px] font-bold tracking-[0.18em] uppercase shadow-[var(--shadow-xs)]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-pink-600)] pink-pulse" />
+                free &middot; in-browser &middot; no upload
+              </p>
+              <h1 className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.02] text-[var(--color-ink)]">
+                {meta.label.replace(/→/g, "to")}
+                <br />
+                <span className="text-[var(--color-pink-600)]">Converter</span>
+              </h1>
+              <p className="mt-6 text-lg sm:text-xl text-[var(--color-ink-2)] max-w-xl mx-auto md:mx-0 leading-relaxed">
+                {heroSubhead(meta.label, inputProfile, outputProfile)}
+              </p>
             </div>
-          )}
 
-          <div className="fade-up fade-up-delay-3 mt-10 flex items-center gap-4 max-w-md mx-auto">
+            {pairFromLabel(meta.label) && (
+              <div className="md:col-span-5 fade-up fade-up-delay-2 flex justify-center md:justify-end">
+                <HeroFlow
+                  graph={FORMAT_GRAPH}
+                  initialInput={pairFromLabel(meta.label)?.[0]}
+                  initialOutput={pairFromLabel(meta.label)?.[1]}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Below the hero row: divider + centered dropzone */}
+          <div className="fade-up fade-up-delay-3 mt-12 flex items-center gap-4 max-w-md mx-auto">
             <span className="flex-1 h-px bg-[var(--color-border)]" aria-hidden />
             <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[var(--color-ink-3)]">
               or drop your file
@@ -81,7 +84,7 @@ export function ToolPage({ toolId, meta }: Props) {
             <span className="flex-1 h-px bg-[var(--color-border)]" aria-hidden />
           </div>
 
-          <div className="fade-up fade-up-delay-3 mt-6 mx-auto">
+          <div className="fade-up fade-up-delay-3 mt-5 max-w-2xl mx-auto">
             <Dropzone
               toolId={toolId}
               toolLabel={meta.label}
