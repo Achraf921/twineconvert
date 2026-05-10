@@ -280,7 +280,8 @@ export function makeTinyCsp(): string {
   return lines.join("\n") + "\n";
 }
 
-/** Minimal Apple Health export.zip with one record. */
+/** Minimal Apple Health export.zip with one of each record type our
+ *  per-metric converters filter by (steps / heart rate / sleep / workout). */
 export async function makeTinyAppleHealthZip(): Promise<Uint8Array> {
   const JSZip = (await import("jszip")).default;
   const zip = new JSZip();
@@ -289,6 +290,7 @@ export async function makeTinyAppleHealthZip(): Promise<Uint8Array> {
   <ExportDate value="2024-01-01 12:00:00 -0500"/>
   <Record type="HKQuantityTypeIdentifierStepCount" sourceName="iPhone" unit="count" startDate="2024-01-01 08:00:00 -0500" endDate="2024-01-01 09:00:00 -0500" value="1234"/>
   <Record type="HKQuantityTypeIdentifierHeartRate" sourceName="Apple Watch" unit="count/min" startDate="2024-01-01 08:30:00 -0500" endDate="2024-01-01 08:30:00 -0500" value="72"/>
+  <Record type="HKCategoryTypeIdentifierSleepAnalysis" sourceName="Apple Watch" startDate="2024-01-01 23:00:00 -0500" endDate="2024-01-02 07:00:00 -0500" value="HKCategoryValueSleepAnalysisAsleep"/>
   <Workout workoutActivityType="HKWorkoutActivityTypeRunning" duration="30" totalDistance="5" totalDistanceUnit="km" totalEnergyBurned="250" totalEnergyBurnedUnit="kcal" sourceName="Apple Watch" startDate="2024-01-01 07:00:00 -0500" endDate="2024-01-01 07:30:00 -0500"/>
 </HealthData>`);
   return zip.generateAsync({ type: "uint8array" });
