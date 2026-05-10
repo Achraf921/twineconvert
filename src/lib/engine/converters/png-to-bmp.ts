@@ -1,5 +1,6 @@
 import type { Converter } from "../types";
-import { canvasEncode, swapExtension } from "../util/canvas-encode";
+import { encodeBmpFromImage } from "../util/bmp-encode";
+import { swapExtension } from "../util/canvas-encode";
 
 const pngToBmp: Converter = {
   id: "png-to-bmp",
@@ -10,7 +11,7 @@ const pngToBmp: Converter = {
 
   async convert(input, opts) {
     opts?.onProgress?.(0.1);
-    const blob = await canvasEncode(input, { toMime: "image/bmp" });
+    const blob = await encodeBmpFromImage(input);
     opts?.onProgress?.(1);
     return { blob, filename: swapExtension(input.name, "bmp") };
   },
