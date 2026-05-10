@@ -318,6 +318,84 @@ export const registry: Record<string, ConverterLoader> = {
     import("./converters/instagram-data-to-html").then((m) => m.default),
   "facebook-archive-to-html": () =>
     import("./converters/facebook-archive-to-html").then((m) => m.default),
+
+  // LUT (color grading) — pure text formats, all cross-pairs
+  "cube-to-3dl": () =>
+    import("./converters/cube-to-3dl").then((m) => m.default),
+  "3dl-to-cube": () =>
+    import("./converters/3dl-to-cube").then((m) => m.default),
+  "cube-to-csp": () =>
+    import("./converters/cube-to-csp").then((m) => m.default),
+  "csp-to-cube": () =>
+    import("./converters/csp-to-cube").then((m) => m.default),
+  "3dl-to-csp": () =>
+    import("./converters/3dl-to-csp").then((m) => m.default),
+  "csp-to-3dl": () =>
+    import("./converters/csp-to-3dl").then((m) => m.default),
+
+  // Color palette — Adobe ASE, Photoshop ACO, GIMP GPL, JSON, CSS, hex list
+  "ase-to-gpl": () =>
+    import("./converters/ase-to-gpl").then((m) => m.default),
+  "gpl-to-ase": () =>
+    import("./converters/gpl-to-ase").then((m) => m.default),
+  "ase-to-aco": () =>
+    import("./converters/ase-to-aco").then((m) => m.default),
+  "aco-to-ase": () =>
+    import("./converters/aco-to-ase").then((m) => m.default),
+  "aco-to-gpl": () =>
+    import("./converters/aco-to-gpl").then((m) => m.default),
+  "gpl-to-aco": () =>
+    import("./converters/gpl-to-aco").then((m) => m.default),
+  "ase-to-css": () =>
+    import("./converters/ase-to-css").then((m) => m.default),
+  "ase-to-json": () =>
+    import("./converters/ase-to-json").then((m) => m.default),
+  "hex-to-ase": () =>
+    import("./converters/hex-to-ase").then((m) => m.default),
+  "hex-to-gpl": () =>
+    import("./converters/hex-to-gpl").then((m) => m.default),
+
+  // 3D printing — STL/OBJ ↔ 3MF (the modern Bambu/Prusa container)
+  "stl-to-3mf": () =>
+    import("./converters/stl-to-3mf").then((m) => m.default),
+  "3mf-to-stl": () =>
+    import("./converters/3mf-to-stl").then((m) => m.default),
+  "obj-to-3mf": () =>
+    import("./converters/obj-to-3mf").then((m) => m.default),
+
+  // Music notation — MIDI ↔ MusicXML and compressed MXL extraction
+  "midi-to-musicxml": () =>
+    import("./converters/midi-to-musicxml").then((m) => m.default),
+  "musicxml-to-midi": () =>
+    import("./converters/musicxml-to-midi").then((m) => m.default),
+  "mxl-to-musicxml": () =>
+    import("./converters/mxl-to-musicxml").then((m) => m.default),
+
+  // Embroidery — DST/PES/JEF/EXP cross-conversions
+  "dst-to-pes": () =>
+    import("./converters/dst-to-pes").then((m) => m.default),
+  "pes-to-dst": () =>
+    import("./converters/pes-to-dst").then((m) => m.default),
+  "dst-to-jef": () =>
+    import("./converters/dst-to-jef").then((m) => m.default),
+  "jef-to-dst": () =>
+    import("./converters/jef-to-dst").then((m) => m.default),
+  "pes-to-jef": () =>
+    import("./converters/pes-to-jef").then((m) => m.default),
+  "jef-to-pes": () =>
+    import("./converters/jef-to-pes").then((m) => m.default),
+  "dst-to-exp": () =>
+    import("./converters/dst-to-exp").then((m) => m.default),
+  "exp-to-dst": () =>
+    import("./converters/exp-to-dst").then((m) => m.default),
+  "pes-to-exp": () =>
+    import("./converters/pes-to-exp").then((m) => m.default),
+  "exp-to-pes": () =>
+    import("./converters/exp-to-pes").then((m) => m.default),
+  "jef-to-exp": () =>
+    import("./converters/jef-to-exp").then((m) => m.default),
+  "exp-to-jef": () =>
+    import("./converters/exp-to-jef").then((m) => m.default),
 };
 
 /** All converter IDs — useful for sitemap generation later. */
