@@ -23,6 +23,9 @@ export default defineConfig({
   test: {
     environment: "happy-dom",
     include: ["tests/**/*.test.ts"],
+    // Browser-only tests run via vitest.browser.config.ts; exclude them
+    // here so they don't fail when picked up by the Node config.
+    exclude: ["tests/browser/**", "node_modules/**"],
     globals: true,
     testTimeout: 30000, // some converters (FFmpeg, OCR) can be slow in browser; 30s ceiling
     pool: "forks", // workers cause heap issues with large WASM/PDF deps; forks isolate

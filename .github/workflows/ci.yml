@@ -52,6 +52,24 @@ jobs:
           path: coverage/
           retention-days: 14
 
+  # Browser-mode tests for the converters that need real Chromium
+  # (Canvas, FFmpeg.wasm Workers, libheif, web-ifc WASM, etc.).
+  # Runs Vitest browser mode via Playwright/Chromium headless.
+  test-browser:
+    name: Browser-mode tests (Chromium)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "npm"
+      - run: npm ci
+      - name: Install Playwright Chromium
+        run: npx playwright install chromium --with-deps
+      - run: npm run test:browser
+
   # Production build verification. We use webpack (not Turbopack) because
   # Turbopack OOMs on our 192-converter dynamic-import set; webpack chunks
   # them cleanly. NODE_OPTIONS bumps the heap to 8GB which Vercel's CI
