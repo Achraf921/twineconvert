@@ -178,9 +178,10 @@ function HeroSection() {
           </p>
         </div>
 
-        {/* Below: compact chip widget LEFT, big dropzone RIGHT, side by side from sm+ */}
-        <div className="fade-up fade-up-delay-2 mt-12 grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-8 sm:gap-10 lg:gap-14 items-center">
-          <div className="flex items-center justify-center sm:justify-start">
+        {/* Below: compact chip widget LEFT, horizontal dropzone RIGHT, side
+         *  by side from lg+ where there's enough room for the row layout. */}
+        <div className="fade-up fade-up-delay-2 mt-12 grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-8 lg:gap-12 items-center">
+          <div className="flex items-center justify-center lg:justify-start">
             <HeroFlow graph={FORMAT_GRAPH} initialInput="HEIC" initialOutput="JPG" />
           </div>
           <div className="w-full">

@@ -75,7 +75,7 @@ export function HomeDropzone({ routes, acceptAll }: Props) {
       />
 
       <div
-        className={`relative w-full rounded-2xl border-2 border-dashed transition-all duration-200 flex items-center ${
+        className={`relative w-full rounded-2xl border-2 border-dashed transition-all duration-200 ${
           isDragging
             ? "dropzone-active"
             : "border-[var(--color-border-2)] bg-white hover:border-[var(--color-pink-400)] hover:bg-[var(--color-pink-50)]/30 shadow-[var(--shadow-md)]"
@@ -87,17 +87,22 @@ export function HomeDropzone({ routes, acceptAll }: Props) {
         onDragLeave={() => setIsDragging(false)}
         onDrop={onDrop}
       >
-        <div className="w-full px-6 py-10 sm:py-12 text-center">
+        {/* Horizontal layout: icon left, copy middle, CTA right. This keeps
+         *  the visible mass of the dropzone adjacent to the chip widget
+         *  rather than centered inside a large empty box. */}
+        <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 px-5 sm:px-6 py-7 sm:py-8 text-center sm:text-left">
           <CloudArrowUp />
-          <h2 className="mt-6 text-2xl sm:text-3xl font-bold tracking-tight text-[var(--color-ink)]">
-            Select your file here to get started
-          </h2>
-          <p className="mt-2 text-[var(--color-ink-3)] text-base">
-            or drop your file here.
-          </p>
+          <div className="flex-1 min-w-0">
+            <h2 className="text-lg sm:text-xl font-bold tracking-tight text-[var(--color-ink)] leading-snug">
+              Select your file here to get started
+            </h2>
+            <p className="mt-1 text-sm text-[var(--color-ink-3)]">
+              or drop your file here.
+            </p>
+          </div>
           <button
             onClick={onPick}
-            className="mt-8 inline-flex items-center gap-3 bg-[var(--color-pink-600)] hover:bg-[var(--color-pink-700)] text-white font-semibold pl-5 pr-2 py-3 rounded-xl shadow-[var(--shadow-pink)] transition-colors"
+            className="shrink-0 inline-flex items-center gap-3 bg-[var(--color-pink-600)] hover:bg-[var(--color-pink-700)] text-white font-semibold pl-5 pr-2 py-3 rounded-xl shadow-[var(--shadow-pink)] transition-colors"
           >
             <span className="inline-flex items-center gap-2">
               <FileWithPlus />
