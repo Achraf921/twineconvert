@@ -22,8 +22,11 @@ export default async function Image({ params }: { params: Promise<{ tool: string
   const { tool } = await params;
   const meta = getMeta(tool);
   const profiles = getProfilesForToolId(tool);
-  const inputName = profiles?.input.name ?? "FILE";
-  const outputName = profiles?.output.name ?? "FILE";
+  const isBidir = tool.includes("-to-");
+  const inputName =
+    profiles?.input.name ?? (isBidir ? tool.split("-to-")[0].toUpperCase() : "");
+  const outputName =
+    profiles?.output.name ?? (isBidir ? tool.split("-to-")[1].toUpperCase() : "");
 
   return new ImageResponse(
     (
@@ -54,12 +57,34 @@ export default async function Image({ params }: { params: Promise<{ tool: string
           </span>
         </div>
 
-        {/* Center — the conversion pair */}
-        <div style={{ display: "flex", alignItems: "center", gap: 32, marginTop: 40 }}>
-          <FormatChip name={inputName} />
-          <ArrowIcon />
-          <FormatChip name={outputName} accent />
-        </div>
+        {/* Center — the conversion pair (or just the label, for single-action tools) */}
+        {isBidir ? (
+          <div style={{ display: "flex", alignItems: "center", gap: 32, marginTop: 40 }}>
+            <FormatChip name={inputName} />
+            <ArrowIcon />
+            <FormatChip name={outputName} accent />
+          </div>
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "40px 56px",
+              borderRadius: 28,
+              background: "#E0297B",
+              color: "#ffffff",
+              fontSize: 60,
+              fontWeight: 800,
+              letterSpacing: "-0.02em",
+              boxShadow: "0 16px 32px -8px rgba(224, 41, 123, 0.35)",
+              alignSelf: "flex-start",
+              marginTop: 40,
+            }}
+          >
+            {meta?.label ?? "Convert files"}
+          </div>
+        )}
 
         {/* Bottom — value prop */}
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
@@ -72,10 +97,10 @@ export default async function Image({ params }: { params: Promise<{ tool: string
               lineHeight: 1.05,
             }}
           >
-            Convert {inputName} to {outputName}
+            {isBidir ? `Convert ${inputName} to ${outputName}` : meta?.label ?? "Convert files"}
           </div>
           <div style={{ fontSize: 28, color: "#525252", fontWeight: 400 }}>
-            In your browser. Nothing uploaded. {meta?.label ?? "Free, no signup."}
+            In your browser. Nothing uploaded. Free, no signup.
           </div>
         </div>
       </div>
