@@ -32,11 +32,44 @@ Vitest browser mode + Playwright + headless Chromium. Run with `npm run test:bro
 - Email/text-input PDF generation: EML, MBOX, GEDCOM, WhatsApp, Discord (5)
 - OCR via Tesseract.js: png-to-text, jpg-to-text, image-to-text (3)
 
-Documented gaps (TODO):
-- HEIC: 700KB sample is too big to inline; needs a Vite-asset loading pattern
-- Audio (mp3/wav/m4a/ogg/flac inter-conversions): FFmpeg.wasm core fetch from unpkg fails in headless Chromium for reasons that need investigation; unblocks 8 tests
-- Video (mp4/mov/avi/mkv/webm/gif): same FFmpeg.wasm dependency
-- IFC: needs a small BIM model fixture
+Untested gap (28 of 192 converters), as of 2026-05-10:
+
+  HEIC (4):  heic-to-jpg, heic-to-png, heic-to-webp, heic-to-pdf
+             Blocker: 700KB libheif sample too big to inline. Needs a
+             Vite asset loading pattern that survives the dev-server
+             config.
+
+  Audio (8): mp3-to-wav, wav-to-mp3, mp3-to-flac, mp3-to-m4a,
+             mp3-to-ogg, m4a-to-mp3, ogg-to-mp3, flac-to-mp3
+             Blocker: FFmpeg.wasm core (~30MB) is fetched from unpkg
+             at runtime; the headless Chromium GHA runner fails the
+             cross-origin core load. Fix candidates: (a) install
+             @ffmpeg/core locally and serve via Vite (b) host the
+             core under /public on Vercel and load via same-origin
+             URL.
+
+  Video (8): avi-to-mp4, mkv-to-mp4, mov-to-mp4, mp4-to-avi,
+             mp4-to-mkv, mp4-to-mov, webm-to-mp4, gif-to-mp4
+             Same FFmpeg blocker as audio.
+
+  Video/audio extraction (2):  mp4-to-mp3, mp4-to-gif
+             Same FFmpeg blocker.
+
+  GIF encode (2):  jpg-to-gif, png-to-gif
+             Suspected bug: same silent Canvas.toBlob fallback as
+             BMP. Canvas does not encode image/gif; converters
+             likely return a PNG with .gif filename. Needs a real
+             JS GIF encoder (gifenc / omggif).
+
+  IFC (2):   ifc-to-csv, ifc-to-gltf
+             Needs a small BIM model fixture.
+
+  EPUB (1):  epub-to-pdf
+             Easy to close: generate EPUB via JSZip at test time.
+
+  Misc (1):  remove-background
+             Needs an image with a clear subject + ONNX model
+             pre-cached.
 
 ### 3. Round-trip equivalence (`tests/round-trip.test.ts`)
 

@@ -45,6 +45,7 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@ffmpeg/core": "^0.12.10",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/papaparse": "^5.5.2",
