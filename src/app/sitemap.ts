@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { listToolIds } from "@/lib/engine/registry-meta";
+import { listFormatKeys } from "@/lib/formats";
 
 /**
  * Programmatic sitemap. One entry per converter route plus the homepage.
@@ -34,5 +35,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  return [homepage, ...staticPages, ...tools];
+  const formats = listFormatKeys().map((key) => ({
+    url: `${baseUrl}/formats/${key}`,
+    lastModified,
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+  }));
+
+  return [homepage, ...staticPages, ...tools, ...formats];
 }

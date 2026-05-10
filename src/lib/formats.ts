@@ -906,6 +906,12 @@ export function getFormat(key: string): FormatProfile | undefined {
   return PROFILES[k];
 }
 
+/** All format keys with a real profile. Used by /formats/[format] route
+ *  to pre-render dedicated format-info pages. */
+export function listFormatKeys(): string[] {
+  return Object.keys(PROFILES);
+}
+
 /**
  * Best-effort: extract input + output format keys from a converter id like
  * "heic-to-jpg" → ["heic", "jpg"]. Returns a fallback profile (just the
