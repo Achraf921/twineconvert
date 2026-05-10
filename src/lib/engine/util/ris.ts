@@ -80,6 +80,40 @@ export function parseRis(text: string): Citation[] {
   const citations: Citation[] = [];
   let current: Partial<Citation> & { _authors?: string[]; _keywords?: string[] } | null = null;
 
+  /**
+   * Materialize the in-progress record into a Citation and push it. Called
+   * on `ER` tag (standard RIS terminator) AND at end-of-file in case the
+   * source omits ER — PubMed NBIB exports often separate records by blank
+   * lines without an explicit terminator.
+   */
+  const flushCurrent = () => {
+    if (!current) return;
+    const authors = current._authors;
+    const keywords = current._keywords;
+    delete current._authors;
+    delete current._keywords;
+    citations.push({
+      id: current.id ?? generateCitationKey({ ...current, authors }),
+      type: current.type ?? "misc",
+      title: current.title,
+      authors: authors && authors.length ? authors : undefined,
+      year: current.year,
+      journal: current.journal,
+      publisher: current.publisher,
+      address: current.address,
+      volume: current.volume,
+      issue: current.issue,
+      pages: current.pages,
+      doi: current.doi,
+      url: current.url,
+      isbn: current.isbn,
+      issn: current.issn,
+      abstract: current.abstract,
+      keywords: keywords && keywords.length ? keywords : undefined,
+    });
+    current = null;
+  };
+
   for (const rawLine of text.split(/\r?\n/)) {
     // Lines look like "TY  - JOUR" — at least one space then "- " then value.
     const m = rawLine.match(/^([A-Z][A-Z0-9]{1,3})\s*-\s?(.*)$/);
@@ -96,33 +130,7 @@ export function parseRis(text: string): Citation[] {
       continue;
     }
     if (tag === "ER") {
-      if (current) {
-        const authors = current._authors;
-        const keywords = current._keywords;
-        delete current._authors;
-        delete current._keywords;
-        const finalCitation: Citation = {
-          id: current.id ?? generateCitationKey({ ...current, authors }),
-          type: current.type ?? "misc",
-          title: current.title,
-          authors: authors && authors.length ? authors : undefined,
-          year: current.year,
-          journal: current.journal,
-          publisher: current.publisher,
-          address: current.address,
-          volume: current.volume,
-          issue: current.issue,
-          pages: current.pages,
-          doi: current.doi,
-          url: current.url,
-          isbn: current.isbn,
-          issn: current.issn,
-          abstract: current.abstract,
-          keywords: keywords && keywords.length ? keywords : undefined,
-        };
-        citations.push(finalCitation);
-      }
-      current = null;
+      flushCurrent();
       continue;
     }
     if (!current) continue;
@@ -192,6 +200,10 @@ export function parseRis(text: string): Citation[] {
         break;
     }
   }
+  // PubMed NBIB exports often omit the trailing ER tag and rely on
+  // blank-line separation between records. Flush any in-progress record
+  // at end of input so we don't silently lose the last citation.
+  flushCurrent();
   return citations;
 }
 
