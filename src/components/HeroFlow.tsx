@@ -13,6 +13,7 @@
  */
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import type { FormatGraph } from "@/lib/dropzone-routes";
 import { groupByCategory, type FormatCategory } from "@/lib/format-categories";
@@ -196,16 +197,13 @@ function FormatChip({
   useEffect(() => {
     if (!open) return;
     searchRef.current?.focus();
-    const handler = (e: MouseEvent) => {
-      if (!wrapperRef.current?.contains(e.target as Node)) close();
-    };
+    // Outside-click is handled by the portal backdrop's onClick; here we
+    // only need Escape support.
     const escHandler = (e: KeyboardEvent) => {
       if (e.key === "Escape") close();
     };
-    document.addEventListener("mousedown", handler);
     document.addEventListener("keydown", escHandler);
     return () => {
-      document.removeEventListener("mousedown", handler);
       document.removeEventListener("keydown", escHandler);
     };
   }, [open]);
@@ -238,16 +236,22 @@ function FormatChip({
         </span>
       </button>
 
-      {open && (
+      {open && typeof document !== "undefined" && createPortal(
         <div
-          role="dialog"
-          aria-label={`Pick ${accented ? "output" : "input"} format`}
-          /* Opens below the chip but kept compact (max ~14rem body) so it
-           *  doesn't bleed into the centered dropzone below the hero row. */
-          className={`absolute z-30 mt-2 w-[min(calc(100vw-2rem),26rem)] bg-white border border-[var(--color-border)] rounded-xl shadow-[var(--shadow-lg)] overflow-hidden ${
-            accented ? "right-0" : "left-0"
-          }`}
+          /* Portal-rendered into document.body so the fixed positioning
+           *  isn't constrained by the fade-up animation's containing
+           *  block on the chip widget's parent. Centers the dropdown on
+           *  the viewport, not anchored to the chip. */
+          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-[2px] flex items-center justify-center p-4"
+          onClick={close}
+          role="presentation"
         >
+          <div
+            role="dialog"
+            aria-label={`Pick ${accented ? "output" : "input"} format`}
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-md bg-white border border-[var(--color-border)] rounded-xl shadow-[var(--shadow-lg)] overflow-hidden"
+          >
           {/* Search bar */}
           <div className="flex items-center gap-2 px-3 py-2.5 border-b border-[var(--color-border)]">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden className="text-[var(--color-ink-3)] shrink-0">
@@ -265,9 +269,8 @@ function FormatChip({
             />
           </div>
 
-          {/* Two-pane body, capped so the dropdown doesn't overlap the
-           *  dropzone that sits below the hero row. */}
-          <div className="flex h-44">
+          {/* Two-pane body. Centered modal has plenty of vertical room. */}
+          <div className="flex h-72">
             {/* Left: categories */}
             <div className="w-32 border-r border-[var(--color-border)] overflow-y-auto py-1 bg-[var(--color-paper)]/50">
               {searchResults !== null ? (
@@ -330,7 +333,9 @@ function FormatChip({
               )}
             </div>
           </div>
-        </div>
+          </div>
+        </div>,
+        document.body,
       )}
     </div>
   );
