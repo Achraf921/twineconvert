@@ -20,6 +20,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 1,
   };
 
+  const staticPages = ["about", "privacy", "terms"].map((slug) => ({
+    url: `${baseUrl}/${slug}`,
+    lastModified,
+    changeFrequency: "yearly" as const,
+    priority: 0.3,
+  }));
+
   const tools = listToolIds().map((id) => ({
     url: `${baseUrl}/${id}`,
     lastModified,
@@ -27,5 +34,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  return [homepage, ...tools];
+  return [homepage, ...staticPages, ...tools];
 }

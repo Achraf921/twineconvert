@@ -15,7 +15,7 @@ export default function NotFound() {
       <p className="text-[var(--color-pink-600)] font-semibold text-sm tracking-wider uppercase">404</p>
       <h1 className="text-4xl font-extrabold mt-3">Couldn&apos;t find that converter</h1>
       <p className="mt-4 text-[var(--color-text-2)]">
-        The URL you tried doesn&apos;t match any of our 193 converter routes.
+        The URL you tried doesn&apos;t match any of our 192 converter routes.
         Maybe one of these is what you were looking for?
       </p>
       <ul className="mt-10 grid grid-cols-2 sm:grid-cols-3 gap-2 max-w-md mx-auto">
