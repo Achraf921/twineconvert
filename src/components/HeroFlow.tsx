@@ -242,7 +242,9 @@ function FormatChip({
         <div
           role="dialog"
           aria-label={`Pick ${accented ? "output" : "input"} format`}
-          className={`absolute z-30 mt-2 w-[min(calc(100vw-2rem),28rem)] bg-white border border-[var(--color-border)] rounded-xl shadow-[var(--shadow-lg)] overflow-hidden ${
+          /* Opens below the chip but kept compact (max ~14rem body) so it
+           *  doesn't bleed into the centered dropzone below the hero row. */
+          className={`absolute z-30 mt-2 w-[min(calc(100vw-2rem),26rem)] bg-white border border-[var(--color-border)] rounded-xl shadow-[var(--shadow-lg)] overflow-hidden ${
             accented ? "right-0" : "left-0"
           }`}
         >
@@ -263,8 +265,9 @@ function FormatChip({
             />
           </div>
 
-          {/* Two-pane body */}
-          <div className="flex h-64">
+          {/* Two-pane body, capped so the dropdown doesn't overlap the
+           *  dropzone that sits below the hero row. */}
+          <div className="flex h-44">
             {/* Left: categories */}
             <div className="w-32 border-r border-[var(--color-border)] overflow-y-auto py-1 bg-[var(--color-paper)]/50">
               {searchResults !== null ? (
