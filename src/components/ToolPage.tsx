@@ -14,9 +14,16 @@
 import Link from "next/link";
 import { Dropzone } from "./Dropzone";
 import { CompetitorComparison } from "./CompetitorComparison";
+import { HeroFlow } from "./HeroFlow";
 import type { ConverterMeta } from "@/lib/engine/registry-meta";
+import { listToolIds } from "@/lib/engine/registry-meta";
 import { getProfilesForToolId, type FormatProfile } from "@/lib/formats";
 import { getOtherInputsForOutput, getOtherOutputsForInput } from "@/lib/related-tools";
+import { buildFormatGraph } from "@/lib/dropzone-routes";
+
+// Build the format graph once at module load; it's pure-data so safe to
+// memoize at the file level.
+const FORMAT_GRAPH = buildFormatGraph(listToolIds());
 
 interface Props {
   toolId: string;
@@ -36,33 +43,45 @@ export function ToolPage({ toolId, meta }: Props) {
 
       <section className="relative hero-wash overflow-hidden">
         <div className="subtle-grid absolute inset-0 opacity-60 pointer-events-none" aria-hidden />
-        <div className="relative mx-auto max-w-7xl px-6 pt-10 pb-12 sm:pt-14 sm:pb-16">
+        <div className="relative mx-auto max-w-3xl px-6 pt-10 pb-14 sm:pt-14 sm:pb-20 text-center">
           <Breadcrumbs label={meta.label} />
 
-          {/* Top row: title+paragraph left, single chip-pair preview right */}
-          <div className="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
-            <div className="lg:col-span-7 fade-up">
-              <p className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-[var(--color-pink-200)] text-[var(--color-pink-700)] text-[11px] font-bold tracking-[0.18em] uppercase shadow-[var(--shadow-xs)]">
-                <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-pink-600)] pink-pulse" />
-                free &middot; in-browser &middot; no upload
-              </p>
-              <h1 className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.02] text-[var(--color-ink)]">
-                {meta.label.replace(/→/g, "to")}
-                <br />
-                <span className="text-[var(--color-pink-600)]">Converter</span>
-              </h1>
-              <p className="mt-6 text-lg sm:text-xl text-[var(--color-ink-2)] max-w-xl leading-relaxed">
-                {heroSubhead(meta.label, inputProfile, outputProfile)}
-              </p>
-            </div>
+          <p className="fade-up mt-5 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-[var(--color-pink-200)] text-[var(--color-pink-700)] text-[11px] font-bold tracking-[0.18em] uppercase shadow-[var(--shadow-xs)]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-pink-600)] pink-pulse" />
+            free &middot; in-browser &middot; no upload
+          </p>
 
-            <div className="lg:col-span-5 fade-up fade-up-delay-2 flex justify-center lg:justify-end">
-              <ToolPageChips label={meta.label} />
+          <h1 className="fade-up fade-up-delay-1 mt-6 text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.02] text-[var(--color-ink)]">
+            {meta.label.replace(/→/g, "to")}
+            <br />
+            <span className="text-[var(--color-pink-600)]">Converter</span>
+          </h1>
+          <p className="fade-up fade-up-delay-2 mt-6 text-lg sm:text-xl text-[var(--color-ink-2)] max-w-2xl mx-auto leading-relaxed">
+            {heroSubhead(meta.label, inputProfile, outputProfile)}
+          </p>
+
+          {/* Interactive chip-pair picker, defaulted to THIS tool's pair.
+              Lets the user pivot to a different input/output without
+              navigating back to the homepage. */}
+          {pairFromLabel(meta.label) && (
+            <div className="fade-up fade-up-delay-2 mt-14">
+              <HeroFlow
+                graph={FORMAT_GRAPH}
+                initialInput={pairFromLabel(meta.label)?.[0]}
+                initialOutput={pairFromLabel(meta.label)?.[1]}
+              />
             </div>
+          )}
+
+          <div className="fade-up fade-up-delay-3 mt-10 flex items-center gap-4 max-w-md mx-auto">
+            <span className="flex-1 h-px bg-[var(--color-border)]" aria-hidden />
+            <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[var(--color-ink-3)]">
+              or drop your file
+            </span>
+            <span className="flex-1 h-px bg-[var(--color-border)]" aria-hidden />
           </div>
 
-          {/* Big dropzone, centered below */}
-          <div className="mt-12 sm:mt-14 max-w-3xl mx-auto fade-up fade-up-delay-3">
+          <div className="fade-up fade-up-delay-3 mt-6 mx-auto">
             <Dropzone
               toolId={toolId}
               toolLabel={meta.label}
@@ -219,83 +238,14 @@ function faqItems(label: string, input?: FormatProfile, output?: FormatProfile) 
   return items;
 }
 
-/** Static format-chip pair shown on the per-tool hero (right column).
- *  Mirrors CloudConvert's "DOC → PDF" header preview: two square chips
- *  with the format name + dropdown chevron, connected by a "TO" sync
- *  button, surrounded by faint concentric pink rings. */
-function ToolPageChips({ label }: { label: string }) {
-  // For X → Y tools, split. For single-action tools (Compress PDF), show
-  // the same format on both sides as a stylised emblem.
-  let from = label;
-  let to = label;
-  if (label.includes("→")) {
-    [from, to] = label.split("→").map((s) => s.trim().toUpperCase());
-  } else {
-    from = label.toUpperCase();
-    to = label.toUpperCase();
-  }
-  return (
-    <div className="relative">
-      <div className="rings absolute -inset-32 pointer-events-none" aria-hidden />
-      <div className="relative flex items-center justify-center gap-3 sm:gap-4">
-        <ToolChip label={from} accented={false} />
-        <ToolToButton />
-        <ToolChip label={to} accented={true} />
-      </div>
-    </div>
-  );
-}
-
-function ToolChip({ label, accented }: { label: string; accented: boolean }) {
-  return (
-    <div
-      className={`relative flex flex-col items-center justify-center w-28 h-28 sm:w-32 sm:h-32 rounded-2xl border ${
-        accented
-          ? "bg-gradient-to-br from-[var(--color-pink-50)] to-white border-[var(--color-pink-300)] shadow-[var(--shadow-md)]"
-          : "bg-white border-[var(--color-border)] shadow-[var(--shadow-sm)]"
-      }`}
-    >
-      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden>
-        <path
-          d="M8 4 H 19 L 24 9 V 28 H 8 Z M 19 4 V 9 H 24"
-          stroke={accented ? "var(--color-pink-700)" : "var(--color-ink-2)"}
-          strokeWidth="1.5"
-          fill="none"
-          strokeLinejoin="round"
-        />
-      </svg>
-      <span className="mt-3 text-[15px] font-bold tracking-wide text-[var(--color-ink)] truncate max-w-[6.5rem] text-center">
-        {label}
-      </span>
-      <span className="absolute bottom-2 right-3 text-[var(--color-ink-3)]" aria-hidden>
-        <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
-          <path d="M3 5l3 3 3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </span>
-    </div>
-  );
-}
-
-function ToolToButton() {
-  return (
-    <div className="relative shrink-0">
-      <div className="absolute inset-0 rounded-full bg-[var(--color-pink-600)] opacity-25 blur-md" aria-hidden />
-      <div className="relative flex items-center justify-center w-12 h-12 rounded-full bg-[var(--color-pink-600)] text-white shadow-[var(--shadow-pink)]">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="slow-spin">
-          <path
-            d="M21 12a9 9 0 1 1-3-6.7M21 4v5h-5"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </div>
-      <div className="absolute -bottom-7 left-1/2 -translate-x-1/2 text-[10px] font-mono uppercase tracking-[0.2em] text-[var(--color-ink-3)]">
-        to
-      </div>
-    </div>
-  );
+/** Extract (input, output) from a tool label like "HEIC → JPG". Returns
+ *  null for single-action tools whose chip widget would be meaningless. */
+function pairFromLabel(label: string): [string, string] | null {
+  if (!label.includes("→")) return null;
+  const [from, to] = label.split("→").map((s) => s.trim().toUpperCase());
+  // Skip compound names that wouldn't fit the chip picker UI
+  if (from.includes(" ") || to.includes(" ") || from.includes("-") || to.includes("-")) return null;
+  return [from, to];
 }
 
 function Breadcrumbs({ label }: { label: string }) {

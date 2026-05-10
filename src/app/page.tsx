@@ -4,7 +4,7 @@ import { ToolSearch } from "@/components/ToolSearch";
 import { HeroFlow } from "@/components/HeroFlow";
 import { HomeFAQ } from "@/components/HomeFAQ";
 import { HomeDropzone } from "@/components/HomeDropzone";
-import { buildDropzoneRoutes } from "@/lib/dropzone-routes";
+import { buildDropzoneRoutes, buildFormatGraph } from "@/lib/dropzone-routes";
 
 const CATEGORIES: Array<{ label: string; description: string; ids: string[] }> = [
   {
@@ -131,6 +131,7 @@ const ALL_TOOLS_FOR_DROPZONE = listToolIds()
   .filter((t): t is { id: string; label: string; accept: string[] } => t !== null);
 
 const { routes: DROPZONE_ROUTES, acceptAll: DROPZONE_ACCEPT } = buildDropzoneRoutes(ALL_TOOLS_FOR_DROPZONE);
+const FORMAT_GRAPH = buildFormatGraph(listToolIds());
 
 const POPULAR = [
   { id: "heic-to-jpg", label: "HEIC → JPG" },
@@ -161,31 +162,37 @@ function HeroSection() {
     <section className="relative hero-wash overflow-hidden">
       <div className="subtle-grid absolute inset-0 opacity-60 pointer-events-none" aria-hidden />
 
-      <div className="relative mx-auto max-w-7xl px-6 pt-16 pb-12 sm:pt-20 sm:pb-16">
-        {/* Top row: copy left, format-chip widget right */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-          <div className="lg:col-span-7 fade-up">
-            <p className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-[var(--color-pink-200)] text-[var(--color-pink-700)] text-[11px] font-bold tracking-[0.18em] uppercase shadow-[var(--shadow-xs)]">
-              <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-pink-600)] pink-pulse" />
-              {TOTAL_TOOLS} converters &middot; in-browser &middot; private by design
-            </p>
-            <h1 className="mt-6 text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.02] text-[var(--color-ink)]">
-              Convert Any File.
-              <br />
-              <span className="text-[var(--color-pink-600)]">Privately.</span>
-            </h1>
-            <p className="mt-7 text-lg sm:text-xl text-[var(--color-ink-2)] max-w-xl leading-relaxed">
-              Drop a file and pick what to turn it into. twineconvert handles {TOTAL_TOOLS} conversions across documents, images, audio, video, archives and more, straight from your browser.
-            </p>
-          </div>
+      <div className="relative mx-auto max-w-3xl px-6 pt-14 pb-14 sm:pt-20 sm:pb-20 text-center">
+        <p className="fade-up inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-[var(--color-pink-200)] text-[var(--color-pink-700)] text-[11px] font-bold tracking-[0.18em] uppercase shadow-[var(--shadow-xs)]">
+          <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-pink-600)] pink-pulse" />
+          {TOTAL_TOOLS} converters &middot; in-browser &middot; private by design
+        </p>
 
-          <div className="lg:col-span-5 fade-up fade-up-delay-2 flex justify-center lg:justify-end">
-            <HeroFlow />
-          </div>
+        <h1 className="fade-up fade-up-delay-1 mt-6 text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.02] text-[var(--color-ink)]">
+          Convert Any File.
+          <br />
+          <span className="text-[var(--color-pink-600)]">Privately.</span>
+        </h1>
+
+        <p className="fade-up fade-up-delay-2 mt-7 text-lg sm:text-xl text-[var(--color-ink-2)] max-w-2xl mx-auto leading-relaxed">
+          Pick the conversion from the format chips, or drop a file and we&apos;ll route you to the right tool. {TOTAL_TOOLS} converters across {CATEGORIES.length} categories, straight from your browser.
+        </p>
+
+        {/* Format-pair picker (chips), centered directly above the dropzone */}
+        <div className="fade-up fade-up-delay-2 mt-14 sm:mt-16">
+          <HeroFlow graph={FORMAT_GRAPH} initialInput="HEIC" initialOutput="JPG" />
         </div>
 
-        {/* Big functional dropzone, centered, below the hero text */}
-        <div className="mt-12 sm:mt-16 max-w-3xl mx-auto fade-up fade-up-delay-3">
+        {/* OR separator, then the file dropzone (same width column as the chips) */}
+        <div className="fade-up fade-up-delay-3 mt-10 flex items-center gap-4 max-w-md mx-auto">
+          <span className="flex-1 h-px bg-[var(--color-border)]" aria-hidden />
+          <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[var(--color-ink-3)]">
+            or drop a file
+          </span>
+          <span className="flex-1 h-px bg-[var(--color-border)]" aria-hidden />
+        </div>
+
+        <div className="fade-up fade-up-delay-3 mt-6 mx-auto">
           <HomeDropzone routes={DROPZONE_ROUTES} acceptAll={DROPZONE_ACCEPT} />
           <div className="mt-6 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-sm">
             <span className="text-[var(--color-ink-3)] font-medium">Popular:</span>
@@ -199,7 +206,7 @@ function HeroSection() {
               </Link>
             ))}
           </div>
-          <div className="mt-4">
+          <div className="mt-5 text-left">
             <ToolSearch tools={ALL_TOOLS_FOR_SEARCH} />
           </div>
         </div>
