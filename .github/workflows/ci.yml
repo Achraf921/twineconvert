@@ -14,7 +14,7 @@ concurrency:
 jobs:
   # Lint + type check — fastest gate, fails first.
   lint:
-    name: Type check
+    name: Lint + type check
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -24,7 +24,10 @@ jobs:
           node-version: "24"
           cache: "npm"
       - run: npm ci
-      - run: npx tsc --noEmit
+      - name: ESLint
+        run: npm run lint
+      - name: TypeScript --noEmit
+        run: npx tsc --noEmit
 
   # Unit + round-trip + fuzz tests — covers ~190 converters across 4 layers
   # of validation (registry integrity, real-file conversion, structural
