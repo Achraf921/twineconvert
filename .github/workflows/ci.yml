@@ -12,31 +12,66 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
-    name: Build + test
+  # Lint + type check — fastest gate, fails first.
+  lint:
+    name: Type check
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: "24"
           cache: "npm"
+      - run: npm ci
+      - run: npx tsc --noEmit
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Type check + build
-        run: npm run build
-
-      - name: Run tests with coverage
-        run: npm run test:coverage
-
-      - name: Upload coverage report
+  # Unit + round-trip + fuzz tests — covers ~190 converters across 4 layers
+  # of validation (registry integrity, real-file conversion, structural
+  # output validation, round-trip equivalence, adversarial fuzz).
+  test:
+    name: Unit + round-trip + fuzz tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "npm"
+      - run: npm ci
+      - run: npm run test:coverage
+      - name: Upload coverage
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: coverage
           path: coverage/
           retention-days: 14
+
+  # Production build verification. We use webpack (not Turbopack) because
+  # Turbopack OOMs on our 192-converter dynamic-import set; webpack chunks
+  # them cleanly. NODE_OPTIONS bumps the heap to 8GB which Vercel's CI
+  # instances can spare.
+  build:
+    name: Production build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "npm"
+      - run: npm ci
+      - name: Regenerate registry meta
+        run: npx tsx scripts/generate-registry-meta.ts
+      - name: Build
+        run: NODE_OPTIONS="--max-old-space-size=8192" npx next build --webpack
+      - name: Upload build output
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: next-build
+          path: .next/
+          retention-days: 7
