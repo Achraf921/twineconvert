@@ -264,6 +264,60 @@ export const registry: Record<string, ConverterLoader> = {
     import("./converters/pgn-to-fen").then((m) => m.default),
   "pgn-to-json": () =>
     import("./converters/pgn-to-json").then((m) => m.default),
+
+  // WhatsApp chat exports — privacy is the SERP wedge here
+  "whatsapp-chat-to-csv": () =>
+    import("./converters/whatsapp-chat-to-csv").then((m) => m.default),
+  "whatsapp-chat-to-json": () =>
+    import("./converters/whatsapp-chat-to-json").then((m) => m.default),
+  "whatsapp-chat-to-html": () =>
+    import("./converters/whatsapp-chat-to-html").then((m) => m.default),
+  "whatsapp-chat-to-pdf": () =>
+    import("./converters/whatsapp-chat-to-pdf").then((m) => m.default),
+
+  // Email .eml/.mbox — postal-mime + jsPDF render
+  "eml-to-pdf": () =>
+    import("./converters/eml-to-pdf").then((m) => m.default),
+  "eml-to-html": () =>
+    import("./converters/eml-to-html").then((m) => m.default),
+  "eml-to-csv": () =>
+    import("./converters/eml-to-csv").then((m) => m.default),
+  "mbox-to-eml": () =>
+    import("./converters/mbox-to-eml").then((m) => m.default),
+  "mbox-to-pdf": () =>
+    import("./converters/mbox-to-pdf").then((m) => m.default),
+
+  // Apple iWork — extract embedded preview.pdf from the zip wrapper
+  "pages-to-pdf": () =>
+    import("./converters/pages-to-pdf").then((m) => m.default),
+  "numbers-to-pdf": () =>
+    import("./converters/numbers-to-pdf").then((m) => m.default),
+  "keynote-to-pdf": () =>
+    import("./converters/keynote-to-pdf").then((m) => m.default),
+
+  // Mainstream high-volume "let's see what ranks" plays
+  "pdf-to-docx": () =>
+    import("./converters/pdf-to-docx").then((m) => m.default),
+  "png-to-ico": () =>
+    import("./converters/png-to-ico").then((m) => m.default),
+  "jpg-to-ico": () =>
+    import("./converters/jpg-to-ico").then((m) => m.default),
+  "ico-to-png": () =>
+    import("./converters/ico-to-png").then((m) => m.default),
+  "remove-background": () =>
+    import("./converters/remove-background").then((m) => m.default),
+
+  // Social media archive viewers (post-platform-migration churn)
+  "twitter-archive-to-csv": () =>
+    import("./converters/twitter-archive-to-csv").then((m) => m.default),
+  "twitter-archive-to-html": () =>
+    import("./converters/twitter-archive-to-html").then((m) => m.default),
+  "instagram-data-to-csv": () =>
+    import("./converters/instagram-data-to-csv").then((m) => m.default),
+  "instagram-data-to-html": () =>
+    import("./converters/instagram-data-to-html").then((m) => m.default),
+  "facebook-archive-to-html": () =>
+    import("./converters/facebook-archive-to-html").then((m) => m.default),
 };
 
 /** All converter IDs — useful for sitemap generation later. */
