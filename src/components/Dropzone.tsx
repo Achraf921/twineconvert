@@ -115,31 +115,24 @@ export function Dropzone({ toolId, toolLabel, accept }: Props) {
         onChange={(e) => e.target.files && onFiles(e.target.files)}
       />
 
-      {/* Idle state uses the horizontal toolbar layout (icon | text | CTA)
-       *  to match HomeDropzone. The other phases use centered layouts
-       *  because they need a more prominent focal element (file preview,
-       *  spinner, success check). */}
-      {phase === "idle" ? (
-        <IdleState onPick={() => inputRef.current?.click()} accept={accept} />
-      ) : (
-        <div className="px-6 py-10 sm:py-12 text-center">
-          {phase === "ready" && file && (
-            <ReadyState file={file} toolLabel={toolLabel} onConvert={startConversion} onCancel={reset} />
-          )}
-          {phase === "running" && file && <RunningState progress={progress} file={file} />}
-          {phase === "done" && output && (
-            <DoneState
-              outputName={output.filename}
-              outputSize={output.blob.size}
-              onDownload={downloadOutput}
-              onReset={reset}
-            />
-          )}
-          {phase === "error" && (
-            <ErrorState message={error ?? "Conversion failed."} onReset={reset} />
-          )}
-        </div>
-      )}
+      <div className="px-6 py-12 sm:py-16 text-center">
+        {phase === "idle" && <IdleState onPick={() => inputRef.current?.click()} accept={accept} />}
+        {phase === "ready" && file && (
+          <ReadyState file={file} toolLabel={toolLabel} onConvert={startConversion} onCancel={reset} />
+        )}
+        {phase === "running" && file && <RunningState progress={progress} file={file} />}
+        {phase === "done" && output && (
+          <DoneState
+            outputName={output.filename}
+            outputSize={output.blob.size}
+            onDownload={downloadOutput}
+            onReset={reset}
+          />
+        )}
+        {phase === "error" && (
+          <ErrorState message={error ?? "Conversion failed."} onReset={reset} />
+        )}
+      </div>
       </div>
     </div>
   );
@@ -149,20 +142,19 @@ export function Dropzone({ toolId, toolLabel, accept }: Props) {
 
 function IdleState({ onPick, accept }: { onPick: () => void; accept: string[] }) {
   return (
-    <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 px-5 sm:px-6 py-7 sm:py-8 text-center sm:text-left">
+    <div className="flex flex-col items-center gap-5">
       <CloudIcon />
-      <div className="flex-1 min-w-0">
-        <p className="text-lg sm:text-xl font-bold tracking-tight text-[var(--color-ink)] leading-snug">
+      <div className="text-center">
+        <p className="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--color-ink)]">
           Select your file here to get started
         </p>
-        <p className="mt-1 text-sm text-[var(--color-ink-3)]">
-          or drop your file here. Accepts {accept.slice(0, 4).join(", ")}
-          {accept.length > 4 ? `, +${accept.length - 4} more` : ""}.
+        <p className="mt-2 text-sm text-[var(--color-ink-3)]">
+          or drop your file here.
         </p>
       </div>
       <button
         onClick={onPick}
-        className="shrink-0 inline-flex items-center gap-3 bg-[var(--color-pink-600)] hover:bg-[var(--color-pink-700)] text-white font-semibold pl-5 pr-2 py-3 rounded-xl shadow-[var(--shadow-pink)] transition-colors"
+        className="mt-2 inline-flex items-center gap-3 bg-[var(--color-pink-600)] hover:bg-[var(--color-pink-700)] text-white font-semibold pl-5 pr-2 py-3 rounded-xl shadow-[var(--shadow-pink)] transition-colors"
       >
         <span className="inline-flex items-center gap-2">
           <FileIcon />
@@ -174,6 +166,10 @@ function IdleState({ onPick, accept }: { onPick: () => void; accept: string[] })
           </svg>
         </span>
       </button>
+      <p className="text-xs text-[var(--color-ink-3)]">
+        Accepts {accept.slice(0, 4).join(", ")}
+        {accept.length > 4 ? `, +${accept.length - 4} more` : ""}
+      </p>
     </div>
   );
 }
