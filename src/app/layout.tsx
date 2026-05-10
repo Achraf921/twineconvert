@@ -5,11 +5,6 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import "./globals.css";
 
-/**
- * Root metadata. Per-tool pages override title/description with their
- * own `generateMetadata`. This is the fallback for any page that
- * doesn't set its own (homepage, 404).
- */
 export const metadata: Metadata = {
   metadataBase: new URL("https://twineconvert.com"),
   title: {
@@ -62,12 +57,45 @@ export const metadata: Metadata = {
   },
 };
 
+const ORGANIZATION_JSONLD = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "twineconvert",
+  url: "https://twineconvert.com",
+  logo: "https://twineconvert.com/favicon.ico",
+  sameAs: ["https://github.com/Achraf921/conversionEngine"],
+};
+
+const WEBSITE_JSONLD = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "twineconvert",
+  url: "https://twineconvert.com",
+  description: "Free in-browser file converter — 192 tools, no upload, no signup.",
+  potentialAction: {
+    "@type": "SearchAction",
+    target: {
+      "@type": "EntryPoint",
+      urlTemplate: "https://twineconvert.com/?q={search_term_string}",
+    },
+    "query-input": "required name=search_term_string",
+  },
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
       <body className="min-h-screen flex flex-col">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(ORGANIZATION_JSONLD) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBSITE_JSONLD) }}
+        />
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />

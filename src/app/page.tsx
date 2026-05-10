@@ -2,6 +2,7 @@ import Link from "next/link";
 import { listToolIds, getMeta } from "@/lib/engine/registry-meta";
 import { ToolSearch } from "@/components/ToolSearch";
 import { HeroFlow } from "@/components/HeroFlow";
+import { HomeFAQ } from "@/components/HomeFAQ";
 
 /**
  * Homepage. Hero + the full directory of tools, grouped by category.
@@ -19,7 +20,7 @@ const CATEGORIES: Array<{ label: string; description: string; ids: string[] }> =
     ids: [
       "heic-to-jpg", "heic-to-png", "heic-to-webp",
       "jpg-to-png", "png-to-jpg", "jpg-to-webp", "png-to-webp", "webp-to-jpg", "webp-to-png",
-      "avif-to-jpg", "avif-to-png", "jpg-to-avif", "png-to-avif", "webp-to-avif",
+      "avif-to-jpg", "avif-to-png", "avif-to-webp", "jpg-to-avif", "png-to-avif", "webp-to-avif",
       "bmp-to-jpg", "bmp-to-png", "jpg-to-bmp", "png-to-bmp",
       "gif-to-jpg", "gif-to-png", "jpg-to-gif", "png-to-gif",
       "svg-to-png", "svg-to-jpg",
@@ -197,6 +198,8 @@ export default function HomePage() {
           {CATEGORIES.map((cat) => <Category key={cat.label} category={cat} />)}
         </div>
       </section>
+
+      <HomeFAQ />
 
       <section id="why" className="bg-[var(--color-surface)] border-t border-[var(--color-border)]">
         <div className="mx-auto max-w-3xl px-6 py-20">
