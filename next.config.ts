@@ -7,6 +7,14 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: resolve(__dirname),
   },
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [{ key: "X-Frame-Options", value: "DENY" }],
+      },
+    ];
+  },
 };
 
 export default nextConfig;
