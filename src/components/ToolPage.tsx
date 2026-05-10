@@ -93,8 +93,12 @@ export function ToolPage({ toolId, meta }: Props) {
               : `About ${inputProfile?.name ?? outputProfile?.name}`}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {inputProfile && <FormatCard profile={inputProfile} />}
-            {outputProfile && <FormatCard profile={outputProfile} />}
+            {inputProfile && (
+              <FormatCard profile={inputProfile} slug={toolId.split("-to-")[0]} />
+            )}
+            {outputProfile && (
+              <FormatCard profile={outputProfile} slug={toolId.split("-to-")[1]} />
+            )}
           </div>
         </section>
       )}
@@ -231,7 +235,7 @@ function TrustItem({ title, body }: { title: string; body: string }) {
   );
 }
 
-function FormatCard({ profile }: { profile: FormatProfile }) {
+function FormatCard({ profile, slug }: { profile: FormatProfile; slug: string }) {
   return (
     <article className="bg-[var(--color-surface)] rounded-xl border border-[var(--color-border)] p-6">
       <div className="flex items-baseline gap-3">
@@ -242,6 +246,14 @@ function FormatCard({ profile }: { profile: FormatProfile }) {
       <div className="mt-4 pt-4 border-t border-[var(--color-border)]">
         <p className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-3)] mb-2">How to open</p>
         <p className="text-sm text-[var(--color-text-2)] leading-relaxed">{profile.howToOpen}</p>
+      </div>
+      <div className="mt-5 pt-4 border-t border-[var(--color-border)]">
+        <Link
+          href={`/formats/${slug}`}
+          className="text-sm font-medium text-[var(--color-pink-600)] hover:text-[var(--color-pink-700)] inline-flex items-center gap-1"
+        >
+          Full {profile.name} format guide →
+        </Link>
       </div>
     </article>
   );
