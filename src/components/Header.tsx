@@ -1,9 +1,10 @@
 import Link from "next/link";
+import { MobileMenu } from "./MobileMenu";
 
 /**
- * Site header. Server component — no interactivity yet (the search
- * autocomplete + tools menu come in a follow-up). Sticky on scroll
- * with a soft border so it floats above content without being heavy.
+ * Site header. Sticky on scroll with a soft border so it floats above
+ * content without being heavy. Desktop nav inline; mobile gets a
+ * hamburger via MobileMenu (client island).
  */
 export function Header() {
   return (
@@ -20,6 +21,7 @@ export function Header() {
           <Link href="/#tools" className="hover:text-[var(--color-text)] transition-colors">All tools</Link>
           <Link href="/#privacy" className="hover:text-[var(--color-text)] transition-colors">Privacy</Link>
           <Link href="/#why" className="hover:text-[var(--color-text)] transition-colors">Why in-browser</Link>
+          <Link href="/#faq" className="hover:text-[var(--color-text)] transition-colors">FAQ</Link>
           <a
             href="https://github.com/Achraf921/conversionEngine"
             target="_blank"
@@ -29,6 +31,8 @@ export function Header() {
             Source
           </a>
         </nav>
+
+        <MobileMenu />
       </div>
     </header>
   );
