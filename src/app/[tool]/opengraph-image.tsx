@@ -18,9 +18,10 @@ export const contentType = "image/png";
 export const size = { width: 1200, height: 630 };
 export const alt = "twineconvert — convert files in your browser";
 
-export default async function Image({ params }: { params: { tool: string } }) {
-  const meta = getMeta(params.tool);
-  const profiles = getProfilesForToolId(params.tool);
+export default async function Image({ params }: { params: Promise<{ tool: string }> }) {
+  const { tool } = await params;
+  const meta = getMeta(tool);
+  const profiles = getProfilesForToolId(tool);
   const inputName = profiles?.input.name ?? "FILE";
   const outputName = profiles?.output.name ?? "FILE";
 
