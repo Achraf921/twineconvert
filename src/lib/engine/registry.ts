@@ -371,6 +371,37 @@ export const registry: Record<string, ConverterLoader> = {
   "mxl-to-musicxml": () =>
     import("./converters/mxl-to-musicxml").then((m) => m.default),
 
+  // ============== PROFESSIONAL / B2B beachheads ==============
+  // SARIF (DevSecOps reports) — pure JSON, high CPM
+  "sarif-to-csv": () =>
+    import("./converters/sarif-to-csv").then((m) => m.default),
+  "sarif-to-html": () =>
+    import("./converters/sarif-to-html").then((m) => m.default),
+
+  // EDI (B2B logistics) — text grammar
+  "edi-to-csv": () =>
+    import("./converters/edi-to-csv").then((m) => m.default),
+  "edifact-to-csv": () =>
+    import("./converters/edifact-to-csv").then((m) => m.default),
+
+  // PACER (legal) — public records, empty SERP
+  "pacer-docket-to-csv": () =>
+    import("./converters/pacer-docket-to-csv").then((m) => m.default),
+
+  // IFC (BIM/AEC) — uses web-ifc WASM, highest CPM lane
+  "ifc-to-csv": () =>
+    import("./converters/ifc-to-csv").then((m) => m.default),
+  "ifc-to-gltf": () =>
+    import("./converters/ifc-to-gltf").then((m) => m.default),
+
+  // Discord chat exports — OSINT / moderation / archival
+  "discord-chat-to-md": () =>
+    import("./converters/discord-chat-to-md").then((m) => m.default),
+  "discord-chat-to-pdf": () =>
+    import("./converters/discord-chat-to-pdf").then((m) => m.default),
+  "discord-chat-summary-csv": () =>
+    import("./converters/discord-chat-summary-csv").then((m) => m.default),
+
   // Embroidery — DST/PES/JEF/EXP cross-conversions
   "dst-to-pes": () =>
     import("./converters/dst-to-pes").then((m) => m.default),
