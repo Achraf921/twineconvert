@@ -14,10 +14,9 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { loadConverter } from "../src/lib/engine/registry";
 import { run } from "../src/lib/engine/runner";
 import { FIXTURES, fileFromText } from "./fixtures/text-fixtures";
-import { fileFromBytes, makeTinyAse, makeTinyAco, makeTinyZip, makeTinyDst, makeTinyPes, makeTinyJef, makeTinyExp, makeTinyStl } from "./fixtures/binary-fixtures";
+import { fileFromBytes, makeTinyAse, makeTinyAco, makeTinyZip, makeTinyDst, makeTinyPes, makeTinyJef, makeTinyStl } from "./fixtures/binary-fixtures";
 
 /** Read a Blob's bytes once and assert the first N bytes match. */
 async function expectMagicBytes(blob: Blob, magic: number[]) {

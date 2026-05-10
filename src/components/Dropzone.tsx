@@ -26,11 +26,9 @@ interface Props {
   toolLabel: string;
   /** File extensions to accept on the file picker, e.g. [".heic", ".heif"]. */
   accept: string[];
-  /** Output format extension (no dot), e.g. "jpg". */
-  outputExt: string;
 }
 
-export function Dropzone({ toolId, toolLabel, accept, outputExt }: Props) {
+export function Dropzone({ toolId, toolLabel, accept }: Props) {
   const [phase, setPhase] = useState<Phase>("idle");
   const [file, setFile] = useState<File | null>(null);
   const [progress, setProgress] = useState(0);

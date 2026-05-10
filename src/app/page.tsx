@@ -207,7 +207,7 @@ export default function HomePage() {
           <h2 className="text-3xl font-extrabold mt-2">The case for not uploading your files.</h2>
           <div className="mt-6 space-y-5 text-[var(--color-text-2)] leading-relaxed">
             <p>
-              Most online file converters work the same way: you upload your file to their server, their server converts it, you download the result. The tradeoff most users don't think about: <strong className="text-[var(--color-text)]">your file lives on their server, even if briefly.</strong>
+              Most online file converters work the same way: you upload your file to their server, their server converts it, you download the result. The tradeoff most users don&apos;t think about: <strong className="text-[var(--color-text)]">your file lives on their server, even if briefly.</strong>
             </p>
             <p>
               That matters more for some files than others. A photo of your dog is one thing. A bank statement, a court filing, a private chat export, a medical scan, an unreleased work draft — those are files where having a copy land on a third-party server is, at minimum, an unnecessary risk.
@@ -216,7 +216,7 @@ export default function HomePage() {
               Twineconvert runs the conversion in your browser using WebAssembly compilations of the same libraries the upload-based converters run on their servers (FFmpeg, libheif, pdfjs, mammoth, web-ifc, jsquash, and a few dozen more). The only difference: the conversion executes on your machine instead of theirs.
             </p>
             <p>
-              Practical implications: no upload progress bar, no daily quota, no file size cap, no signup, no email, no "upgrade to convert without watermark." And the engine is <a href="https://github.com/Achraf921/conversionEngine" className="text-[var(--color-pink-600)] hover:text-[var(--color-pink-700)] underline underline-offset-2">open source</a> — anyone can read every line of code that handles a file.
+              Practical implications: no upload progress bar, no daily quota, no file size cap, no signup, no email, no &quot;upgrade to convert without watermark.&quot; And the engine is <a href="https://github.com/Achraf921/conversionEngine" className="text-[var(--color-pink-600)] hover:text-[var(--color-pink-700)] underline underline-offset-2">open source</a> — anyone can read every line of code that handles a file.
             </p>
           </div>
         </div>

@@ -29,7 +29,6 @@ export function ToolPage({ toolId, meta }: Props) {
   const outputProfile = profiles?.output;
   const otherInputs = getOtherInputsForOutput(toolId, 12);
   const otherOutputs = getOtherOutputsForInput(toolId, 12);
-  const outputExt = toolId.split("-to-")[1] ?? "out";
 
   return (
     <>
@@ -51,7 +50,6 @@ export function ToolPage({ toolId, meta }: Props) {
               toolId={toolId}
               toolLabel={meta.label}
               accept={meta.accept}
-              outputExt={outputExt}
             />
           </div>
         </div>

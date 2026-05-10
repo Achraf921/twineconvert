@@ -26,8 +26,6 @@ import {
   makeTinyJef,
   makeTinyExp,
   makeTinyStl,
-  makeTinyZip,
-  makeTinyPdf,
   makeTinyDocx,
   makeTinyXlsx,
   makeTinyEpub,
@@ -90,11 +88,6 @@ const makeExpFixture = async (): Promise<File> =>
 
 const makeStlFixture = async (): Promise<File> =>
   fileFromBytes("cube.stl", makeTinyStl(), "model/stl");
-
-const makeZipFixture = async (): Promise<File> => {
-  const bytes = await makeTinyZip();
-  return fileFromBytes("test.zip", bytes, "application/zip");
-};
 
 const text = (name: string, content: string, mime = "text/plain") =>
   Promise.resolve(fileFromText(name, content, mime));

@@ -26,7 +26,7 @@
 import { describe, it, expect } from "vitest";
 import { run } from "../src/lib/engine/runner";
 import { fileFromText, FIXTURES } from "./fixtures/text-fixtures";
-import { fileFromBytes, makeTinyAse, makeTinyAco, makeTinyDst, makeTinyPes, makeTinyJef, makeTinyExp, makeTinyStl, makeTiny3mf } from "./fixtures/binary-fixtures";
+import { fileFromBytes, makeTinyAse, makeTinyDst, makeTinyPes, makeTinyJef, makeTinyExp, makeTinyStl, makeTiny3mf } from "./fixtures/binary-fixtures";
 
 /** Convert a Blob/File chain. The output of run() is { blob, filename };
  *  this just wraps it back into a File so the next converter accepts it. */

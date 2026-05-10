@@ -77,7 +77,7 @@ function tryParseDate(date: string, time: string): string {
   if (!day || !month || !year) return `${date} ${time}`;
 
   // Convert AM/PM time to 24-hour for the ISO output.
-  let timeNorm = time.trim().toUpperCase();
+  const timeNorm = time.trim().toUpperCase();
   let hour = 0, minute = 0, second = 0;
   const mm = timeNorm.match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?\s*([AP]M)?$/);
   if (mm) {

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ToolPage } from "@/components/ToolPage";
-import { listToolIds, getMeta } from "@/lib/engine/registry-meta";
+import { getMeta } from "@/lib/engine/registry-meta";
 import { getProfilesForToolId } from "@/lib/formats";
 
 /**

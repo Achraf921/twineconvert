@@ -24,15 +24,6 @@ const ALL_IDS = listConverterIds();
 // Split the registry by what we can test where.
 const NODE_TESTABLE = ALL_IDS.filter(isNodeTestable);
 const BROWSER_ONLY = ALL_IDS.filter((id) => FIXTURE_PROVIDERS[id]?.env === "browser");
-const MISSING_FIXTURES_NODE = ALL_IDS.filter((id) => {
-  const spec = FIXTURE_PROVIDERS[id];
-  if (!spec) return false; // entirely missing — separate test below
-  if (spec.env !== "node") return false;
-  // It's marked node-testable, but the provider is a "fixture pending" stub
-  // (we identify these by attempting the provider and catching synchronous
-  // rejection). For the count summary we just trust the env field.
-  return false;
-});
 const TOTALLY_UNFIXTURED = ALL_IDS.filter((id) => !hasFixture(id));
 
 describe("converters-comprehensive (node tier)", () => {
