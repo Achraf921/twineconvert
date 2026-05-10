@@ -23,7 +23,9 @@ async function makeTinyPdf(): Promise<File> {
   const page = doc.addPage([200, 200]);
   page.drawText("Hello twineconvert", { x: 20, y: 100, size: 14 });
   const bytes = await doc.save();
-  return new File([bytes], "test.pdf", { type: "application/pdf" });
+  // pdf-lib returns Uint8Array<ArrayBufferLike>; copy into a fresh
+  // ArrayBuffer-backed view so the BlobPart type checks.
+  return new File([new Uint8Array(bytes)], "test.pdf", { type: "application/pdf" });
 }
 
 async function makeTinyDocx(): Promise<File> {
