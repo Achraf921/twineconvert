@@ -36,47 +36,32 @@ Coverage as of 2026-05-10:
 
   Total converters:  192
   Node-tested:       120 (real fixtures + structural validation)
-  Browser-tested:     54 (Chromium + Playwright; some it.fails for
-                          known-broken upstream behaviour or Vite
-                          loader limitations)
-  Remaining gap:      18
+  Browser-tested:     72 (Chromium + Playwright)
+  Total covered:     192 (100%)
 
-  All 18 remaining are FFmpeg.wasm-dependent (audio + video):
-    Audio (8):  mp3-to-wav, wav-to-mp3, mp3-to-flac, mp3-to-m4a,
-                mp3-to-ogg, m4a-to-mp3, ogg-to-mp3, flac-to-mp3
-    Video (8):  avi-to-mp4, mkv-to-mp4, mov-to-mp4, mp4-to-avi,
-                mp4-to-mkv, mp4-to-mov, webm-to-mp4, gif-to-mp4
-    Hybrid (2): mp4-to-mp3, mp4-to-gif
+  Browser-tested coverage was unblocked by adding a small custom
+  Vite plugin (vitest.browser.config.ts:rawAssetServer) that
+  serves /ffmpeg/* and /ifc/* as raw files with the correct MIME,
+  bypassing Vite's module-resolution pipeline. Module workers
+  inside @ffmpeg/ffmpeg use dynamic import(), which only works on
+  the ESM build of @ffmpeg/core (UMD has no `export default`), so
+  the plugin maps /ffmpeg/ffmpeg-core.js to the ESM dist.
 
-  Blocker: when running through Vitest browser mode, Vite's dev
-  server intercepts the FFmpeg.wasm worker's importScripts() call
-  and either appends a ?import query (Vite module-resolution
-  marker) or refuses to serve the .js as a non-module asset. The
-  same root cause blocks IFC's web-ifc.wasm load (those tests are
-  it.fails as a tracking marker). All affected converters work
-  fine in production at twineconvert.com because Next.js serves
-  them through a clean static-asset pipeline without Vite in the
-  way.
-
-  Fix candidates (all involve Vite config surgery):
-    (a) Custom Vite plugin that serves /ffmpeg/* + web-ifc.wasm
-        as raw assets without module rewriting.
-    (b) Move FFmpeg core out of public/ into a separate static
-        server during tests.
-    (c) Ditch Vitest browser mode for these and run them in
-        a separate Playwright-against-built-Next.js test job.
-
-  Bugs found by browser tests so far:
+  Bugs found by browser tests:
     - png-to-bmp + jpg-to-bmp returned PNG-with-.bmp-filename
       because Canvas.toBlob falls back silently for image/bmp.
-      Fixed with a hand-rolled BMP encoder in
+      Fixed with a pure-JS BMP encoder in
       src/lib/engine/util/bmp-encode.ts.
     - png-to-gif + jpg-to-gif had the same silent fallback for
       image/gif. Fixed with gifenc-based encoder in
       src/lib/engine/util/gif-encode.ts.
-    - heic-to-webp returns PNG instead of WebP (heic2any quirk
-      that doesn't honor toType: 'image/webp'). Marked it.fails;
-      tracked for upstream fix.
+    - heic-to-webp returns PNG instead of WebP (heic2any
+      upstream quirk that doesn't honor toType: 'image/webp').
+      Marked it.fails so we get pinged when fixed upstream.
+
+  Production deployment unaffected by Vitest internals. Next.js
+  serves /ffmpeg/* + /ifc/* directly from public/ without Vite
+  in the way; the same files load identically in both contexts.
 
 ### 3. Round-trip equivalence (`tests/round-trip.test.ts`)
 

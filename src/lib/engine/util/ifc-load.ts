@@ -1,15 +1,16 @@
 /**
- * Shared `web-ifc` loader. The lib needs a WASM binary path; we point
- * at the unpkg CDN with the exact pinned version to keep it stable.
+ * Shared `web-ifc` loader. The library needs a WASM binary path;
+ * we serve from /ifc/ same-origin (the wasm is copied from
+ * node_modules into public/ifc/ at build time).
  *
- * Same pattern as our pdfjs and ffmpeg loaders, single cached promise
- * so multiple converters in the same session reuse one instance.
+ * Was previously CDN-hosted but moved same-origin so production
+ * traffic doesn't bounce through unpkg's CDN and so Vitest browser
+ * tests can serve the file via the raw-asset-server plugin.
  */
 
 import type { IfcAPI } from "web-ifc";
 
-const WEB_IFC_VERSION = "0.0.69";
-const WASM_PATH = `https://unpkg.com/web-ifc@${WEB_IFC_VERSION}/`;
+const WASM_PATH = "/ifc/";
 
 let apiPromise: Promise<IfcAPI> | null = null;
 

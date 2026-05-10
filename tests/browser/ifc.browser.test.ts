@@ -11,14 +11,8 @@ import { describe, it, expect } from "vitest";
 import { run } from "../../src/lib/engine/runner";
 import { loadFixtureSync } from "./helpers";
 
-// BLOCKED: web-ifc.wasm fails to instantiate in Vitest browser mode
-// because Vite's dev-server pipeline rewrites the WASM module imports.
-// Same root cause as the FFmpeg.wasm blocker in audio/video tests.
-// Marked it.fails so the suite stays green and we get an alert if the
-// upstream fix lands. Conversions work fine in production (Next.js
-// serves the WASM cleanly without Vite in the way).
 describe("IFC converters (browser, hand-crafted IFC4 fixture)", () => {
-  it.fails("ifc-to-csv produces non-empty CSV", async () => {
+  it("ifc-to-csv produces non-empty CSV", async () => {
     const ifc = loadFixtureSync("sample.ifc");
     const result = await run("ifc-to-csv", ifc);
     expect(result.blob.size).toBeGreaterThan(0);
@@ -26,7 +20,7 @@ describe("IFC converters (browser, hand-crafted IFC4 fixture)", () => {
     expect(csv.split("\n").length).toBeGreaterThanOrEqual(2);
   }, 90000);
 
-  it.fails("ifc-to-gltf produces a glTF with magic 'glTF'", async () => {
+  it("ifc-to-gltf produces a glTF or GLB", async () => {
     const ifc = loadFixtureSync("sample.ifc");
     const result = await run("ifc-to-gltf", ifc);
     expect(result.blob.size).toBeGreaterThan(0);
