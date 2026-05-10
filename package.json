@@ -12,6 +12,7 @@
     "@ffmpeg/ffmpeg": "^0.12.15",
     "@ffmpeg/util": "^0.12.2",
     "@jsquash/avif": "^2.1.1",
+    "chess.js": "^1.4.0",
     "epubjs": "^0.3.93",
     "heic2any": "^0.0.4",
     "html2canvas": "^1.4.1",
@@ -24,6 +25,7 @@
     "pdfjs-dist": "^5.7.284",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "sax": "^1.6.0",
     "tesseract.js": "^7.0.0",
     "utif": "^3.1.0",
     "xlsx": "^0.18.5"
@@ -34,6 +36,7 @@
     "@types/papaparse": "^5.5.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/sax": "^1.2.7",
     "@types/utif": "^3.0.6",
     "eslint": "^9",
     "eslint-config-next": "16.2.6",

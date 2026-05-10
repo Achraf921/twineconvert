@@ -186,6 +186,84 @@ export const registry: Record<string, ConverterLoader> = {
     import("./converters/ofx-to-qif").then((m) => m.default),
   "qif-to-ofx": () =>
     import("./converters/qif-to-ofx").then((m) => m.default),
+
+  // Apple Health export — streaming SAX parser, accepts export.zip directly
+  // (we extract export.xml from inside via JSZip) or the raw export.xml
+  "apple-health-to-csv": () =>
+    import("./converters/apple-health-to-csv").then((m) => m.default),
+  "apple-health-to-json": () =>
+    import("./converters/apple-health-to-json").then((m) => m.default),
+  "apple-health-heart-rate-to-csv": () =>
+    import("./converters/apple-health-heart-rate-to-csv").then((m) => m.default),
+  "apple-health-steps-to-csv": () =>
+    import("./converters/apple-health-steps-to-csv").then((m) => m.default),
+  "apple-health-sleep-to-csv": () =>
+    import("./converters/apple-health-sleep-to-csv").then((m) => m.default),
+  "apple-health-workouts-to-csv": () =>
+    import("./converters/apple-health-workouts-to-csv").then((m) => m.default),
+
+  // Kindle My Clippings.txt — text format, parsed from scratch
+  "kindle-clippings-to-csv": () =>
+    import("./converters/kindle-clippings-to-csv").then((m) => m.default),
+  "kindle-clippings-to-json": () =>
+    import("./converters/kindle-clippings-to-json").then((m) => m.default),
+  "kindle-clippings-to-markdown": () =>
+    import("./converters/kindle-clippings-to-markdown").then((m) => m.default),
+  "kindle-clippings-to-obsidian-md": () =>
+    import("./converters/kindle-clippings-to-obsidian-md").then((m) => m.default),
+  "kindle-clippings-to-notion-csv": () =>
+    import("./converters/kindle-clippings-to-notion-csv").then((m) => m.default),
+  "kindle-clippings-to-readwise-csv": () =>
+    import("./converters/kindle-clippings-to-readwise-csv").then((m) => m.default),
+
+  // GEDCOM — genealogy interchange (parsed from scratch, text-hierarchical)
+  "gedcom-to-csv": () =>
+    import("./converters/gedcom-to-csv").then((m) => m.default),
+  "gedcom-to-json": () =>
+    import("./converters/gedcom-to-json").then((m) => m.default),
+  "gedcom-to-html": () =>
+    import("./converters/gedcom-to-html").then((m) => m.default),
+  "gedcom-to-pdf": () =>
+    import("./converters/gedcom-to-pdf").then((m) => m.default),
+  "csv-to-gedcom": () =>
+    import("./converters/csv-to-gedcom").then((m) => m.default),
+
+  // Bibliography — BibTeX, RIS, NBIB, EndNote XML cross-conversions
+  // Unified Citation type bridges N parsers × M writers.
+  "bibtex-to-ris": () =>
+    import("./converters/bibtex-to-ris").then((m) => m.default),
+  "ris-to-bibtex": () =>
+    import("./converters/ris-to-bibtex").then((m) => m.default),
+  "nbib-to-bibtex": () =>
+    import("./converters/nbib-to-bibtex").then((m) => m.default),
+  "nbib-to-ris": () =>
+    import("./converters/nbib-to-ris").then((m) => m.default),
+  "endnote-xml-to-bibtex": () =>
+    import("./converters/endnote-xml-to-bibtex").then((m) => m.default),
+  "endnote-xml-to-ris": () =>
+    import("./converters/endnote-xml-to-ris").then((m) => m.default),
+  "bibtex-to-csv": () =>
+    import("./converters/bibtex-to-csv").then((m) => m.default),
+  "ris-to-csv": () =>
+    import("./converters/ris-to-csv").then((m) => m.default),
+
+  // ADIF — amateur radio QSO logs
+  "adif-to-csv": () =>
+    import("./converters/adif-to-csv").then((m) => m.default),
+  "csv-to-adif": () =>
+    import("./converters/csv-to-adif").then((m) => m.default),
+  "adif-to-cabrillo": () =>
+    import("./converters/adif-to-cabrillo").then((m) => m.default),
+  "adif-to-kml": () =>
+    import("./converters/adif-to-kml").then((m) => m.default),
+
+  // Chess PGN — uses chess.js (industry-standard parser/validator)
+  "pgn-to-csv": () =>
+    import("./converters/pgn-to-csv").then((m) => m.default),
+  "pgn-to-fen": () =>
+    import("./converters/pgn-to-fen").then((m) => m.default),
+  "pgn-to-json": () =>
+    import("./converters/pgn-to-json").then((m) => m.default),
 };
 
 /** All converter IDs — useful for sitemap generation later. */
