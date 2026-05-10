@@ -54,7 +54,7 @@ function renderMarkdown(guild: string | undefined, channel: string | undefined, 
       lastDate = date;
     }
     const time = m.timestamp.slice(11, 16);
-    lines.push(`**${m.author}** *— ${time}${m.isEdited ? " (edited)" : ""}*`);
+    lines.push(`**${m.author}** *, ${time}${m.isEdited ? " (edited)" : ""}*`);
     if (m.content) {
       // Indent content as a blockquote so multi-line messages stay grouped.
       lines.push(...m.content.split("\n").map((l) => `> ${l}`));

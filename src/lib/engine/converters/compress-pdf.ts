@@ -2,10 +2,10 @@ import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 
 /**
- * Compress PDF — re-saves the input with pdf-lib's basic optimizations
+ * Compress PDF, re-saves the input with pdf-lib's basic optimizations
  * (object stream re-write, removed duplicate resources). NOT a deep
  * recompression of embedded images; for that we'd need to render every
- * page, re-encode at lower quality, and re-assemble — much bigger scope.
+ * page, re-encode at lower quality, and re-assemble, much bigger scope.
  *
  * Realistic compression ratio for typical "office documents with embedded
  * fonts + some images": ~10-30% size reduction. For PDFs that are mostly
@@ -43,7 +43,7 @@ const compressPdf: Converter = {
       blob = new Blob([buf], { type: "application/pdf" });
     } catch (err) {
       throw new ConvertFailedError(
-        "Could not compress PDF — file may be corrupt or password-protected",
+        "Could not compress PDF, file may be corrupt or password-protected",
         err,
       );
     }

@@ -9,7 +9,7 @@
  * collapses to zero.
  *
  * Safety note: the HTML originates from documents the user uploaded into
- * their own browser session — there is no cross-user surface. We still
+ * their own browser session, there is no cross-user surface. We still
  * use DOMParser + adoptNode rather than innerHTML so any inert <script>
  * fragments are parsed but not executed (the html parser created by
  * DOMParser does not run scripts).

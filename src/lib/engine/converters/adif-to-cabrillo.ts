@@ -10,7 +10,7 @@ import { parseAdif } from "../util/adif";
  *
  * Cabrillo requires header lines the operator is supposed to fill in
  * (CALLSIGN, CONTEST, CATEGORY-*). We emit placeholders that the user
- * MUST edit before submission — there's no way to derive these from
+ * MUST edit before submission, there's no way to derive these from
  * the QSO records alone.
  */
 const adifToCabrillo: Converter = {

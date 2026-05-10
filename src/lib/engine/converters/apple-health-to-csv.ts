@@ -10,7 +10,7 @@ const appleHealthToCsv: Converter = {
   toMime: "text/csv",
   // Accept the literal export.zip (most common) and the unzipped export.xml
   accept: [".zip", ".xml"],
-  // Apple Health exports get huge — 500MB is roughly the upper bound for
+  // Apple Health exports get huge, 500MB is roughly the upper bound for
   // a heavy multi-year user; bigger and we'd need true streaming-to-disk.
   maxFileSizeBytes: 500 * 1024 * 1024,
 

@@ -22,7 +22,7 @@ const heicToPdf: Converter = {
       jpgBlob = await decodeHeic(input, "image/jpeg", 0.92);
     } catch (err) {
       throw new ConvertFailedError(
-        "HEIC decode failed — file may be corrupt or use an unsupported HEIC profile",
+        "HEIC decode failed, file may be corrupt or use an unsupported HEIC profile",
         err,
       );
     }

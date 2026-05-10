@@ -11,7 +11,7 @@ import { parseKindleClippings, type KindleClipping } from "../util/kindle-clippi
  *   - One file's worth of content, ready to drop into a vault
  *
  * For users who want one file per book, the JSON output is the better
- * starting point — easier to script. This route covers the common case
+ * starting point, easier to script. This route covers the common case
  * of "import all my highlights as a single Obsidian note."
  */
 const kindleClippingsToObsidianMd: Converter = {
@@ -73,7 +73,7 @@ function buildObsidianMarkdown(clippings: KindleClipping[]): string {
   const sections: string[] = [];
   for (const [book, items] of byBook) {
     const author = items.find((i) => i.author)?.author;
-    const title = author ? `[[${book}]] — ${author}` : `[[${book}]]`;
+    const title = author ? `[[${book}]], ${author}` : `[[${book}]]`;
     sections.push(`# ${title}\n\n#book/${bookSlug(book)}\n`);
     for (const c of items) {
       const meta: string[] = [];

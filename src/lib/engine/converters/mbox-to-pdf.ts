@@ -8,7 +8,7 @@ import { renderEmailHtml } from "./eml-to-pdf";
 /**
  * MBOX → PDF. Renders every message in the mbox as a stacked PDF
  * with page breaks between. The SERP for this is dominated by paid
- * desktop installers (RecoveryTools, BitRecover) — a free in-browser
+ * desktop installers (RecoveryTools, BitRecover), a free in-browser
  * tool is genuinely missing from page one.
  */
 const mboxToPdf: Converter = {

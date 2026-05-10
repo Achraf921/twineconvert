@@ -1,6 +1,6 @@
 /**
  * Parser for WhatsApp's chat export `_chat.txt` (or whichever name the
- * platform happens to use — same regex either way).
+ * platform happens to use, same regex either way).
  *
  * WhatsApp exports come in two shapes:
  *   1. A `.txt` file (the chat transcript only)
@@ -17,7 +17,7 @@
  * we attach those continuation lines to the previous message.
  *
  * System events ("X added Y", "Messages and calls are end-to-end
- * encrypted") have no sender — we capture them with sender = undefined
+ * encrypted") have no sender, we capture them with sender = undefined
  * so consumers can choose to render or filter.
  */
 
@@ -28,7 +28,7 @@ export interface WhatsappMessage {
   timestamp: string;
   /** Sender display name. Undefined for system messages. */
   sender?: string;
-  /** Message body — may include `<Media omitted>` placeholder when the
+  /** Message body, may include `<Media omitted>` placeholder when the
    *  user exported "without media" mode. */
   text: string;
   /** Filename of attached media (when the export bundle includes it).
@@ -61,7 +61,7 @@ function tryParseDate(date: string, time: string): string {
   if (dParts.length !== 3) return `${date} ${time}`;
 
   // WhatsApp follows the device locale: DD/MM/YY in most of Europe/Asia,
-  // MM/DD/YY in US. We can't infer the locale from one line — we use a
+  // MM/DD/YY in US. We can't infer the locale from one line, we use a
   // mild heuristic: if the FIRST number is > 12, it must be a day. The
   // whole batch typically uses the same locale, so if any line in the
   // file disambiguates, all dates parse the same way. For v1 we default
@@ -157,7 +157,7 @@ export async function parseWhatsapp(input: File | Blob): Promise<ParsedWhatsapp>
           isSystem: true,
         });
       } else if (messages.length > 0) {
-        // Continuation — append to previous message.
+        // Continuation, append to previous message.
         messages[messages.length - 1].text += "\n" + line;
       }
     }

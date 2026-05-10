@@ -50,7 +50,7 @@ DO  - 10.1038/sample.2024.001
 ER  -
 `,
 
-  // NBIB (PubMed format) — same as RIS structurally. PT (Publication
+  // NBIB (PubMed format), same as RIS structurally. PT (Publication
   // Type) is what triggers PubMed record detection in our parser
   // (mapped to RIS TY tag via NBIB_TO_RIS table).
   nbib: `PMID- 12345678

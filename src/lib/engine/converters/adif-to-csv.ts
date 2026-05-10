@@ -8,7 +8,7 @@ import { parseAdif } from "../util/adif";
  * passes the rest through as additional columns when present.
  *
  * The "common" tag set chosen here matches what LoTW, eQSL, QRZ, and
- * Club Log all use for their CSV exports — so users importing this
+ * Club Log all use for their CSV exports, so users importing this
  * back into another tool get the columns those tools expect.
  */
 const COMMON_TAGS = [

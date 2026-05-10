@@ -6,7 +6,7 @@ import { parseWhatsapp, type WhatsappMessage } from "../util/whatsapp-parse";
 
 /**
  * WhatsApp Chat → PDF. The court-evidence / archival use case is the
- * money one — people need a stable, paginated, human-readable PDF that
+ * money one, people need a stable, paginated, human-readable PDF that
  * preserves who-said-what-when. Layout is intentionally print-friendly
  * (no chat-bubble UI) so it's compact and grep-friendly inside any
  * PDF reader.

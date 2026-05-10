@@ -6,7 +6,7 @@ import { parsePgn } from "../util/pgn-parse";
 /**
  * PGN → FEN. Outputs the FEN string for the FINAL position of each game,
  * one per line. For games where a tactical engine analysis is desired
- * mid-game, users typically want the per-move FEN list — that's the
+ * mid-game, users typically want the per-move FEN list, that's the
  * JSON output's role; this route is the simplest "what's the position
  * at the end" answer.
  */

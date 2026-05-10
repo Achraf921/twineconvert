@@ -3,7 +3,7 @@
  *
  * On read, we auto-detect column meaning from headers using a small
  * dictionary of synonyms. This lets users drop in CSV exports from
- * basically any bank without manual column mapping — most banks use
+ * basically any bank without manual column mapping, most banks use
  * recognizable names like "Posted Date", "Description", "Amount".
  *
  * Two amount conventions exist in real bank CSVs:
@@ -67,7 +67,7 @@ function parseDate(raw: string): string {
     return `${year}-${us[1].padStart(2, "0")}-${us[2].padStart(2, "0")}`;
   }
   // DD/MM/YYYY (UK/EU) and DD-MM-YYYY ambiguity is intentionally NOT auto-detected
-  // here — there's no way to disambiguate "01/02/2024" without knowing locale.
+  // here, there's no way to disambiguate "01/02/2024" without knowing locale.
   // Fall back to native Date parsing for ISO-ish forms.
   const d = new Date(trimmed);
   if (!isNaN(d.getTime())) {

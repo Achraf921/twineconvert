@@ -12,7 +12,7 @@
  *   (image/avif emerging but inconsistent; we use specialized libs for AVIF)
  *
  * For animated formats (GIF, animated WebP), this returns the FIRST FRAME
- * only — animated→still conversion is the realistic browser-side use case.
+ * only, animated→still conversion is the realistic browser-side use case.
  * Animated→animated needs FFmpeg.wasm and lives in a different family.
  */
 
@@ -34,7 +34,7 @@ export async function canvasEncode(
   const url = URL.createObjectURL(input);
   try {
     const img = new Image();
-    // CORS not relevant here — blob URLs are same-origin.
+    // CORS not relevant here, blob URLs are same-origin.
     img.src = url;
     await img.decode();
 

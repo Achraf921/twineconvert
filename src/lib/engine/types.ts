@@ -1,10 +1,10 @@
 /**
- * Conversion engine — public types.
+ * Conversion engine, public types.
  *
  * The engine is a tiny orchestration layer over a registry of "converters".
  * Each converter handles ONE format pair (e.g. heic→jpg) and lazy-loads its
  * own WASM/JS dependencies the first time it runs. Tool pages don't import
- * converters directly — they go through the runner with a string id, which
+ * converters directly, they go through the runner with a string id, which
  * keeps each route's bundle small.
  */
 

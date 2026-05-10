@@ -5,7 +5,7 @@ import { swapExtension } from "../util/canvas-encode";
 /**
  * JSON → CSV. Expects the JSON to be an array of objects (the standard
  * tabular shape). Nested objects/arrays get JSON-stringified into single
- * cells — Papa's default behavior, which matches what tools like Excel's
+ * cells, Papa's default behavior, which matches what tools like Excel's
  * Power Query produce.
  */
 const jsonToCsv: Converter = {

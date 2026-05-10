@@ -8,7 +8,7 @@ import { HomeFAQ } from "@/components/HomeFAQ";
  * Homepage. Hero + the full directory of tools, grouped by category.
  *
  * The category groupings are hand-curated (not auto-derived from
- * registry IDs) because human grouping aids discoverability — a user
+ * registry IDs) because human grouping aids discoverability, a user
  * looking for "Apple Health export" doesn't think "I want a CSV
  * converter," they think "I want my health data."
  */
@@ -65,7 +65,7 @@ const CATEGORIES: Array<{ label: string; description: string; ids: string[] }> =
   },
   {
     label: "Personal data exports",
-    description: "Apple Health, WhatsApp, Discord, Twitter / X, Instagram, Facebook — extract your data into open formats.",
+    description: "Apple Health, WhatsApp, Discord, Twitter / X, Instagram, Facebook, extract your data into open formats.",
     ids: [
       "apple-health-to-csv", "apple-health-to-json",
       "apple-health-heart-rate-to-csv", "apple-health-steps-to-csv", "apple-health-sleep-to-csv", "apple-health-workouts-to-csv",
@@ -126,7 +126,7 @@ const CATEGORIES: Array<{ label: string; description: string; ids: string[] }> =
 const TOTAL_TOOLS = listToolIds().length;
 
 // Pre-compute the tool list for the search component (server-side, sent
-// once with the homepage HTML — no API call needed for search to work).
+// once with the homepage HTML, no API call needed for search to work).
 const ALL_TOOLS_FOR_SEARCH = listToolIds().map((id) => ({
   id,
   label: getMeta(id)?.label ?? id,
@@ -148,7 +148,7 @@ export default function HomePage() {
             <span className="text-[var(--color-pink-600)]">Nothing uploaded.</span>
           </h1>
           <p className="text-lg text-[var(--color-text-2)] mt-6 max-w-2xl mx-auto">
-            HEIC, PDF, MP4, DOCX, OFX, EPUB, IFC, MIDI — {TOTAL_TOOLS} converters across {CATEGORIES.length} categories. No upload, no signup, no file size limit. Your file never leaves your device.
+            HEIC, PDF, MP4, DOCX, OFX, EPUB, IFC, MIDI, {TOTAL_TOOLS} converters across {CATEGORIES.length} categories. No upload, no signup, no file size limit. Your file never leaves your device.
           </p>
 
           <div className="mt-10 flex justify-center">
@@ -182,7 +182,7 @@ export default function HomePage() {
         <div className="mx-auto max-w-5xl px-6 py-14 grid grid-cols-1 md:grid-cols-3 gap-8">
           <Pillar title="No upload." body="Every conversion runs in your browser via WebAssembly. Files never travel to a server because we don't have one." />
           <Pillar title="No file size limit." body="The 1-2 GB caps that paid converters use don't apply here. Your limit is whatever your browser can handle." />
-          <Pillar title="No signup. No watermark. No queue." body="Open source — every line of conversion code is on GitHub. We can't see what you convert, even if we wanted to." />
+          <Pillar title="No signup. No watermark. No queue." body="Open source, every line of conversion code is on GitHub. We can't see what you convert, even if we wanted to." />
         </div>
       </section>
 
@@ -210,13 +210,13 @@ export default function HomePage() {
               Most online file converters work the same way: you upload your file to their server, their server converts it, you download the result. The tradeoff most users don&apos;t think about: <strong className="text-[var(--color-text)]">your file lives on their server, even if briefly.</strong>
             </p>
             <p>
-              That matters more for some files than others. A photo of your dog is one thing. A bank statement, a court filing, a private chat export, a medical scan, an unreleased work draft — those are files where having a copy land on a third-party server is, at minimum, an unnecessary risk.
+              That matters more for some files than others. A photo of your dog is one thing. A bank statement, a court filing, a private chat export, a medical scan, an unreleased work draft, those are files where having a copy land on a third-party server is, at minimum, an unnecessary risk.
             </p>
             <p>
               Twineconvert runs the conversion in your browser using WebAssembly compilations of the same libraries the upload-based converters run on their servers (FFmpeg, libheif, pdfjs, mammoth, web-ifc, jsquash, and a few dozen more). The only difference: the conversion executes on your machine instead of theirs.
             </p>
             <p>
-              Practical implications: no upload progress bar, no daily quota, no file size cap, no signup, no email, no &quot;upgrade to convert without watermark.&quot; And the engine is <a href="https://github.com/Achraf921/conversionEngine" className="text-[var(--color-pink-600)] hover:text-[var(--color-pink-700)] underline underline-offset-2">open source</a> — anyone can read every line of code that handles a file.
+              Practical implications: no upload progress bar, no daily quota, no file size cap, no signup, no email, no &quot;upgrade to convert without watermark.&quot; And the engine is <a href="https://github.com/Achraf921/conversionEngine" className="text-[var(--color-pink-600)] hover:text-[var(--color-pink-700)] underline underline-offset-2">open source</a>, anyone can read every line of code that handles a file.
             </p>
           </div>
         </div>

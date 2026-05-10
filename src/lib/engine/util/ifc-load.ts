@@ -2,7 +2,7 @@
  * Shared `web-ifc` loader. The lib needs a WASM binary path; we point
  * at the unpkg CDN with the exact pinned version to keep it stable.
  *
- * Same pattern as our pdfjs and ffmpeg loaders — single cached promise
+ * Same pattern as our pdfjs and ffmpeg loaders, single cached promise
  * so multiple converters in the same session reuse one instance.
  */
 

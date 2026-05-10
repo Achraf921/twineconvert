@@ -10,7 +10,7 @@ import { parseKindleClippings } from "../util/kindle-clippings-parse";
  *
  * Mapping caveats:
  *   - "Note" in Readwise = your annotation, NOT the highlight body.
- *     Kindle exports both highlights and notes as separate entries —
+ *     Kindle exports both highlights and notes as separate entries ,
  *     we map the body of "note" type clippings to the Note column,
  *     leaving Highlight blank for those rows. Highlights map to the
  *     Highlight column with empty Note. This keeps Readwise's data model intact.

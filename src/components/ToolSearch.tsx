@@ -3,7 +3,7 @@
 /**
  * Client-side tool search. Loads ALL 192 tool IDs at build time
  * (registry-meta is static), filters them with substring + word-boundary
- * matching as the user types. No API call, no debounce — instant.
+ * matching as the user types. No API call, no debounce, instant.
  *
  * Result: a tiny searchbox at the top of the homepage that lets users
  * jump straight to /heic-to-jpg by typing "heic", or browse all 47
@@ -63,7 +63,7 @@ export function ToolSearch({ tools }: Props) {
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setShowResults(true)}
           onBlur={() => setTimeout(() => setShowResults(false), 200)}
-          placeholder="Search tools — try 'heic', 'pdf to docx', 'mp4'…"
+          placeholder="Search tools, try 'heic', 'pdf to docx', 'mp4'…"
           className="w-full pl-10 pr-4 py-3 rounded-xl border border-[var(--color-border-2)] bg-white text-sm placeholder:text-[var(--color-text-3)] focus:border-[var(--color-pink-400)] focus:bg-[var(--color-pink-50)] outline-none transition-colors"
         />
       </div>

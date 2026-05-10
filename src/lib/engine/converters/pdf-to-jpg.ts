@@ -7,7 +7,7 @@ import { canvasToBlob, renderPdfPage } from "../util/pdf-render";
  * PDF → JPG. Returns the FIRST PAGE rendered as JPEG.
  *
  * Multi-page PDF→JPG (returning a ZIP of per-page JPEGs) is a separate
- * tool that lives later — most users searching "pdf to jpg" want a quick
+ * tool that lives later, most users searching "pdf to jpg" want a quick
  * cover-page render of a single-page document.
  */
 const pdfToJpg: Converter = {
@@ -26,7 +26,7 @@ const pdfToJpg: Converter = {
       canvas = rendered.canvas;
     } catch (err) {
       throw new ConvertFailedError(
-        "Could not render PDF — file may be corrupt or password-protected",
+        "Could not render PDF, file may be corrupt or password-protected",
         err,
       );
     }

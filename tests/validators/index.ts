@@ -32,7 +32,7 @@ export interface ValidationContext {
 export type Validator = (ctx: ValidationContext) => Promise<void>;
 
 // ============================================================================
-// Magic byte helpers — first line of defense
+// Magic byte helpers, first line of defense
 // ============================================================================
 
 async function readBytes(blob: Blob, n: number): Promise<Uint8Array> {
@@ -84,7 +84,7 @@ export const validateJpeg: Validator = async ({ blob, minSize = 50 }) => {
   // Last bytes should be FF D9 (EOI marker) for a complete JPEG
   const tail = new Uint8Array(await blob.slice(blob.size - 2).arrayBuffer());
   if (tail[0] !== 0xff || tail[1] !== 0xd9) {
-    throw new Error(`JPEG missing EOI marker (FF D9) at end — got ${tail[0]?.toString(16)} ${tail[1]?.toString(16)}`);
+    throw new Error(`JPEG missing EOI marker (FF D9) at end, got ${tail[0]?.toString(16)} ${tail[1]?.toString(16)}`);
   }
 };
 
@@ -137,7 +137,7 @@ export const validateTiff: Validator = async ({ blob, minSize = 8 }) => {
   const isLE = head[0] === 0x49 && head[1] === 0x49 && head[2] === 0x2a && head[3] === 0x00;
   const isBE = head[0] === 0x4d && head[1] === 0x4d && head[2] === 0x00 && head[3] === 0x2a;
   if (!isLE && !isBE) {
-    throw new Error("TIFF magic bytes mismatch — expected II*\\0 or MM\\0*");
+    throw new Error("TIFF magic bytes mismatch, expected II*\\0 or MM\\0*");
   }
 };
 
@@ -171,7 +171,7 @@ export const validatePdf: Validator = async ({ blob, minSize = 100 }) => {
   const head = await readBytes(blob, 5);
   // PDF: %PDF-
   assertMagicBytes(head, [0x25, 0x50, 0x44, 0x46, 0x2d], "PDF");
-  // Should have %%EOF near the end (last 1024 bytes — PDFs sometimes have
+  // Should have %%EOF near the end (last 1024 bytes, PDFs sometimes have
   // trailing whitespace or junk after the marker)
   const tail = await readBytes(blob.slice(Math.max(0, blob.size - 1024)), 1024);
   const tailStr = new TextDecoder("ascii", { fatal: false }).decode(tail);
@@ -182,14 +182,14 @@ export const validatePdf: Validator = async ({ blob, minSize = 100 }) => {
 
 export const validateDocx: Validator = async ({ blob, minSize = 200 }) => {
   assertMinSize(blob, minSize, "DOCX");
-  // DOCX is a ZIP — must have the ZIP magic
+  // DOCX is a ZIP, must have the ZIP magic
   const head = await readBytes(blob, 4);
   assertMagicBytes(head, [0x50, 0x4b, 0x03, 0x04], "DOCX (ZIP)");
   // Use JSZip to verify the inner Content_Types file exists
   const JSZip = (await import("jszip")).default;
   const zip = await JSZip.loadAsync(await blob.arrayBuffer());
   if (!zip.file("[Content_Types].xml")) {
-    throw new Error("DOCX missing [Content_Types].xml — not a valid OOXML package");
+    throw new Error("DOCX missing [Content_Types].xml, not a valid OOXML package");
   }
 };
 
@@ -214,7 +214,7 @@ export const validateEpub: Validator = async ({ blob, minSize = 200 }) => {
   const JSZip = (await import("jszip")).default;
   const zip = await JSZip.loadAsync(await blob.arrayBuffer());
   if (!zip.file("META-INF/container.xml")) {
-    throw new Error("EPUB missing META-INF/container.xml — not a valid EPUB");
+    throw new Error("EPUB missing META-INF/container.xml, not a valid EPUB");
   }
 };
 
@@ -227,7 +227,7 @@ export const validateCsv: Validator = async ({ blob, minSize = 1 }) => {
   const text = await readText(blob);
   if (!text.trim()) throw new Error("CSV is empty");
   // First line should have at least one separator (comma) OR be a single field.
-  // We're tolerant — empty header, single column CSVs are valid.
+  // We're tolerant, empty header, single column CSVs are valid.
   const lines = text.split(/\r?\n/).filter((l) => l.trim());
   if (lines.length === 0) throw new Error("CSV has no non-blank lines");
 };
@@ -274,7 +274,7 @@ export const validateCss: Validator = async ({ blob, minSize = 1 }) => {
   const text = await readText(blob);
   // CSS variables format we emit always has :root { ... }
   if (!text.includes(":root") && !text.includes("{")) {
-    throw new Error("CSS output looks malformed — no rules detected");
+    throw new Error("CSS output looks malformed, no rules detected");
   }
 };
 
@@ -500,7 +500,7 @@ export const validateGpl: Validator = async ({ blob, minSize = 15 }) => {
 };
 
 export const validateLut: Validator = async ({ blob, minSize = 30 }) => {
-  // CUBE / 3DL / CSP — all text formats with numeric grids
+  // CUBE / 3DL / CSP, all text formats with numeric grids
   assertMinSize(blob, minSize, "LUT");
   const text = await readText(blob);
   // Should have at least one line of three space-separated floats
@@ -538,7 +538,7 @@ export const validateJefOrExp: Validator = async ({ blob, minSize = 4 }) => {
   // JEF/EXP have no fixed header; just check size + last bytes look like an end marker
   assertMinSize(blob, minSize, "JEF/EXP");
   // Both formats end with a 2-byte control code: 0x80 0x10 for JEF (END),
-  // 0x80 0x02 for EXP (END). Look at the last 2 bytes — must start with 0x80.
+  // 0x80 0x02 for EXP (END). Look at the last 2 bytes, must start with 0x80.
   const tail = new Uint8Array(await blob.slice(Math.max(0, blob.size - 2)).arrayBuffer());
   if (tail[0] !== 0x80) {
     throw new Error(`JEF/EXP missing control-code end marker; last 2 bytes are 0x${(tail[0] ?? 0).toString(16)} 0x${(tail[1] ?? 0).toString(16)} (expected 0x80 ...)`);
@@ -556,7 +556,7 @@ export const validateMbox: Validator = async ({ blob, minSize = 10 }) => {
 
 export const validateEml: Validator = async ({ blob, minSize = 20 }) => {
   // RFC-822 message: must have at least one header (Header-Name:) followed
-  // by a blank line and a body. We're tolerant — any line matching
+  // by a blank line and a body. We're tolerant, any line matching
   // "Word: value" near the start counts as a header.
   assertMinSize(blob, minSize, "EML");
   const text = await readText(blob);
@@ -574,7 +574,7 @@ export const validateGlb: Validator = async ({ blob, minSize = 12 }) => {
 };
 
 // ============================================================================
-// Validator dispatch — pick by output MIME or by filename extension fallback
+// Validator dispatch, pick by output MIME or by filename extension fallback
 // ============================================================================
 
 const BY_MIME: Record<string, Validator> = {
@@ -635,7 +635,7 @@ const BY_MIME: Record<string, Validator> = {
   "video/x-matroska": validateMatroskaContainer,
   "video/x-msvideo": validateAvi,
 
-  // Application-specific text formats — match by their stated MIME
+  // Application-specific text formats, match by their stated MIME
   "application/x-bibtex": validateBibtex,
   "text/x-bibtex": validateBibtex,
   "application/x-research-info-systems": validateRis,
@@ -651,7 +651,7 @@ const BY_MIME: Record<string, Validator> = {
   "message/rfc822": validateEml,
 };
 
-// Extension-keyed fallback — used when toMime is generic (octet-stream)
+// Extension-keyed fallback, used when toMime is generic (octet-stream)
 const BY_EXT: Record<string, Validator> = {
   ase: validateAse,
   aco: validateAco,
@@ -671,7 +671,7 @@ const BY_EXT: Record<string, Validator> = {
 
 /**
  * Pick the right validator for a given output. Looks up by MIME first,
- * falls back to extension. Throws if neither matches — better to fail
+ * falls back to extension. Throws if neither matches, better to fail
  * loudly than silently skip validation.
  *
  * Strips MIME parameters (e.g. `text/csv;charset=utf-8` → `text/csv`)

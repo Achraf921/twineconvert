@@ -6,7 +6,7 @@ import { extractEpub } from "../util/epub-extract";
 /**
  * EPUB → HTML. Concatenates all chapter HTMLs into a single document
  * separated by <hr/> markers. Embedded images are NOT extracted (each
- * chapter's <img src="..."> still references zip-relative paths) — full
+ * chapter's <img src="..."> still references zip-relative paths), full
  * asset bundling would mean returning a ZIP, which is a different tool.
  */
 const epubToHtml: Converter = {
@@ -22,7 +22,7 @@ const epubToHtml: Converter = {
     let combinedHtml: string;
     try {
       const extracted = await extractEpub(input);
-      // Strip <html>/<head>/<body> wrappers from each chapter — we provide
+      // Strip <html>/<head>/<body> wrappers from each chapter, we provide
       // our own outer document. Crude regex is fine here since EPUB chapters
       // are well-formed XHTML by spec.
       const inner = extracted.chaptersHtml

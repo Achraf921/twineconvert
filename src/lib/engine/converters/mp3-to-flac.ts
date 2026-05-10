@@ -4,7 +4,7 @@ import { swapExtension } from "../util/canvas-encode";
 import { ffmpegConvert } from "../util/ffmpeg-runner";
 
 /**
- * MP3 → FLAC. Lossless re-encode of an already-lossy source — output
+ * MP3 → FLAC. Lossless re-encode of an already-lossy source, output
  * fidelity is bounded by the MP3 input. Useful for archival workflows
  * that require FLAC as the canonical container even if the source is MP3.
  */

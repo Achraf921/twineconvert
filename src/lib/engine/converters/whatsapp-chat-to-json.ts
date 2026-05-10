@@ -16,7 +16,7 @@ const whatsappChatToJson: Converter = {
     let json: string;
     try {
       const parsed = await parseWhatsapp(input);
-      // Strip the media Map — JSON can't represent Blobs anyway.
+      // Strip the media Map, JSON can't represent Blobs anyway.
       const { messages, participantCounts } = parsed;
       json = JSON.stringify({ messages, participantCounts }, null, 2);
     } catch (err) {

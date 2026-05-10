@@ -10,16 +10,16 @@
  *
  * For lossless pairs (PNG ↔ BMP via canvas, MP4 ↔ MOV stream-copy
  * remux, OFX ↔ QIF transactional roundtrip, ASE ↔ GPL palette
- * roundtrip), we check that the SEMANTIC content matches — same
+ * roundtrip), we check that the SEMANTIC content matches, same
  * transaction count + amounts, same color values, same vertex
- * positions — rather than byte equality (which never works after
+ * positions, rather than byte equality (which never works after
  * encoding/decoding through a format that adds metadata).
  *
  * Round-trip is a uniquely powerful test class because it catches
  * bugs in EITHER the forward or reverse converter that one-way tests
  * cannot detect. If our CSV writer encodes amounts as strings but the
  * CSV reader expects them as numbers, the magic-byte and structural
- * tests both pass — only the round-trip will catch that the data
+ * tests both pass, only the round-trip will catch that the data
  * round-tripped wrong.
  */
 
@@ -227,7 +227,7 @@ describe("round-trip: 3MF mesh wrapping", () => {
     const stl = await chain("3mf-to-stl", original);
     const back = await chain("stl-to-3mf", stl);
     expect(back.size).toBeGreaterThan(0);
-    // 3MF is a zip — magic bytes
+    // 3MF is a zip, magic bytes
     const bytes = new Uint8Array(await back.arrayBuffer());
     expect([bytes[0], bytes[1], bytes[2], bytes[3]]).toEqual([0x50, 0x4b, 0x03, 0x04]);
   });

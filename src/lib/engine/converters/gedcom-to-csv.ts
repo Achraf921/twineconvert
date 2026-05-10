@@ -4,7 +4,7 @@ import { swapExtension } from "../util/canvas-encode";
 import { parseGedcom } from "../util/gedcom-parse";
 
 /**
- * GEDCOM → CSV. Flat individuals export — one row per person with all
+ * GEDCOM → CSV. Flat individuals export, one row per person with all
  * the fields a typical "spreadsheet of my family tree" use case needs.
  * Family relationships are captured by FamilyAsSpouse + FamilyAsChild
  * id columns so users can join back if they care.

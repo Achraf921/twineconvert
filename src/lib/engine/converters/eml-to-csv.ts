@@ -5,7 +5,7 @@ import { parseEml } from "../util/email-parse";
 
 /**
  * EML → CSV. Single-message metadata as a one-row CSV. Useful for
- * users batching many .eml files and merging — they can run this on
+ * users batching many .eml files and merging, they can run this on
  * each then concat. The mbox-to-csv route exists for the multi-message
  * case where the input is already a single mbox bundle.
  */

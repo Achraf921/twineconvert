@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Dropzone — the conversion UI.
+ * Dropzone, the conversion UI.
  *
  * Client component because it needs:
  *   - drag/drop event handlers

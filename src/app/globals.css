@@ -4,7 +4,7 @@
  * twineconvert design tokens
  *
  * Brand: bold pink + clean white. Pink (#E0297B) is the load-bearing
- * identity color — used for primary CTAs, focused inputs, accent links,
+ * identity color, used for primary CTAs, focused inputs, accent links,
  * and one decorative gradient on the hero. Everything else is pure
  * neutrals (off-white background, near-black text, subtle borders) so
  * the pink reads as a confident editorial accent rather than a candy
@@ -12,7 +12,7 @@
  * carrying every meaningful UI moment, neutrals everywhere else.
  *
  * Type stack: Geist (Vercel's geometric sans, distributed via the
- * `geist` npm package as next/font subsets — fast, woff2, latin-only).
+ * `geist` npm package as next/font subsets, fast, woff2, latin-only).
  * Display weight 800 with tight tracking on H1s for the bold opener;
  * body weight 400-500 in regular Geist Sans.
  * ===================================================================== */
@@ -101,7 +101,7 @@ body {
     radial-gradient(ellipse 60% 50% at 10% 100%, rgb(252 231 243 / 0.4) 0%, transparent 60%);
 }
 
-/* Dropzone hover/drag state — pink glow that we trigger via class swap */
+/* Dropzone hover/drag state, pink glow that we trigger via class swap */
 .dropzone-active {
   background: var(--color-pink-50);
   border-color: var(--color-pink-600);

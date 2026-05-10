@@ -11,7 +11,7 @@ export interface AvifEncodeOptions {
   quality?: number;
   /**
    * libavif speed: 0 = slowest/best compression, 10 = fastest/worst.
-   * Default 6 — balanced for an in-browser experience (slower than 8 but
+   * Default 6, balanced for an in-browser experience (slower than 8 but
    * meaningfully smaller output).
    */
   speed?: number;

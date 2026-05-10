@@ -5,7 +5,7 @@ import { ffmpegConvert } from "../util/ffmpeg-runner";
 
 /**
  * MOV → MP4. Most MOV files are already H.264/AAC inside a QuickTime
- * container — we can stream-copy the codecs (`-c copy`) to remux without
+ * container, we can stream-copy the codecs (`-c copy`) to remux without
  * re-encoding. Massively faster (seconds instead of minutes) and lossless.
  * Falls back are NOT implemented yet: if the input uses ProRes or another
  * non-MP4-compatible codec, FFmpeg errors out and we surface the failure.
@@ -31,7 +31,7 @@ const movToMp4: Converter = {
       });
     } catch (err) {
       throw new ConvertFailedError(
-        "Could not remux MOV — the source may use ProRes or another non-MP4-compatible codec",
+        "Could not remux MOV, the source may use ProRes or another non-MP4-compatible codec",
         err,
       );
     }

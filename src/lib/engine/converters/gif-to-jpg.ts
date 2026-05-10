@@ -10,7 +10,7 @@ const gifToJpg: Converter = {
 
   async convert(input, opts) {
     opts?.onProgress?.(0.1);
-    // Animated GIFs return only the first frame via Canvas.drawImage —
+    // Animated GIFs return only the first frame via Canvas.drawImage ,
     // by design. Animated→video is a different family (FFmpeg.wasm).
     const blob = await canvasEncode(input, {
       toMime: "image/jpeg",

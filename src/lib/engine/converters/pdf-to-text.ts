@@ -6,9 +6,9 @@ import { loadPdfjs, renderPdfPage } from "../util/pdf-render";
 
 /**
  * PDF → Text. Two paths depending on the PDF:
- *   1. Text-based PDFs (most office docs) — pdf.js extracts the text layer
+ *   1. Text-based PDFs (most office docs), pdf.js extracts the text layer
  *      directly (fast, accurate). Walks every page.
- *   2. Scanned-image PDFs (no text layer) — falls back to rasterizing the
+ *   2. Scanned-image PDFs (no text layer), falls back to rasterizing the
  *      first page and running Tesseract OCR. Multi-page OCR is intentionally
  *      out of scope here (slow + needs different UX).
  */
@@ -45,7 +45,7 @@ const pdfToText: Converter = {
       await pdf.destroy();
     } catch (err) {
       throw new ConvertFailedError(
-        "Could not read PDF — file may be corrupt or password-protected",
+        "Could not read PDF, file may be corrupt or password-protected",
         err,
       );
     }

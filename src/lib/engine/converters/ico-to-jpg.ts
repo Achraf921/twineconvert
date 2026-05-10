@@ -10,7 +10,7 @@ const icoToJpg: Converter = {
 
   async convert(input, opts) {
     opts?.onProgress?.(0.2);
-    // ICOs frequently include transparency — we flatten on white when
+    // ICOs frequently include transparency, we flatten on white when
     // targeting JPEG since JPEG can't carry an alpha channel.
     const blob = await canvasEncode(input, {
       toMime: "image/jpeg",

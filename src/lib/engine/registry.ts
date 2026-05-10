@@ -5,7 +5,7 @@ import type { Converter } from "./types";
  *
  * Each entry maps a tool id ("heic-to-jpg") to a function that imports the
  * converter module on demand. The dynamic `import()` lets the bundler
- * code-split each converter into its own chunk — meaning a user landing on
+ * code-split each converter into its own chunk, meaning a user landing on
  * /heic-to-jpg only downloads heic2any, not FFmpeg.wasm + Tesseract + libheif
  * combined.
  *
@@ -20,7 +20,7 @@ import type { Converter } from "./types";
 type ConverterLoader = () => Promise<Converter>;
 
 export const registry: Record<string, ConverterLoader> = {
-  // HEIC family — uses heic2any (decode via libheif under the hood)
+  // HEIC family, uses heic2any (decode via libheif under the hood)
   "heic-to-jpg": () =>
     import("./converters/heic-to-jpg").then((m) => m.default),
   "heic-to-png": () =>
@@ -28,7 +28,7 @@ export const registry: Record<string, ConverterLoader> = {
   "heic-to-webp": () =>
     import("./converters/heic-to-webp").then((m) => m.default),
 
-  // Canvas-based image format pairs (no extra deps — uses browser's
+  // Canvas-based image format pairs (no extra deps, uses browser's
   // native decode + Canvas.toBlob for re-encoding)
   "jpg-to-png": () =>
     import("./converters/jpg-to-png").then((m) => m.default),
@@ -43,7 +43,7 @@ export const registry: Record<string, ConverterLoader> = {
   "webp-to-png": () =>
     import("./converters/webp-to-png").then((m) => m.default),
 
-  // AVIF family — relies on browser-native AVIF decode (Chrome 85+,
+  // AVIF family, relies on browser-native AVIF decode (Chrome 85+,
   // Safari 16.4+, Firefox 113+). Older browsers will surface a clean error.
   "avif-to-jpg": () =>
     import("./converters/avif-to-jpg").then((m) => m.default),
@@ -58,7 +58,7 @@ export const registry: Record<string, ConverterLoader> = {
   "bmp-to-png": () =>
     import("./converters/bmp-to-png").then((m) => m.default),
 
-  // GIF (first frame extraction — animated→video uses FFmpeg family later)
+  // GIF (first frame extraction, animated→video uses FFmpeg family later)
   "gif-to-jpg": () =>
     import("./converters/gif-to-jpg").then((m) => m.default),
   "gif-to-png": () =>
@@ -70,7 +70,7 @@ export const registry: Record<string, ConverterLoader> = {
   "svg-to-jpg": () =>
     import("./converters/svg-to-jpg").then((m) => m.default),
 
-  // PDF family — pdfjs-dist for rendering, pdf-lib for assembly + manipulation
+  // PDF family, pdfjs-dist for rendering, pdf-lib for assembly + manipulation
   "pdf-to-jpg": () =>
     import("./converters/pdf-to-jpg").then((m) => m.default),
   "pdf-to-png": () =>
@@ -86,7 +86,7 @@ export const registry: Record<string, ConverterLoader> = {
   "compress-pdf": () =>
     import("./converters/compress-pdf").then((m) => m.default),
 
-  // OCR family — tesseract.js (lazy-loaded; ~10MB language model on first use)
+  // OCR family, tesseract.js (lazy-loaded; ~10MB language model on first use)
   "image-to-text": () =>
     import("./converters/image-to-text").then((m) => m.default),
   "jpg-to-text": () =>
@@ -96,7 +96,7 @@ export const registry: Record<string, ConverterLoader> = {
   "pdf-to-text": () =>
     import("./converters/pdf-to-text").then((m) => m.default),
 
-  // AVIF encoding — @jsquash/avif WASM (browser AVIF encode is unreliable)
+  // AVIF encoding, @jsquash/avif WASM (browser AVIF encode is unreliable)
   "jpg-to-avif": () =>
     import("./converters/jpg-to-avif").then((m) => m.default),
   "png-to-avif": () =>
@@ -104,7 +104,7 @@ export const registry: Record<string, ConverterLoader> = {
   "webp-to-avif": () =>
     import("./converters/webp-to-avif").then((m) => m.default),
 
-  // TIFF — utif (browsers don't decode TIFF natively)
+  // TIFF, utif (browsers don't decode TIFF natively)
   "tiff-to-jpg": () =>
     import("./converters/tiff-to-jpg").then((m) => m.default),
   "tiff-to-png": () =>
@@ -112,7 +112,7 @@ export const registry: Record<string, ConverterLoader> = {
   "tiff-to-pdf": () =>
     import("./converters/tiff-to-pdf").then((m) => m.default),
 
-  // FFmpeg.wasm family — single-threaded core via CDN (no COOP/COEP needed,
+  // FFmpeg.wasm family, single-threaded core via CDN (no COOP/COEP needed,
   // keeps the SEO/ad surface free of cross-origin isolation constraints)
   "mp4-to-mp3": () =>
     import("./converters/mp4-to-mp3").then((m) => m.default),
@@ -137,7 +137,7 @@ export const registry: Record<string, ConverterLoader> = {
   "ogg-to-mp3": () =>
     import("./converters/ogg-to-mp3").then((m) => m.default),
 
-  // Office documents — mammoth (DOCX), SheetJS (XLSX), Papa Parse (CSV)
+  // Office documents, mammoth (DOCX), SheetJS (XLSX), Papa Parse (CSV)
   "docx-to-html": () =>
     import("./converters/docx-to-html").then((m) => m.default),
   "docx-to-txt": () =>
@@ -155,7 +155,7 @@ export const registry: Record<string, ConverterLoader> = {
   "json-to-csv": () =>
     import("./converters/json-to-csv").then((m) => m.default),
 
-  // EPUB — JSZip + DOMParser (lighter than epubjs for headless extraction)
+  // EPUB, JSZip + DOMParser (lighter than epubjs for headless extraction)
   "epub-to-text": () =>
     import("./converters/epub-to-text").then((m) => m.default),
   "epub-to-html": () =>
@@ -163,7 +163,7 @@ export const registry: Record<string, ConverterLoader> = {
   "epub-to-pdf": () =>
     import("./converters/epub-to-pdf").then((m) => m.default),
 
-  // Finance family — OFX/QFX/QBO share one parser (structurally identical
+  // Finance family, OFX/QFX/QBO share one parser (structurally identical
   // formats); QIF is a separate text format. CSV is the universal bridge.
   // Beachhead niche: weak SERP competition + privacy-conscious audience.
   "ofx-to-csv": () =>
@@ -187,7 +187,7 @@ export const registry: Record<string, ConverterLoader> = {
   "qif-to-ofx": () =>
     import("./converters/qif-to-ofx").then((m) => m.default),
 
-  // Apple Health export — streaming SAX parser, accepts export.zip directly
+  // Apple Health export, streaming SAX parser, accepts export.zip directly
   // (we extract export.xml from inside via JSZip) or the raw export.xml
   "apple-health-to-csv": () =>
     import("./converters/apple-health-to-csv").then((m) => m.default),
@@ -202,7 +202,7 @@ export const registry: Record<string, ConverterLoader> = {
   "apple-health-workouts-to-csv": () =>
     import("./converters/apple-health-workouts-to-csv").then((m) => m.default),
 
-  // Kindle My Clippings.txt — text format, parsed from scratch
+  // Kindle My Clippings.txt, text format, parsed from scratch
   "kindle-clippings-to-csv": () =>
     import("./converters/kindle-clippings-to-csv").then((m) => m.default),
   "kindle-clippings-to-json": () =>
@@ -216,7 +216,7 @@ export const registry: Record<string, ConverterLoader> = {
   "kindle-clippings-to-readwise-csv": () =>
     import("./converters/kindle-clippings-to-readwise-csv").then((m) => m.default),
 
-  // GEDCOM — genealogy interchange (parsed from scratch, text-hierarchical)
+  // GEDCOM, genealogy interchange (parsed from scratch, text-hierarchical)
   "gedcom-to-csv": () =>
     import("./converters/gedcom-to-csv").then((m) => m.default),
   "gedcom-to-json": () =>
@@ -228,7 +228,7 @@ export const registry: Record<string, ConverterLoader> = {
   "csv-to-gedcom": () =>
     import("./converters/csv-to-gedcom").then((m) => m.default),
 
-  // Bibliography — BibTeX, RIS, NBIB, EndNote XML cross-conversions
+  // Bibliography, BibTeX, RIS, NBIB, EndNote XML cross-conversions
   // Unified Citation type bridges N parsers × M writers.
   "bibtex-to-ris": () =>
     import("./converters/bibtex-to-ris").then((m) => m.default),
@@ -247,7 +247,7 @@ export const registry: Record<string, ConverterLoader> = {
   "ris-to-csv": () =>
     import("./converters/ris-to-csv").then((m) => m.default),
 
-  // ADIF — amateur radio QSO logs
+  // ADIF, amateur radio QSO logs
   "adif-to-csv": () =>
     import("./converters/adif-to-csv").then((m) => m.default),
   "csv-to-adif": () =>
@@ -257,7 +257,7 @@ export const registry: Record<string, ConverterLoader> = {
   "adif-to-kml": () =>
     import("./converters/adif-to-kml").then((m) => m.default),
 
-  // Chess PGN — uses chess.js (industry-standard parser/validator)
+  // Chess PGN, uses chess.js (industry-standard parser/validator)
   "pgn-to-csv": () =>
     import("./converters/pgn-to-csv").then((m) => m.default),
   "pgn-to-fen": () =>
@@ -265,7 +265,7 @@ export const registry: Record<string, ConverterLoader> = {
   "pgn-to-json": () =>
     import("./converters/pgn-to-json").then((m) => m.default),
 
-  // WhatsApp chat exports — privacy is the SERP wedge here
+  // WhatsApp chat exports, privacy is the SERP wedge here
   "whatsapp-chat-to-csv": () =>
     import("./converters/whatsapp-chat-to-csv").then((m) => m.default),
   "whatsapp-chat-to-json": () =>
@@ -275,7 +275,7 @@ export const registry: Record<string, ConverterLoader> = {
   "whatsapp-chat-to-pdf": () =>
     import("./converters/whatsapp-chat-to-pdf").then((m) => m.default),
 
-  // Email .eml/.mbox — postal-mime + jsPDF render
+  // Email .eml/.mbox, postal-mime + jsPDF render
   "eml-to-pdf": () =>
     import("./converters/eml-to-pdf").then((m) => m.default),
   "eml-to-html": () =>
@@ -287,7 +287,7 @@ export const registry: Record<string, ConverterLoader> = {
   "mbox-to-pdf": () =>
     import("./converters/mbox-to-pdf").then((m) => m.default),
 
-  // Apple iWork — extract embedded preview.pdf from the zip wrapper
+  // Apple iWork, extract embedded preview.pdf from the zip wrapper
   "pages-to-pdf": () =>
     import("./converters/pages-to-pdf").then((m) => m.default),
   "numbers-to-pdf": () =>
@@ -319,7 +319,7 @@ export const registry: Record<string, ConverterLoader> = {
   "facebook-archive-to-html": () =>
     import("./converters/facebook-archive-to-html").then((m) => m.default),
 
-  // LUT (color grading) — pure text formats, all cross-pairs
+  // LUT (color grading), pure text formats, all cross-pairs
   "cube-to-3dl": () =>
     import("./converters/cube-to-3dl").then((m) => m.default),
   "3dl-to-cube": () =>
@@ -333,7 +333,7 @@ export const registry: Record<string, ConverterLoader> = {
   "csp-to-3dl": () =>
     import("./converters/csp-to-3dl").then((m) => m.default),
 
-  // Color palette — Adobe ASE, Photoshop ACO, GIMP GPL, JSON, CSS, hex list
+  // Color palette, Adobe ASE, Photoshop ACO, GIMP GPL, JSON, CSS, hex list
   "ase-to-gpl": () =>
     import("./converters/ase-to-gpl").then((m) => m.default),
   "gpl-to-ase": () =>
@@ -355,7 +355,7 @@ export const registry: Record<string, ConverterLoader> = {
   "hex-to-gpl": () =>
     import("./converters/hex-to-gpl").then((m) => m.default),
 
-  // 3D printing — STL/OBJ ↔ 3MF (the modern Bambu/Prusa container)
+  // 3D printing, STL/OBJ ↔ 3MF (the modern Bambu/Prusa container)
   "stl-to-3mf": () =>
     import("./converters/stl-to-3mf").then((m) => m.default),
   "3mf-to-stl": () =>
@@ -363,7 +363,7 @@ export const registry: Record<string, ConverterLoader> = {
   "obj-to-3mf": () =>
     import("./converters/obj-to-3mf").then((m) => m.default),
 
-  // Music notation — MIDI ↔ MusicXML and compressed MXL extraction
+  // Music notation, MIDI ↔ MusicXML and compressed MXL extraction
   "midi-to-musicxml": () =>
     import("./converters/midi-to-musicxml").then((m) => m.default),
   "musicxml-to-midi": () =>
@@ -372,29 +372,29 @@ export const registry: Record<string, ConverterLoader> = {
     import("./converters/mxl-to-musicxml").then((m) => m.default),
 
   // ============== PROFESSIONAL / B2B beachheads ==============
-  // SARIF (DevSecOps reports) — pure JSON, high CPM
+  // SARIF (DevSecOps reports), pure JSON, high CPM
   "sarif-to-csv": () =>
     import("./converters/sarif-to-csv").then((m) => m.default),
   "sarif-to-html": () =>
     import("./converters/sarif-to-html").then((m) => m.default),
 
-  // EDI (B2B logistics) — text grammar
+  // EDI (B2B logistics), text grammar
   "edi-to-csv": () =>
     import("./converters/edi-to-csv").then((m) => m.default),
   "edifact-to-csv": () =>
     import("./converters/edifact-to-csv").then((m) => m.default),
 
-  // PACER (legal) — public records, empty SERP
+  // PACER (legal), public records, empty SERP
   "pacer-docket-to-csv": () =>
     import("./converters/pacer-docket-to-csv").then((m) => m.default),
 
-  // IFC (BIM/AEC) — uses web-ifc WASM, highest CPM lane
+  // IFC (BIM/AEC), uses web-ifc WASM, highest CPM lane
   "ifc-to-csv": () =>
     import("./converters/ifc-to-csv").then((m) => m.default),
   "ifc-to-gltf": () =>
     import("./converters/ifc-to-gltf").then((m) => m.default),
 
-  // Discord chat exports — OSINT / moderation / archival
+  // Discord chat exports, OSINT / moderation / archival
   "discord-chat-to-md": () =>
     import("./converters/discord-chat-to-md").then((m) => m.default),
   "discord-chat-to-pdf": () =>
@@ -402,7 +402,7 @@ export const registry: Record<string, ConverterLoader> = {
   "discord-chat-summary-csv": () =>
     import("./converters/discord-chat-summary-csv").then((m) => m.default),
 
-  // Embroidery — DST/PES/JEF/EXP cross-conversions
+  // Embroidery, DST/PES/JEF/EXP cross-conversions
   "dst-to-pes": () =>
     import("./converters/dst-to-pes").then((m) => m.default),
   "pes-to-dst": () =>
@@ -488,7 +488,7 @@ export const registry: Record<string, ConverterLoader> = {
     import("./converters/txt-to-docx").then((m) => m.default),
 };
 
-/** All converter IDs — useful for sitemap generation later. */
+/** All converter IDs, useful for sitemap generation later. */
 export type ConverterId = keyof typeof registry;
 
 export function isKnownConverter(id: string): id is ConverterId {

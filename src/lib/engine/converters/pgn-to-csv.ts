@@ -8,7 +8,7 @@ import { parsePgn } from "../util/pgn-parse";
  * (Event, Site, Date, Round, White, Black, Result) plus White/BlackElo,
  * ECO, opening, plus move count and final FEN.
  *
- * The full move list is included as a single concatenated column —
+ * The full move list is included as a single concatenated column ,
  * trying to pivot moves into per-ply columns blows up CSV width
  * (a 60-move game = 120 columns). Users analyzing move sequences
  * should use the JSON output instead.

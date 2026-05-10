@@ -83,7 +83,7 @@ export function parseRis(text: string): Citation[] {
   /**
    * Materialize the in-progress record into a Citation and push it. Called
    * on `ER` tag (standard RIS terminator) AND at end-of-file in case the
-   * source omits ER — PubMed NBIB exports often separate records by blank
+   * source omits ER, PubMed NBIB exports often separate records by blank
    * lines without an explicit terminator.
    */
   const flushCurrent = () => {
@@ -115,7 +115,7 @@ export function parseRis(text: string): Citation[] {
   };
 
   for (const rawLine of text.split(/\r?\n/)) {
-    // Lines look like "TY  - JOUR" — at least one space then "- " then value.
+    // Lines look like "TY  - JOUR", at least one space then "- " then value.
     const m = rawLine.match(/^([A-Z][A-Z0-9]{1,3})\s*-\s?(.*)$/);
     if (!m) continue;
     let tag = m[1];
@@ -184,7 +184,7 @@ export function parseRis(text: string): Citation[] {
         current.url = value;
         break;
       case "SN":
-        // Could be ISSN or ISBN — heuristic: ISBNs are 10 or 13 digits, ISSNs are 8.
+        // Could be ISSN or ISBN, heuristic: ISBNs are 10 or 13 digits, ISSNs are 8.
         if (/^\d{4}-?\d{3}[\dxX]$/.test(value)) current.issn = value;
         else current.isbn = value;
         break;

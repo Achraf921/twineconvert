@@ -1,11 +1,11 @@
 /**
- * ToolPage — the per-tool page template.
+ * ToolPage, the per-tool page template.
  *
  * Server component (zero JS shipped for the SEO-critical content). The
  * only client component is <Dropzone>, which handles the actual file
  * conversion in the browser.
  *
- * Takes static metadata (label, accept, fromMime, toMime) — does NOT
+ * Takes static metadata (label, accept, fromMime, toMime), does NOT
  * dynamically import the converter implementation. The Dropzone client
  * component loads the actual converter at the moment the user clicks
  * "Convert," via the runtime registry.
@@ -61,8 +61,8 @@ export function ToolPage({ toolId, meta }: Props) {
           Three steps. No upload, no signup.
         </h2>
         <ol className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Step n={1} title="Drop your file" body={`Click the dropzone above or drag a ${inputProfile?.name ?? "file"} from your desktop. Files of any size — there's no upload, so there's no upload limit.`} />
-          <Step n={2} title="Convert in your browser" body={`The conversion runs entirely in this tab using JavaScript and WebAssembly. Your file never touches our servers — we don't have any.`} />
+          <Step n={1} title="Drop your file" body={`Click the dropzone above or drag a ${inputProfile?.name ?? "file"} from your desktop. Files of any size, there's no upload, so there's no upload limit.`} />
+          <Step n={2} title="Convert in your browser" body={`The conversion runs entirely in this tab using JavaScript and WebAssembly. Your file never touches our servers, we don't have any.`} />
           <Step n={3} title="Download" body={`Get your ${outputProfile?.name ?? "converted file"} the moment the conversion finishes. Convert another, or close the tab.`} />
         </ol>
       </section>
@@ -79,7 +79,7 @@ export function ToolPage({ toolId, meta }: Props) {
           />
           <TrustItem
             title="Free, no signup, no ads on conversions"
-            body="No account required. No watermark on the output. No queue. Open source — every line of conversion code is public."
+            body="No account required. No watermark on the output. No queue. Open source, every line of conversion code is public."
           />
         </div>
       </section>
@@ -145,29 +145,29 @@ function heroSubhead(label: string, input?: FormatProfile, output?: FormatProfil
   if (!input || !output) {
     return `Convert ${label} in your browser. Nothing uploaded, no signup, no file size limit.`;
   }
-  return `Drop your ${input.name} file. We'll convert it to ${output.name} right here in your browser — your file never leaves your device.`;
+  return `Drop your ${input.name} file. We'll convert it to ${output.name} right here in your browser, your file never leaves your device.`;
 }
 
 function faqItems(label: string, input?: FormatProfile, output?: FormatProfile) {
   const items: Array<{ q: string; a: string }> = [
     {
       q: `Is this ${label} converter really free?`,
-      a: `Yes. No signup, no watermark, no daily file count limit. The entire engine is open source — you can read the conversion code on GitHub.`,
+      a: `Yes. No signup, no watermark, no daily file count limit. The entire engine is open source, you can read the conversion code on GitHub.`,
     },
     {
       q: `Where does my file go when I convert it?`,
-      a: `Nowhere. The conversion runs entirely in your browser using JavaScript and WebAssembly. Your file is never uploaded to our servers. We don't have any servers handling files — there's nothing for us to log, store, or accidentally leak.`,
+      a: `Nowhere. The conversion runs entirely in your browser using JavaScript and WebAssembly. Your file is never uploaded to our servers. We don't have any servers handling files, there's nothing for us to log, store, or accidentally leak.`,
     },
     {
       q: `What's the maximum file size?`,
-      a: `Whatever your browser can hold in memory. Practically, this means a few hundred MB on most computers — significantly larger than the 1-2 GB caps that server-upload converters charge for. Very large files (multi-GB) may require closing other browser tabs first.`,
+      a: `Whatever your browser can hold in memory. Practically, this means a few hundred MB on most computers, significantly larger than the 1-2 GB caps that server-upload converters charge for. Very large files (multi-GB) may require closing other browser tabs first.`,
     },
   ];
 
   if (input && output) {
     items.push({
       q: `Why convert ${input.name} to ${output.name}?`,
-      a: `${input.primaryUse} ${output.primaryUse} The most common reason to convert is compatibility — ${output.name} works in places where ${input.name} doesn't, or vice versa.`,
+      a: `${input.primaryUse} ${output.primaryUse} The most common reason to convert is compatibility, ${output.name} works in places where ${input.name} doesn't, or vice versa.`,
     });
   }
 
@@ -180,12 +180,12 @@ function faqItems(label: string, input?: FormatProfile, output?: FormatProfile) 
 
   items.push({
     q: `Does this work offline?`,
-    a: `Once the page is loaded, the conversion itself runs entirely offline. The first time you use a tool, your browser downloads the conversion library (a one-time cache). If you reload while offline, the page won't load — but you can install the site as a Progressive Web App for full offline use.`,
+    a: `Once the page is loaded, the conversion itself runs entirely offline. The first time you use a tool, your browser downloads the conversion library (a one-time cache). If you reload while offline, the page won't load, but you can install the site as a Progressive Web App for full offline use.`,
   });
 
   items.push({
     q: `Can I convert multiple files at once?`,
-    a: `Single file at a time for now. Batch conversion is on the roadmap — for now, drop one file, download the result, then convert the next.`,
+    a: `Single file at a time for now. Batch conversion is on the roadmap, for now, drop one file, download the result, then convert the next.`,
   });
 
   return items;
@@ -240,7 +240,7 @@ function FormatCard({ profile, slug }: { profile: FormatProfile; slug: string })
     <article className="bg-[var(--color-surface)] rounded-xl border border-[var(--color-border)] p-6">
       <div className="flex items-baseline gap-3">
         <span className="text-xl font-bold text-[var(--color-text)]">{profile.name}</span>
-        <span className="text-sm text-[var(--color-text-3)]">— {profile.fullName}</span>
+        <span className="text-sm text-[var(--color-text-3)]">, {profile.fullName}</span>
       </div>
       <p className="mt-4 text-sm text-[var(--color-text-2)] leading-relaxed">{profile.description}</p>
       <div className="mt-4 pt-4 border-t border-[var(--color-border)]">
@@ -312,7 +312,7 @@ function StructuredData({
   const softwareApp = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    name: `${meta.label} Converter — twineconvert`,
+    name: `${meta.label} Converter, twineconvert`,
     applicationCategory: "UtilityApplication",
     operatingSystem: "Web",
     url,

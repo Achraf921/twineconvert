@@ -7,7 +7,7 @@ import { htmlToPdf } from "../util/jspdf-html";
  * DOCX → PDF. Pipeline: mammoth converts DOCX to semantic HTML, then
  * jsPDF (with html2canvas) rasterizes that HTML to a PDF.
  *
- * Fidelity is "good enough for sharing/printing" — exact font metrics,
+ * Fidelity is "good enough for sharing/printing", exact font metrics,
  * complex tables, and embedded objects may not render identically.
  * Users who need perfect fidelity will Print → Save as PDF in Word.
  * Our value prop is "no Word required, no upload, no signup."
@@ -32,7 +32,7 @@ const docxToPdf: Converter = {
       html = result.value;
     } catch (err) {
       throw new ConvertFailedError(
-        "Could not parse DOCX — file may be corrupt or password-protected",
+        "Could not parse DOCX, file may be corrupt or password-protected",
         err,
       );
     }

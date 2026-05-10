@@ -19,7 +19,7 @@ const POST_FILE_PATTERNS = [
 
 /**
  * Facebook archive → HTML. Same shape as the Instagram and Twitter
- * routes — finds the user's posts file(s) inside the zip, renders a
+ * routes, finds the user's posts file(s) inside the zip, renders a
  * scrollable HTML timeline. Comments, friend lists, ad interactions
  * are out of scope for v1.
  */

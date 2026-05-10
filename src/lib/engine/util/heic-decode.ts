@@ -1,7 +1,7 @@
 /**
  * Decode a HEIC/HEIF file into a re-encoded Blob of the requested format.
  * Uses heic2any (lazy-loaded). The library handles libheif under the hood
- * and produces a JPEG / PNG / WebP Blob directly — no Canvas re-encode
+ * and produces a JPEG / PNG / WebP Blob directly, no Canvas re-encode
  * needed when the target format is one heic2any supports natively.
  */
 export async function decodeHeic(

@@ -2,7 +2,7 @@
  * Render a PDF page to a Canvas using pdf.js.
  *
  * Used by every "PDF → image" converter. The PDF.js worker URL needs to be
- * provided so it can spawn its own worker thread for parsing — without it,
+ * provided so it can spawn its own worker thread for parsing, without it,
  * pdf.js processes everything on the main thread (slow + janky).
  *
  * Worker hosting: we point at the unpkg CDN with the exact pdfjs version
@@ -27,7 +27,7 @@ export async function loadPdfjs(): Promise<typeof import("pdfjs-dist")> {
 export interface PdfRenderOptions {
   /** 1-based page number. Defaults to 1 (first page only). */
   pageNumber?: number;
-  /** Render scale multiplier — higher = sharper but bigger. Default 2 (~144dpi). */
+  /** Render scale multiplier, higher = sharper but bigger. Default 2 (~144dpi). */
   scale?: number;
 }
 

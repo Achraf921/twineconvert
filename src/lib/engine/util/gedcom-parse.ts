@@ -23,7 +23,7 @@
  * (name, sex, birth/death/marriage dates and places, parents/children).
  *
  * Niceties NOT in v1: notes, sources/citations, multimedia objects,
- * GEDCOM 7.0 EXT extensions. These can be added later — most CSV/JSON
+ * GEDCOM 7.0 EXT extensions. These can be added later, most CSV/JSON
  * exports drop them anyway.
  */
 
@@ -66,7 +66,7 @@ export interface ParsedGedcom {
 }
 
 function parseLines(raw: string): RawNode[] {
-  // GEDCOM files are commonly ASCII or UTF-8; some old ones are ANSEL —
+  // GEDCOM files are commonly ASCII or UTF-8; some old ones are ANSEL ,
   // we'd need an iconv layer for those. For v1 we trust the file to
   // decode as UTF-8 (modern apps export this).
   const lines = raw.split(/\r?\n/);

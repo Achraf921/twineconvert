@@ -9,7 +9,7 @@ import { swapExtension } from "../util/canvas-encode";
  * `.js` files that wrap JSON).
  *
  * Output columns are the most-asked-for tweet fields. Threading info,
- * quote-tweets, and image URLs are dropped — users who want the full
+ * quote-tweets, and image URLs are dropped, users who want the full
  * relational shape should use the JSON output.
  */
 const twitterArchiveToCsv: Converter = {
@@ -18,7 +18,7 @@ const twitterArchiveToCsv: Converter = {
   fromMime: ["application/zip"],
   accept: [".zip"],
   toMime: "text/csv",
-  maxFileSizeBytes: 1024 * 1024 * 1024, // 1 GB — old accounts' archives are huge
+  maxFileSizeBytes: 1024 * 1024 * 1024, // 1 GB, old accounts' archives are huge
 
   async convert(input, opts) {
     opts?.onProgress?.(0.05);

@@ -10,7 +10,7 @@
  *   3. (blank)
  *   4. The actual highlight/note text (may span multiple lines for notes).
  *
- * Authors are inside the trailing parentheses of line 1 — but some books
+ * Authors are inside the trailing parentheses of line 1, but some books
  * use the format "Title - Author" or just "Title" with no author. We try
  * the parens form first and fall back to the whole line as title if it
  * doesn't match.
@@ -18,7 +18,7 @@
  * Localization note: the second line is fully localized in non-English
  * Kindles ("Surlignement" in French, "Markierung" in German, etc.).
  * Our regex handles English; non-English will fall through to a "highlight"
- * default — better than failing.
+ * default, better than failing.
  */
 
 export type ClippingType = "highlight" | "note" | "bookmark";
@@ -58,7 +58,7 @@ function parseHeader(line: string): {
   const locMatch = line.match(/Location\s+([\d-]+)/i);
   const location = locMatch?.[1];
 
-  // Extract date — everything after "Added on "
+  // Extract date, everything after "Added on "
   const dateMatch = line.match(/Added on\s+(.+)$/i);
   const addedAt = dateMatch?.[1].trim();
 
@@ -66,7 +66,7 @@ function parseHeader(line: string): {
 }
 
 function parseTitleLine(line: string): { book: string; author?: string } {
-  // "(Author)" at the end — handle nested parens by taking the LAST balanced pair.
+  // "(Author)" at the end, handle nested parens by taking the LAST balanced pair.
   const m = line.match(/^(.*)\s*\(([^()]+)\)\s*$/);
   if (m) return { book: m[1].trim(), author: m[2].trim() };
   return { book: line.trim() };

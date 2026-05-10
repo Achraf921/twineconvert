@@ -25,7 +25,7 @@ const cabrilloToAdif: Converter = {
       const qsos: AdifQso[] = [];
       for (const line of text.split(/\r?\n/)) {
         if (!line.startsWith("QSO:")) continue;
-        // Cabrillo QSO line — whitespace-delimited fields after "QSO:"
+        // Cabrillo QSO line, whitespace-delimited fields after "QSO:"
         const parts = line.slice(4).trim().split(/\s+/);
         if (parts.length < 9) continue;
         const [freqKHz, mode, date, time, myCall, sentRst, sentExch, theirCall, rcvdRst, ...rest] = parts;

@@ -4,7 +4,7 @@ import { swapExtension } from "../util/canvas-encode";
 import { ffmpegConvert } from "../util/ffmpeg-runner";
 
 /**
- * MP4 → MKV. MKV is a more permissive container — we stream-copy
+ * MP4 → MKV. MKV is a more permissive container, we stream-copy
  * codecs without re-encoding (lossless, fast). The `-fflags +genpts`
  * regenerates timestamps so MKV's stricter timing requirements pass.
  */

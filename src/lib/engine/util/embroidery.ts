@@ -7,7 +7,7 @@
  * underlying stitch model is shared.
  *
  * Internal model:
- *   Stitch[] — { x, y (absolute, units of 0.1mm), command }
+ *   Stitch[], { x, y (absolute, units of 0.1mm), command }
  *   command in: NORMAL | JUMP | TRIM | STOP | COLOR_CHANGE | END
  *
  * Coordinate conventions:
@@ -55,7 +55,7 @@ export function computeBbox(design: EmbroideryDesign): { minX: number; minY: num
 }
 
 // ============================================================================
-// DST (Tajima) — most widely supported industrial format
+// DST (Tajima), most widely supported industrial format
 // ============================================================================
 //
 // DST file structure:
@@ -246,7 +246,7 @@ export function buildDst(design: EmbroideryDesign): ArrayBuffer {
 }
 
 // ============================================================================
-// EXP (Melco / Bernina) — simplest format: no header, just stitch deltas
+// EXP (Melco / Bernina), simplest format: no header, just stitch deltas
 // ============================================================================
 //
 // Each stitch is 2 bytes (signed dx, dy). Control codes use 0x80 in byte 0
@@ -265,7 +265,7 @@ export function parseExp(buf: ArrayBuffer): EmbroideryDesign {
       if (code === 0x01) stitches.push({ x, y, command: StitchCommand.COLOR_CHANGE });
       else if (code === 0x02) { stitches.push({ x, y, command: StitchCommand.END }); break; }
       else if (code === 0x04) {
-        // Jump — delta is in the next 2 bytes
+        // Jump, delta is in the next 2 bytes
         if (off + 4 > buf.byteLength) break;
         x += view.getInt8(off + 2);
         y += view.getInt8(off + 3);
@@ -311,7 +311,7 @@ export function buildExp(design: EmbroideryDesign): ArrayBuffer {
 }
 
 // ============================================================================
-// JEF (Janome) — header with color list, then simple 2-byte stitches
+// JEF (Janome), header with color list, then simple 2-byte stitches
 // ============================================================================
 //
 // JEF header is ~116 bytes of fixed-position metadata followed by a
@@ -389,16 +389,16 @@ export function buildJef(design: EmbroideryDesign): ArrayBuffer {
 
   dv.setUint32(0, stitchOffset, true);
   dv.setUint32(4, 0x14, true); // format
-  // Skip optional date string at offset 8 (16 bytes ASCII) — leave zeros
+  // Skip optional date string at offset 8 (16 bytes ASCII), leave zeros
   dv.setUint32(24, colorCount, true);
-  // Stitch count, hoop type, extents — leave defaults; consumer software derives them.
+  // Stitch count, hoop type, extents, leave defaults; consumer software derives them.
   for (let i = 0; i < colorCount; i++) dv.setUint32(116 + i * 4, 14, true); // default color id
   out.set(body, headerSize);
   return out.buffer;
 }
 
 function jefColorIndexToHex(idx: number): string {
-  // Janome's full color palette is huge — we map common slots and fall
+  // Janome's full color palette is huge, we map common slots and fall
   // back to neutral grey for unknowns. Round-trip through other formats
   // is what matters most here, not exact thread color reproduction.
   const palette: Record<number, string> = {
@@ -409,7 +409,7 @@ function jefColorIndexToHex(idx: number): string {
 }
 
 // ============================================================================
-// PES (Brother) — minimal: contains an embedded PEC subsection that's
+// PES (Brother), minimal: contains an embedded PEC subsection that's
 // the actual stitch data. Full PES parsing is complex; for v1 we only
 // READ the PEC subsection, and we WRITE a minimal v1 PES with one PEC.
 // ============================================================================

@@ -47,7 +47,7 @@ const twitterArchiveToHtml: Converter = {
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Twitter Archive — @${screenName}</title>
+<title>Twitter Archive, @${screenName}</title>
 <style>
   body { font-family: system-ui, -apple-system, Segoe UI, sans-serif; max-width: 600px; margin: 2rem auto; padding: 0 1rem; background: #f7f9fa; }
   h1 { border-bottom: 1px solid #ccd; padding-bottom: 0.5rem; }
@@ -58,7 +58,7 @@ const twitterArchiveToHtml: Converter = {
 </style>
 </head>
 <body>
-<h1>@${screenName} — ${totalTweets} tweets</h1>
+<h1>@${screenName}, ${totalTweets} tweets</h1>
 ${tweetsHtml}
 </body>
 </html>`;

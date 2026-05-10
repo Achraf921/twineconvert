@@ -19,7 +19,7 @@ const pdfToPng: Converter = {
       canvas = rendered.canvas;
     } catch (err) {
       throw new ConvertFailedError(
-        "Could not render PDF — file may be corrupt or password-protected",
+        "Could not render PDF, file may be corrupt or password-protected",
         err,
       );
     }

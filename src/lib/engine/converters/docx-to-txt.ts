@@ -24,7 +24,7 @@ const docxToTxt: Converter = {
       text = result.value;
     } catch (err) {
       throw new ConvertFailedError(
-        "Could not parse DOCX — file may be corrupt or password-protected",
+        "Could not parse DOCX, file may be corrupt or password-protected",
         err,
       );
     }

@@ -1,5 +1,5 @@
 /**
- * EDI X12 + EDIFACT parsers — text grammars used by every B2B logistics,
+ * EDI X12 + EDIFACT parsers, text grammars used by every B2B logistics,
  * healthcare, retail, and supply-chain integration on the planet.
  *
  * Both formats are flat hierarchies of "segments" delimited by special
@@ -24,7 +24,7 @@
  *
  * For our v1 we expose ALL segments as flat rows with the tag and a
  * field-by-field breakdown. That's the most useful thing for non-dev
- * logistics analysts who actually want to read the data — full
+ * logistics analysts who actually want to read the data, full
  * transaction-set-aware parsing (decoding ST*850 as a Purchase Order
  * with semantic field names) requires per-spec lookups that vary by
  * X12 version and would balloon scope.
@@ -36,7 +36,7 @@ export interface EdiSegment {
 }
 
 export function parseX12(text: string): EdiSegment[] {
-  // ISA header is fixed-width — first 106 bytes contain the delimiters.
+  // ISA header is fixed-width, first 106 bytes contain the delimiters.
   // ISA[3] is the element separator, ISA[105] is the segment terminator.
   if (text.length < 106 || !text.startsWith("ISA")) {
     throw new Error("Not an X12 file (missing ISA header)");

@@ -11,7 +11,7 @@ import { parseWhatsapp, type WhatsappMessage } from "../util/whatsapp-parse";
  *
  * The "outgoing" sender heuristic: WhatsApp doesn't tell us in the
  * export which sender was you. We pick the first sender alphabetically
- * as "incoming" (left) and treat any other sender as "outgoing" (right) —
+ * as "incoming" (left) and treat any other sender as "outgoing" (right) ,
  * this is a coin flip but at least produces the visual two-sided layout
  * users recognize. Future: let the user pick their name in the UI.
  */

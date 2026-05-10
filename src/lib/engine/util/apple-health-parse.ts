@@ -16,10 +16,10 @@
  *   </HealthData>
  *
  * Why streaming SAX (not DOMParser):
- *   Real exports can hit 500MB+ — building a full DOM tree OOMs the tab.
+ *   Real exports can hit 500MB+, building a full DOM tree OOMs the tab.
  *   SAX walks the file as a stream of events, letting us push records into
  *   typed buckets and discard the raw nodes immediately. We also accept the
- *   raw `export.zip` directly and find the inner XML via JSZip — most users
+ *   raw `export.zip` directly and find the inner XML via JSZip, most users
  *   download what Apple gives them and don't realize there's an unzip step.
  */
 

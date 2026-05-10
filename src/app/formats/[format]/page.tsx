@@ -21,11 +21,11 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   if (!profile) return { title: "Format not found" };
   const url = `https://twineconvert.com/formats/${format}`;
   return {
-    title: `${profile.name} (${profile.fullName}) — format guide & converters`,
+    title: `${profile.name} (${profile.fullName}), format guide & converters`,
     description: `${profile.name} explained: what it is, how to open it, and every converter we offer that reads or writes ${profile.name}. ${profile.primaryUse}`,
     alternates: { canonical: url },
     openGraph: {
-      title: `${profile.name} — ${profile.fullName}`,
+      title: `${profile.name}, ${profile.fullName}`,
       description: profile.description.slice(0, 160),
       url,
       type: "article",

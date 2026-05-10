@@ -4,7 +4,7 @@
  * Hero visual: animated rotating display of "INPUT → TO → OUTPUT" format
  * pairs. Cycles through a curated list of popular conversions every few
  * seconds so the visitor immediately sees concrete examples of what the
- * tool does. Borrowed from CloudConvert's floating widget — it's a more
+ * tool does. Borrowed from CloudConvert's floating widget, it's a more
  * memorable hero than a static screenshot would be.
  *
  * Uses CSS transitions only (no animation library). Each rotation

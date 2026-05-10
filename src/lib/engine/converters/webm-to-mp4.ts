@@ -6,7 +6,7 @@ import { ffmpegConvert } from "../util/ffmpeg-runner";
 /**
  * WebM → MP4. WebM is VP8/VP9 video + Vorbis/Opus audio; MP4 expects
  * H.264 + AAC. Full re-encode required (slow). Using the libx264 ultrafast
- * preset to keep WASM runtime reasonable — quality is fine for casual use,
+ * preset to keep WASM runtime reasonable, quality is fine for casual use,
  * not broadcast. CRF 23 = visually-near-lossless default.
  */
 const webmToMp4: Converter = {

@@ -1,6 +1,6 @@
 /**
  * ICO encoder. Browsers can DECODE .ico via <img>, but no `toBlob('image/x-icon')`
- * exists — we have to write the container ourselves.
+ * exists, we have to write the container ourselves.
  *
  * ICO file structure (little-endian):
  *   ICONDIR header (6 bytes):
@@ -16,12 +16,12 @@
  *     6-7:  bits per pixel (32)
  *     8-11: image data size in bytes
  *     12-15: offset to image data
- *   Then concatenated image payloads — for our purposes, embedded PNG
+ *   Then concatenated image payloads, for our purposes, embedded PNG
  *   data (Microsoft added PNG-in-ICO support back in Vista; every modern
  *   browser/OS reads it).
  *
  * Using PNG payloads (not the legacy BMP+mask format) means we can hand
- * the canvas's PNG output directly to the encoder — no per-pixel work.
+ * the canvas's PNG output directly to the encoder, no per-pixel work.
  */
 
 export interface IcoSize {

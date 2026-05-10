@@ -24,7 +24,7 @@ const POST_FILE_PATTERNS = [
 /**
  * Instagram Data Export → CSV. Pulls the user's posts (the most-asked-for
  * subset of the archive). Stories, reels, comments, follower lists are
- * intentionally out of scope for v1 — those can be separate routes later
+ * intentionally out of scope for v1, those can be separate routes later
  * if the post route gets traction.
  *
  * The export zip from Instagram ships posts as either one big JSON or

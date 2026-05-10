@@ -58,7 +58,7 @@ interface FixtureSpec {
 }
 
 // ============================================================================
-// Programmatic fixture builders (use our own writers — bug in writer ==
+// Programmatic fixture builders (use our own writers, bug in writer ==
 // fixture creation failure == loud CI break)
 // ============================================================================
 
@@ -157,14 +157,14 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "remove-background": { provider: makePngFixture, env: "browser" },
   "image-to-text":     { provider: makePngFixture, env: "browser" },
 
-  // ===== PDF family — need real PDF fixtures for input =====
+  // ===== PDF family, need real PDF fixtures for input =====
   "pdf-to-jpg":  { provider: () => Promise.reject(new Error("pdf fixture pending")), env: "browser" },
   "pdf-to-png":  { provider: () => Promise.reject(new Error("pdf fixture pending")), env: "browser" },
   "pdf-to-text": { provider: () => Promise.reject(new Error("pdf fixture pending")), env: "browser" },
   "pdf-to-docx": { provider: () => Promise.reject(new Error("pdf fixture pending")), env: "browser" },
   "compress-pdf":{ provider: () => Promise.reject(new Error("pdf fixture pending")), env: "browser" },
 
-  // ===== FFmpeg — need browser for FFmpeg.wasm Worker =====
+  // ===== FFmpeg, need browser for FFmpeg.wasm Worker =====
   "mp4-to-mp3":  { provider: () => Promise.reject(new Error("mp4 fixture pending")), env: "browser" },
   "mp4-to-gif":  { provider: () => Promise.reject(new Error("mp4 fixture pending")), env: "browser" },
   "mp4-to-mov":  { provider: () => Promise.reject(new Error("mp4 fixture pending")), env: "browser" },

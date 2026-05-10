@@ -5,7 +5,7 @@ import { parseGedcom, type GedcomIndividual, type GedcomFamily } from "../util/g
 
 /**
  * GEDCOM → HTML family tree report. Self-contained single HTML file with
- * inlined CSS — opens cleanly in any browser. Layout is a section per
+ * inlined CSS, opens cleanly in any browser. Layout is a section per
  * individual with parents/spouses/children rendered as anchor links to
  * other individuals on the page (so users can click around).
  *
@@ -76,8 +76,8 @@ function renderIndividual(
   }
 
   const parts: string[] = [];
-  if (ind.birthDate || ind.birthPlace) parts.push(`<dt>Born</dt><dd>${escapeHtml([ind.birthDate, ind.birthPlace].filter(Boolean).join(" — "))}</dd>`);
-  if (ind.deathDate || ind.deathPlace) parts.push(`<dt>Died</dt><dd>${escapeHtml([ind.deathDate, ind.deathPlace].filter(Boolean).join(" — "))}</dd>`);
+  if (ind.birthDate || ind.birthPlace) parts.push(`<dt>Born</dt><dd>${escapeHtml([ind.birthDate, ind.birthPlace].filter(Boolean).join(", "))}</dd>`);
+  if (ind.deathDate || ind.deathPlace) parts.push(`<dt>Died</dt><dd>${escapeHtml([ind.deathDate, ind.deathPlace].filter(Boolean).join(", "))}</dd>`);
   if (parents.length) parts.push(`<dt>Parents</dt><dd>${parents.join(", ")}</dd>`);
   if (spouseLinks.length) parts.push(`<dt>Spouse${spouseLinks.length > 1 ? "s" : ""}</dt><dd>${spouseLinks.join(", ")}</dd>`);
   if (childrenLinks.length) parts.push(`<dt>Children</dt><dd>${childrenLinks.join(", ")}</dd>`);

@@ -5,7 +5,7 @@
  *   The multi-threaded build is ~2-3x faster but requires SharedArrayBuffer,
  *   which means setting Cross-Origin-Opener-Policy + Cross-Origin-Embedder-Policy
  *   headers. Those headers break embedded ads, third-party scripts, video
- *   embeds, and most analytics scripts — i.e. everything our future
+ *   embeds, and most analytics scripts, i.e. everything our future
  *   Mediavine/Raptive layer depends on. Single-threaded is slower but
  *   isolation-free, so the site can keep monetizing the SEO surface around
  *   each tool. We can route-segment COOP/COEP later for power-user pages.
@@ -93,7 +93,7 @@ export async function ffmpegConvert(
       await instance.deleteFile(opts.inputName);
       await instance.deleteFile(opts.outputName);
     } catch {
-      // Non-fatal — the FS is in-memory and will be garbage-collected anyway.
+      // Non-fatal, the FS is in-memory and will be garbage-collected anyway.
     }
 
     return new Blob([buf], { type: opts.outputMime });

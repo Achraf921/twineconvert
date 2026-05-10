@@ -9,7 +9,7 @@
  *     contains commas, JSON parses, BibTeX starts with `@`)
  *
  * This catches the "writes garbage but doesn't throw" failure mode at
- * CI time — the worst failure mode for a conversion site, since the
+ * CI time, the worst failure mode for a conversion site, since the
  * user gets a downloadable file but it's broken.
  */
 
@@ -303,7 +303,7 @@ describe("text-format converter smoke tests", () => {
     const input = fileFromText("test.cube", FIXTURES.cubeLut, "text/plain");
     const result = await run("cube-to-3dl", input);
     const text = await result.blob.text();
-    // 3DL starts with the coordinate ladder line — should be space-separated integers
+    // 3DL starts with the coordinate ladder line, should be space-separated integers
     const firstLine = text.split("\n")[0];
     expect(firstLine.split(/\s+/).every((tok) => /^\d+$/.test(tok))).toBe(true);
   });
@@ -316,7 +316,7 @@ describe("text-format converter smoke tests", () => {
     await expectMagicBytes(result.blob, [0x50, 0x4b, 0x03, 0x04]);
   });
 
-  it("midi-to-musicxml smoke (skip — needs binary MIDI fixture)", () => {
+  it("midi-to-musicxml smoke (skip, needs binary MIDI fixture)", () => {
     // MIDI is binary; we'd need a real MIDI fixture or generate one via
     // midi-file's writeMidi. Punt to a future binary-fixtures expansion.
   });

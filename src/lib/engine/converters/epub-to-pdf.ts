@@ -7,7 +7,7 @@ import { htmlToPdf } from "../util/jspdf-html";
 /**
  * EPUB → PDF. Pipeline: extract chapter HTMLs, concatenate with page
  * breaks, render to PDF via jsPDF.html(). Image resources embedded in the
- * EPUB are NOT inlined — the PDF will show broken-image placeholders for
+ * EPUB are NOT inlined, the PDF will show broken-image placeholders for
  * any chapters that reference them. Full image embedding requires reading
  * each <img> from the zip and converting to data: URLs; left as a v2
  * improvement when we have signal that users care.

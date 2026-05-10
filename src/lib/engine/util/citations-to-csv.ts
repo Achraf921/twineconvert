@@ -1,7 +1,7 @@
 /**
  * Shared CSV writer for the bibliography family. Picked the column set
  * that matches what reference managers (Zotero, Mendeley) export by
- * default — so users can pipe our output straight back into those tools.
+ * default, so users can pipe our output straight back into those tools.
  */
 
 import type { Citation } from "./citation";

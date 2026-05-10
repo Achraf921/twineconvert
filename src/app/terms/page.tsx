@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Terms",
   description:
-    "Plain-language terms of use for twineconvert — a free, open-source, in-browser file conversion tool.",
+    "Plain-language terms of use for twineconvert, a free, open-source, in-browser file conversion tool.",
   alternates: { canonical: "https://twineconvert.com/terms" },
 };
 
@@ -14,7 +14,7 @@ export default function TermsPage() {
         Terms
       </p>
       <h1 className="text-4xl font-extrabold tracking-tight mb-2">
-        The rules — short version
+        The rules, short version
       </h1>
       <p className="text-sm text-[var(--color-text-3)] mb-10">Last updated May 2026</p>
 
@@ -22,7 +22,7 @@ export default function TermsPage() {
         <p>
           Drop a file in, get a converted file out. That&apos;s the whole deal.
           You don&apos;t need an account. There&apos;s no usage limit. Convert
-          your own files or files you have permission to convert — we
+          your own files or files you have permission to convert, we
           can&apos;t check, but it&apos;s on you.
         </p>
       </Section>
@@ -68,7 +68,7 @@ export default function TermsPage() {
           twineconvert is a free tool provided as-is. We&apos;re not liable
           for losses arising from conversion errors, format incompatibilities,
           or the output not meeting your expectations. The conversion engine
-          is open source — anyone can audit it, fork it, or fix it. If you
+          is open source, anyone can audit it, fork it, or fix it. If you
           find a bug, file an issue on GitHub.
         </p>
       </Section>

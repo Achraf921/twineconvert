@@ -30,7 +30,7 @@ const imageToText: Converter = {
       });
     } catch (err) {
       throw new ConvertFailedError(
-        "OCR failed — image may be too small, blurry, or contain no readable text",
+        "OCR failed, image may be too small, blurry, or contain no readable text",
         err,
       );
     }

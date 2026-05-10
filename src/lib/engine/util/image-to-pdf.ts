@@ -1,13 +1,13 @@
 /**
  * Wrap one or more image Blobs into a single PDF using pdf-lib.
  * Each image becomes one page sized to the image's intrinsic dimensions
- * (no scaling / fitting — most "image to PDF" tools work this way).
+ * (no scaling / fitting, most "image to PDF" tools work this way).
  */
 
 import { swapExtension } from "./canvas-encode";
 
 export interface ImageToPdfOptions {
-  /** "image/jpeg" or "image/png" — pdf-lib supports these natively. */
+  /** "image/jpeg" or "image/png", pdf-lib supports these natively. */
   embedType: "image/jpeg" | "image/png";
 }
 

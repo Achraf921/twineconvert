@@ -19,7 +19,7 @@ const mp3ToWav: Converter = {
         inputName: "in.mp3",
         outputName: "out.wav",
         outputMime: "audio/wav",
-        // 16-bit signed little-endian PCM — the de-facto WAV everyone expects
+        // 16-bit signed little-endian PCM, the de-facto WAV everyone expects
         args: ["-acodec", "pcm_s16le"],
         onProgress: (p) => opts?.onProgress?.(0.05 + p * 0.93),
       });

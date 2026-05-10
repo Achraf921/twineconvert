@@ -5,7 +5,7 @@ import { listToolIds, getMeta } from "@/lib/engine/registry-meta";
 export const metadata: Metadata = {
   title: "All 192 file converters",
   description:
-    "Complete alphabetical list of every file converter on twineconvert. HEIC, PDF, MP4, DOCX, XLSX, OFX, EPUB, IFC, MIDI, GEDCOM, ASE, STL — every conversion runs in your browser.",
+    "Complete alphabetical list of every file converter on twineconvert. HEIC, PDF, MP4, DOCX, XLSX, OFX, EPUB, IFC, MIDI, GEDCOM, ASE, STL, every conversion runs in your browser.",
   alternates: { canonical: "https://twineconvert.com/all-tools" },
 };
 
@@ -44,7 +44,7 @@ export default function AllToolsPage() {
       </h1>
       <p className="mt-3 text-[var(--color-text-2)] max-w-2xl">
         {TOTAL} converters, alphabetical. Every one runs entirely in your
-        browser — files never upload, no signup, no daily limit.
+        browser, files never upload, no signup, no daily limit.
       </p>
 
       <nav aria-label="Letter index" className="mt-8 flex flex-wrap gap-1.5">

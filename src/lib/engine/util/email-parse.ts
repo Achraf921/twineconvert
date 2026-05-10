@@ -1,11 +1,11 @@
 /**
  * RFC-822 email parsing for `.eml` and `.mbox` files.
  *
- * `.eml` is a single message — headers, blank line, body (plus optional
+ * `.eml` is a single message, headers, blank line, body (plus optional
  * MIME multipart structure for HTML/attachments).
  *
  * `.mbox` is a concatenation of EMLs separated by lines beginning with
- * `From ` (note the trailing space) — the legacy Unix mbox convention.
+ * `From ` (note the trailing space), the legacy Unix mbox convention.
  * We split on that delimiter and parse each chunk as an EML.
  *
  * We use postal-mime for the actual heavy lifting (header decoding,
@@ -25,7 +25,7 @@ export interface ParsedEmail {
   messageId?: string;
   /** Plaintext body. May be empty if the email was HTML-only. */
   textBody?: string;
-  /** HTML body — used by the PDF/HTML renderers. */
+  /** HTML body, used by the PDF/HTML renderers. */
   htmlBody?: string;
   attachments: ParsedEmailAttachment[];
 }
@@ -74,7 +74,7 @@ export async function parseEml(raw: string | ArrayBuffer): Promise<ParsedEmail> 
  * Split an mbox file into individual EML strings. The "From " separator
  * convention has a known false-positive rate (any body line starting
  * with "From " in the wild collides with the header). The standard
- * mitigation is to require a preceding blank line — we apply that.
+ * mitigation is to require a preceding blank line, we apply that.
  */
 function splitMbox(text: string): string[] {
   const messages: string[] = [];

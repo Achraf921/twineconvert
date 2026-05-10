@@ -2,7 +2,7 @@
  * OFX 2.x writer. Produces well-formed XML that's accepted by Quicken,
  * GnuCash, Money in Excel, and most personal-finance apps. The same
  * output is valid as OFX, QFX (with INTU.BID), and QBO (with QuickBooks
- * MIME wrapper) — vendor variants are produced by passing different
+ * MIME wrapper), vendor variants are produced by passing different
  * `flavor` options.
  *
  * We don't bother with OFX 1.x output even though we accept it as input.
@@ -61,7 +61,7 @@ export function buildOfx(opts: BuildOfxOptions): string {
   const isQfx = flavor === "qfx";
   const isQbo = flavor === "qbo";
 
-  // Date range — earliest and latest transaction dates, falling back to today.
+  // Date range, earliest and latest transaction dates, falling back to today.
   const dates = txs.map((t) => t.date).sort();
   const dtStart = dates[0] ? toOfxDate(dates[0]) : nowOfxDate();
   const dtEnd = dates[dates.length - 1] ? toOfxDate(dates[dates.length - 1]) : nowOfxDate();

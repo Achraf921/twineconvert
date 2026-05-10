@@ -2,7 +2,7 @@ import type { Converter } from "../types";
 import { canvasEncode, swapExtension } from "../util/canvas-encode";
 
 /**
- * JPG → GIF. Single-frame GIF — animated GIF generation requires a
+ * JPG → GIF. Single-frame GIF, animated GIF generation requires a
  * separate gif-encoder lib and is outside scope for the static-image
  * routes. For animated GIFs from video, see mp4-to-gif.
  */

@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "twineconvert",
     short_name: "twineconvert",
     description:
-      "Free in-browser file converter — 192 tools, no upload, no signup, no file size limit.",
+      "Free in-browser file converter, 192 tools, no upload, no signup, no file size limit.",
     start_url: "/",
     display: "standalone",
     background_color: "#ffffff",

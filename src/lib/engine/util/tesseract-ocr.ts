@@ -3,7 +3,7 @@
  *
  * Tesseract.js is heavy (~2-15MB depending on language data + WASM). We
  * lazy-load it per call. The first call also fetches the language model
- * (~10MB for English) — subsequent calls reuse the cached model.
+ * (~10MB for English), subsequent calls reuse the cached model.
  *
  * Default language: English. Multi-language support is a Pro-tier
  * differentiator for later.

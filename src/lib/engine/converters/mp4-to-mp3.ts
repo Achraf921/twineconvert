@@ -5,7 +5,7 @@ import { ffmpegConvert } from "../util/ffmpeg-runner";
 
 /**
  * MP4 → MP3. Strips video, encodes audio with libmp3lame at VBR ~190kbps
- * (-q:a 2). This is THE highest-volume video/audio query on the web —
+ * (-q:a 2). This is THE highest-volume video/audio query on the web ,
  * "extract audio from video" / "convert mp4 to mp3" is millions/mo.
  */
 const mp4ToMp3: Converter = {
@@ -29,7 +29,7 @@ const mp4ToMp3: Converter = {
       });
     } catch (err) {
       throw new ConvertFailedError(
-        "FFmpeg failed — file may use an unsupported codec or be corrupt",
+        "FFmpeg failed, file may use an unsupported codec or be corrupt",
         err,
       );
     }

@@ -8,11 +8,11 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL("https://twineconvert.com"),
   title: {
-    default: "twineconvert — convert files in your browser",
+    default: "twineconvert, convert files in your browser",
     template: "%s · twineconvert",
   },
   description:
-    "Free file converter that runs entirely in your browser. Convert HEIC, PDF, audio, video, archives — your files never leave your device. No upload, no signup, no file size limit.",
+    "Free file converter that runs entirely in your browser. Convert HEIC, PDF, audio, video, archives, your files never leave your device. No upload, no signup, no file size limit.",
   keywords: [
     "file converter",
     "online converter",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "twineconvert",
-    title: "twineconvert — convert files in your browser",
+    title: "twineconvert, convert files in your browser",
     description:
       "Free file converter that runs entirely in your browser. Your files never leave your device.",
     url: "https://twineconvert.com",
@@ -68,7 +68,7 @@ const WEBSITE_JSONLD = {
   "@type": "WebSite",
   name: "twineconvert",
   url: "https://twineconvert.com",
-  description: "Free in-browser file converter — 192 tools, no upload, no signup.",
+  description: "Free in-browser file converter, 192 tools, no upload, no signup.",
   potentialAction: {
     "@type": "SearchAction",
     target: {

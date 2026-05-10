@@ -4,7 +4,7 @@ import { swapExtension } from "../util/canvas-encode";
 import type JSZipType from "jszip";
 
 /**
- * MXL is the compressed MusicXML format — a zip containing:
+ * MXL is the compressed MusicXML format, a zip containing:
  *   META-INF/container.xml  (points at the inner file)
  *   <something>.xml         (the actual MusicXML)
  *

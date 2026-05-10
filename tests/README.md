@@ -1,6 +1,6 @@
 # Test infrastructure
 
-The engine has 192 converters. The tests verify that **every one of them produces a real, valid output for a real, valid input** — not just that they don't throw.
+The engine has 192 converters. The tests verify that **every one of them produces a real, valid output for a real, valid input**, not just that they don't throw.
 
 ## Layers
 
@@ -17,7 +17,7 @@ For every converter, we:
 2. Run the conversion
 3. Validate the output via a format-specific validator (from `tests/validators/index.ts`)
 
-The validators **decode the output and assert structural soundness** — PDF has `%%EOF` trailer, ZIP has `[Content_Types].xml`, BibTeX has `@entry` blocks, GEDCOM has `HEAD` + `TRLR`, embroidery PES starts with `#PES`, etc. This catches the failure mode where a converter produces a file with valid magic bytes but garbage content.
+The validators **decode the output and assert structural soundness**, PDF has `%%EOF` trailer, ZIP has `[Content_Types].xml`, BibTeX has `@entry` blocks, GEDCOM has `HEAD` + `TRLR`, embroidery PES starts with `#PES`, etc. This catches the failure mode where a converter produces a file with valid magic bytes but garbage content.
 
 Currently covers ~110 converters that work in Node + happy-dom. The remaining ~80 (image format pairs, FFmpeg audio/video, HEIC/AVIF/TIFF, IFC, OCR) need real Canvas / WASM / Worker support and are covered by the browser test suite.
 
@@ -29,7 +29,7 @@ For every losslessly-bijective pair (X→Y where Y→X exists and the round-trip
 - Convert Y→X' (reconstructed)
 - Assert X' is semantically equivalent to X (preserves the key fields, transaction count, vertex count, etc.)
 
-This is uniquely powerful because it catches bugs in EITHER the forward or reverse converter that one-way tests cannot detect. If our writer encodes amounts as strings but the reader expects them as numbers, the magic-byte and structural validators both pass — only the round-trip catches the silent corruption.
+This is uniquely powerful because it catches bugs in EITHER the forward or reverse converter that one-way tests cannot detect. If our writer encodes amounts as strings but the reader expects them as numbers, the magic-byte and structural validators both pass, only the round-trip catches the silent corruption.
 
 Covers 30+ pairs across finance, bibliography, GEDCOM, ADIF, 3D mesh, color palettes, embroidery, LUTs, and music notation.
 
@@ -69,15 +69,15 @@ npx vitest run -t "ofx"     # single converter
 
 `.github/workflows/ci.yml` runs three parallel jobs on every push and PR:
 
-1. **Type check** (5 min timeout) — `tsc --noEmit`
-2. **Tests** (15 min) — `vitest run --coverage`, uploads coverage artifact
-3. **Build** (15 min) — regenerates registry-meta, runs `next build --webpack`, uploads `.next/` artifact
+1. **Type check** (5 min timeout), `tsc --noEmit`
+2. **Tests** (15 min), `vitest run --coverage`, uploads coverage artifact
+3. **Build** (15 min), regenerates registry-meta, runs `next build --webpack`, uploads `.next/` artifact
 
 Failure in any job blocks the merge.
 
 ## Why webpack instead of Turbopack
 
-Turbopack (Next.js 16's default) wedges on our 192-converter dynamic-import set during the chunking phase — observed multi-minute hangs at 0% CPU with 10GB+ memory pressure on local builds. Webpack chunks the same set in <2 minutes with normal memory.
+Turbopack (Next.js 16's default) wedges on our 192-converter dynamic-import set during the chunking phase, observed multi-minute hangs at 0% CPU with 10GB+ memory pressure on local builds. Webpack chunks the same set in <2 minutes with normal memory.
 
 Once Turbopack matures further this will probably stop being a problem; for now we explicitly opt out via `--webpack` flag.
 
@@ -98,4 +98,4 @@ These have fixture providers but are tagged `env: "browser"` and skipped by the 
 
 ## Coverage
 
-Run `npm run test:coverage` to generate an HTML report in `coverage/`. Open `coverage/index.html` to see line coverage per file. The unit tests currently exercise the engine's text/structured-format converters, all parser+writer utilities, and the runner. Browser-only converters show low coverage in the Node report — that's expected and covered by the browser test suite.
+Run `npm run test:coverage` to generate an HTML report in `coverage/`. Open `coverage/index.html` to see line coverage per file. The unit tests currently exercise the engine's text/structured-format converters, all parser+writer utilities, and the runner. Browser-only converters show low coverage in the Node report, that's expected and covered by the browser test suite.

@@ -9,7 +9,7 @@ import { htmlToPdf } from "../util/jspdf-html";
  * at the top, then the email body. HTML body is preferred when the
  * source has both HTML and text parts; falls back to text otherwise.
  *
- * Attachments are NOT embedded in the PDF in v1 — that would mean
+ * Attachments are NOT embedded in the PDF in v1, that would mean
  * reconstructing a multi-page PDF where each attachment renders on its
  * own page. For now we list filenames at the bottom so users know
  * what's missing. Future: add a "with attachments" route that produces

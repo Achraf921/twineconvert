@@ -2,7 +2,7 @@
  * ADIF (Amateur Data Interchange Format) parser + writer.
  *
  * ADIF is THE universal interchange for ham radio QSO logs (every
- * logging app — N1MM, Log4OM, HRD, ACLog, fldigi, WSJT-X — exports
+ * logging app, N1MM, Log4OM, HRD, ACLog, fldigi, WSJT-X, exports
  * and imports it). Format is tag-length-value:
  *
  *   <TAG:length>value
@@ -63,7 +63,7 @@ export function parseAdif(text: string): ParsedAdif {
 
     let length = 0;
     if (colon >= 0) {
-      // Tag may include data type indicator: "<NAME:5:S>" — split on : and take first numeric.
+      // Tag may include data type indicator: "<NAME:5:S>", split on : and take first numeric.
       const parts = tagSpec.slice(colon + 1).split(":");
       length = parseInt(parts[0], 10);
       if (isNaN(length)) length = 0;

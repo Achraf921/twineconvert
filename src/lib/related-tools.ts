@@ -2,8 +2,8 @@
  * Auto-generated cross-link grids for per-tool pages.
  *
  * For a tool like `heic-to-jpg`, we want two link grids on the page:
- *   1. "Convert HEIC to other formats" — every other route starting with `heic-to-`
- *   2. "Convert other files to JPG" — every other route ending with `-to-jpg`
+ *   1. "Convert HEIC to other formats", every other route starting with `heic-to-`
+ *   2. "Convert other files to JPG", every other route ending with `-to-jpg`
  *
  * These are SEO weapons: they create dense topic clusters and internal
  * linking that Google uses to understand how related pages connect.
@@ -58,7 +58,7 @@ export function getOtherInputsForOutput(currentId: string, limit = 12): Array<{ 
 }
 
 /**
- * Hand-curated "related tools" — when there's a thematic relationship
+ * Hand-curated "related tools", when there's a thematic relationship
  * across format families that auto-generation can't infer (e.g. on
  * /heic-to-jpg we want to surface compress-pdf because Apple users
  * often have BOTH iPhone photos AND big PDFs to share).

@@ -2,15 +2,15 @@
  * Color palette parsers + writers for the design-tool interchange family.
  *
  * Formats supported:
- *   - ASE (Adobe Swatch Exchange) — binary, big-endian, used by Adobe CC
- *   - ACO (Adobe Color) — binary, big-endian, Photoshop's native format
- *   - GPL (GIMP Palette) — plain text, used by GIMP / Krita / Inkscape
- *   - HEX list (text) — input convenience for Coolors / Figma exports
+ *   - ASE (Adobe Swatch Exchange), binary, big-endian, used by Adobe CC
+ *   - ACO (Adobe Color), binary, big-endian, Photoshop's native format
+ *   - GPL (GIMP Palette), plain text, used by GIMP / Krita / Inkscape
+ *   - HEX list (text), input convenience for Coolors / Figma exports
  *   - CSS variables (text, output only)
  *   - JSON (text, output only)
  *
  * All formats reduce internally to a `Color[]` with R/G/B in 0-255 plus
- * an optional name. ASE supports CMYK/Lab/Gray entries — we convert
+ * an optional name. ASE supports CMYK/Lab/Gray entries, we convert
  * those to sRGB on input rather than carrying them through the
  * unified shape (most downstream consumers want RGB anyway).
  */
@@ -94,7 +94,7 @@ export function buildGpl(palette: Palette): string {
   return lines.join("\n") + "\n";
 }
 
-// ---- ASE (Adobe Swatch Exchange) — binary, big-endian -----------------
+// ---- ASE (Adobe Swatch Exchange), binary, big-endian -----------------
 
 export function parseAse(buf: ArrayBuffer): Palette {
   const view = new DataView(buf);
@@ -151,7 +151,7 @@ function readAseColor(view: DataView, off: number, model: string): { r: number; 
       b: Math.round(255 * (1 - y) * (1 - k)),
     };
   }
-  // LAB and others — skip silently rather than fail.
+  // LAB and others, skip silently rather than fail.
   return null;
 }
 
@@ -198,7 +198,7 @@ export function buildAse(palette: Palette): ArrayBuffer {
   return buf;
 }
 
-// ---- ACO (Adobe Color) — binary, big-endian ---------------------------
+// ---- ACO (Adobe Color), binary, big-endian ---------------------------
 
 export function parseAco(buf: ArrayBuffer): Palette {
   const view = new DataView(buf);

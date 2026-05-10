@@ -3,7 +3,7 @@ import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
 
 /**
- * Background removal via @imgly/background-removal — runs an ONNX
+ * Background removal via @imgly/background-removal, runs an ONNX
  * segmentation model entirely in-browser. First-call cost is the
  * ~30MB model download (cached by the browser thereafter), then a
  * few seconds per image depending on dimensions and CPU.

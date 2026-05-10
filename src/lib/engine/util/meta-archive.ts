@@ -4,7 +4,7 @@
  * Meta gives users a "Download Your Information" zip that contains
  * dozens of category folders (posts, messages, your_topics, etc.) with
  * either JSON or HTML files inside. Path conventions shift between
- * Meta's export-format versions — what's `media/posts_1.json` today was
+ * Meta's export-format versions, what's `media/posts_1.json` today was
  * `posts/posts.json` two years ago. We use glob-style path matching so
  * this works across the historical layouts.
  */
@@ -57,7 +57,7 @@ export async function loadJsonArrays<T>(files: FoundFile[]): Promise<T[]> {
         }
       }
     } catch {
-      // Skip files that aren't valid JSON — Meta sometimes ships HTML in
+      // Skip files that aren't valid JSON, Meta sometimes ships HTML in
       // the same folder as JSON depending on the export-format choice.
       continue;
     }
@@ -66,7 +66,7 @@ export async function loadJsonArrays<T>(files: FoundFile[]): Promise<T[]> {
 }
 
 /**
- * Meta's strings are sometimes mojibake-encoded — they double-encode
+ * Meta's strings are sometimes mojibake-encoded, they double-encode
  * UTF-8 as Latin-1, so "café" arrives as "cafÃ©". This normalizer
  * undoes that when it can be done safely.
  */

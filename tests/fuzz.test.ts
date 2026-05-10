@@ -30,7 +30,7 @@ import { isNodeTestable } from "./fixtures/fixture-providers";
 const NODE_TESTABLE = listConverterIds().filter(isNodeTestable);
 
 /** A converter accepting `accept[0]` extension is what we use to
- *  construct the wrong-format input — give every converter a file
+ *  construct the wrong-format input, give every converter a file
  *  that has its expected extension but contains garbage. */
 function makeFile(name: string, content: Uint8Array | string, mime: string): File {
   const data = typeof content === "string" ? content : content.buffer.slice(
@@ -81,7 +81,7 @@ describe("fuzz: every converter handles bad input gracefully", () => {
         // If it didn't throw, the result must at least be a Blob.
         expect(result.blob).toBeInstanceOf(Blob);
       } catch (err) {
-        // Throwing IS the expected outcome — we just want a clean
+        // Throwing IS the expected outcome, we just want a clean
         // error, not a process crash.
         expect(err).toBeDefined();
       }
@@ -128,7 +128,7 @@ describe("fuzz: every converter handles bad input gracefully", () => {
 
 describe("fuzz: hostile-input class boundaries", () => {
   it("zip-bomb-shaped input doesn't lock the parser", async () => {
-    // A tiny "zip" with bogus headers — should be rejected by JSZip
+    // A tiny "zip" with bogus headers, should be rejected by JSZip
     const bogusZip = new Uint8Array([0x50, 0x4b, 0x03, 0x04, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff]);
     const f = makeFile("bomb.zip", bogusZip, "application/zip");
     try {
@@ -143,7 +143,7 @@ describe("fuzz: hostile-input class boundaries", () => {
   });
 
   it("very long single-line CSV doesn't blow up the parser", async () => {
-    // 100k columns on one row — papaparse should handle this without OOM at this size
+    // 100k columns on one row, papaparse should handle this without OOM at this size
     const cells = Array.from({ length: 100000 }, (_, i) => `col${i}`).join(",");
     const f = makeFile("wide.csv", cells, "text/csv");
     try {
@@ -175,7 +175,7 @@ describe("fuzz: hostile-input class boundaries", () => {
       await run("json-to-csv", f);
     } catch (err) {
       // Either throws cleanly OR succeeds with partial output. Both are fine
-      // — what we don't want is a recursion stack-overflow.
+      //, what we don't want is a recursion stack-overflow.
       expect(err).toBeDefined();
     }
   });

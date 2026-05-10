@@ -8,7 +8,7 @@ import { ImageResponse } from "next/og";
 export const runtime = "edge";
 export const contentType = "image/png";
 export const size = { width: 1200, height: 630 };
-export const alt = "twineconvert — convert files in your browser";
+export const alt = "twineconvert, convert files in your browser";
 
 export default function Image() {
   return new ImageResponse(

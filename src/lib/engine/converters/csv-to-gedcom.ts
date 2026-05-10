@@ -10,7 +10,7 @@ import type { GedcomIndividual } from "../util/gedcom-parse";
  * a minimal GEDCOM 5.5.1 file.
  *
  * Family relationships are NOT inferred from CSVs that lack family-id
- * columns — for users who need full family round-trips, JSON is the
+ * columns, for users who need full family round-trips, JSON is the
  * better intermediate format. Most "import my Excel of ancestors"
  * workflows just need INDI records, which is what this produces.
  */

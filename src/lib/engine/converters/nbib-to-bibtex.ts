@@ -5,7 +5,7 @@ import { buildBibtex } from "../util/bibtex";
 import { parseRis } from "../util/ris";
 
 /**
- * NBIB is PubMed's citation export format — structurally identical to
+ * NBIB is PubMed's citation export format, structurally identical to
  * RIS with a different tag dictionary. The same parser handles both
  * (NBIB tags are mapped to RIS equivalents internally).
  */

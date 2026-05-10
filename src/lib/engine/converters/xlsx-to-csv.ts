@@ -3,7 +3,7 @@ import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
 
 /**
- * XLSX → CSV. Returns the FIRST sheet only — multi-sheet output (returning
+ * XLSX → CSV. Returns the FIRST sheet only, multi-sheet output (returning
  * a ZIP of CSVs) is a separate tool.
  */
 const xlsxToCsv: Converter = {

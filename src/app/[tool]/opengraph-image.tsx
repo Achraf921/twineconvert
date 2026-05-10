@@ -4,7 +4,7 @@ import { getProfilesForToolId } from "@/lib/formats";
 
 /**
  * Per-tool Open Graph image generator. Renders a 1200x630 PNG for
- * each /[tool] route — used as the preview when someone shares the
+ * each /[tool] route, used as the preview when someone shares the
  * URL on Twitter, LinkedIn, Discord, Slack, or any other site that
  * reads OG metadata. Without this, every share shows the generic
  * Vercel logo.
@@ -16,7 +16,7 @@ import { getProfilesForToolId } from "@/lib/formats";
 export const runtime = "edge";
 export const contentType = "image/png";
 export const size = { width: 1200, height: 630 };
-export const alt = "twineconvert — convert files in your browser";
+export const alt = "twineconvert, convert files in your browser";
 
 export default async function Image({ params }: { params: Promise<{ tool: string }> }) {
   const { tool } = await params;
@@ -45,7 +45,7 @@ export default async function Image({ params }: { params: Promise<{ tool: string
           fontFamily: "system-ui",
         }}
       >
-        {/* Top band — logo + brand */}
+        {/* Top band, logo + brand */}
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
           <svg width="56" height="56" viewBox="0 0 32 32" fill="none">
             <circle cx="11" cy="16" r="7" stroke="#E0297B" strokeWidth="2.5" />
@@ -57,7 +57,7 @@ export default async function Image({ params }: { params: Promise<{ tool: string
           </span>
         </div>
 
-        {/* Center — the conversion pair (or just the label, for single-action tools) */}
+        {/* Center, the conversion pair (or just the label, for single-action tools) */}
         {isBidir ? (
           <div style={{ display: "flex", alignItems: "center", gap: 32, marginTop: 40 }}>
             <FormatChip name={inputName} />
@@ -86,7 +86,7 @@ export default async function Image({ params }: { params: Promise<{ tool: string
           </div>
         )}
 
-        {/* Bottom — value prop */}
+        {/* Bottom, value prop */}
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           <div
             style={{

@@ -1,6 +1,6 @@
 /**
  * PGN (Portable Game Notation) parser. PGN is the universal format for
- * chess games — used by chess.com, lichess, ChessBase, every chess engine.
+ * chess games, used by chess.com, lichess, ChessBase, every chess engine.
  *
  * Format is plaintext with two parts per game:
  *
@@ -73,7 +73,7 @@ export async function parsePgn(text: string): Promise<PgnGame[]> {
       moves = chess.history();
       finalFen = chess.fen();
     } catch {
-      // Bad PGN block — skip it but don't fail the whole batch.
+      // Bad PGN block, skip it but don't fail the whole batch.
       continue;
     }
     games.push({

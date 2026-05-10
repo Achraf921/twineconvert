@@ -5,7 +5,7 @@
  * differing only in headers and a handful of vendor-specific tags we
  * don't need to interpret.
  *
- * The hairy part is OFX 1.x: it's "SGML" in the loose sense — tags like
+ * The hairy part is OFX 1.x: it's "SGML" in the loose sense, tags like
  * `<DTPOSTED>20240101` close implicitly at the next `<`, which isn't
  * valid XML. We rewrite the body into well-formed XML before handing it
  * to DOMParser. The transformation is: every line matching

@@ -33,7 +33,7 @@ export default function AboutPage() {
           unnecessary risk.
         </p>
         <p>
-          twineconvert runs every conversion in your browser — using
+          twineconvert runs every conversion in your browser, using
           WebAssembly compilations of the same libraries the upload-based
           converters run on their servers (FFmpeg, libheif, pdfjs, mammoth,
           web-ifc, jsquash, and a few dozen more). The only difference: the
@@ -49,7 +49,7 @@ export default function AboutPage() {
           What&apos;s here
         </h2>
         <p>
-          192 converters across 28 format families — the standard image / PDF
+          192 converters across 28 format families, the standard image / PDF
           / audio / video lineup, plus a long tail of professional and niche
           formats most generic converters don&apos;t bother with: OFX/QFX/QBO
           for personal finance, Apple Health export, Kindle clippings,
@@ -91,13 +91,13 @@ export default function AboutPage() {
           what users ask for, batch conversion (multiple files at once),
           a Progressive Web App install option for full offline use, and a
           Pro tier if/when there&apos;s clear demand for something paid (the
-          free tier is permanently free — no bait-and-switch).
+          free tier is permanently free, no bait-and-switch).
         </p>
         <p>
           The engine eventually monetizes via display ads (AdSense → Mediavine
           when traffic is sufficient → Raptive at scale) on the SEO content
           areas of each tool page. The conversions themselves will never have
-          ads, watermarks, or premium gates — that stuff erodes the core
+          ads, watermarks, or premium gates, that stuff erodes the core
           value proposition (convert files in your browser, fast, private,
           free).
         </p>

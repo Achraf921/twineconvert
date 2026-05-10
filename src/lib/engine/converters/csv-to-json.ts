@@ -4,7 +4,7 @@ import { swapExtension } from "../util/canvas-encode";
 
 /**
  * CSV → JSON via Papa Parse. `header: true` means the first row is treated
- * as the keys for each subsequent row's object — the standard "CSV table"
+ * as the keys for each subsequent row's object, the standard "CSV table"
  * interpretation users expect.
  */
 const csvToJson: Converter = {

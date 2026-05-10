@@ -17,7 +17,7 @@ const pgnToJson: Converter = {
     try {
       const text = await input.text();
       const games = await parsePgn(text);
-      // Strip the raw PGN block from the output to keep JSON size sane —
+      // Strip the raw PGN block from the output to keep JSON size sane ,
       // users who want the original bytes already have the input file.
       const compact = games.map(({ headers, moves, finalFen, result }) => ({
         headers,

@@ -3,7 +3,7 @@
  *   v x y z       (one vertex per line)
  *   f a b c       (one triangle per line, 1-indexed vertex references)
  *
- * No materials, normals, or texture coordinates — just geometry. That
+ * No materials, normals, or texture coordinates, just geometry. That
  * matches what our 3MF/STL parsers extract anyway (we don't preserve
  * normals/UVs through the unified Mesh shape).
  */

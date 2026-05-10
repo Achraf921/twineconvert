@@ -4,7 +4,7 @@ import { swapExtension } from "../util/canvas-encode";
 import { loadPdfjs } from "../util/pdf-render";
 
 /**
- * PDF → DOCX. Best-effort text extraction with paragraph reconstruction —
+ * PDF → DOCX. Best-effort text extraction with paragraph reconstruction ,
  * matches the volume of "I just need the text editable" intent without
  * pretending to preserve layout fidelity (no tables, no images, no
  * columns, no fonts).
@@ -16,7 +16,7 @@ import { loadPdfjs } from "../util/pdf-render";
  *      in the docx
  *
  * For "PDF with real layout fidelity" users we surface a clear note in
- * the UI elsewhere directing them to Adobe/iLovePDF — that's a fight we
+ * the UI elsewhere directing them to Adobe/iLovePDF, that's a fight we
  * structurally can't win client-side. This route serves the much larger
  * "give me the text in Word so I can edit" use case.
  */

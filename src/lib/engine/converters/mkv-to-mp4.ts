@@ -4,11 +4,11 @@ import { swapExtension } from "../util/canvas-encode";
 import { ffmpegConvert } from "../util/ffmpeg-runner";
 
 /**
- * MKV → MP4. MKV is a container, not a codec — most MKV files already
+ * MKV → MP4. MKV is a container, not a codec, most MKV files already
  * carry H.264/AAC, so we try a stream-copy remux first. If the source
  * has truly exotic codecs (HEVC 10-bit, Opus audio, etc.) the user gets
  * a clean error and can use a desktop tool. Re-encoding fallback would
- * dramatically increase WASM runtime — not justified for v1.
+ * dramatically increase WASM runtime, not justified for v1.
  */
 const mkvToMp4: Converter = {
   id: "mkv-to-mp4",
@@ -31,7 +31,7 @@ const mkvToMp4: Converter = {
       });
     } catch (err) {
       throw new ConvertFailedError(
-        "Could not remux MKV — codecs may be MP4-incompatible (HEVC, Opus, etc.)",
+        "Could not remux MKV, codecs may be MP4-incompatible (HEVC, Opus, etc.)",
         err,
       );
     }

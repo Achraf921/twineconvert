@@ -1,5 +1,5 @@
 /**
- * MIDI ↔ MusicXML — minimal but functional.
+ * MIDI ↔ MusicXML, minimal but functional.
  *
  * MIDI is the lowest-common-denominator of musical notation: it captures
  * note-on/note-off times and pitches, but not staff layout, key signatures
@@ -16,8 +16,8 @@
  *
  * v1 limitations (acceptable for the "I just need this to load in
  * MuseScore" use case which is the bulk of the demand):
- *   - Single track per part — multi-track polyphony is collapsed
- *   - Quarter-note quantization — sub-quarter durations are rounded
+ *   - Single track per part, multi-track polyphony is collapsed
+ *   - Quarter-note quantization, sub-quarter durations are rounded
  *   - Time signature defaults to 4/4 unless the MIDI file declares it
  *   - Key signature defaults to C major
  */
@@ -230,7 +230,7 @@ export async function musicXmlToMidi(text: string): Promise<ArrayBuffer> {
     tracks: [events],
   };
   const u8 = midiLib.writeMidi(midi);
-  // writeMidi returns number[] — convert to a clean ArrayBuffer.
+  // writeMidi returns number[], convert to a clean ArrayBuffer.
   const arr = new Uint8Array(u8);
   return arr.buffer.slice(arr.byteOffset, arr.byteOffset + arr.byteLength) as ArrayBuffer;
 }

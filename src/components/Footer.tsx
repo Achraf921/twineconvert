@@ -2,7 +2,7 @@ import Link from "next/link";
 
 /**
  * Site footer. Multi-column layout with category navigation (great
- * for both UX and as a sitewide internal-linking surface — every page
+ * for both UX and as a sitewide internal-linking surface, every page
  * carries the full topic graph in its footer, which Google likes).
  */
 
@@ -88,7 +88,7 @@ export function Footer() {
 
         <div className="pt-8 border-t border-[var(--color-border)] flex flex-col md:flex-row justify-between items-start md:items-center gap-4 text-xs text-[var(--color-text-3)]">
           <p>
-            © {new Date().getFullYear()} twineconvert. Open source — every conversion runs in your browser.
+            © {new Date().getFullYear()} twineconvert. Open source, every conversion runs in your browser.
           </p>
           <div className="flex items-center gap-5 flex-wrap">
             <Link href="/all-tools" className="hover:text-[var(--color-text)] transition-colors">

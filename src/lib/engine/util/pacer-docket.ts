@@ -3,14 +3,14 @@
  *
  * PACER (the federal court records system) lets users download a case
  * docket as an HTML page. The page is a simple table with one row per
- * filing — but the formatting varies a bit between PACER frontends
+ * filing, but the formatting varies a bit between PACER frontends
  * (NextGen vs older builds). We target the common shape:
  *
  *   Header section: case caption, court, judge, date filed
  *   Docket table:
  *     Date | # | Docket Text (with PDF links)
  *
- * We also accept zipped exports — some users save "Docket Sheet.zip"
+ * We also accept zipped exports, some users save "Docket Sheet.zip"
  * which contains the HTML plus referenced PDFs. We extract the HTML
  * (and ignore the PDFs since the converter shape is single-file out).
  *

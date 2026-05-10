@@ -5,7 +5,7 @@ import { swapExtension } from "../util/canvas-encode";
 /**
  * DOCX → HTML via mammoth. Mammoth maps Word styles to semantic HTML
  * (Heading 1 → <h1>, etc.). It explicitly does NOT preserve every visual
- * detail — that's the point. Users who want pixel-perfect rendering need
+ * detail, that's the point. Users who want pixel-perfect rendering need
  * a desktop tool.
  */
 const docxToHtml: Converter = {
@@ -31,7 +31,7 @@ const docxToHtml: Converter = {
       html = result.value;
     } catch (err) {
       throw new ConvertFailedError(
-        "Could not parse DOCX — file may be corrupt or password-protected",
+        "Could not parse DOCX, file may be corrupt or password-protected",
         err,
       );
     }

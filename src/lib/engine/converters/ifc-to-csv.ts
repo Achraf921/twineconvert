@@ -22,7 +22,7 @@ interface ElementRow {
  * spreadsheet needs: type, name, material, volume/area/length/etc.
  *
  * IFC's data model is graph-shaped: an element doesn't directly own
- * its quantities — it's connected via IfcRelDefinesByProperties to an
+ * its quantities, it's connected via IfcRelDefinesByProperties to an
  * IfcElementQuantity, which holds IfcQuantityVolume / IfcQuantityArea /
  * IfcQuantityLength children. We walk those relationships per element.
  *

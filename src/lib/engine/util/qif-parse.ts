@@ -1,5 +1,5 @@
 /**
- * QIF parser. QIF is the oldest of the Quicken family — pre-OFX, text
+ * QIF parser. QIF is the oldest of the Quicken family, pre-OFX, text
  * line-based, with single-character field codes. Each transaction is a
  * sequence of field lines terminated by a single `^`.
  *
@@ -38,7 +38,7 @@ export function parseQif(raw: string): ParsedFinanceFile {
     const trimmed = line.trim();
     if (!trimmed) continue;
 
-    // Section header (!Type:Bank, !Type:CCard, !Account, etc.) — we ignore
+    // Section header (!Type:Bank, !Type:CCard, !Account, etc.), we ignore
     // the type since our unified shape doesn't distinguish, but we reset
     // any in-progress transaction to be safe.
     if (trimmed.startsWith("!")) {
@@ -77,7 +77,7 @@ export function parseQif(raw: string): ParsedFinanceFile {
       case "L":
         current.category = value;
         break;
-      // C (cleared), A (address), S/E/$ (split lines), F (reimbursable) — ignored
+      // C (cleared), A (address), S/E/$ (split lines), F (reimbursable), ignored
     }
   }
 

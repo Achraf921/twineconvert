@@ -4,7 +4,7 @@ import { swapExtension } from "../util/canvas-encode";
 import { parseKindleClippings, type KindleClipping } from "../util/kindle-clippings-parse";
 
 /**
- * Generic Markdown export — groups clippings by book with a # heading
+ * Generic Markdown export, groups clippings by book with a # heading
  * per book, then ## per highlight type, then a blockquote of the text.
  * This format imports cleanly into any Markdown app (Obsidian, Notion
  * via Markdown import, Bear, Logseq, plain text editors).
@@ -41,7 +41,7 @@ const kindleClippingsToMarkdown: Converter = {
 function buildMarkdown(clippings: KindleClipping[]): string {
   const byBook = new Map<string, KindleClipping[]>();
   for (const c of clippings) {
-    const key = c.author ? `${c.book} — ${c.author}` : c.book;
+    const key = c.author ? `${c.book}, ${c.author}` : c.book;
     const list = byBook.get(key) ?? [];
     list.push(c);
     byBook.set(key, list);

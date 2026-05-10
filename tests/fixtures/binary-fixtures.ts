@@ -1,5 +1,5 @@
 /**
- * Binary fixtures that we generate programmatically — using either our own
+ * Binary fixtures that we generate programmatically, using either our own
  * writers (which doubles as a sanity check for the writer) or hand-crafted
  * bytes for tiny standard formats (PNG, JPEG, etc.).
  *
@@ -59,7 +59,7 @@ export function makeTinyAco(): Uint8Array {
   return new Uint8Array(buildAco(SAMPLE_PALETTE));
 }
 
-/** A unit cube as a Mesh — useful for STL/OBJ/3MF round-trips. */
+/** A unit cube as a Mesh, useful for STL/OBJ/3MF round-trips. */
 export const SAMPLE_CUBE_MESH: Mesh = {
   vertices: new Float32Array([
     0, 0, 0,  1, 0, 0,  1, 1, 0,  0, 1, 0, // bottom face
@@ -116,7 +116,7 @@ export function fileFromBytes(name: string, bytes: Uint8Array, type = "applicati
 // ============================================================================
 // Programmatic builders for binary fixtures we can synthesize using
 // libraries already in our dependency tree. The output of each builder
-// is a real, decodable file in the target format — not a fake stub.
+// is a real, decodable file in the target format, not a fake stub.
 // ============================================================================
 
 /** A minimal valid PDF with one page of text. Built via pdf-lib. */
@@ -244,7 +244,7 @@ export async function makeTinyMxl(): Promise<Uint8Array> {
 
 /** A minimal 3DL LUT. Size 4 because our parser requires the coordinate
  *  ladder to have > 3 entries to disambiguate from a normal RGB triplet
- *  line. 4^3 = 64 entries — still tiny. */
+ *  line. 4^3 = 64 entries, still tiny. */
 export function makeTiny3dl(): string {
   const ladder = [0, 341, 682, 1023];
   const lines = [ladder.join(" ")];
@@ -351,7 +351,7 @@ export async function makeTinyFacebookZip(): Promise<Uint8Array> {
   return zip.generateAsync({ type: "uint8array" });
 }
 
-/** Minimal iWork .pages document — zip with embedded preview.pdf. */
+/** Minimal iWork .pages document, zip with embedded preview.pdf. */
 export async function makeTinyIworkPages(): Promise<Uint8Array> {
   const JSZip = (await import("jszip")).default;
   const pdfBytes = await makeTinyPdf();

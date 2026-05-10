@@ -7,7 +7,7 @@ import { ffmpegConvert } from "../util/ffmpeg-runner";
  * GIF → MP4. MP4 is dramatically smaller than GIF for the same animation
  * (often 10-20x smaller), which is why every social platform converts
  * uploaded GIFs to MP4 internally. Width is forced to even pixels via
- * the scale filter — H.264 requires even dimensions.
+ * the scale filter, H.264 requires even dimensions.
  */
 const gifToMp4: Converter = {
   id: "gif-to-mp4",

@@ -20,7 +20,7 @@ const tiffToPng: Converter = {
       canvas = imageDataToCanvas(decoded.imageData);
     } catch (err) {
       throw new ConvertFailedError(
-        "TIFF decode failed — file may be corrupt or use an unsupported TIFF compression",
+        "TIFF decode failed, file may be corrupt or use an unsupported TIFF compression",
         err,
       );
     }

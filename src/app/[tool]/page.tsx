@@ -63,19 +63,19 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   if (profiles) {
     const inputName = profiles.input.name;
     const outputName = profiles.output.name;
-    title = `${inputName} to ${outputName} converter — free, in your browser`;
-    description = `Convert ${inputName} to ${outputName} for free. Runs entirely in your browser — your file never leaves your device. No upload, no signup, no file size limit.`;
+    title = `${inputName} to ${outputName} converter, free, in your browser`;
+    description = `Convert ${inputName} to ${outputName} for free. Runs entirely in your browser, your file never leaves your device. No upload, no signup, no file size limit.`;
   } else if (isBidir) {
     const [inKey, outKey] = tool.split("-to-");
     const inputName = inKey.toUpperCase();
     const outputName = outKey.toUpperCase();
-    title = `${inputName} to ${outputName} converter — free, in your browser`;
-    description = `Convert ${inputName} to ${outputName} for free. Runs entirely in your browser — your file never leaves your device. No upload, no signup, no file size limit.`;
+    title = `${inputName} to ${outputName} converter, free, in your browser`;
+    description = `Convert ${inputName} to ${outputName} for free. Runs entirely in your browser, your file never leaves your device. No upload, no signup, no file size limit.`;
   } else {
     // Single-action tools: compress-pdf, remove-background, image-to-text-equivalent.
     // Use the human-curated label from the registry instead of slug-mangling.
-    title = `${meta.label} — free, in your browser`;
-    description = `${meta.label} for free. Runs entirely in your browser — your file never leaves your device. No upload, no signup, no file size limit.`;
+    title = `${meta.label}, free, in your browser`;
+    description = `${meta.label} for free. Runs entirely in your browser, your file never leaves your device. No upload, no signup, no file size limit.`;
   }
 
   return {
@@ -83,14 +83,14 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
     description,
     alternates: { canonical: url },
     openGraph: {
-      title: `${meta.label} converter — twineconvert`,
+      title: `${meta.label} converter, twineconvert`,
       description,
       url,
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
-      title: `${meta.label} converter — twineconvert`,
+      title: `${meta.label} converter, twineconvert`,
       description,
     },
   };

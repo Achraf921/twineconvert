@@ -3,7 +3,7 @@
  * and EndNote XML. Each parser converts INTO this; each writer converts
  * FROM this. That gives us NxM format pairs from N+M parsers/writers.
  *
- * Field choices follow the BibTeX/CSL union — these are the fields that
+ * Field choices follow the BibTeX/CSL union, these are the fields that
  * actually round-trip cleanly across all four formats. Source-specific
  * fields (RIS-only "AB" abstract, EndNote-only "rec-number", BibTeX
  * cross-references) are preserved in `extra` so users who care can
@@ -11,7 +11,7 @@
  */
 
 export interface Citation {
-  /** Citation key — required for BibTeX, optional for the others. */
+  /** Citation key, required for BibTeX, optional for the others. */
   id: string;
   /** Mapped to BibTeX entry type / RIS TY field. Default "article". */
   type: CitationType;
@@ -36,7 +36,7 @@ export interface Citation {
   issn?: string;
   abstract?: string;
   keywords?: string[];
-  /** Free-form extras that didn't map to a structured field — preserved for round-trip. */
+  /** Free-form extras that didn't map to a structured field, preserved for round-trip. */
   extra?: Record<string, string>;
 }
 

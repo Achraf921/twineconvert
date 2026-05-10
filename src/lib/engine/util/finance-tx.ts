@@ -2,7 +2,7 @@
  * Common transaction shape used by every finance-format converter.
  *
  * The four formats we touch (OFX, QFX, QBO, QIF) all describe the same
- * thing — a list of bank/credit-card transactions — but each uses
+ * thing, a list of bank/credit-card transactions, but each uses
  * different field names, encodings, and idioms. Centralizing on this
  * shape lets every parser/writer pair degrade gracefully (missing fields
  * become undefined; unknown fields get dropped).
@@ -48,7 +48,7 @@ export function toOfxDate(iso: string): string {
   return compact.length === 8 ? `${compact}000000` : compact;
 }
 
-/** Format an ISO date into QIF MM/DD/YYYY (US style — QIF is a US format). */
+/** Format an ISO date into QIF MM/DD/YYYY (US style, QIF is a US format). */
 export function toQifDate(iso: string): string {
   const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})/);
   return m ? `${m[2]}/${m[3]}/${m[1]}` : iso;

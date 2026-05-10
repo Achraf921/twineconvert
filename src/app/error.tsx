@@ -6,7 +6,7 @@
  * or client component during navigation. Without this, Next.js shows
  * a default ugly error page.
  *
- * Specifically NOT a catch-all for converter errors — those are caught
+ * Specifically NOT a catch-all for converter errors, those are caught
  * inside the Dropzone component and shown inline. This is for the
  * unexpected stuff: a routing typo, a registry-meta mismatch, a
  * react-rendering exception.

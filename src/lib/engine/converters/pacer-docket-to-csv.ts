@@ -29,7 +29,7 @@ const pacerDocketToCsv: Converter = {
         })),
       );
       if (parsed.entries.length === 0) {
-        throw new Error("No docket entries found — the HTML may not be a PACER docket sheet");
+        throw new Error("No docket entries found, the HTML may not be a PACER docket sheet");
       }
     } catch (err) {
       throw new ConvertFailedError(

@@ -2,7 +2,7 @@
 
 > Free file conversion that runs entirely in your browser. Nothing uploaded. No signup. No file size limit.
 
-[twineconvert.com](https://twineconvert.com) — 192 converters across 28 format families. Image, PDF, audio/video, office docs, EPUB, finance (OFX/QIF), Apple Health, WhatsApp, GEDCOM, BibTeX, IFC (BIM), embroidery (DST/PES/JEF/EXP), MIDI, color palettes, LUTs, 3D meshes, and more.
+[twineconvert.com](https://twineconvert.com), 192 converters across 28 format families. Image, PDF, audio/video, office docs, EPUB, finance (OFX/QIF), Apple Health, WhatsApp, GEDCOM, BibTeX, IFC (BIM), embroidery (DST/PES/JEF/EXP), MIDI, color palettes, LUTs, 3D meshes, and more.
 
 The differentiator vs CloudConvert / iLovePDF / Smallpdf / FreeConvert: **the conversion runs in your browser**, not on a server. Your file is never uploaded.
 
@@ -10,55 +10,58 @@ The differentiator vs CloudConvert / iLovePDF / Smallpdf / FreeConvert: **the co
 
 ```
 src/lib/engine/
-├── registry.ts        — runtime registry: id → lazy converter loader
-├── registry-meta.ts   — static metadata catalog (build-time, generated)
-├── runner.ts          — public run(toolId, file, opts) entry point
-├── types.ts           — Converter interface, error hierarchy
-├── util/              — shared parsers + writers (one per format family:
-│                        ofx-parse, gedcom-parse, embroidery, palette, lut,
-│                        mesh, midi-musicxml, citation, ifc-load, etc.)
-└── converters/        — one file per converter (192 total). Each implements
+├── registry.ts        runtime registry: id to lazy converter loader
+├── registry-meta.ts   static metadata catalog (build-time, generated)
+├── runner.ts          public run(toolId, file, opts) entry point
+├── types.ts           Converter interface, error hierarchy
+├── util/              shared parsers + writers (ofx-parse, gedcom-parse,
+│                        embroidery, palette, lut, mesh, midi-musicxml,
+│                        citation, ifc-load, etc.)
+└── converters/        one file per converter (192 total). Each implements
                          the Converter interface and is lazy-loaded by
                          registry.ts via dynamic import.
 
 src/app/
-├── layout.tsx                   — root layout + Organization/WebSite JSON-LD
-├── page.tsx                     — homepage: hero + tool directory + FAQ
-├── [tool]/page.tsx              — per-tool dynamic route (192 URLs, ISR)
-├── [tool]/opengraph-image.tsx   — per-tool 1200×630 OG card (edge runtime)
-├── opengraph-image.tsx          — homepage OG card
-├── all-tools/page.tsx           — alphabetical 192-tool inventory
-├── about/page.tsx               — what this is + why it exists
-├── privacy/page.tsx             — privacy policy (AdSense-required)
-├── terms/page.tsx               — terms of use
-├── error.tsx                    — global error boundary
-├── not-found.tsx                — branded 404 with popular-route suggestions
-├── sitemap.ts                   — programmatic sitemap from registry-meta
-├── manifest.ts                  — PWA manifest
-└── robots.ts                    — robots.txt
+├── layout.tsx                  root layout + Organization/WebSite JSON-LD
+├── page.tsx                    homepage: hero + tool directory + FAQ
+├── [tool]/page.tsx             per-tool dynamic route (192 URLs, ISR)
+├── [tool]/opengraph-image.tsx  per-tool 1200x630 OG card (edge runtime)
+├── opengraph-image.tsx         homepage OG card
+├── all-tools/page.tsx          alphabetical 192-tool inventory
+├── formats/[format]/page.tsx   per-format guide pages (90+ formats)
+├── about/page.tsx              what this is + why it exists
+├── privacy/page.tsx            privacy policy (AdSense-required)
+├── terms/page.tsx              terms of use
+├── error.tsx                   global error boundary
+├── not-found.tsx               branded 404 with popular-route suggestions
+├── sitemap.ts                  programmatic sitemap from registry-meta
+├── manifest.ts                 PWA manifest
+├── icon.tsx                    branded favicon (32x32, edge)
+├── apple-icon.tsx              iOS home-screen icon (180x180, edge)
+└── robots.ts                   robots.txt
 
 src/components/
-├── Header, Footer, MobileMenu   — shared layout chrome
-├── Dropzone (client)            — file picker + state machine + progress
-├── ToolSearch (client)          — fuzzy search over 192 tool IDs
-├── HeroFlow (client)            — animated INPUT → OUTPUT carousel
-├── HomeFAQ                      — homepage FAQ + FAQPage JSON-LD
-├── CompetitorComparison         — per-tool feature table vs competitors
-└── ToolPage (server)            — per-tool template (hero + how-to + format
-                                   cards + cross-link grids + FAQ + JSON-LD)
+├── Header, Footer, MobileMenu  shared layout chrome
+├── Dropzone (client)           file picker + state machine + progress
+├── ToolSearch (client)         fuzzy search over 192 tool IDs
+├── HeroFlow (client)           animated INPUT to OUTPUT carousel
+├── HomeFAQ                     homepage FAQ + FAQPage JSON-LD
+├── CompetitorComparison        per-tool feature table vs competitors
+└── ToolPage (server)           per-tool template (hero + how-to + format
+                                  cards + cross-link grids + FAQ + JSON-LD)
 
 src/lib/
-├── formats.ts         — format profile catalog (descriptions reused
+├── formats.ts         format profile catalog (descriptions reused
 │                        across all per-tool pages)
-└── related-tools.ts   — auto-generated cross-link grids
+└── related-tools.ts   auto-generated cross-link grids
 
 tests/
-├── validators/        — output validator library (one per format)
-├── fixtures/          — fixture providers (programmatic + committed)
-├── registry.test.ts   — registry integrity (all 192 IDs)
-├── converters-comprehensive.test.ts — per-converter smoke + structural
-├── round-trip.test.ts — bijective round-trip equivalence (30 pairs)
-└── fuzz.test.ts       — adversarial input handling
+├── validators/        output validator library (one per format)
+├── fixtures/          fixture providers (programmatic + committed)
+├── registry.test.ts   registry integrity (all 192 IDs)
+├── converters-comprehensive.test.ts   per-converter smoke + structural
+├── round-trip.test.ts                 bijective round-trip equivalence (30 pairs)
+└── fuzz.test.ts                       adversarial input handling
 ```
 
 ## Adding a converter
@@ -78,12 +81,12 @@ The new converter automatically gets:
 
 ## Tech stack
 
-- **Next.js 16** (App Router) — server components for SEO, client component only for the dropzone
-- **Tailwind v4** — CSS-first design tokens (`@theme` block in `globals.css`)
-- **Geist** — typography (Vercel's geometric sans, distributed via `geist` npm package)
-- **TypeScript strict mode** — every converter is typed via the `Converter` interface
-- **Vitest + happy-dom** — fast Node test environment for ~110 converters
-- **Webpack** — production build (Turbopack OOMs on our 192-chunk dynamic-import set)
+- **Next.js 16** (App Router), server components for SEO, client component only for the dropzone
+- **Tailwind v4**, CSS-first design tokens (`@theme` block in `globals.css`)
+- **Geist**, typography (Vercel's geometric sans, distributed via `geist` npm package)
+- **TypeScript strict mode**, every converter is typed via the `Converter` interface
+- **Vitest + happy-dom**, fast Node test environment for ~110 converters
+- **Webpack**, production build (Turbopack OOMs on our 192-chunk dynamic-import set)
 
 ## Conversion library inventory
 
@@ -137,12 +140,12 @@ Every conversion `X → Y` has a reverse `Y → X` shipped where it's technicall
 
 `.github/workflows/ci.yml` runs three parallel jobs on every push and PR:
 
-- **Type check** — `tsc --noEmit`, fails first on type errors
-- **Tests** — `npm run test:coverage`, uploads coverage artifact
-- **Build** — regenerates registry-meta + `next build --webpack`, uploads `.next` artifact
+- **Type check**, `tsc --noEmit`, fails first on type errors
+- **Tests**, `npm run test:coverage`, uploads coverage artifact
+- **Build**, regenerates registry-meta + `next build --webpack`, uploads `.next` artifact
 
 Vercel auto-deploys on push to main using the same `npm run build` command, so the production deploy uses the same config as CI.
 
 ## License
 
-(unspecified yet — TBD)
+(unspecified yet, TBD)

@@ -19,7 +19,7 @@ const pngToText: Converter = {
         onProgress: (p) => opts?.onProgress?.(0.1 + p * 0.85),
       });
     } catch (err) {
-      throw new ConvertFailedError("OCR failed — image may be unreadable", err);
+      throw new ConvertFailedError("OCR failed, image may be unreadable", err);
     }
     opts?.onProgress?.(1);
     return {

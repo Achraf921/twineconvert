@@ -10,7 +10,7 @@ import { swapExtension } from "../util/canvas-encode";
  * Inline formatting (bold, italic) is preserved per-text-run; tables,
  * images, and complex CSS are flattened to plain paragraphs in v1.
  * For richer fidelity, mammoth's reverse direction (htmlToDocx) would
- * be a v2 upgrade — there's no maintained pure-JS implementation that
+ * be a v2 upgrade, there's no maintained pure-JS implementation that
  * preserves layout the way mammoth does in the docx→html direction.
  */
 const htmlToDocx: Converter = {

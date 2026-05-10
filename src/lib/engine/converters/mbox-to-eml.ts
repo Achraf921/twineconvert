@@ -6,9 +6,9 @@ import { swapExtension } from "../util/canvas-encode";
  * MBOX → EML.
  *
  * Note: the converter contract is single-in, single-out. An mbox typically
- * contains many messages — we can't easily emit N separate .eml files
+ * contains many messages, we can't easily emit N separate .eml files
  * without packaging them in a zip. For v1 we DO produce a single .eml
- * file holding the FIRST message — that satisfies the most-common search
+ * file holding the FIRST message, that satisfies the most-common search
  * intent ("I have an mbox, I want to look at one specific email"). For
  * "extract all messages as EMLs" we'd need a zip-output variant which
  * the engine doesn't support yet.

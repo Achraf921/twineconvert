@@ -8,7 +8,7 @@ import { ConvertFailedError } from "../types";
  * It only works in the browser (depends on Canvas + Image APIs), so this
  * file MUST NOT be imported from a server component or any code path that
  * runs during SSR / build. The lazy import inside `convert()` enforces that
- * — the heavy library is only fetched when an actual user action calls it.
+ *, the heavy library is only fetched when an actual user action calls it.
  */
 
 const MAX_FILE_SIZE_BYTES = 100 * 1024 * 1024; // 100MB cap (HEIC files are typically 1-5MB; 100MB is way past pathological)
@@ -24,7 +24,7 @@ const heicToJpg: Converter = {
   async convert(input, opts): Promise<ConvertResult> {
     opts?.onProgress?.(0.05);
 
-    // heic2any is browser-only — dynamic import keeps the lib out of the
+    // heic2any is browser-only, dynamic import keeps the lib out of the
     // initial route bundle until a real conversion is requested.
     const heic2any = (await import("heic2any")).default;
 
@@ -44,7 +44,7 @@ const heicToJpg: Converter = {
       blob = Array.isArray(result) ? result[0] : result;
     } catch (err) {
       throw new ConvertFailedError(
-        "HEIC decode failed — file may be corrupt or use an unsupported HEIC profile",
+        "HEIC decode failed, file may be corrupt or use an unsupported HEIC profile",
         err,
       );
     }

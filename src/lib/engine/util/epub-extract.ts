@@ -2,8 +2,8 @@
  * Headless EPUB extraction via JSZip.
  *
  * EPUB files are ZIPs containing:
- *   - META-INF/container.xml — points to the OPF (package) file
- *   - <opf> — manifest + spine (reading order)
+ *   - META-INF/container.xml, points to the OPF (package) file
+ *   - <opf>, manifest + spine (reading order)
  *   - one or more (X)HTML chapter files
  *
  * We avoid epubjs because it's built for in-browser rendering: spawns
@@ -53,7 +53,7 @@ export async function extractEpub(input: File | Blob): Promise<ExtractedEpub> {
   const opfPath = rootfile?.getAttribute("full-path");
   if (!opfPath) throw new Error("EPUB container.xml has no rootfile");
 
-  // 2. Parse OPF — pull metadata, manifest, spine
+  // 2. Parse OPF, pull metadata, manifest, spine
   const opfXml = await zip.file(opfPath)?.async("string");
   if (!opfXml) throw new Error(`OPF file not found at ${opfPath}`);
   const opfDoc = parseXml(opfXml);

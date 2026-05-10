@@ -1,5 +1,5 @@
 /**
- * Minimal mesh parsers/writers for STL and 3MF — skipping three.js to
+ * Minimal mesh parsers/writers for STL and 3MF, skipping three.js to
  * keep the per-route bundle small. The mesh interchange we care about
  * is just "triangles in 3D space," so the in-memory model is flat
  * vertex/triangle arrays.
@@ -19,7 +19,7 @@ export interface Mesh {
 /**
  * STL file detection: ASCII files start with "solid"; binary files have
  * an 80-byte header followed by a uint32 triangle count. Some ASCII STLs
- * also start with "solid" but have a binary body — we detect via file
+ * also start with "solid" but have a binary body, we detect via file
  * size: binary = 84 + N * 50 bytes for N triangles.
  */
 export function parseStl(buf: ArrayBuffer): Mesh {
@@ -86,7 +86,7 @@ export function buildBinaryStl(mesh: Mesh): ArrayBuffer {
   const triCount = mesh.triangles.length / 3;
   const buf = new ArrayBuffer(84 + triCount * 50);
   const view = new DataView(buf);
-  // Header (80 bytes — leave zero-filled apart from a tag).
+  // Header (80 bytes, leave zero-filled apart from a tag).
   const tag = "client-conversion STL";
   for (let i = 0; i < tag.length && i < 80; i++) view.setUint8(i, tag.charCodeAt(i));
   view.setUint32(80, triCount, true);
@@ -127,9 +127,9 @@ export function buildBinaryStl(mesh: Mesh): ArrayBuffer {
 
 /**
  * 3MF (3D Manufacturing Format) is a zip containing:
- *   [Content_Types].xml  — MIME map
- *   _rels/.rels          — package relationships
- *   3D/3dmodel.model     — the actual mesh as XML
+ *   [Content_Types].xml , MIME map
+ *   _rels/.rels         , package relationships
+ *   3D/3dmodel.model    , the actual mesh as XML
  *
  * The model XML uses millimeter units by default; mesh data is just
  * vertices and triangles. We omit materials and components (the
@@ -219,7 +219,7 @@ export function parseObj(text: string): Mesh {
       const parts = line.slice(2).trim().split(/\s+/).map(parseFloat);
       verts.push(parts[0], parts[1], parts[2]);
     } else if (line.startsWith("f ")) {
-      // Face line: f a/_/_ b/_/_ c/_/_  (also supports d for quad — we triangulate)
+      // Face line: f a/_/_ b/_/_ c/_/_  (also supports d for quad, we triangulate)
       const idx = line.slice(2).trim().split(/\s+/).map((tok) => parseInt(tok.split("/")[0], 10) - 1);
       // Triangulate fan-style for n-gons
       for (let i = 1; i < idx.length - 1; i++) {

@@ -8,7 +8,7 @@ import { htmlToPdf } from "../util/jspdf-html";
  * GEDCOM → PDF. Renders the same layout as the HTML route via jsPDF,
  * producing a single printable family tree document. For very large
  * trees (>500 individuals) the PDF can take a minute and balloon in
- * page count — there's no v1 pagination strategy beyond jsPDF's
+ * page count, there's no v1 pagination strategy beyond jsPDF's
  * autoPaging.
  */
 const gedcomToPdf: Converter = {
@@ -28,7 +28,7 @@ const gedcomToPdf: Converter = {
 
       const html = `<h1>Family Tree</h1>${individuals
         .map((i) => {
-          const dates = [i.birthDate, i.deathDate].filter(Boolean).join(" — ");
+          const dates = [i.birthDate, i.deathDate].filter(Boolean).join(", ");
           return `<h2>${escapeHtml(i.name ?? i.id)}</h2><p>${escapeHtml(dates)}</p>`;
         })
         .join("")}`;

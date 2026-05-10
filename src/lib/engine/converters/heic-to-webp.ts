@@ -18,7 +18,7 @@ const heicToWebp: Converter = {
       blob = await decodeHeic(input, "image/webp", opts?.quality ?? 0.9);
     } catch (err) {
       throw new ConvertFailedError(
-        "HEIC decode failed — file may be corrupt or use an unsupported HEIC profile",
+        "HEIC decode failed, file may be corrupt or use an unsupported HEIC profile",
         err,
       );
     }

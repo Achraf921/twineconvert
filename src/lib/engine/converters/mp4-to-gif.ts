@@ -5,7 +5,7 @@ import { ffmpegConvert } from "../util/ffmpeg-runner";
 
 /**
  * MP4 → GIF. Two-pass approach (palettegen + paletteuse) is what produces
- * good-quality GIFs from video — the default quantizer is hideous. We're
+ * good-quality GIFs from video, the default quantizer is hideous. We're
  * doing it in one pipeline using a complex filter, which is slower but
  * keeps the runner generic. Output is 480px wide @ 12fps as a sane default
  * for "share-to-Slack" use cases.

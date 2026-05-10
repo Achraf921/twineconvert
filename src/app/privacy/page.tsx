@@ -3,17 +3,17 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Privacy",
   description:
-    "twineconvert runs entirely in your browser. Your files never leave your device. We collect almost nothing — this page lists exactly what.",
+    "twineconvert runs entirely in your browser. Your files never leave your device. We collect almost nothing, this page lists exactly what.",
   alternates: { canonical: "https://twineconvert.com/privacy" },
 };
 
 /**
  * Privacy policy. Required for AdSense approval and just generally good
- * hygiene. Written in plain language, not lawyer-speak — explaining what
+ * hygiene. Written in plain language, not lawyer-speak, explaining what
  * actually happens (which is almost nothing because the conversion runs
  * in the browser).
  *
- * Anything we say here we need to keep true forever — if we ever add
+ * Anything we say here we need to keep true forever, if we ever add
  * server-side anything (account features, paid tiers with backend
  * processing), the privacy policy needs to update first, not after.
  */
@@ -37,7 +37,7 @@ export default function PrivacyPage() {
           no server-side step in any conversion route.
         </p>
         <p>
-          This means we cannot see, log, store, or recover what you convert —
+          This means we cannot see, log, store, or recover what you convert ,
           even if we wanted to. The same conversion library that runs on
           CloudConvert&apos;s servers (FFmpeg, libheif, pdfjs, mammoth, etc.)
           runs on your machine instead.
@@ -66,8 +66,8 @@ export default function PrivacyPage() {
         </p>
         <p>
           When advertising launches on the site (which is the eventual revenue
-          model), the ad provider — Google AdSense initially, Mediavine or
-          Raptive once we hit their traffic threshold — will set their own
+          model), the ad provider, Google AdSense initially, Mediavine or
+          Raptive once we hit their traffic threshold, will set their own
           cookies for ad measurement. Those cookies are governed by the
           provider&apos;s privacy policy, and we&apos;ll update this page when
           ads go live with a clear opt-out path.
@@ -101,7 +101,7 @@ export default function PrivacyPage() {
           >
             github.com/Achraf921/conversionEngine
           </a>{" "}
-          is the project&apos;s home — you can read every line of code that
+          is the project&apos;s home, you can read every line of code that
           handles a file, and open an issue if something looks off.
         </p>
       </Section>

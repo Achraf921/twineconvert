@@ -1,5 +1,5 @@
 /**
- * Competitor comparison table — shown on every per-tool page.
+ * Competitor comparison table, shown on every per-tool page.
  *
  * Honest, factual comparison vs the major server-upload converters.
  * Numbers come from each competitor's pricing/help pages as of 2026;

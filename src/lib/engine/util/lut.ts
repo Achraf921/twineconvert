@@ -2,14 +2,14 @@
  * LUT (Look-Up Table) parser + writer for color-grading interchange.
  *
  * The three formats we support:
- *   - .cube — Adobe / SpeedGrade format (most common). Text:
+ *   - .cube, Adobe / SpeedGrade format (most common). Text:
  *       LUT_3D_SIZE 33
  *       0.000000 0.000000 0.000000
  *       0.031250 0.000000 0.000000
  *       ...
- *   - .3dl — Autodesk / Lustre format. Text. Header lines vary by vendor;
+ *   - .3dl, Autodesk / Lustre format. Text. Header lines vary by vendor;
  *       we skip lines until we hit numeric data.
- *   - .csp — Cinespace (Rising Sun) format. Text with a richer header
+ *   - .csp, Cinespace (Rising Sun) format. Text with a richer header
  *       (preLUT and metadata blocks) but the 3D core is a simple grid.
  *
  * Internally everything reduces to a single 3D table:
@@ -17,7 +17,7 @@
  *   data: Float32Array of size*size*size*3 in R,G,B,R,G,B... order
  *
  * Index ordering follows Cube convention: R fastest, then G, then B.
- * Different formats have different ordering — readers normalize on input.
+ * Different formats have different ordering, readers normalize on input.
  */
 
 export interface Lut3D {
@@ -61,7 +61,7 @@ export function parseCube(text: string): Lut3D {
       domainMax = [parts[0], parts[1], parts[2]];
       continue;
     }
-    // 1D LUT or other directives we don't care about — skip non-numeric lines.
+    // 1D LUT or other directives we don't care about, skip non-numeric lines.
     const parts = line.split(/\s+/);
     if (parts.length === 3 && !isNaN(parseFloat(parts[0]))) {
       triples.push(parseFloat(parts[0]), parseFloat(parts[1]), parseFloat(parts[2]));
@@ -148,7 +148,7 @@ export function parse3dl(text: string): Lut3D {
 }
 
 export function build3dl(lut: Lut3D): string {
-  // Use a 0..1023 (10-bit) output ladder — Lustre's default.
+  // Use a 0..1023 (10-bit) output ladder, Lustre's default.
   const lines: string[] = [];
   const ladder: number[] = [];
   for (let i = 0; i < lut.size; i++) {
@@ -174,10 +174,10 @@ export function build3dl(lut: Lut3D): string {
 // ---- CSP --------------------------------------------------------------
 
 /**
- * Cinespace 3D LUT — minimal subset. Real CSP files can include a
+ * Cinespace 3D LUT, minimal subset. Real CSP files can include a
  * 1D preLUT block and metadata; we generate a 3D-only file (which all
  * Cinespace-compatible apps accept) and parse 3D-only files cleanly.
- * Files with a preLUT will still parse — the preLUT block is skipped.
+ * Files with a preLUT will still parse, the preLUT block is skipped.
  */
 export function parseCsp(text: string): Lut3D {
   // Skip header until we find a "size size size" line, then read triples.

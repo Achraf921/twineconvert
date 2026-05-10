@@ -1,5 +1,5 @@
 /**
- * SARIF (Static Analysis Results Interchange Format) — JSON shape
+ * SARIF (Static Analysis Results Interchange Format), JSON shape
  * specified by OASIS, output by every modern SAST tool (CodeQL, Semgrep,
  * Bandit, ESLint, Snyk, Checkmarx, Sonar). The structure is well-typed
  * but verbose; for our purposes we flatten the per-result fields users
