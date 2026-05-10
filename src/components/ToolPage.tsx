@@ -64,7 +64,7 @@ export function ToolPage({ toolId, meta }: Props) {
             </div>
 
             {pairFromLabel(meta.label) && (
-              <div className="md:col-span-5 fade-up fade-up-delay-2 flex justify-center md:justify-end">
+              <div className="md:col-span-5 fade-up fade-up-delay-2 flex justify-center md:justify-end relative z-20">
                 <HeroFlow
                   graph={FORMAT_GRAPH}
                   initialInput={pairFromLabel(meta.label)?.[0]}
