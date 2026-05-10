@@ -20,7 +20,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 1,
   };
 
-  const staticPages = ["about", "privacy", "terms"].map((slug) => ({
+  const staticPages = ["about", "all-tools", "privacy", "terms"].map((slug) => ({
     url: `${baseUrl}/${slug}`,
     lastModified,
     changeFrequency: "yearly" as const,

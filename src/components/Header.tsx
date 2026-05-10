@@ -18,7 +18,7 @@ export function Header() {
         </Link>
 
         <nav className="hidden md:flex items-center gap-7 text-sm text-[var(--color-text-2)]">
-          <Link href="/#tools" className="hover:text-[var(--color-text)] transition-colors">All tools</Link>
+          <Link href="/all-tools" className="hover:text-[var(--color-text)] transition-colors">All tools</Link>
           <Link href="/#privacy" className="hover:text-[var(--color-text)] transition-colors">Privacy</Link>
           <Link href="/#why" className="hover:text-[var(--color-text)] transition-colors">Why in-browser</Link>
           <Link href="/#faq" className="hover:text-[var(--color-text)] transition-colors">FAQ</Link>

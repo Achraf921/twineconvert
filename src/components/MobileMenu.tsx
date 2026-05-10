@@ -46,7 +46,7 @@ export function MobileMenu() {
         >
           <nav className="px-6 py-6 flex flex-col gap-1">
             <MobileLink href="/" onSelect={() => setOpen(false)}>Home</MobileLink>
-            <MobileLink href="/#tools" onSelect={() => setOpen(false)}>All tools</MobileLink>
+            <MobileLink href="/all-tools" onSelect={() => setOpen(false)}>All tools</MobileLink>
             <MobileLink href="/#privacy" onSelect={() => setOpen(false)}>Privacy promise</MobileLink>
             <MobileLink href="/#why" onSelect={() => setOpen(false)}>Why in-browser</MobileLink>
             <MobileLink href="/#faq" onSelect={() => setOpen(false)}>FAQ</MobileLink>
