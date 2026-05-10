@@ -226,7 +226,7 @@ const PROFILES: Record<string, FormatProfile> = {
     name: "FLAC",
     fullName: "Free Lossless Audio Codec",
     description:
-      "FLAC is lossless compression — about half the size of WAV with bit-perfect audio (no quality lost). The audiophile and archive standard since 2001. Files are larger than MP3 (typically 4-5× depending on source) but the trade is "no degradation, ever." Streaming services like Tidal, Qobuz, and Apple Music's lossless tier deliver FLAC.",
+      "FLAC is lossless compression — about half the size of WAV with bit-perfect audio (no quality lost). The audiophile and archive standard since 2001. Files are larger than MP3 (typically 4-5× depending on source) but the trade is no degradation, ever. Streaming services like Tidal, Qobuz, and Apple Music's lossless tier deliver FLAC.",
     howToOpen: "VLC, foobar2000, Audacity, every modern music player, native iOS support since 2017, native Android support since version 3. Older Apple devices need a third-party app.",
     primaryUse: "Archival music, audiophile listening, lossless streaming.",
     binary: true,
@@ -282,7 +282,7 @@ const PROFILES: Record<string, FormatProfile> = {
     name: "MKV",
     fullName: "Matroska Video",
     description:
-      "MKV is an open-source container that holds essentially any video/audio codec combination plus subtitles, chapters, and metadata. The format of choice for high-quality video archives, fan-subtitled content, and anything that benefits from multiple audio tracks. The catch: not every player supports it, and converting MKV to MP4 is the standard fix for "won't play on my TV/phone."",
+      "MKV is an open-source container that holds essentially any video/audio codec combination plus subtitles, chapters, and metadata. The format of choice for high-quality video archives, fan-subtitled content, and anything that benefits from multiple audio tracks. The catch: not every player supports it, and converting MKV to MP4 is the standard fix for the won't-play-on-my-TV problem.",
     howToOpen: "VLC reads everything MKV. Plex and Kodi handle MKV libraries. Browsers and many TVs do not — converting to MP4 makes MKV content universally playable.",
     primaryUse: "High-quality video archives with multiple audio/subtitle tracks.",
     binary: true,
