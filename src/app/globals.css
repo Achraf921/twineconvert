@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens deferred — will land with the brand decision.
+ * For now Tailwind is wired but unused; this keeps the build green
+ * and the toolchain ready for the first UI commit.
+ */
