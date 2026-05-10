@@ -41,7 +41,7 @@ const discordChatToPdf: Converter = {
           body: lines.join("\n\n"),
         },
       ];
-      blob = await renderTextPdf(sections, { title: titleParts.join(" — ") });
+      blob = await renderTextPdf(sections, { title: titleParts.join(", ") });
       opts?.onProgress?.(0.95);
     } catch (err) {
       throw new ConvertFailedError(

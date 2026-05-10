@@ -1,75 +1,62 @@
 @import "tailwindcss";
 
 /* ========================================================================
- * twineconvert design system
+ * twineconvert design tokens
  *
- * Direction: editorial precision with a woven-twine motif. The brand
- * mark is two interlocking circles (a knot); the visual language extends
- * that into pink threads that weave between format chips, snake along
- * section dividers, and frame the dropzone. Pairs a confident display
- * serif (Fraunces) with Geist Sans body for a magazine-meets-Linear feel
- * that breaks out of the generic SaaS converter aesthetic.
- *
- * Color: white background, near-black ink, ONE brand pink (#E0297B). No
- * secondary accent. Pink carries every meaningful UI moment: CTAs, the
- * focus ring, the underline marker on hero callouts, the thread overlays,
- * the chip highlight when a format is "selected" in the hero demo.
- *
- * Type: Fraunces variable serif (display, variable optical-size +
- * variable softness) for H1 + H2; Geist Sans (variable weight) for
- * body, controls, code chips. Drastic size jumps (text-7xl heroes,
- * text-base body) and big-italic-bold pairings carry the editorial feel.
+ * Direction: clean, restrained, CloudConvert-shaped layout in white +
+ * bold pink. One typeface (Geist Sans) with extreme weight/size
+ * contrasts. One brand color (#E0297B) carrying every meaningful
+ * accent. No marker underlines, no scribbles, no thread-weaving
+ * ornaments, just calm geometry, plenty of breathing room, and a
+ * load-bearing dropzone.
  * ===================================================================== */
 
 @theme {
   /* Brand palette */
-  --color-pink-50:  #FFF1F7;
-  --color-pink-100: #FFDAEC;
-  --color-pink-200: #FFB5D6;
-  --color-pink-300: #FF85BA;
-  --color-pink-400: #F853A0;
-  --color-pink-500: #E0297B;
+  --color-pink-50:  #FDF2F8;
+  --color-pink-100: #FCE7F3;
+  --color-pink-200: #FBCFE8;
+  --color-pink-300: #F9A8D4;
+  --color-pink-400: #F472B6;
+  --color-pink-500: #EC4899;
   --color-pink-600: #E0297B;
-  --color-pink-700: #BF1965;
-  --color-pink-800: #9C0E51;
-  --color-pink-900: #6E082F;
+  --color-pink-700: #BE185D;
+  --color-pink-800: #9D174D;
+  --color-pink-900: #831843;
 
-  /* Neutral surfaces */
+  /* Neutrals, true white background, near-black ink */
   --color-bg:        #FFFFFF;
-  --color-paper:     #FBFAF7;       /* off-white, slightly warm; the "page" */
-  --color-surface:   #F7F5F0;       /* warmer than gray; reads as paper */
-  --color-surface-2: #EFEBE2;
-  --color-border:    #E5E0D5;
-  --color-border-2:  #C9C2B3;
-  --color-ink:       #1A1614;       /* near-black with a tiny warm tint */
-  --color-ink-2:     #4A4540;
-  --color-ink-3:     #7A736A;
+  --color-paper:     #FAFAFA;
+  --color-surface:   #F5F5F5;
+  --color-surface-2: #EAEAEA;
+  --color-border:    #E5E5E5;
+  --color-border-2:  #D4D4D4;
+  --color-ink:       #0A0A0A;
+  --color-ink-2:     #525252;
+  --color-ink-3:     #737373;
 
   --color-success: #16A34A;
   --color-warning: #EAB308;
   --color-error:   #DC2626;
 
-  --font-display: var(--font-display), "Playfair Display", Georgia, serif;
-  --font-sans:    var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-mono:    var(--font-geist-mono), ui-monospace, "JetBrains Mono", "SF Mono", Menlo, monospace;
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "JetBrains Mono", "SF Mono", Menlo, monospace;
 
   --radius-sm:  0.375rem;
-  --radius-md:  0.625rem;
-  --radius-lg:  1rem;
-  --radius-xl:  1.5rem;
-  --radius-2xl: 2rem;
-  --radius-3xl: 2.5rem;
+  --radius-md:  0.5rem;
+  --radius-lg:  0.75rem;
+  --radius-xl:  1rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
 
-  --shadow-xs:    0 1px 2px 0 rgb(26 22 20 / 0.04);
-  --shadow-sm:    0 2px 6px -1px rgb(26 22 20 / 0.08), 0 1px 2px -1px rgb(26 22 20 / 0.06);
-  --shadow-md:    0 6px 16px -3px rgb(26 22 20 / 0.10), 0 3px 6px -3px rgb(26 22 20 / 0.06);
-  --shadow-lg:    0 18px 40px -8px rgb(26 22 20 / 0.14), 0 8px 16px -6px rgb(26 22 20 / 0.08);
-  --shadow-pink:  0 12px 32px -8px rgb(224 41 123 / 0.40), 0 4px 12px -4px rgb(224 41 123 / 0.20);
-  --shadow-pink-lg: 0 24px 60px -12px rgb(224 41 123 / 0.50), 0 8px 20px -8px rgb(224 41 123 / 0.25);
+  --shadow-xs:    0 1px 2px 0 rgb(0 0 0 / 0.04);
+  --shadow-sm:    0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.05);
+  --shadow-md:    0 4px 12px -2px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.04);
+  --shadow-lg:    0 12px 32px -4px rgb(0 0 0 / 0.10), 0 4px 12px -4px rgb(0 0 0 / 0.06);
+  --shadow-pink:  0 8px 24px -6px rgb(224 41 123 / 0.30);
 
   --ease-spring: cubic-bezier(0.32, 0.72, 0, 1);
-  --ease-out:    cubic-bezier(0.0, 0.0, 0.2, 1);
-  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out:    cubic-bezier(0, 0, 0.2, 1);
 }
 
 /* ===== Base ===== */
@@ -79,273 +66,108 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  background: var(--color-paper);
 }
 
 body {
-  background: var(--color-paper);
+  background: var(--color-bg);
   color: var(--color-ink);
   font-family: var(--font-sans);
-  font-feature-settings: "ss01", "cv11";
 }
 
 ::selection {
-  background: var(--color-pink-500);
-  color: white;
+  background: var(--color-pink-200);
+  color: var(--color-pink-900);
 }
 
 *:focus-visible {
-  outline: 2px solid var(--color-pink-500);
+  outline: 2px solid var(--color-pink-600);
   outline-offset: 3px;
   border-radius: var(--radius-sm);
 }
 
-/* ===== Display serif helpers ===== */
+/* ===== Hero atmospherics, restrained ===== */
 
-.font-display {
-  font-family: var(--font-display);
-  font-feature-settings: "ss01" on, "ss02" on;
-}
-
-/* Big editorial headline. Fraunces variable softness + tight tracking. */
-.h-display {
-  font-family: var(--font-display);
-  font-weight: 700;
-  letter-spacing: -0.035em;
-  line-height: 0.95;
-  font-variation-settings: "opsz" 144, "SOFT" 30;
-}
-
-.h-display-italic {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-weight: 700;
-  letter-spacing: -0.025em;
-  font-variation-settings: "opsz" 144, "SOFT" 100;
-}
-
-/* ===== Backgrounds & textures ===== */
-
-/* Subtle warm dot grid, the "paper" texture of the page */
-.dot-grid {
+/* Subtle grid pattern, only visible on hover surfaces */
+.subtle-grid {
   background-image:
-    radial-gradient(circle at 1px 1px, rgb(26 22 20 / 0.05) 1px, transparent 0);
-  background-size: 22px 22px;
+    linear-gradient(to right, rgb(0 0 0 / 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(0 0 0 / 0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
 }
 
-/* Pink-tinted dot grid (used in hero) */
-.dot-grid-pink {
-  background-image:
-    radial-gradient(circle at 1px 1px, rgb(224 41 123 / 0.18) 1px, transparent 0);
-  background-size: 18px 18px;
-}
-
-/* Hero gradient wash, soft pink → cream with slow drift */
-.hero-glow {
+/* Soft pink wash for the hero, gentle, not aggressive */
+.hero-wash {
   background:
-    radial-gradient(ellipse 70% 80% at 80% 0%, rgb(255 133 186 / 0.30) 0%, transparent 55%),
-    radial-gradient(ellipse 60% 70% at 20% 90%, rgb(248 83 160 / 0.18) 0%, transparent 60%),
-    radial-gradient(ellipse 90% 60% at 50% 50%, rgb(255 218 236 / 0.50) 0%, transparent 75%);
-  background-size: 220% 220%;
-  animation: hero-shift 22s var(--ease-out) infinite alternate;
+    radial-gradient(ellipse 80% 60% at 100% 0%, rgb(252 231 243 / 0.5) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 0% 100%, rgb(252 231 243 / 0.3) 0%, transparent 70%);
 }
 
-@keyframes hero-shift {
-  0%   { background-position: 0% 0%; }
-  100% { background-position: 100% 50%; }
-}
-
-/* Noise grain overlay (use sparingly, on hero containers) */
-.grain {
-  position: relative;
-}
-.grain::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.18 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-  background-size: 200px 200px;
-  pointer-events: none;
-  opacity: 0.5;
-  mix-blend-mode: multiply;
-  z-index: 0;
-}
-.grain > * { position: relative; z-index: 1; }
-
-/* ===== Marker / scribble accents ===== */
-
-/* Hand-drawn pink underline beneath an inline span. The element is
- * positioned over a pseudo-element with an SVG squiggly line so it
- * reads as a real felt-tip mark, not a CSS rectangle. */
-.marker {
-  position: relative;
-  display: inline-block;
-  white-space: nowrap;
-  padding: 0 0.05em;
-}
-.marker::before {
-  content: "";
-  position: absolute;
-  left: -0.05em;
-  right: -0.05em;
-  bottom: -0.04em;
-  height: 0.32em;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 30' preserveAspectRatio='none'><path d='M2 18 Q 50 6 100 16 T 198 14' stroke='%23E0297B' stroke-width='10' stroke-linecap='round' fill='none' opacity='0.95'/></svg>");
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  z-index: -1;
-}
-
-/* Highlighter swipe (sits behind the word, roughly horizontal block) */
-.highlight {
-  position: relative;
-  display: inline-block;
-  padding: 0 0.15em;
-}
-.highlight::before {
-  content: "";
-  position: absolute;
-  inset: 0.15em -0.05em 0.05em -0.05em;
-  background: var(--color-pink-200);
-  z-index: -1;
-  transform: skewX(-3deg);
-  border-radius: 0.2em;
-}
-
-/* Dotted scribble divider used between sections, low-opacity SVG path */
-.scribble-divider {
-  height: 18px;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 18' fill='none' stroke='%23E0297B' stroke-width='1.5' stroke-linecap='round' preserveAspectRatio='none'><path d='M0 9 Q 25 1 50 9 T 100 9 T 150 9 T 200 9'/></svg>");
-  background-repeat: repeat-x;
-  background-size: 120px 18px;
-  opacity: 0.5;
-}
-
-/* ===== Twine thread (the brand motif extended) ===== */
-
-/* Animated woven thread that connects two format chips. The path is
- * an SVG. Use the .thread-pulse class on a wrapper to make the
- * stroke breathe. */
-@keyframes thread-pulse {
-  0%, 100% { stroke-dashoffset: 0; opacity: 1; }
-  50%      { stroke-dashoffset: 12; opacity: 0.85; }
-}
-.thread-anim path {
-  stroke-dasharray: 6 4;
-  animation: thread-pulse 3s var(--ease-out) infinite;
-}
-
-/* Conic-gradient halo behind the dropzone (the "loom" frame) */
-.loom-halo {
+/* Concentric circle decoration that sits behind the format-chip widget,
+ * matching CloudConvert's visual treatment. Static; no animation. */
+.rings {
   background:
-    conic-gradient(from 200deg at 50% 50%,
-      rgb(224 41 123 / 0)    0deg,
-      rgb(224 41 123 / 0.5) 80deg,
-      rgb(248 83 160 / 0.6) 160deg,
-      rgb(224 41 123 / 0.5) 240deg,
-      rgb(224 41 123 / 0)   360deg);
-  filter: blur(28px);
-  animation: loom-spin 24s linear infinite;
+    radial-gradient(circle, transparent 99px, rgb(224 41 123 / 0.08) 100px, rgb(224 41 123 / 0.08) 101px, transparent 102px),
+    radial-gradient(circle, transparent 159px, rgb(224 41 123 / 0.06) 160px, rgb(224 41 123 / 0.06) 161px, transparent 162px),
+    radial-gradient(circle, transparent 219px, rgb(224 41 123 / 0.05) 220px, rgb(224 41 123 / 0.05) 221px, transparent 222px);
 }
 
-@keyframes loom-spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-
-/* Dropzone hover/drag state — the loom "tightens" */
+/* Dropzone hover/drag state */
 .dropzone-active {
   background: var(--color-pink-50);
-  border-color: var(--color-pink-500);
-  box-shadow: 0 0 0 6px rgb(224 41 123 / 0.15), var(--shadow-pink-lg);
-  transform: translateY(-2px);
+  border-color: var(--color-pink-600);
+  box-shadow: 0 0 0 4px rgb(224 41 123 / 0.12), var(--shadow-lg);
 }
 
-/* ===== Lift / hover micro-interactions ===== */
+/* ===== Hover micro-interactions (calm) ===== */
 
 .lift {
   transition:
-    transform 220ms var(--ease-spring),
-    box-shadow 220ms var(--ease-spring),
-    border-color 220ms;
+    transform 200ms var(--ease-spring),
+    border-color 200ms,
+    background 200ms,
+    color 200ms;
 }
 .lift:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-lg);
-  border-color: var(--color-pink-400);
+  transform: translateY(-1px);
+  border-color: var(--color-pink-300);
 }
 
-.lift-pink:hover {
-  box-shadow: var(--shadow-pink);
-}
-
-/* ===== Animations ===== */
+/* ===== Stagger reveal on hero load ===== */
 
 @keyframes fade-up {
-  from { opacity: 0; transform: translateY(14px); }
+  from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-.fade-up { animation: fade-up 0.7s var(--ease-spring) both; }
-.fade-up-delay-1 { animation-delay: 100ms; }
-.fade-up-delay-2 { animation-delay: 200ms; }
-.fade-up-delay-3 { animation-delay: 300ms; }
-.fade-up-delay-4 { animation-delay: 400ms; }
-.fade-up-delay-5 { animation-delay: 500ms; }
+.fade-up { animation: fade-up 0.55s var(--ease-spring) both; }
+.fade-up-delay-1 { animation-delay: 80ms; }
+.fade-up-delay-2 { animation-delay: 160ms; }
+.fade-up-delay-3 { animation-delay: 240ms; }
+.fade-up-delay-4 { animation-delay: 320ms; }
 
-@keyframes fade-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-.fade-in { animation: fade-in 0.6s var(--ease-out) both; }
-
+/* Pulsing dot for "live" indicators */
 @keyframes pink-pulse {
-  0%, 100% { box-shadow: 0 0 0 0   rgb(224 41 123 / 0.55); }
-  50%      { box-shadow: 0 0 0 14px rgb(224 41 123 / 0); }
+  0%, 100% { box-shadow: 0 0 0 0  rgb(224 41 123 / 0.5); }
+  50%      { box-shadow: 0 0 0 8px rgb(224 41 123 / 0); }
 }
-.pink-pulse { animation: pink-pulse 2.5s var(--ease-out) infinite; }
+.pink-pulse { animation: pink-pulse 2s var(--ease-out) infinite; }
 
-/* Format chip swap (input → output animation) */
-@keyframes chip-flip-out {
-  0%   { opacity: 1; transform: translateY(0)    rotateX(0deg); }
-  100% { opacity: 0; transform: translateY(-10px) rotateX(75deg); }
+/* Format chip swap animation (input → output rotation) */
+@keyframes chip-swap-out {
+  0%   { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.95); }
 }
-@keyframes chip-flip-in {
-  0%   { opacity: 0; transform: translateY(10px)  rotateX(-75deg); }
-  100% { opacity: 1; transform: translateY(0)    rotateX(0deg); }
-}
-
-/* Big number with gradient ink */
-.big-number {
-  font-family: var(--font-display);
-  font-variant-numeric: tabular-nums;
-  font-weight: 700;
-  letter-spacing: -0.04em;
-  line-height: 1;
-  background: linear-gradient(180deg, var(--color-pink-500) 0%, var(--color-pink-700) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+@keyframes chip-swap-in {
+  0%   { opacity: 0; transform: scale(0.95); }
+  100% { opacity: 1; transform: scale(1); }
 }
 
-/* Pink gradient border via padding+border layering (works on any bg) */
-.gradient-border {
-  background:
-    linear-gradient(var(--color-bg), var(--color-bg)) padding-box,
-    linear-gradient(135deg, var(--color-pink-300) 0%, var(--color-pink-600) 100%) border-box;
-  border: 2px solid transparent;
+/* Slow rotation for the "TO" sync glyph between format chips */
+@keyframes slow-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }
+.slow-spin { animation: slow-spin 6s linear infinite; }
 
-/* Marquee for the "popular conversions" strip */
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-.marquee {
-  animation: marquee 40s linear infinite;
-}
-.marquee:hover { animation-play-state: paused; }
-
-/* Reduced motion override */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

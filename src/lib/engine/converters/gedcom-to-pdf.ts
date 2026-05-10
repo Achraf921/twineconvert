@@ -5,7 +5,7 @@ import { parseGedcom } from "../util/gedcom-parse";
 import { renderTextPdf, type PdfTextSection } from "../util/jspdf-text";
 
 /**
- * GEDCOM → PDF. Searchable family-tree document — every individual is
+ * GEDCOM → PDF. Searchable family-tree document, every individual is
  * a section with their name as the heading and life dates as metadata.
  */
 const gedcomToPdf: Converter = {

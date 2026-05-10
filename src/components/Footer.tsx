@@ -88,7 +88,7 @@ export function Footer() {
 
         <div className="pt-8 border-t border-[var(--color-border)] flex flex-col md:flex-row justify-between items-start md:items-center gap-4 text-xs text-[var(--color-text-3)]">
           <p>
-            © {new Date().getFullYear()} twineconvert. Open source, every conversion runs in your browser.
+            © {new Date().getFullYear()} twineconvert. Every conversion runs in your browser.
           </p>
           <div className="flex items-center gap-5 flex-wrap">
             <Link href="/all-tools" className="hover:text-[var(--color-text)] transition-colors">
@@ -103,14 +103,6 @@ export function Footer() {
             <Link href="/terms" className="hover:text-[var(--color-text)] transition-colors">
               Terms
             </Link>
-            <a
-              href="https://github.com/Achraf921/conversionEngine"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-[var(--color-text)] transition-colors"
-            >
-              GitHub
-            </a>
           </div>
         </div>
       </div>

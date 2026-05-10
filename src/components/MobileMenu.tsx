@@ -56,15 +56,6 @@ export function MobileMenu() {
             <MobileLink href="/about" onSelect={() => setOpen(false)}>About</MobileLink>
             <MobileLink href="/privacy" onSelect={() => setOpen(false)}>Privacy policy</MobileLink>
             <MobileLink href="/terms" onSelect={() => setOpen(false)}>Terms</MobileLink>
-            <a
-              href="https://github.com/Achraf921/conversionEngine"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block px-4 py-3 rounded-lg text-[var(--color-text-2)] hover:bg-[var(--color-pink-50)] hover:text-[var(--color-pink-700)] transition-colors text-base font-medium"
-              onClick={() => setOpen(false)}
-            >
-              Source on GitHub ↗
-            </a>
           </nav>
         </div>
       )}

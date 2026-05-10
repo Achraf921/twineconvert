@@ -34,39 +34,51 @@ export function ToolPage({ toolId, meta }: Props) {
     <>
       <StructuredData toolId={toolId} meta={meta} inputProfile={inputProfile} outputProfile={outputProfile} />
 
-      <section className="relative hero-glow overflow-hidden">
-        <div className="dot-grid-pink absolute inset-0 opacity-40 pointer-events-none" aria-hidden />
-        <div className="relative mx-auto max-w-4xl px-6 pt-10 pb-16 sm:pt-14 sm:pb-20 text-center">
+      <section className="relative hero-wash overflow-hidden">
+        <div className="subtle-grid absolute inset-0 opacity-60 pointer-events-none" aria-hidden />
+        <div className="relative mx-auto max-w-7xl px-6 pt-10 pb-12 sm:pt-14 sm:pb-16">
           <Breadcrumbs label={meta.label} />
-          <p className="fade-up mt-5 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-[var(--color-pink-200)] text-[var(--color-pink-700)] text-[11px] font-bold tracking-[0.18em] uppercase shadow-[var(--shadow-xs)]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-pink-500)] pink-pulse" />
-            free &middot; in-browser &middot; no upload
-          </p>
-          <h1 className="fade-up fade-up-delay-1 h-display text-4xl sm:text-5xl lg:text-7xl mt-6 leading-[0.96]">
-            <ToolFormula label={meta.label} />
-          </h1>
-          <p className="fade-up fade-up-delay-2 text-lg sm:text-xl text-[var(--color-ink-2)] mt-7 max-w-2xl mx-auto leading-relaxed">
-            {heroSubhead(meta.label, inputProfile, outputProfile)}
-          </p>
 
-          <div className="fade-up fade-up-delay-3 mt-12 max-w-2xl mx-auto">
+          {/* Top row: title+paragraph left, single chip-pair preview right */}
+          <div className="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
+            <div className="lg:col-span-7 fade-up">
+              <p className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-[var(--color-pink-200)] text-[var(--color-pink-700)] text-[11px] font-bold tracking-[0.18em] uppercase shadow-[var(--shadow-xs)]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-pink-600)] pink-pulse" />
+                free &middot; in-browser &middot; no upload
+              </p>
+              <h1 className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.02] text-[var(--color-ink)]">
+                {meta.label.replace(/→/g, "to")}
+                <br />
+                <span className="text-[var(--color-pink-600)]">Converter</span>
+              </h1>
+              <p className="mt-6 text-lg sm:text-xl text-[var(--color-ink-2)] max-w-xl leading-relaxed">
+                {heroSubhead(meta.label, inputProfile, outputProfile)}
+              </p>
+            </div>
+
+            <div className="lg:col-span-5 fade-up fade-up-delay-2 flex justify-center lg:justify-end">
+              <ToolPageChips label={meta.label} />
+            </div>
+          </div>
+
+          {/* Big dropzone, centered below */}
+          <div className="mt-12 sm:mt-14 max-w-3xl mx-auto fade-up fade-up-delay-3">
             <Dropzone
               toolId={toolId}
               toolLabel={meta.label}
               accept={meta.accept}
             />
-          </div>
-
-          <div className="fade-up fade-up-delay-4 mt-9 flex items-center justify-center flex-wrap gap-x-6 gap-y-2 text-[11px] font-mono uppercase tracking-[0.18em] text-[var(--color-ink-3)]">
-            <span className="inline-flex items-center gap-1.5">
-              <CheckMark /> nothing uploaded
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <CheckMark /> no file size cap
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <CheckMark /> open source
-            </span>
+            <div className="mt-6 flex items-center justify-center flex-wrap gap-x-6 gap-y-2 text-[11px] font-mono uppercase tracking-[0.18em] text-[var(--color-ink-3)]">
+              <span className="inline-flex items-center gap-1.5">
+                <CheckMark /> nothing uploaded
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <CheckMark /> no file size cap
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <CheckMark /> no signup
+              </span>
+            </div>
           </div>
         </div>
       </section>
@@ -95,7 +107,7 @@ export function ToolPage({ toolId, meta }: Props) {
           />
           <TrustItem
             title="Free, no signup, no ads on conversions"
-            body="No account required. No watermark on the output. No queue. Open source, every line of conversion code is public."
+            body="No account required. No watermark on the output. No queue. Drop a file, get a converted file."
           />
         </div>
       </section>
@@ -168,7 +180,7 @@ function faqItems(label: string, input?: FormatProfile, output?: FormatProfile) 
   const items: Array<{ q: string; a: string }> = [
     {
       q: `Is this ${label} converter really free?`,
-      a: `Yes. No signup, no watermark, no daily file count limit. The entire engine is open source, you can read the conversion code on GitHub.`,
+      a: `Yes. No signup, no watermark, no daily file count limit. Every conversion runs in your browser, your file never touches our servers because there are no servers.`,
     },
     {
       q: `Where does my file go when I convert it?`,
@@ -207,55 +219,82 @@ function faqItems(label: string, input?: FormatProfile, output?: FormatProfile) 
   return items;
 }
 
-/** Big editorial title rendered as a "X → Y" formula. The arrow gets
- *  the marker treatment; the format names use the italic display variant
- *  to play with the formula composition. */
-function ToolFormula({ label }: { label: string }) {
-  // meta.label is in the form "HEIC → JPG" or "Compress PDF" (single-action).
+/** Static format-chip pair shown on the per-tool hero (right column).
+ *  Mirrors CloudConvert's "DOC → PDF" header preview: two square chips
+ *  with the format name + dropdown chevron, connected by a "TO" sync
+ *  button, surrounded by faint concentric pink rings. */
+function ToolPageChips({ label }: { label: string }) {
+  // For X → Y tools, split. For single-action tools (Compress PDF), show
+  // the same format on both sides as a stylised emblem.
+  let from = label;
+  let to = label;
   if (label.includes("→")) {
-    const [from, to] = label.split("→").map((s) => s.trim());
-    return (
-      <>
-        <span>{from}</span>
-        <span className="inline-block mx-3 sm:mx-4 align-middle text-[var(--color-pink-500)]">
-          <ArrowKnot />
-        </span>
-        <span className="h-display-italic">{to}</span>
-      </>
-    );
+    [from, to] = label.split("→").map((s) => s.trim().toUpperCase());
+  } else {
+    from = label.toUpperCase();
+    to = label.toUpperCase();
   }
-  return <span className="marker">{label}</span>;
+  return (
+    <div className="relative">
+      <div className="rings absolute -inset-32 pointer-events-none" aria-hidden />
+      <div className="relative flex items-center justify-center gap-3 sm:gap-4">
+        <ToolChip label={from} accented={false} />
+        <ToolToButton />
+        <ToolChip label={to} accented={true} />
+      </div>
+    </div>
+  );
 }
 
-/** Inline arrow with a small twine knot mid-line — "→" but on-brand. */
-function ArrowKnot() {
+function ToolChip({ label, accented }: { label: string; accented: boolean }) {
   return (
-    <svg
-      width="0.95em"
-      height="0.6em"
-      viewBox="0 0 80 50"
-      fill="none"
-      aria-hidden
-      className="inline-block"
+    <div
+      className={`relative flex flex-col items-center justify-center w-28 h-28 sm:w-32 sm:h-32 rounded-2xl border ${
+        accented
+          ? "bg-gradient-to-br from-[var(--color-pink-50)] to-white border-[var(--color-pink-300)] shadow-[var(--shadow-md)]"
+          : "bg-white border-[var(--color-border)] shadow-[var(--shadow-sm)]"
+      }`}
     >
-      <path
-        d="M2 25 Q 22 8, 38 25 T 72 25"
-        stroke="currentColor"
-        strokeWidth="4"
-        strokeLinecap="round"
-        fill="none"
-      />
-      <path
-        d="M64 14 L 76 25 L 64 36"
-        stroke="currentColor"
-        strokeWidth="4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      />
-      <circle cx="38" cy="25" r="6" fill="currentColor" />
-      <circle cx="38" cy="25" r="2.5" fill="white" />
-    </svg>
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden>
+        <path
+          d="M8 4 H 19 L 24 9 V 28 H 8 Z M 19 4 V 9 H 24"
+          stroke={accented ? "var(--color-pink-700)" : "var(--color-ink-2)"}
+          strokeWidth="1.5"
+          fill="none"
+          strokeLinejoin="round"
+        />
+      </svg>
+      <span className="mt-3 text-[15px] font-bold tracking-wide text-[var(--color-ink)] truncate max-w-[6.5rem] text-center">
+        {label}
+      </span>
+      <span className="absolute bottom-2 right-3 text-[var(--color-ink-3)]" aria-hidden>
+        <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
+          <path d="M3 5l3 3 3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </span>
+    </div>
+  );
+}
+
+function ToolToButton() {
+  return (
+    <div className="relative shrink-0">
+      <div className="absolute inset-0 rounded-full bg-[var(--color-pink-600)] opacity-25 blur-md" aria-hidden />
+      <div className="relative flex items-center justify-center w-12 h-12 rounded-full bg-[var(--color-pink-600)] text-white shadow-[var(--shadow-pink)]">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="slow-spin">
+          <path
+            d="M21 12a9 9 0 1 1-3-6.7M21 4v5h-5"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </div>
+      <div className="absolute -bottom-7 left-1/2 -translate-x-1/2 text-[10px] font-mono uppercase tracking-[0.2em] text-[var(--color-ink-3)]">
+        to
+      </div>
+    </div>
   );
 }
 

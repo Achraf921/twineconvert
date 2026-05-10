@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Terms",
   description:
-    "Plain-language terms of use for twineconvert, a free, open-source, in-browser file conversion tool.",
+    "Plain-language terms of use for twineconvert, a free in-browser file conversion tool.",
   alternates: { canonical: "https://twineconvert.com/terms" },
 };
 
@@ -30,10 +30,9 @@ export default function TermsPage() {
       <Section title="What we promise">
         <p>
           We aim for the conversion to produce a reasonable result for any
-          well-formed input file. The engine is open source so you can read
-          (or improve) the conversion code yourself. We test 192 converters
-          on every push to main with structural validation, round-trip
-          equivalence, and adversarial fuzz tests.
+          well-formed input file. We test 192 converters on every push with
+          structural validation, round-trip equivalence, and adversarial
+          fuzz tests.
         </p>
         <p>
           We do <strong>not</strong> promise the conversion will be perfect
@@ -67,9 +66,8 @@ export default function TermsPage() {
         <p>
           twineconvert is a free tool provided as-is. We&apos;re not liable
           for losses arising from conversion errors, format incompatibilities,
-          or the output not meeting your expectations. The conversion engine
-          is open source, anyone can audit it, fork it, or fix it. If you
-          find a bug, file an issue on GitHub.
+          or the output not meeting your expectations. Verify important
+          conversions yourself before relying on them.
         </p>
       </Section>
 

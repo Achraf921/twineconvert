@@ -91,18 +91,8 @@ export default function PrivacyPage() {
       <Section title="Your rights">
         <p>
           Because we don&apos;t collect personal data, there&apos;s nothing
-          for you to request, delete, or correct. If you have questions, the
-          GitHub repository at{" "}
-          <a
-            href="https://github.com/Achraf921/conversionEngine"
-            className="text-[var(--color-pink-600)] hover:text-[var(--color-pink-700)] underline underline-offset-2"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            github.com/Achraf921/conversionEngine
-          </a>{" "}
-          is the project&apos;s home, you can read every line of code that
-          handles a file, and open an issue if something looks off.
+          for you to request, delete, or correct. The conversion runs
+          entirely on your device.
         </p>
       </Section>
 
@@ -110,8 +100,7 @@ export default function PrivacyPage() {
         <p>
           If we ever add server-side anything (paid tiers, accounts, file
           history), this page will be updated <strong>before</strong> the
-          change ships, not after. The current commit history of this file
-          lives in the open-source repo, so any changes are public-record.
+          change ships, not after.
         </p>
       </Section>
     </article>

@@ -94,12 +94,11 @@ export function Dropzone({ toolId, toolLabel, accept }: Props) {
 
   return (
     <div className="relative">
-      <div className="absolute -inset-3 sm:-inset-5 loom-halo rounded-[2.5rem] pointer-events-none opacity-50" aria-hidden />
       <div
-        className={`relative rounded-3xl border-2 border-dashed transition-all duration-300 ${
+        className={`relative rounded-2xl border-2 border-dashed transition-all duration-200 ${
           isDragging
             ? "dropzone-active"
-            : "border-[var(--color-pink-300)] bg-white hover:border-[var(--color-pink-500)] hover:bg-[var(--color-pink-50)] shadow-[var(--shadow-md)] hover:shadow-[var(--shadow-pink)]"
+            : "border-[var(--color-border-2)] bg-white hover:border-[var(--color-pink-400)] hover:bg-[var(--color-pink-50)]/30 shadow-[var(--shadow-md)]"
         }`}
         onDragOver={(e) => {
           e.preventDefault();
@@ -143,33 +142,34 @@ export function Dropzone({ toolId, toolLabel, accept }: Props) {
 
 function IdleState({ onPick, accept }: { onPick: () => void; accept: string[] }) {
   return (
-    <div className="flex flex-col items-center gap-6">
+    <div className="flex flex-col items-center gap-5">
       <CloudIcon />
       <div className="text-center">
-        <p className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-[var(--color-ink)]">
-          Drop your file <span className="h-display-italic">here</span>
+        <p className="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--color-ink)]">
+          Select your file here to get started
         </p>
-        <p className="text-sm text-[var(--color-ink-3)] mt-2">
-          or click below to pick from your device
+        <p className="mt-2 text-sm text-[var(--color-ink-3)]">
+          or drop your file here.
         </p>
       </div>
       <button
         onClick={onPick}
-        className="group mt-1 relative inline-flex items-center gap-2.5 bg-[var(--color-pink-500)] text-white font-bold px-8 py-4 rounded-full shadow-[var(--shadow-pink)] hover:bg-[var(--color-pink-600)] hover:shadow-[var(--shadow-pink-lg)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200"
+        className="mt-2 inline-flex items-center gap-3 bg-[var(--color-pink-600)] hover:bg-[var(--color-pink-700)] text-white font-semibold pl-5 pr-2 py-3 rounded-xl shadow-[var(--shadow-pink)] transition-colors"
       >
-        <FileIcon />
-        Choose file
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="transition-transform group-hover:translate-x-0.5">
-          <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </button>
-      <div className="flex items-center gap-2 text-xs">
-        <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-[var(--color-ink-3)]">accepts</span>
-        <span className="px-2.5 py-1 rounded-full bg-[var(--color-paper)] border border-[var(--color-pink-100)] text-[var(--color-pink-700)] font-mono font-semibold tracking-wide">
-          {accept.slice(0, 3).join("  ·  ")}
+        <span className="inline-flex items-center gap-2">
+          <FileIcon />
+          Select File
         </span>
-        {accept.length > 3 && <span className="text-[var(--color-ink-3)] font-mono">+{accept.length - 3}</span>}
-      </div>
+        <span className="border-l border-white/20 pl-2 py-1 inline-flex items-center">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </span>
+      </button>
+      <p className="text-xs text-[var(--color-ink-3)]">
+        Accepts {accept.slice(0, 4).join(", ")}
+        {accept.length > 4 ? `, +${accept.length - 4} more` : ""}
+      </p>
     </div>
   );
 }
@@ -293,39 +293,24 @@ function ErrorState({ message, onReset }: { message: string; onReset: () => void
 // ===== Icons =====
 
 function CloudIcon() {
-  // Animated upload glyph: a cloud with two interlocking circles
-  // (the brand twine knot) tucked beneath, plus an upload arrow that
-  // gently bobs on hover. Pink "Local" badge clarifies that the file
-  // doesn't actually leave the device.
   return (
-    <div className="group relative w-24 h-24 rounded-3xl bg-gradient-to-br from-white via-[var(--color-pink-50)] to-[var(--color-pink-100)] border border-[var(--color-pink-200)] flex items-center justify-center shadow-[var(--shadow-md)]">
-      {/* Twine knot in the corner (echoes the brand mark) */}
-      <svg className="absolute bottom-2 right-2 w-5 h-5 text-[var(--color-pink-400)]" viewBox="0 0 24 24" fill="none" aria-hidden>
-        <circle cx="9" cy="12" r="5" stroke="currentColor" strokeWidth="2" />
-        <circle cx="15" cy="12" r="5" stroke="currentColor" strokeWidth="2" />
-      </svg>
-
-      <svg width="44" height="44" viewBox="0 0 48 48" fill="none" aria-hidden>
+    <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[var(--color-pink-50)] border border-[var(--color-pink-100)]">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden>
         <path
-          d="M14 30a8 8 0 0 1 1.5 -15.85 12 12 0 0 1 22.5 4 7 7 0 0 1 -2 13.85"
+          d="M9 20a5 5 0 0 1 .8 -9.95 7.5 7.5 0 0 1 14.4 2.5 4.5 4.5 0 0 1 -1.2 8.95"
           stroke="#E0297B"
-          strokeWidth="2.5"
+          strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
         <path
-          d="M24 22v18M16 30l8 -8 8 8"
+          d="M16 14v12M11 19l5 -5 5 5"
           stroke="#E0297B"
-          strokeWidth="2.5"
+          strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="transition-transform duration-300 group-hover:-translate-y-1"
         />
       </svg>
-
-      <span className="absolute -top-2 -right-2 px-2 py-0.5 rounded-full bg-[var(--color-pink-500)] text-white text-[9px] font-mono font-bold tracking-[0.18em] uppercase shadow-[var(--shadow-pink)]">
-        local
-      </span>
     </div>
   );
 }

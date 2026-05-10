@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "twineconvert is a free, open-source file converter that runs entirely in your browser. Built by one developer because every existing free converter uploads your files to a server.",
+    "twineconvert is a free file converter that runs entirely in your browser. Built because every existing free converter uploads your files to a server.",
   alternates: { canonical: "https://twineconvert.com/about" },
 };
 
@@ -64,26 +64,6 @@ export default function AboutPage() {
         </p>
 
         <h2 className="text-xl font-bold text-[var(--color-text)] pt-6">
-          Open source
-        </h2>
-        <p>
-          The entire conversion engine is{" "}
-          <a
-            href="https://github.com/Achraf921/conversionEngine"
-            className="text-[var(--color-pink-600)] hover:text-[var(--color-pink-700)] underline underline-offset-2"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            on GitHub
-          </a>
-          . You can read every line of code that handles a file. You can fork
-          it, audit it, run it locally without internet access, or fix bugs
-          and submit them back. The 192-converter test suite (registry
-          integrity, real-file conversion validation, round-trip equivalence,
-          adversarial fuzz tests) runs on every commit.
-        </p>
-
-        <h2 className="text-xl font-bold text-[var(--color-text)] pt-6">
           What&apos;s next
         </h2>
         <p>
@@ -102,21 +82,6 @@ export default function AboutPage() {
           free).
         </p>
 
-        <h2 className="text-xl font-bold text-[var(--color-text)] pt-6">
-          Get in touch
-        </h2>
-        <p>
-          Bugs, feature requests, format suggestions: open an issue on the{" "}
-          <a
-            href="https://github.com/Achraf921/conversionEngine/issues"
-            className="text-[var(--color-pink-600)] hover:text-[var(--color-pink-700)] underline underline-offset-2"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            GitHub repo
-          </a>
-          . That&apos;s the canonical channel for everything.
-        </p>
       </div>
     </article>
   );

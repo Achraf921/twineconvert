@@ -24,12 +24,8 @@ const FAQS = [
     a: "The conversion runs in a Web Worker (a background thread), so the page stays responsive while it works. You'll see a progress indicator during long operations. If you do hit a memory ceiling, the tab will reload, your file is never lost because it never left your disk.",
   },
   {
-    q: "Is the code open source?",
-    a: "Yes, every line of the conversion engine is on GitHub at github.com/Achraf921/conversionEngine. You can audit which libraries handle which formats, fork it, run it locally without internet access, or submit fixes. The 192-converter test suite (registry integrity, real-file conversion validation, round-trip equivalence checks, adversarial fuzz tests) runs on every commit.",
-  },
-  {
     q: "Do you support batch conversion?",
-    a: "Not yet, the current UI is one file at a time per tool page. Batch conversion is on the near-term roadmap; the engine itself is stateless and supports it, the UI just isn't wired up yet. Open an issue on GitHub if this is blocking you and it'll get prioritized.",
+    a: "Not yet, the current UI is one file at a time per tool page. Batch conversion is on the near-term roadmap; the engine itself is stateless and supports it, the UI just isn't wired up yet.",
   },
 ];
 

@@ -64,14 +64,6 @@ const ROWS: Row[] = [
     smallpdf: false,
   },
   {
-    feature: "Open source",
-    twine: true,
-    cloudConvert: false,
-    iLovePDF: false,
-    freeConvert: false,
-    smallpdf: false,
-  },
-  {
     feature: "Works offline (after first load)",
     twine: true,
     cloudConvert: false,
