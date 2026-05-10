@@ -19,6 +19,7 @@ import { listToolIds } from "@/lib/engine/registry-meta";
 import { getProfilesForToolId, type FormatProfile } from "@/lib/formats";
 import { getOtherInputsForOutput, getOtherOutputsForInput } from "@/lib/related-tools";
 import { buildFormatGraph } from "@/lib/dropzone-routes";
+import { getExtendedCopy } from "@/lib/tool-extended-copy";
 
 // Build the format graph once at module load; it's pure-data so safe to
 // memoize at the file level.
@@ -35,6 +36,7 @@ export function ToolPage({ toolId, meta }: Props) {
   const outputProfile = profiles?.output;
   const otherInputs = getOtherInputsForOutput(toolId, 12);
   const otherOutputs = getOtherOutputsForInput(toolId, 12);
+  const extended = getExtendedCopy(toolId);
 
   return (
     <>
@@ -132,6 +134,41 @@ export function ToolPage({ toolId, meta }: Props) {
           />
         </div>
       </section>
+
+      {extended && (
+        <section className="mx-auto max-w-4xl px-6 py-16">
+          <SectionLabel>Why convert {meta.label}</SectionLabel>
+          <h2 className="text-2xl font-bold mt-2 mb-4">
+            What this conversion is actually for
+          </h2>
+          <p className="text-[var(--color-text-2)] leading-relaxed mb-8">
+            {extended.whyConvert}
+          </p>
+
+          <h3 className="text-xl font-semibold mt-8 mb-3">A real example</h3>
+          <p className="text-[var(--color-text-2)] leading-relaxed">
+            {extended.example}
+          </p>
+
+          {extended.troubleshooting.length > 0 && (
+            <>
+              <h3 className="text-xl font-semibold mt-10 mb-4">Troubleshooting</h3>
+              <div className="space-y-5">
+                {extended.troubleshooting.map((item, i) => (
+                  <div key={i} className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
+                    <p className="font-semibold text-[var(--color-text)] mb-2">
+                      {item.problem}
+                    </p>
+                    <p className="text-sm text-[var(--color-text-2)] leading-relaxed">
+                      {item.solution}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </section>
+      )}
 
       {(inputProfile || outputProfile) && (
         <section className="mx-auto max-w-4xl px-6 py-16">
