@@ -34,6 +34,9 @@ export function HeroFlow() {
   const [animating, setAnimating] = useState(false);
 
   useEffect(() => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) return;
+
     const tick = () => {
       setAnimating(true);
       setTimeout(() => {
