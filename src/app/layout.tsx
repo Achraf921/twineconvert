@@ -46,9 +46,6 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  icons: {
-    icon: "/favicon.ico",
-  },
   alternates: {
     canonical: "https://twineconvert.com",
   },
@@ -62,7 +59,7 @@ const ORGANIZATION_JSONLD = {
   "@type": "Organization",
   name: "twineconvert",
   url: "https://twineconvert.com",
-  logo: "https://twineconvert.com/favicon.ico",
+  logo: "https://twineconvert.com/icon",
   sameAs: ["https://github.com/Achraf921/conversionEngine"],
 };
 
