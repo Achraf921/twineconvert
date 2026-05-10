@@ -178,12 +178,12 @@ function HeroSection() {
           </p>
         </div>
 
-        {/* Below: chip widget LEFT, dropzone RIGHT, side by side at md+ */}
-        <div className="fade-up fade-up-delay-2 mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 items-stretch">
-          <div className="flex items-center justify-center md:justify-start">
+        {/* Below: compact chip widget LEFT, big dropzone RIGHT, side by side from sm+ */}
+        <div className="fade-up fade-up-delay-2 mt-12 grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-8 sm:gap-10 lg:gap-14 items-center">
+          <div className="flex items-center justify-center sm:justify-start">
             <HeroFlow graph={FORMAT_GRAPH} initialInput="HEIC" initialOutput="JPG" />
           </div>
-          <div className="flex">
+          <div className="w-full">
             <HomeDropzone routes={DROPZONE_ROUTES} acceptAll={DROPZONE_ACCEPT} />
           </div>
         </div>

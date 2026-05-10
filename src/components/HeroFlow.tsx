@@ -89,9 +89,10 @@ export function HeroFlow({ graph, initialInput, initialOutput }: Props) {
   };
 
   return (
-    <div className="relative w-full max-w-md">
-      {/* Concentric pink rings backdrop */}
-      <div className="rings absolute -inset-24 pointer-events-none" aria-hidden />
+    <div className="relative">
+      {/* Concentric pink rings backdrop, kept tight so it doesn't bleed into
+       *  the dropzone column. */}
+      <div className="rings absolute -inset-12 sm:-inset-16 pointer-events-none" aria-hidden />
 
       <div className="relative flex items-center justify-center gap-3 sm:gap-4">
         <FormatChip
