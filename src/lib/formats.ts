@@ -335,6 +335,569 @@ const PROFILES: Record<string, FormatProfile> = {
     primaryUse: "Ebooks across non-Kindle readers.",
     binary: true,
   },
+
+  // ==================== Bibliography ====================
+  bibtex: {
+    name: "BibTeX",
+    fullName: "BibTeX bibliography",
+    description:
+      "BibTeX is the de facto bibliography format for LaTeX since 1985 — plain-text entries like @article{key, author={...}, title={...}, journal={...}, year={2024}}. Used by every academic publisher's LaTeX template and supported as an import/export format by Zotero, Mendeley, EndNote, and Papers. Strengths: trivially diff-able in git, scriptable, tooling-rich. Weakness: there's no single canonical spec, so different parsers handle edge cases (special characters, cross-references, @string macros) inconsistently.",
+    howToOpen: "Any text editor (the format is plain text). Reference managers like Zotero, Mendeley, JabRef, BibDesk all read and write it natively.",
+    primaryUse: "Academic citations in LaTeX papers; reference-manager export.",
+    binary: false,
+  },
+  ris: {
+    name: "RIS",
+    fullName: "Research Information Systems",
+    description:
+      "RIS is a tagged citation format from Research Information Systems (the Reference Manager company), now an industry-standard interchange. Two-letter tags (TY=type, AU=author, TI=title, JO=journal, etc.), one per line, records terminated by ER. Most academic databases (PubMed, Web of Science, JSTOR, Scopus) export to RIS. Reference managers all import and export it.",
+    howToOpen: "Zotero, Mendeley, EndNote, Papers, RefWorks, Citavi — every modern reference manager. Plain text in any editor.",
+    primaryUse: "Citation interchange between databases and reference managers.",
+    binary: false,
+  },
+  nbib: {
+    name: "NBIB",
+    fullName: "PubMed citation format",
+    description:
+      "NBIB is the National Library of Medicine's citation format for PubMed exports. Structurally identical to RIS with a different tag dictionary (PMID, FAU, JT, AID instead of ID, AU, JO, DO). Reference managers treat .nbib files as RIS-flavored with PubMed-specific extensions. The format ships with PubMed downloads and the major systematic-review tools (Covidence, Rayyan).",
+    howToOpen: "Zotero, Mendeley, EndNote, Papers — all read NBIB natively. Plain text in any editor.",
+    primaryUse: "PubMed citation export; systematic review imports.",
+    binary: false,
+  },
+  "endnote-xml": {
+    name: "EndNote XML",
+    fullName: "EndNote XML export",
+    description:
+      "EndNote XML is the structured XML format used by EndNote (Clarivate's reference manager) for backups and interchange. Each <record> wraps contributors, titles, dates, and identifiers with explicit semantic tagging — much richer than RIS or BibTeX. Useful when you want to preserve EndNote's full data model (custom fields, attached files, ratings).",
+    howToOpen: "EndNote (paid). Zotero and Mendeley import EndNote XML cleanly. Any text editor for inspection.",
+    primaryUse: "EndNote backup; cross-platform reference-manager migration.",
+    binary: false,
+  },
+
+  // ==================== Genealogy ====================
+  gedcom: {
+    name: "GEDCOM",
+    fullName: "Genealogical Data Communication",
+    description:
+      "GEDCOM is the universal interchange format for family-tree data. The current spec is GEDCOM 7.0 (2021) but most genealogy software still emits GEDCOM 5.5.1 (2019) for compatibility. Plain-text hierarchical records: 0-level lines define individuals (INDI) and families (FAM); deeper levels (1, 2, 3...) attach attributes like names, dates, and places. Every major genealogy app reads and writes GEDCOM.",
+    howToOpen: "Ancestry, MyHeritage, FamilySearch, RootsMagic, Family Tree Maker, Gramps, MacFamilyTree. Plain text in any editor.",
+    primaryUse: "Family tree interchange between genealogy programs.",
+    binary: false,
+  },
+
+  // ==================== Amateur radio ====================
+  adif: {
+    name: "ADIF",
+    fullName: "Amateur Data Interchange Format",
+    description:
+      "ADIF is THE universal interchange for ham radio QSO logs since 1996 — every logging app from N1MM Logger to ACLog to fldigi to WSJT-X to Log4OM exports and imports it. Format is tag-length-value: <CALL:5>K1ABC, then <EOR> between contacts. The current spec is ADIF 3.1.4 with ADIF 3.2 in development.",
+    howToOpen: "All ham radio logging software. eQSL.cc, LoTW (ARRL), QRZ.com, Club Log all import ADIF for verifying contacts.",
+    primaryUse: "Logbook interchange between ham radio software.",
+    binary: false,
+  },
+  cabrillo: {
+    name: "Cabrillo",
+    fullName: "Cabrillo contest log",
+    description:
+      "Cabrillo is the contest-log submission format used by ARRL, CQ World Wide, RDXC, and other major amateur radio contests. Each QSO is a fixed-format line beginning with QSO:, followed by header lines declaring CALLSIGN, CONTEST, CATEGORY-* metadata. Contest organizers' robots parse Cabrillo logs to score and cross-check thousands of submissions automatically.",
+    howToOpen: "All ham radio contest logging software (N1MM Logger+, WriteLog, TRLog) writes Cabrillo. Plain text — any editor opens it for review.",
+    primaryUse: "Contest log submission to ARRL/CQ/RDXC scoring committees.",
+    binary: false,
+  },
+
+  // ==================== Chess ====================
+  pgn: {
+    name: "PGN",
+    fullName: "Portable Game Notation",
+    description:
+      "PGN is the universal text format for chess games — every chess engine, every chess server (chess.com, lichess), every analysis tool reads it. A PGN file is a sequence of game blocks; each block has 7-tag headers (Event, Site, Date, Round, White, Black, Result) followed by the moves in algebraic notation. A single PGN file can contain thousands of games.",
+    howToOpen: "chess.com, lichess.org (paste it into the analysis board), ChessBase, Scid, every chess engine. Plain text in any editor.",
+    primaryUse: "Sharing and analyzing chess games.",
+    binary: false,
+  },
+  fen: {
+    name: "FEN",
+    fullName: "Forsyth–Edwards Notation",
+    description:
+      "FEN is a single-line text representation of one chess position — piece placement, side to move, castling rights, en passant target, halfmove clock, and fullmove number. Used by chess engines for position analysis, by chess servers for sharing puzzles, and by GUIs for board setup. Unlike PGN (which represents a game), FEN represents a single static position.",
+    howToOpen: "Any chess engine, GUI, or website's analysis board. Just paste the FEN string.",
+    primaryUse: "Sharing chess positions for analysis.",
+    binary: false,
+  },
+
+  // ==================== BIM / Architecture ====================
+  ifc: {
+    name: "IFC",
+    fullName: "Industry Foundation Classes",
+    description:
+      "IFC is the open BIM (Building Information Modeling) interchange standard maintained by buildingSMART. Used by every major AEC software — Revit, ArchiCAD, AutoCAD, Tekla, Bentley — to exchange architectural and structural model data. The format is text-based STEP (ISO 10303) — verbose but human-readable. The current spec is IFC 4.3 (released 2024).",
+    howToOpen: "Revit, ArchiCAD, AutoCAD, Tekla, Bentley OpenBuildings. Free viewers: BIMcollab Zoom, IFC++, BIMVision, Solibri Anywhere.",
+    primaryUse: "Architectural/structural BIM model interchange between disciplines.",
+    binary: false,
+  },
+  gltf: {
+    name: "glTF",
+    fullName: "GL Transmission Format",
+    description:
+      "glTF (\"the JPEG of 3D\") is the runtime asset format for 3D scenes — designed by Khronos for fast loading in web/AR/VR applications. Two flavors: .gltf (JSON + external textures) and .glb (binary, single-file, what we produce here). Native viewer support in macOS/iOS Quick Look, Windows 3D Viewer, every modern browser via three.js or babylon.js.",
+    howToOpen: "macOS / iOS Quick Look, Windows 3D Viewer, every WebGL/WebGPU 3D viewer (Three.js, Babylon.js), Blender (with importer), every game engine.",
+    primaryUse: "3D model delivery to web/AR/VR/game engines.",
+    binary: true,
+  },
+
+  // ==================== 3D mesh ====================
+  stl: {
+    name: "STL",
+    fullName: "Stereolithography",
+    description:
+      "STL is the lingua franca of 3D printing — every slicer (PrusaSlicer, Bambu Studio, Cura, Simplify3D) reads it. Files are unstructured triangle soup: no scene graph, no materials, no scale info, just vertices and triangles. The format is ancient (1987) and primitive but its simplicity is exactly why it's universal. Two variants: ASCII (human-readable, big) and binary (compact, what most software produces).",
+    howToOpen: "Every 3D printing slicer, every CAD/3D tool (Blender, FreeCAD, Fusion 360, SolidWorks, Tinkercad). Free viewers: ViewSTL, MeshLab, online STL viewers.",
+    primaryUse: "3D printing — feed an STL into your slicer to get G-code.",
+    binary: true,
+  },
+  obj: {
+    name: "OBJ",
+    fullName: "Wavefront Object",
+    description:
+      "OBJ is Wavefront's text-based 3D mesh format from 1990 — the most-used asset interchange in computer graphics for decades. Plain text: \"v\" lines for vertices, \"f\" for faces, \"vn\" for normals, \"vt\" for texture coordinates. Optional companion .mtl file describes materials. Universal compatibility across 3D software but lacks newer features like PBR materials, animations, and skeletons.",
+    howToOpen: "Blender, Maya, 3ds Max, Cinema 4D, ZBrush, Modo, MeshLab, every 3D software ever. Plain text in any editor.",
+    primaryUse: "3D mesh interchange between modeling/rendering applications.",
+    binary: false,
+  },
+  "3mf": {
+    name: "3MF",
+    fullName: "3D Manufacturing Format",
+    description:
+      "3MF is the modern successor to STL, designed by the 3MF Consortium (Microsoft, HP, Autodesk, Bambu Lab, Prusa, Ultimaker). Zip-packaged XML carries mesh geometry, materials, color info, slicer settings, and multi-object scenes — everything STL lacks. Bambu Lab and Prusa have adopted 3MF as their preferred format; many MakerWorld and Printables downloads now ship as 3MF only.",
+    howToOpen: "PrusaSlicer, Bambu Studio, OrcaSlicer, Cura, Simplify3D — all modern slicers. Microsoft 3D Viewer (Windows), Apple Preview (macOS Sonoma+).",
+    primaryUse: "3D printing with full color/material/multi-object scene data.",
+    binary: true,
+  },
+
+  // ==================== Color palettes ====================
+  ase: {
+    name: "ASE",
+    fullName: "Adobe Swatch Exchange",
+    description:
+      "ASE is Adobe's binary palette format used across Creative Cloud (Photoshop, Illustrator, InDesign). Each entry stores RGB/CMYK/Lab/Grayscale color values plus a name. Designed for sharing brand color systems between team members — load an ASE in Photoshop and the swatches appear in your Swatches panel.",
+    howToOpen: "Photoshop, Illustrator, InDesign, Affinity apps, Krita, GIMP (with plugin), Procreate.",
+    primaryUse: "Brand color systems shared across Adobe Creative Cloud teams.",
+    binary: true,
+  },
+  aco: {
+    name: "ACO",
+    fullName: "Adobe Color",
+    description:
+      "ACO is Photoshop's older binary color palette format (predates ASE). Two versions exist: v1 (color values only) and v2 (adds names). Most contemporary Photoshop users have moved to ASE for cross-Adobe-app compatibility, but ACO remains the format you get when Photoshop's swatch panel exports.",
+    howToOpen: "Photoshop natively. Krita, GIMP (with plugin), Affinity Photo. Convert to ASE for Illustrator/InDesign use.",
+    primaryUse: "Photoshop swatch panel exports.",
+    binary: true,
+  },
+  gpl: {
+    name: "GPL",
+    fullName: "GIMP Palette",
+    description:
+      "GPL is GIMP's plain-text palette format. Each line: R G B Name (R/G/B as 0-255 integers). Trivially diff-able, scriptable, and human-readable — which is why open-source design tools (Inkscape, Krita) and many web color tools support GPL natively even when they don't read ASE/ACO.",
+    howToOpen: "GIMP, Inkscape, Krita, Aseprite, MyPaint. Plain text in any editor — generate or edit them programmatically.",
+    primaryUse: "Color palette sharing in open-source design workflows.",
+    binary: false,
+  },
+
+  // ==================== LUT (color grading) ====================
+  cube: {
+    name: "CUBE",
+    fullName: "Adobe CUBE LUT",
+    description:
+      "CUBE is the Adobe / SpeedGrade color grading LUT format and the most widely supported 3D LUT format in video editing. Plain text: a header declares the grid size (LUT_3D_SIZE 17/33/65), then the body lists RGB triplets in R-major order. Every NLE and color grading tool reads CUBE — DaVinci Resolve, Premiere Pro, Final Cut Pro, FilmConvert.",
+    howToOpen: "DaVinci Resolve, Premiere Pro, Final Cut Pro, Avid Media Composer, OBS Studio. Plain text in any editor.",
+    primaryUse: "Video color grading — apply a film look or correction LUT.",
+    binary: false,
+  },
+  "3dl": {
+    name: "3DL",
+    fullName: "Autodesk Lustre 3D LUT",
+    description:
+      "3DL is Autodesk Lustre's LUT format, also adopted by Quantel and several film post tools. Text-based: a coordinate ladder line declares the grid resolution, then RGB triplets in B-major (B varies fastest) order. Output values are integers in the declared bit depth (typically 10-bit, 0-1023). Common in film and high-end TV post workflows.",
+    howToOpen: "DaVinci Resolve, Lustre, Quantel Genetic Engineering, FilmLight Baselight. Plain text in any editor.",
+    primaryUse: "Film/post color grading LUT interchange.",
+    binary: false,
+  },
+  csp: {
+    name: "CSP",
+    fullName: "Cinespace LUT",
+    description:
+      "CSP is the Cinespace (Rising Sun Research, now part of Autodesk) LUT format. Text-based with optional 1D preLUT blocks for separate per-channel curves before the 3D mapping — useful for combining tone curves with color grading in one file. Supported by DaVinci Resolve and Lustre.",
+    howToOpen: "DaVinci Resolve, Lustre, Mistika. Plain text in any editor.",
+    primaryUse: "Color grading workflows that need preLUT + 3D combined.",
+    binary: false,
+  },
+
+  // ==================== Embroidery ====================
+  dst: {
+    name: "DST",
+    fullName: "Tajima DST",
+    description:
+      "DST is Tajima's industrial embroidery file format and the most universally-supported design format on commercial machines. 512-byte header followed by 3-byte stitch records. Brother, Janome, Bernina, Singer, Husqvarna Viking — all read DST as a fallback even when their native format is different.",
+    howToOpen: "Every commercial embroidery machine. Free viewers: Embird (paid), Embroidermodder (free), online embroidery viewers like StitchView.",
+    primaryUse: "Universal embroidery design interchange.",
+    binary: true,
+  },
+  pes: {
+    name: "PES",
+    fullName: "Brother Embroidery",
+    description:
+      "PES is Brother's native embroidery format, also used by Babylock and Bernina-XJ machines. The file embeds a PEC subsection containing the actual stitch data. PES is the format most embroidery design marketplaces (Etsy, Embroidery Library) ship with by default because Brother dominates the home/hobbyist market.",
+    howToOpen: "Brother and Babylock home machines (PE Design software, Brother Embroidery Box). Free: Embroidermodder, online PES viewers.",
+    primaryUse: "Brother home embroidery machine designs.",
+    binary: true,
+  },
+  jef: {
+    name: "JEF",
+    fullName: "Janome Embroidery Format",
+    description:
+      "JEF is Janome's embroidery format (also Memorycraft, Elna). 116-byte header with thread color list, then 2-byte stitch deltas. Used by Janome Memorycraft 9700/11000/15000 series and Elna eXpressive machines.",
+    howToOpen: "Janome Digitizer, Elna sewing software, Embird. Free: Embroidermodder.",
+    primaryUse: "Janome and Elna embroidery machines.",
+    binary: true,
+  },
+  exp: {
+    name: "EXP",
+    fullName: "Melco Expanded",
+    description:
+      "EXP is Melco's expanded embroidery format (also used by Bernina Artista). Simplest of the major formats: no header, just a stream of 2-byte stitch deltas with control codes for jumps, color changes, and end-of-design. Universal compatibility because of the format's simplicity.",
+    howToOpen: "Melco DesignShop, Bernina Embroidery Software, Embird, Embroidermodder.",
+    primaryUse: "Melco and Bernina industrial/professional embroidery.",
+    binary: true,
+  },
+
+  // ==================== Music notation ====================
+  midi: {
+    name: "MIDI",
+    fullName: "Musical Instrument Digital Interface",
+    description:
+      "MIDI files (.mid/.midi) carry note-on/note-off events plus tempo and instrument changes — not audio waveforms. Standardized in 1983 and unchanged in core. Every DAW (Logic, Ableton, FL Studio, Pro Tools, Reaper, GarageBand) reads and writes MIDI. Use it for: scoring, MIDI-controlled hardware (keyboards, drum machines), and the 1990s-era General MIDI ringtones.",
+    howToOpen: "Every DAW (Logic, Ableton, FL Studio, Pro Tools, Reaper, GarageBand, Studio One). MuseScore for notation. VLC and QuickTime can play MIDI through software synth.",
+    primaryUse: "Capturing musical performance as note events for editing/playback.",
+    binary: true,
+  },
+  musicxml: {
+    name: "MusicXML",
+    fullName: "MusicXML notation",
+    description:
+      "MusicXML is the lingua franca of digital sheet music — XML schema designed by Recordare (now MakeMusic, makers of Finale). Carries staves, notes, articulations, dynamics, lyrics, and layout in a way that survives transfer between notation programs (Finale, Sibelius, Dorico, MuseScore). Most digital sheet music sites (musicnotes.com, sheetmusicplus.com) sell MusicXML alongside PDF.",
+    howToOpen: "Finale, Sibelius, Dorico, MuseScore, Notion, StaffPad — every modern notation app. Plain XML in any editor.",
+    primaryUse: "Sheet music interchange between notation programs.",
+    binary: false,
+  },
+  mxl: {
+    name: "MXL",
+    fullName: "Compressed MusicXML",
+    description:
+      "MXL is the compressed (zipped) variant of MusicXML — a zip containing the inner XML score plus a META-INF/container.xml manifest pointing at it. Most digital sheet music ships as MXL because it's typically 70-80% smaller than the uncompressed MusicXML. Every notation app that reads MusicXML reads MXL.",
+    howToOpen: "Same as MusicXML — Finale, Sibelius, Dorico, MuseScore, Notion all read MXL natively.",
+    primaryUse: "Compressed sheet music distribution.",
+    binary: true,
+  },
+
+  // ==================== Apple iWork ====================
+  pages: {
+    name: "Pages",
+    fullName: "Apple Pages document",
+    description:
+      "Pages is Apple's word processor (the macOS/iOS counterpart to Word). Files are zip-packaged with proprietary iWork XML inside — not OOXML, not openable outside Apple's ecosystem without conversion. macOS/iOS Quick Look shows a thumbnail; reading the actual content on Windows/Linux requires either iCloud Pages (web) or converting to PDF/DOCX first.",
+    howToOpen: "Pages on macOS/iOS (free with any Apple device since 2013). iCloud.com Pages on any browser. Convert to PDF or DOCX for Windows/Linux compatibility.",
+    primaryUse: "Word processing on Mac/iPad/iPhone.",
+    binary: true,
+  },
+  numbers: {
+    name: "Numbers",
+    fullName: "Apple Numbers spreadsheet",
+    description:
+      "Numbers is Apple's spreadsheet app, paired with Pages and Keynote in iWork. Files are zip-packaged proprietary iWork XML. Core functionality overlaps with Excel but Numbers favors free-form layout (multiple tables per sheet, embedded charts, design templates) over Excel's grid-everywhere convention. Same compatibility caveats as Pages — convert to XLSX/CSV for non-Apple use.",
+    howToOpen: "Numbers on macOS/iOS, iCloud.com Numbers in any browser. Convert to XLSX or CSV for Excel/Google Sheets users.",
+    primaryUse: "Spreadsheets on Mac/iPad/iPhone.",
+    binary: true,
+  },
+  keynote: {
+    name: "Keynote",
+    fullName: "Apple Keynote presentation",
+    description:
+      "Keynote is Apple's presentation app — the iWork answer to PowerPoint. Files are zip-packaged proprietary iWork XML. Keynote is widely admired for its motion design (Magic Move transitions, smooth Cinema-style animations) but lockstep Apple-only. Convert to PPTX or PDF for sharing with Windows/Google Slides users.",
+    howToOpen: "Keynote on macOS/iOS, iCloud.com Keynote in browser. Convert to PPTX or PDF for non-Apple recipients.",
+    primaryUse: "Presentations on Mac/iPad/iPhone.",
+    binary: true,
+  },
+
+  // ==================== Personal data exports ====================
+  "kindle-clippings": {
+    name: "Kindle Clippings",
+    fullName: "Kindle My Clippings.txt",
+    description:
+      "My Clippings.txt is the file every Kindle device maintains internally — a plain-text log of every highlight, note, and bookmark you've made across all your books. Plug your Kindle into a computer via USB and it appears in /documents/My Clippings.txt. The format is line-based with == separators; great for archiving your reading history into Notion, Obsidian, Readwise, or any markdown system.",
+    howToOpen: "Plain text — open in any text editor. The file is machine-readable, which is why people convert it into structured formats (CSV, Markdown, Notion-compatible CSV) for import into knowledge-management tools.",
+    primaryUse: "Archiving Kindle highlights for personal knowledge management.",
+    binary: false,
+  },
+  "whatsapp-chat": {
+    name: "WhatsApp Chat",
+    fullName: "WhatsApp chat export",
+    description:
+      "WhatsApp lets users export individual chats as either a .txt transcript or a .zip containing the txt plus all the referenced media. Used for: archiving conversations before switching phones, court evidence (a chat transcript is increasingly admissible), and personal record-keeping. The format is line-per-message: \"[date, time] sender: message\" on iOS or \"date, time - sender: message\" on Android.",
+    howToOpen: "Plain text in any editor. The .zip needs unzipping first; inside is the txt + media files. Convert to PDF for paginated archiving or CSV/JSON for structured analysis.",
+    primaryUse: "Archiving personal chat history before phone migration or for legal records.",
+    binary: false,
+  },
+  "discord-chat": {
+    name: "Discord Export",
+    fullName: "DiscordChatExporter JSON",
+    description:
+      "DiscordChatExporter (Tyrrrz) is the de facto tool for exporting Discord channel/server logs to JSON, HTML, CSV, or plain text. JSON output is the most data-rich — full message structure with author, timestamp, content, attachments, reactions, mentions, embeds. Used by community moderators, OSINT researchers (Bellingcat publishes a guide), and Discord server admins archiving before deletion.",
+    howToOpen: "DiscordChatExporter for fresh exports. JSON files open in any editor; for human reading, convert to Markdown, PDF, or rendered HTML.",
+    primaryUse: "Community moderation logs; OSINT investigations; archival of Discord servers.",
+    binary: false,
+  },
+  "twitter-archive": {
+    name: "Twitter Archive",
+    fullName: "Twitter (X) data export",
+    description:
+      "Twitter's GDPR-compliant data export lets users download their entire account history as a zip — every tweet, DM, like, follow, ad interaction. The structure is JavaScript files (window.YTD.tweets.part0 = [...]) inside a data/ directory, with a manifest declaring which files contain what. Used heavily during the 2022-2023 X migration wave when users wanted a permanent record of their old tweets.",
+    howToOpen: "Twitter's own browser-based archive viewer (open the included Your archive.html). Online tools like sk22.github.io/twitter-archive-browser. Convert to CSV for spreadsheet analysis.",
+    primaryUse: "Personal record of Twitter activity; analysis of one's tweet history.",
+    binary: false,
+  },
+  "instagram-data": {
+    name: "Instagram Data",
+    fullName: "Instagram data export",
+    description:
+      "Instagram's data export (downloadable from Settings → Privacy → Data Download) is a zip containing all your posts, stories, comments, messages, follower history, and ad preferences as JSON files. Structure has shifted across Meta's export-format versions but always uses /your_instagram_activity/ as the root directory.",
+    howToOpen: "Plain JSON files — any text editor. Convert to CSV/HTML for human-friendly browsing of your post history.",
+    primaryUse: "Personal record before account deletion; analysis of one's Instagram activity.",
+    binary: false,
+  },
+  "facebook-archive": {
+    name: "Facebook Archive",
+    fullName: "Facebook data export",
+    description:
+      "Facebook's data export (Settings → Your Facebook Information → Download Your Information) lets users download an account's full history. Output is either an HTML browseable bundle or JSON. The JSON shape includes posts, photos, messages, ads-targeting categories, and friend relationships. Useful for migrating to other social platforms or maintaining a personal record.",
+    howToOpen: "HTML version is browser-openable as a static site. JSON requires conversion to CSV/HTML for casual browsing.",
+    primaryUse: "Personal record; account migration; data portability.",
+    binary: false,
+  },
+  "apple-health": {
+    name: "Apple Health Export",
+    fullName: "Apple Health export.zip",
+    description:
+      "Apple Health on iOS lets users export their entire health/fitness history as export.zip — heart rate samples, step counts, sleep stages, workouts, blood pressure, every recorded metric. Inside the zip is one big export.xml file (often hundreds of megabytes for multi-year users) listing every Record element. Quantified-self enthusiasts, researchers, and healthcare providers all want this data in CSV/JSON for analysis.",
+    howToOpen: "iOS Health app (where it originated). For analysis: convert export.xml to CSV/JSON and load into any spreadsheet/notebook (Excel, Pandas, R).",
+    primaryUse: "Health data export for analysis, backup, or healthcare provider sharing.",
+    binary: false,
+  },
+  "apple-health-heart-rate": {
+    name: "Apple Health Heart Rate",
+    fullName: "Apple Health heart rate records",
+    description:
+      "Heart rate readings from your Apple Watch (and iPhone, where applicable) live inside the Apple Health export. Each reading has a precise timestamp, a value in BPM, and the source device. Athletes use these for HRV analysis, doctors review them for arrhythmia screening, and quantified-self folks correlate them with sleep and stress data.",
+    howToOpen: "iOS Health app shows them in the Heart Rate section. For analysis, extract from export.zip and load into a spreadsheet or analytics notebook.",
+    primaryUse: "Heart rate trend analysis from Apple Watch data.",
+    binary: false,
+  },
+  "apple-health-steps": {
+    name: "Apple Health Steps",
+    fullName: "Apple Health step counts",
+    description:
+      "Step-count records from iPhone's motion coprocessor and Apple Watch live in the Health export. Each entry has a time range, count, and source. Useful for rolling daily/weekly step trends, comparing across years, or feeding into a personal fitness dashboard.",
+    howToOpen: "iOS Health app's Activity section. For analysis, extract from export.zip into CSV.",
+    primaryUse: "Step trend analysis; personal fitness dashboards.",
+    binary: false,
+  },
+  "apple-health-sleep": {
+    name: "Apple Health Sleep",
+    fullName: "Apple Health sleep stages",
+    description:
+      "Sleep stage records from Apple Watch (when worn overnight) — Asleep, Awake, Core, Deep, REM stages, plus In Bed periods. The Watch's sleep tracking became reliable in watchOS 9 (2022); older watchOS sleep data is just in/out of bed without stages.",
+    howToOpen: "iOS Health app's Sleep section. For analysis, extract sleep records from export.zip into CSV.",
+    primaryUse: "Sleep quality analysis; correlating sleep with workouts/HRV.",
+    binary: false,
+  },
+  "apple-health-workouts": {
+    name: "Apple Health Workouts",
+    fullName: "Apple Health workout history",
+    description:
+      "Workout records from Apple Watch — activity type (running, cycling, yoga, etc.), duration, distance, calories burned, average heart rate. Each workout shows up as a single Workout element in export.xml with totals plus an inner timeline of associated heart-rate Record entries.",
+    howToOpen: "iOS Fitness app. For analysis, extract Workout entries from export.zip into CSV.",
+    primaryUse: "Fitness history; training load analysis.",
+    binary: false,
+  },
+
+  // ==================== Legal / B2B / Security ====================
+  "pacer-docket": {
+    name: "PACER Docket",
+    fullName: "PACER federal court docket",
+    description:
+      "PACER (Public Access to Court Electronic Records) is the US federal courts' electronic filing system. Users can download case dockets as HTML pages — listing every filing, ruling, and order in chronological order. Paralegals, journalists, and legal researchers routinely scrape PACER dockets to build case timelines.",
+    howToOpen: "PACER itself (paid per-page); after download, any browser opens the HTML. Convert to CSV for spreadsheet analysis or merging multiple dockets.",
+    primaryUse: "Legal research; case timeline analysis.",
+    binary: false,
+  },
+  sarif: {
+    name: "SARIF",
+    fullName: "Static Analysis Results Interchange Format",
+    description:
+      "SARIF is the OASIS-standardized JSON format for static analysis tool output. Every modern security/quality scanner — CodeQL, Semgrep, Bandit, ESLint, Snyk, Checkmarx, Sonar — exports SARIF. GitHub Code Scanning consumes SARIF natively for its security alerts UI. The format is verbose but well-typed, with rich location, fix-suggestion, and rule metadata.",
+    howToOpen: "Microsoft's sarif-web-component (browser viewer), VS Code SARIF extension. GitHub renders SARIF natively in the Security tab. Convert to CSV/HTML for sharing scan results with non-engineering stakeholders.",
+    primaryUse: "Static analysis result interchange between tools and review platforms.",
+    binary: false,
+  },
+  edi: {
+    name: "EDI X12",
+    fullName: "ANSI ASC X12 EDI",
+    description:
+      "EDI X12 is the dominant electronic-data-interchange standard in North American B2B commerce — purchase orders (850), invoices (810), ship notices (856), payment remittances (820). Used by Walmart, Amazon, Target, every large retailer's supply chain. Plain text with delimiter conventions declared in the ISA header.",
+    howToOpen: "Specialized EDI software (Stedi, Cleo, OpenText). For analysis or debugging: convert segments to CSV for spreadsheet review.",
+    primaryUse: "B2B supply-chain transactions in North American retail.",
+    binary: false,
+  },
+  edifact: {
+    name: "EDIFACT",
+    fullName: "UN/EDIFACT",
+    description:
+      "EDIFACT is the UN-standardized EDI format used in European and global supply chains (the international counterpart to ANSI X12). Same idea — segment-based plain text with declared delimiters in the UNB envelope — different message types (ORDERS, INVOIC, DESADV, PAYORD).",
+    howToOpen: "Specialized EDI integration platforms. Convert to CSV for human-friendly review.",
+    primaryUse: "B2B logistics, retail, and customs filings outside North America.",
+    binary: false,
+  },
+
+  // ==================== Email ====================
+  eml: {
+    name: "EML",
+    fullName: "RFC 822 email message",
+    description:
+      "EML is the IETF-standard email message format (.eml extension) — plain-text headers (From, To, Subject, Date), a blank line, then the body. MIME multipart structure handles HTML email bodies and attachments. Most email clients (Outlook, Apple Mail, Thunderbird) save individual messages as EML when you drag them out of the inbox.",
+    howToOpen: "Outlook, Apple Mail, Thunderbird, Gmail's web import. Plain text in any editor for header inspection.",
+    primaryUse: "Email message archiving and forensic preservation.",
+    binary: false,
+  },
+  mbox: {
+    name: "MBOX",
+    fullName: "Unix mbox mailbox",
+    description:
+      "MBOX is the Unix tradition for mailbox storage — a plain-text file containing many email messages back-to-back, separated by lines beginning with \"From \" (with trailing space). Used by Thunderbird, Apple Mail, Postfix, and as the export format from Gmail's Takeout service. Files for power users with years of mail can hit gigabytes.",
+    howToOpen: "Thunderbird (drop into a folder), Apple Mail (Import Mailboxes), Mozilla SeaMonkey, mutt. Convert to PDF for archival or single EMLs for individual message work.",
+    primaryUse: "Mass email archival; Gmail Takeout exports; long-term mail backups.",
+    binary: false,
+  },
+
+  // ==================== Generic text formats ====================
+  txt: {
+    name: "TXT",
+    fullName: "Plain text",
+    description:
+      "Plain text — the simplest data format. No formatting, no metadata, just characters. Universal compatibility across every device and program ever made. UTF-8 encoding has been the de facto default for over a decade.",
+    howToOpen: "Every text editor on every platform. Browser previews. Universal.",
+    primaryUse: "Universal text interchange.",
+    binary: false,
+  },
+  text: {
+    name: "Text",
+    fullName: "Plain text",
+    description:
+      "Plain text — the simplest data format. No formatting, no metadata, just characters. Universal compatibility across every device and program ever made.",
+    howToOpen: "Every text editor on every platform. Browser previews.",
+    primaryUse: "Universal text interchange.",
+    binary: false,
+  },
+  html: {
+    name: "HTML",
+    fullName: "HyperText Markup Language",
+    description:
+      "HTML is the markup language of the web — every browser displays HTML documents natively. Files contain text plus tags (<h1>, <p>, <a>, etc.) describing structure and links. Modern HTML5 also supports embedded media (audio/video) and complex semantic markup.",
+    howToOpen: "Every web browser. Any text editor for source. Modern editors (VS Code) syntax-highlight HTML.",
+    primaryUse: "Web pages; structured document interchange; readable archives.",
+    binary: false,
+  },
+  markdown: {
+    name: "Markdown",
+    fullName: "Markdown",
+    description:
+      "Markdown is plain text with simple punctuation conventions for formatting — # for headings, * for lists, ** for bold, links as [text](url). Created by John Gruber in 2004 and now the default for GitHub READMEs, documentation sites, and modern note-taking apps (Obsidian, Notion-export, Bear).",
+    howToOpen: "Any text editor (raw). Rendered: GitHub, GitLab, VS Code preview, Obsidian, Bear, Notion (importable), Typora, MarkText, Markdown Editor.",
+    primaryUse: "Documentation, READMEs, notes, blog posts.",
+    binary: false,
+  },
+  md: {
+    name: "Markdown (.md)",
+    fullName: "Markdown",
+    description:
+      "Markdown is plain text with simple punctuation conventions for formatting — # for headings, * for lists, ** for bold, links as [text](url). The .md extension is the most common Markdown file extension; .markdown is the older form. GitHub READMEs, documentation sites, and Obsidian/Bear use Markdown universally.",
+    howToOpen: "Any text editor. Rendered: GitHub, GitLab, VS Code preview, Obsidian, Bear, Typora, MarkText.",
+    primaryUse: "Documentation, READMEs, notes, blog posts.",
+    binary: false,
+  },
+  css: {
+    name: "CSS",
+    fullName: "Cascading Style Sheets",
+    description:
+      "CSS describes how HTML elements should be displayed — colors, fonts, layout, animations. Plain text. Every browser parses CSS to render web pages. Modern CSS has cascade variables, container queries, and a vibrant ecosystem of preprocessors and frameworks (Tailwind, PostCSS).",
+    howToOpen: "Any text editor. Browsers parse CSS automatically when linked from HTML.",
+    primaryUse: "Web styling; design system distribution.",
+    binary: false,
+  },
+  hex: {
+    name: "Hex codes",
+    fullName: "Hex color list",
+    description:
+      "A plain text list of hex color codes (e.g. #FF6B35, one per line). The most portable color-list format — any modern design tool accepts hex. Often the format used by color-palette generators (Coolors, Adobe Color, Khroma) for export.",
+    howToOpen: "Any text editor. Pastes directly into design tools.",
+    primaryUse: "Color palette interchange between web/design tools.",
+    binary: false,
+  },
+  image: {
+    name: "Image",
+    fullName: "Image (any format)",
+    description:
+      "Generic image input — JPG, PNG, WebP, BMP, GIF, or any other format your browser can decode. The OCR pipeline accepts any of these because Tesseract.js works on raw pixels regardless of source format.",
+    howToOpen: "Every image viewer on every platform.",
+    primaryUse: "OCR input — extract text from any image.",
+    binary: true,
+  },
+  kml: {
+    name: "KML",
+    fullName: "Keyhole Markup Language",
+    description:
+      "KML is Google Earth's XML format for geographic data — points, lines, polygons, with optional descriptions and styles. Originally Keyhole Inc.'s format (Google acquired Keyhole and created Google Earth from it). Standardized as OGC KML in 2008.",
+    howToOpen: "Google Earth (free), Google My Maps, QGIS, ArcGIS. Plain XML in any editor.",
+    primaryUse: "Geographic visualization in Google Earth and GIS tools.",
+    binary: false,
+  },
+
+  // ==================== Output-specific (Kindle clippings destinations) ====================
+  "obsidian-md": {
+    name: "Obsidian Markdown",
+    fullName: "Obsidian-flavored Markdown",
+    description:
+      "Standard Markdown with Obsidian-specific extensions — YAML frontmatter for metadata, [[wikilinks]] for cross-references, #tags for organization, ![[]] for embedded media. Drop into your Obsidian vault and the file is immediately searchable, linkable, and graph-visualizable.",
+    howToOpen: "Obsidian primarily. Renders fine as regular Markdown elsewhere — you just lose the wikilink magic.",
+    primaryUse: "Knowledge graphs in Obsidian.",
+    binary: false,
+  },
+  "notion-csv": {
+    name: "Notion-import CSV",
+    fullName: "Notion-compatible CSV",
+    description:
+      "CSV with column names that map cleanly to Notion's database properties — Notion's import wizard (File → Import → CSV) treats first-column entries as page titles and remaining columns as properties. Used to bulk-import structured data (research notes, highlights, contacts) into a fresh Notion database.",
+    howToOpen: "Notion import wizard creates a database from the CSV. Otherwise opens in any spreadsheet.",
+    primaryUse: "Bulk-loading structured data into Notion.",
+    binary: false,
+  },
+  "readwise-csv": {
+    name: "Readwise-import CSV",
+    fullName: "Readwise-compatible CSV",
+    description:
+      "CSV formatted to match Readwise's import schema — Highlight, Title, Author, Note, Location, Date columns. Drop into Readwise's importer to bulk-add highlights from sources Readwise doesn't natively integrate with (or to migrate from a competing service).",
+    howToOpen: "Readwise's CSV importer at readwise.io/import_csv. Otherwise standard CSV in any editor.",
+    primaryUse: "Bulk-importing highlights into Readwise.",
+    binary: false,
+  },
 };
 
 /** Look up by extension or by name (case-insensitive). */
