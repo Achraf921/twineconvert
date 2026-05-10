@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { listToolIds } from "@/lib/engine/registry-meta";
+import { listToolIds, getMeta } from "@/lib/engine/registry-meta";
+import { ToolSearch } from "@/components/ToolSearch";
 
 /**
  * Homepage. Hero + the full directory of tools, grouped by category.
@@ -122,6 +123,13 @@ const CATEGORIES: Array<{ label: string; description: string; ids: string[] }> =
 
 const TOTAL_TOOLS = listToolIds().length;
 
+// Pre-compute the tool list for the search component (server-side, sent
+// once with the homepage HTML — no API call needed for search to work).
+const ALL_TOOLS_FOR_SEARCH = listToolIds().map((id) => ({
+  id,
+  label: getMeta(id)?.label ?? id,
+}));
+
 export default function HomePage() {
   return (
     <>
@@ -140,19 +148,25 @@ export default function HomePage() {
           <p className="text-lg text-[var(--color-text-2)] mt-6 max-w-2xl mx-auto">
             HEIC, PDF, MP4, DOCX, OFX, EPUB, IFC, MIDI — {TOTAL_TOOLS} converters across {CATEGORIES.length} categories. No upload, no signup, no file size limit. Your file never leaves your device.
           </p>
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-3 text-sm">
-            <Link
-              href="#tools"
-              className="bg-[var(--color-pink-600)] text-white font-medium px-6 py-3 rounded-lg shadow-[var(--shadow-pink)] hover:bg-[var(--color-pink-700)] transition-colors"
-            >
-              Browse all tools
-            </Link>
-            <Link
-              href="/heic-to-jpg"
-              className="font-medium px-6 py-3 rounded-lg border border-[var(--color-border-2)] hover:border-[var(--color-pink-400)] hover:bg-[var(--color-pink-50)] hover:text-[var(--color-pink-700)] transition-colors"
-            >
-              Try HEIC → JPG
-            </Link>
+          <div className="mt-10">
+            <ToolSearch tools={ALL_TOOLS_FOR_SEARCH} />
+          </div>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm text-[var(--color-text-3)]">
+            <span>Popular:</span>
+            {[
+              { id: "heic-to-jpg", label: "HEIC → JPG" },
+              { id: "pdf-to-docx", label: "PDF → DOCX" },
+              { id: "mp4-to-mp3", label: "MP4 → MP3" },
+              { id: "ofx-to-csv", label: "OFX → CSV" },
+            ].map((p) => (
+              <Link
+                key={p.id}
+                href={`/${p.id}`}
+                className="px-3 py-1 rounded-full bg-white border border-[var(--color-border)] hover:border-[var(--color-pink-400)] hover:text-[var(--color-pink-700)] transition-colors"
+              >
+                {p.label}
+              </Link>
+            ))}
           </div>
         </div>
       </section>

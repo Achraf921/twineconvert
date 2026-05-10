@@ -13,6 +13,7 @@
 
 import Link from "next/link";
 import { Dropzone } from "./Dropzone";
+import { CompetitorComparison } from "./CompetitorComparison";
 import type { ConverterMeta } from "@/lib/engine/registry-meta";
 import { getProfilesForToolId, type FormatProfile } from "@/lib/formats";
 import { getOtherInputsForOutput, getOtherOutputsForInput } from "@/lib/related-tools";
@@ -116,6 +117,14 @@ export function ToolPage({ toolId, meta }: Props) {
           <CrossLinkGrid items={otherOutputs.map((it) => ({ id: it.id, label: `${inputProfile.name} → ${it.output.toUpperCase()}` }))} />
         </section>
       )}
+
+      <section className="mx-auto max-w-4xl px-6 py-12">
+        <SectionLabel>How we compare</SectionLabel>
+        <h2 className="text-2xl font-bold mt-2 mb-6">
+          {meta.label} vs the alternatives
+        </h2>
+        <CompetitorComparison />
+      </section>
 
       <section className="bg-[var(--color-surface)] border-t border-[var(--color-border)]">
         <div className="mx-auto max-w-3xl px-6 py-16">
