@@ -19,7 +19,24 @@ For every converter, we:
 
 The validators **decode the output and assert structural soundness**, PDF has `%%EOF` trailer, ZIP has `[Content_Types].xml`, BibTeX has `@entry` blocks, GEDCOM has `HEAD` + `TRLR`, embroidery PES starts with `#PES`, etc. This catches the failure mode where a converter produces a file with valid magic bytes but garbage content.
 
-Currently covers ~110 converters that work in Node + happy-dom. The remaining ~80 (image format pairs, FFmpeg audio/video, HEIC/AVIF/TIFF, IFC, OCR) need real Canvas / WASM / Worker support and are covered by the browser test suite.
+Currently covers ~120 converters that work in Node + happy-dom (698 tests). The remaining ~72 need real Canvas / WASM / Worker support and run in the browser tier.
+
+### 2b. Browser-mode tests (`tests/browser/*.browser.test.ts`)
+
+Vitest browser mode + Playwright + headless Chromium. Run with `npm run test:browser`. Currently 44 tests across:
+- Canvas image conversions (PNG/JPG/WebP/BMP/ICO/PDF cross-conversions, 13)
+- SVG/PDF/DOCX (8)
+- AVIF (real fixture) + AVIF encoding (9)
+- TIFF (hand-encoded fixture) (3)
+- BMP/ICO reverses + GIF (hand-crafted) (6)
+- Email/text-input PDF generation: EML, MBOX, GEDCOM, WhatsApp, Discord (5)
+- OCR via Tesseract.js: png-to-text, jpg-to-text, image-to-text (3)
+
+Documented gaps (TODO):
+- HEIC: 700KB sample is too big to inline; needs a Vite-asset loading pattern
+- Audio (mp3/wav/m4a/ogg/flac inter-conversions): FFmpeg.wasm core fetch from unpkg fails in headless Chromium for reasons that need investigation; unblocks 8 tests
+- Video (mp4/mov/avi/mkv/webm/gif): same FFmpeg.wasm dependency
+- IFC: needs a small BIM model fixture
 
 ### 3. Round-trip equivalence (`tests/round-trip.test.ts`)
 
