@@ -162,43 +162,35 @@ function HeroSection() {
     <section className="relative hero-wash overflow-hidden">
       <div className="subtle-grid absolute inset-0 opacity-60 pointer-events-none" aria-hidden />
 
-      <div className="relative mx-auto max-w-7xl px-6 pt-12 pb-12 sm:pt-16 sm:pb-16">
-        {/* Top row: copy LEFT, chip widget RIGHT, side by side. Breakpoint
-         *  is md (768px) so common laptop widths get the 2-column layout
-         *  instead of falling back to mobile stack. */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8 items-center">
-          <div className="md:col-span-7 fade-up text-center md:text-left">
-            <p className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-[var(--color-pink-200)] text-[var(--color-pink-700)] text-[11px] font-bold tracking-[0.18em] uppercase shadow-[var(--shadow-xs)]">
-              <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-pink-600)] pink-pulse" />
-              {TOTAL_TOOLS} converters &middot; in-browser &middot; private by design
-            </p>
-            <h1 className="mt-6 text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.02] text-[var(--color-ink)]">
-              Convert Any File.
-              <br />
-              <span className="text-[var(--color-pink-600)]">Privately.</span>
-            </h1>
-            <p className="mt-6 text-lg sm:text-xl text-[var(--color-ink-2)] max-w-xl mx-auto md:mx-0 leading-relaxed">
-              Pick a conversion from the chips on the right, or drop a file below and we&apos;ll route you to the right tool. {TOTAL_TOOLS} converters across {CATEGORIES.length} categories, straight from your browser.
-            </p>
-          </div>
+      <div className="relative mx-auto max-w-7xl px-6 pt-12 pb-14 sm:pt-16 sm:pb-20">
+        {/* Top: headline + paragraph spanning the full width */}
+        <div className="fade-up max-w-4xl">
+          <p className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-[var(--color-pink-200)] text-[var(--color-pink-700)] text-[11px] font-bold tracking-[0.18em] uppercase shadow-[var(--shadow-xs)]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-pink-600)] pink-pulse" />
+            {TOTAL_TOOLS} converters &middot; in-browser &middot; private by design
+          </p>
+          <h1 className="mt-6 text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.02] text-[var(--color-ink)]">
+            Convert Any File.{" "}
+            <span className="text-[var(--color-pink-600)]">Privately.</span>
+          </h1>
+          <p className="mt-6 text-lg sm:text-xl text-[var(--color-ink-2)] max-w-2xl leading-relaxed">
+            Pick a conversion from the chips, or drop a file and we&apos;ll route you to the right tool. {TOTAL_TOOLS} converters across {CATEGORIES.length} categories, straight from your browser.
+          </p>
+        </div>
 
-          <div className="md:col-span-5 fade-up fade-up-delay-2 flex justify-center md:justify-end">
+        {/* Below: chip widget LEFT, dropzone RIGHT, side by side at md+ */}
+        <div className="fade-up fade-up-delay-2 mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 items-stretch">
+          <div className="flex items-center justify-center md:justify-start">
             <HeroFlow graph={FORMAT_GRAPH} initialInput="HEIC" initialOutput="JPG" />
           </div>
+          <div className="flex">
+            <HomeDropzone routes={DROPZONE_ROUTES} acceptAll={DROPZONE_ACCEPT} />
+          </div>
         </div>
 
-        {/* Below the hero row: divider + centered dropzone */}
-        <div className="fade-up fade-up-delay-3 mt-12 flex items-center gap-4 max-w-md mx-auto">
-          <span className="flex-1 h-px bg-[var(--color-border)]" aria-hidden />
-          <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[var(--color-ink-3)]">
-            or drop a file
-          </span>
-          <span className="flex-1 h-px bg-[var(--color-border)]" aria-hidden />
-        </div>
-
-        <div className="fade-up fade-up-delay-3 mt-5 max-w-2xl mx-auto">
-          <HomeDropzone routes={DROPZONE_ROUTES} acceptAll={DROPZONE_ACCEPT} />
-          <div className="mt-5 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-sm">
+        {/* Search + popular row below */}
+        <div className="fade-up fade-up-delay-3 mt-10 max-w-3xl">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm">
             <span className="text-[var(--color-ink-3)] font-medium">Popular:</span>
             {POPULAR.map((p) => (
               <Link

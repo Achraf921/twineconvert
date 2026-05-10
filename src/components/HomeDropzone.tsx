@@ -61,7 +61,7 @@ export function HomeDropzone({ routes, acceptAll }: Props) {
   );
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full flex">
       <input
         ref={inputRef}
         type="file"
@@ -75,7 +75,7 @@ export function HomeDropzone({ routes, acceptAll }: Props) {
       />
 
       <div
-        className={`relative rounded-2xl border-2 border-dashed transition-all duration-200 ${
+        className={`relative w-full rounded-2xl border-2 border-dashed transition-all duration-200 flex items-center ${
           isDragging
             ? "dropzone-active"
             : "border-[var(--color-border-2)] bg-white hover:border-[var(--color-pink-400)] hover:bg-[var(--color-pink-50)]/30 shadow-[var(--shadow-md)]"
@@ -87,7 +87,7 @@ export function HomeDropzone({ routes, acceptAll }: Props) {
         onDragLeave={() => setIsDragging(false)}
         onDrop={onDrop}
       >
-        <div className="px-6 py-10 sm:py-12 text-center">
+        <div className="w-full px-6 py-10 sm:py-12 text-center">
           <CloudArrowUp />
           <h2 className="mt-6 text-2xl sm:text-3xl font-bold tracking-tight text-[var(--color-ink)]">
             Select your file here to get started
