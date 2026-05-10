@@ -28,7 +28,7 @@ const docxToPdf: Converter = {
     try {
       const mammoth = (await import("mammoth")).default;
       const arrayBuffer = await input.arrayBuffer();
-      const result = await mammoth.convertToHtml({ arrayBuffer });
+      const result = await mammoth.convertToHtml({ arrayBuffer, buffer: arrayBuffer } as Parameters<typeof mammoth.convertToHtml>[0]);
       html = result.value;
     } catch (err) {
       throw new ConvertFailedError(

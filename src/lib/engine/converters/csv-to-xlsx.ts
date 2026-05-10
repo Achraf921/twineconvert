@@ -14,18 +14,38 @@ const csvToXlsx: Converter = {
     opts?.onProgress?.(0.1);
     let buf: ArrayBuffer;
     try {
-      const XLSX = await import("xlsx");
+      const XLSXModule = await import("xlsx");
+      // CJS-interop quirk: depending on Node version, the namespace either
+      // exposes the methods directly OR wraps them in a `default` export.
+      // Handle both shapes.
+      const XLSX = XLSXModule.default ?? XLSXModule;
       const text = await input.text();
-      const workbook = XLSX.read(text, { type: "string" });
-      // SheetJS' write() returns a Uint8Array when type is "array".
-      const out = XLSX.write(workbook, { type: "array", bookType: "xlsx" });
-      const bytes = out as Uint8Array;
+      const Papa = (await import("papaparse")).default;
+      const parsed = Papa.parse<string[]>(text, { skipEmptyLines: true });
+      if (!parsed.data || parsed.data.length === 0) {
+        throw new Error("CSV input has no rows");
+      }
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.aoa_to_sheet(parsed.data);
+      XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+      const out = XLSX.write(wb, { type: "array", bookType: "xlsx" });
+      // SheetJS sometimes returns a plain ArrayBuffer instead of Uint8Array
+      // depending on its internal path. Normalize.
+      const bytes: Uint8Array =
+        out instanceof Uint8Array
+          ? out
+          : out instanceof ArrayBuffer
+          ? new Uint8Array(out)
+          : new Uint8Array(out as ArrayBufferLike);
       buf = bytes.buffer.slice(
         bytes.byteOffset,
         bytes.byteOffset + bytes.byteLength,
       ) as ArrayBuffer;
     } catch (err) {
-      throw new ConvertFailedError("Could not write XLSX from CSV", err);
+      throw new ConvertFailedError(
+        err instanceof Error ? err.message : "Could not write XLSX from CSV",
+        err,
+      );
     }
     opts?.onProgress?.(1);
     return {

@@ -1,0 +1,31 @@
+import type { MetadataRoute } from "next";
+import { listToolIds } from "@/lib/engine/registry-meta";
+
+/**
+ * Programmatic sitemap. One entry per converter route plus the homepage.
+ *
+ * Next.js generates `/sitemap.xml` automatically from this — no manual
+ * XML writing needed. Submit it to Google Search Console once after
+ * launch; Google re-crawls daily.
+ */
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  const lastModified = new Date();
+  const baseUrl = "https://twineconvert.com";
+
+  const homepage = {
+    url: baseUrl,
+    lastModified,
+    changeFrequency: "weekly" as const,
+    priority: 1,
+  };
+
+  const tools = listToolIds().map((id) => ({
+    url: `${baseUrl}/${id}`,
+    lastModified,
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  }));
+
+  return [homepage, ...tools];
+}

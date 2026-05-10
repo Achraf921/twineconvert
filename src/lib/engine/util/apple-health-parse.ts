@@ -106,16 +106,19 @@ export async function parseAppleHealth(
 ): Promise<AppleHealthExport> {
   const xml = await readExportXml(input);
   const totalLength = xml.length;
-  const sax = await import("sax");
+  // sax exposes its API via a CJS-default in modern Node ESM; handle both shapes.
+  const saxModule = await import("sax");
+  const sax = (saxModule.default ?? saxModule) as typeof import("sax");
 
   const records: AppleHealthRecord[] = [];
   const workouts: AppleHealthWorkout[] = [];
   const wantTypes = opts.recordTypes ? new Set(opts.recordTypes) : null;
   const includeWorkouts = opts.includeWorkouts !== false;
 
-  // strict=false = HTML-style forgiving mode (Apple's XML is well-formed but
-  // strict mode is slower and stricter than we need).
-  const parser = sax.parser(false, { lowercase: false, trim: true });
+  // strict=true preserves tag case (HealthData, Record, Workout). The
+  // non-strict mode uppercases everything regardless of the `lowercase`
+  // option, which would break our case-sensitive tag matching below.
+  const parser = sax.parser(true, { trim: true });
   let lastProgressFire = 0;
 
   parser.onopentag = (node) => {

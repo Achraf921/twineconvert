@@ -18,7 +18,9 @@ const docxToTxt: Converter = {
     try {
       const mammoth = (await import("mammoth")).default;
       const arrayBuffer = await input.arrayBuffer();
-      const result = await mammoth.extractRawText({ arrayBuffer });
+      // mammoth's Node build wants {buffer}, browser build wants {arrayBuffer};
+      // pass both so the converter works in either environment.
+      const result = await mammoth.extractRawText({ arrayBuffer, buffer: arrayBuffer } as Parameters<typeof mammoth.extractRawText>[0]);
       text = result.value;
     } catch (err) {
       throw new ConvertFailedError(
