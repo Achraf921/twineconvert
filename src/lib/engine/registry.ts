@@ -427,6 +427,65 @@ export const registry: Record<string, ConverterLoader> = {
     import("./converters/jef-to-exp").then((m) => m.default),
   "exp-to-jef": () =>
     import("./converters/exp-to-jef").then((m) => m.default),
+
+  // ============== BIJECTIVITY: reverse-direction additions ==============
+  // For every conversion X→Y where the inverse Y→X is technically possible
+  // (not lossy enough to produce nonsense), we ship the reverse. The audit
+  // documenting one-way-only converters lives in ENGINE-BIJECTIVITY.md.
+  "jpg-to-bmp": () =>
+    import("./converters/jpg-to-bmp").then((m) => m.default),
+  "png-to-bmp": () =>
+    import("./converters/png-to-bmp").then((m) => m.default),
+  "jpg-to-gif": () =>
+    import("./converters/jpg-to-gif").then((m) => m.default),
+  "png-to-gif": () =>
+    import("./converters/png-to-gif").then((m) => m.default),
+  "ico-to-jpg": () =>
+    import("./converters/ico-to-jpg").then((m) => m.default),
+  "mp3-to-m4a": () =>
+    import("./converters/mp3-to-m4a").then((m) => m.default),
+  "mp3-to-flac": () =>
+    import("./converters/mp3-to-flac").then((m) => m.default),
+  "mp3-to-ogg": () =>
+    import("./converters/mp3-to-ogg").then((m) => m.default),
+  "mp4-to-avi": () =>
+    import("./converters/mp4-to-avi").then((m) => m.default),
+  "mp4-to-mkv": () =>
+    import("./converters/mp4-to-mkv").then((m) => m.default),
+  "mp4-to-mov": () =>
+    import("./converters/mp4-to-mov").then((m) => m.default),
+  "gif-to-mp4": () =>
+    import("./converters/gif-to-mp4").then((m) => m.default),
+  "musicxml-to-mxl": () =>
+    import("./converters/musicxml-to-mxl").then((m) => m.default),
+  "cabrillo-to-adif": () =>
+    import("./converters/cabrillo-to-adif").then((m) => m.default),
+  "3mf-to-obj": () =>
+    import("./converters/3mf-to-obj").then((m) => m.default),
+  "stl-to-obj": () =>
+    import("./converters/stl-to-obj").then((m) => m.default),
+  "obj-to-stl": () =>
+    import("./converters/obj-to-stl").then((m) => m.default),
+  "json-to-gedcom": () =>
+    import("./converters/json-to-gedcom").then((m) => m.default),
+  "eml-to-mbox": () =>
+    import("./converters/eml-to-mbox").then((m) => m.default),
+  "csv-to-bibtex": () =>
+    import("./converters/csv-to-bibtex").then((m) => m.default),
+  "csv-to-ris": () =>
+    import("./converters/csv-to-ris").then((m) => m.default),
+  "bibtex-to-nbib": () =>
+    import("./converters/bibtex-to-nbib").then((m) => m.default),
+  "ris-to-nbib": () =>
+    import("./converters/ris-to-nbib").then((m) => m.default),
+  "bibtex-to-endnote-xml": () =>
+    import("./converters/bibtex-to-endnote-xml").then((m) => m.default),
+  "ris-to-endnote-xml": () =>
+    import("./converters/ris-to-endnote-xml").then((m) => m.default),
+  "html-to-docx": () =>
+    import("./converters/html-to-docx").then((m) => m.default),
+  "txt-to-docx": () =>
+    import("./converters/txt-to-docx").then((m) => m.default),
 };
 
 /** All converter IDs — useful for sitemap generation later. */
