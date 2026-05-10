@@ -2,7 +2,7 @@
  * Competitor comparison table — shown on every per-tool page.
  *
  * Honest, factual comparison vs the major server-upload converters.
- * Numbers come from each competitor's pricing/help pages as of 2025;
+ * Numbers come from each competitor's pricing/help pages as of 2026;
  * we'll need to refresh them annually but they're stable enough.
  *
  * Why it's on every per-tool page (not just the homepage): SEO. Google
@@ -113,7 +113,7 @@ export function CompetitorComparison() {
         </tbody>
       </table>
       <p className="text-[11px] text-[var(--color-text-3)] mt-3 italic">
-        Comparison data from each competitor&apos;s own pricing and FAQ pages, last verified 2025. Limits and pricing change frequently.
+        Comparison data from each competitor&apos;s own pricing and FAQ pages, last verified May 2026. Limits and pricing change frequently.
       </p>
     </div>
   );
