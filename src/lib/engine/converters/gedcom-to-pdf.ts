@@ -2,14 +2,11 @@ import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
 import { parseGedcom } from "../util/gedcom-parse";
-import { htmlToPdf } from "../util/jspdf-html";
+import { renderTextPdf, type PdfTextSection } from "../util/jspdf-text";
 
 /**
- * GEDCOM → PDF. Renders the same layout as the HTML route via jsPDF,
- * producing a single printable family tree document. For very large
- * trees (>500 individuals) the PDF can take a minute and balloon in
- * page count, there's no v1 pagination strategy beyond jsPDF's
- * autoPaging.
+ * GEDCOM → PDF. Searchable family-tree document — every individual is
+ * a section with their name as the heading and life dates as metadata.
  */
 const gedcomToPdf: Converter = {
   id: "gedcom-to-pdf",
@@ -26,16 +23,22 @@ const gedcomToPdf: Converter = {
       const text = await input.text();
       const { individuals } = parseGedcom(text);
 
-      const html = `<h1>Family Tree</h1>${individuals
-        .map((i) => {
-          const dates = [i.birthDate, i.deathDate].filter(Boolean).join(", ");
-          return `<h2>${escapeHtml(i.name ?? i.id)}</h2><p>${escapeHtml(dates)}</p>`;
-        })
-        .join("")}`;
-
-      blob = await htmlToPdf(html, {
-        onProgress: (p) => opts?.onProgress?.(0.1 + p * 0.85),
+      const sections: PdfTextSection[] = individuals.map((i) => {
+        const meta: string[] = [];
+        if (i.birthDate) meta.push(`Born: ${i.birthDate}`);
+        if (i.deathDate) meta.push(`Died: ${i.deathDate}`);
+        if (i.sex) meta.push(`Sex: ${i.sex}`);
+        return {
+          heading: i.name ?? i.id,
+          meta,
+          body: "",
+        };
       });
+
+      blob = await renderTextPdf(sections, {
+        title: `Family Tree (${individuals.length} individuals)`,
+      });
+      opts?.onProgress?.(0.95);
     } catch (err) {
       throw new ConvertFailedError(
         err instanceof Error ? err.message : "Could not render GEDCOM PDF",
@@ -46,11 +49,5 @@ const gedcomToPdf: Converter = {
     return { blob, filename: swapExtension(input.name, "pdf") };
   },
 };
-
-function escapeHtml(s: string): string {
-  return s.replace(/[&<>"']/g, (c) =>
-    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!),
-  );
-}
 
 export default gedcomToPdf;

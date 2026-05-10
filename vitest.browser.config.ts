@@ -69,6 +69,11 @@ export default defineConfig({
         file: resolve(__dirname, "node_modules/web-ifc/web-ifc-mt.wasm"),
         mime: "application/wasm",
       },
+      {
+        url: "/pdfjs/pdf.worker.mjs",
+        file: resolve(__dirname, "node_modules/pdfjs-dist/build/pdf.worker.mjs"),
+        mime: "application/javascript",
+      },
     ]),
   ],
   test: {

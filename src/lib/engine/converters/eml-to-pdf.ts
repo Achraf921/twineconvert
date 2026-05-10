@@ -2,7 +2,7 @@ import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
 import { parseEml, type ParsedEmail } from "../util/email-parse";
-import { htmlToPdf } from "../util/jspdf-html";
+import { renderTextPdf, htmlToPlainText, type PdfTextSection } from "../util/jspdf-text";
 
 /**
  * EML → PDF. Renders headers (From/To/Subject/Date) as a styled block
@@ -29,10 +29,10 @@ const emlToPdf: Converter = {
     try {
       const text = await input.text();
       const email = await parseEml(text);
-      const html = renderEmailHtml(email);
-      blob = await htmlToPdf(html, {
-        onProgress: (p) => opts?.onProgress?.(0.1 + p * 0.85),
+      blob = await renderTextPdf(buildEmailSections(email), {
+        title: email.subject || "(no subject)",
       });
+      opts?.onProgress?.(0.95);
     } catch (err) {
       throw new ConvertFailedError(
         err instanceof Error ? err.message : "Could not render email as PDF",
@@ -43,6 +43,28 @@ const emlToPdf: Converter = {
     return { blob, filename: swapExtension(input.name, "pdf") };
   },
 };
+
+function buildEmailSections(email: ParsedEmail): PdfTextSection[] {
+  const meta: string[] = [];
+  if (email.from) meta.push(`From: ${email.from}`);
+  if (email.to) meta.push(`To: ${email.to}`);
+  if (email.cc) meta.push(`Cc: ${email.cc}`);
+  if (email.date) meta.push(`Date: ${email.date}`);
+
+  const body = email.textBody?.trim() ||
+    (email.htmlBody ? htmlToPlainText(email.htmlBody) : "(no message body)");
+
+  const sections: PdfTextSection[] = [{ meta, body }];
+
+  if (email.attachments.length > 0) {
+    sections.push({
+      heading: `Attachments (${email.attachments.length})`,
+      body: email.attachments.map((a) => `- ${a.filename}`).join("\n"),
+    });
+  }
+
+  return sections;
+}
 
 function escapeHtml(s: string): string {
   return s.replace(/[&<>"']/g, (c) =>

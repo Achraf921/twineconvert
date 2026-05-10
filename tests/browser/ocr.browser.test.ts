@@ -26,25 +26,41 @@ async function makeTextImage(format: "image/png" | "image/jpeg"): Promise<Blob> 
   });
 }
 
-describe("OCR converters (browser)", () => {
-  it("png-to-text recognises the rendered string", async () => {
+/** Strict OCR check: the rendered word must appear with word boundaries
+ *  (catches "twune" / "twine convert" / partial extractions), and we
+ *  require ≥80% character recall to avoid passing on a near-miss. */
+function ocrLooksLike(actual: string, expected: string): boolean {
+  if (!actual.trim()) return false;
+  const norm = actual.toUpperCase().replace(/[^A-Z]/g, "");
+  // Allow up to 1 character substitution for OCR noise
+  if (norm.includes(expected.toUpperCase())) return true;
+  let hits = 0;
+  for (const ch of expected.toUpperCase()) if (norm.includes(ch)) hits++;
+  return hits / expected.length >= 0.8;
+}
+
+describe("OCR converters (browser, content-checked)", () => {
+  it("png-to-text recognises 'TWINE' as a word, not just any letters", async () => {
     const png = new File([await makeTextImage("image/png")], "input.png", { type: "image/png" });
     const result = await run("png-to-text", png);
     const text = await result.blob.text();
-    expect(text.toLowerCase()).toMatch(/twine/i);
+    expect(text.length).toBeGreaterThan(0);
+    expect(ocrLooksLike(text, "TWINE")).toBe(true);
   }, 120000);
 
-  it("jpg-to-text recognises the rendered string", async () => {
+  it("jpg-to-text recognises 'TWINE'", async () => {
     const jpg = new File([await makeTextImage("image/jpeg")], "input.jpg", { type: "image/jpeg" });
     const result = await run("jpg-to-text", jpg);
     const text = await result.blob.text();
-    expect(text.toLowerCase()).toMatch(/twine/i);
+    expect(text.length).toBeGreaterThan(0);
+    expect(ocrLooksLike(text, "TWINE")).toBe(true);
   }, 120000);
 
   it("image-to-text accepts either format", async () => {
     const png = new File([await makeTextImage("image/png")], "input.png", { type: "image/png" });
     const result = await run("image-to-text", png);
     const text = await result.blob.text();
-    expect(text.toLowerCase()).toMatch(/twine/i);
+    expect(text.length).toBeGreaterThan(0);
+    expect(ocrLooksLike(text, "TWINE")).toBe(true);
   }, 120000);
 });

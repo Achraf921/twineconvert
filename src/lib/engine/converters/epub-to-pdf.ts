@@ -2,15 +2,16 @@ import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
 import { extractEpub } from "../util/epub-extract";
-import { htmlToPdf } from "../util/jspdf-html";
+import { renderTextPdf, htmlToPlainText, type PdfTextSection } from "../util/jspdf-text";
 
 /**
- * EPUB → PDF. Pipeline: extract chapter HTMLs, concatenate with page
- * breaks, render to PDF via jsPDF.html(). Image resources embedded in the
- * EPUB are NOT inlined, the PDF will show broken-image placeholders for
- * any chapters that reference them. Full image embedding requires reading
- * each <img> from the zip and converting to data: URLs; left as a v2
- * improvement when we have signal that users care.
+ * EPUB → SEARCHABLE PDF. Each chapter becomes a section with the
+ * chapter title as heading and the prose as body. Real text in the
+ * PDF means the result is grep-friendly and screen-reader friendly.
+ *
+ * Image resources embedded in the EPUB are NOT inlined; the PDF is
+ * text-only. Customers who want fully visual fidelity should use a
+ * dedicated EPUB reader's print-to-PDF feature.
  */
 const epubToPdf: Converter = {
   id: "epub-to-pdf",
@@ -22,26 +23,20 @@ const epubToPdf: Converter = {
 
   async convert(input, opts) {
     opts?.onProgress?.(0.05);
-    let html: string;
-    try {
-      const extracted = await extractEpub(input);
-      const inner = extracted.chaptersHtml
-        .map((chapter) => {
-          const m = chapter.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
-          return m ? m[1] : chapter;
-        })
-        .join('\n<div style="page-break-after: always;"></div>\n');
-      html = `<h1>${extracted.title}</h1>${inner}`;
-    } catch (err) {
-      throw new ConvertFailedError("Could not parse EPUB", err);
-    }
-    opts?.onProgress?.(0.2);
-
     let blob: Blob;
     try {
-      blob = await htmlToPdf(html, {
-        onProgress: (p) => opts?.onProgress?.(0.2 + p * 0.75),
+      const extracted = await extractEpub(input);
+      const sections: PdfTextSection[] = extracted.chaptersHtml.map((chapter, i) => {
+        const m = chapter.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+        const inner = m ? m[1] : chapter;
+        const text = htmlToPlainText(inner);
+        return {
+          heading: `Chapter ${i + 1}`,
+          body: text || "(empty chapter)",
+        };
       });
+      blob = await renderTextPdf(sections, { title: extracted.title });
+      opts?.onProgress?.(0.95);
     } catch (err) {
       throw new ConvertFailedError("PDF render from EPUB failed", err);
     }

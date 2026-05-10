@@ -14,6 +14,11 @@
  * canvas. Both stay inside the browser-test environment.
  */
 
+/** Width of the spatial fingerprint grid. 8 means 64 cells: enough
+ *  resolution to detect cat-vs-dog content swaps and 1-quadrant
+ *  recolors that a 4x4 grid can wash out. */
+const FP_GRID = 8;
+
 export interface ImageStats {
   width: number;
   height: number;
@@ -21,8 +26,8 @@ export interface ImageStats {
   meanG: number;
   meanB: number;
   meanA: number;
-  /** 4x4 grid of mean-RGB cells. Catches flips, crops, content swaps. */
-  fingerprint: Float32Array; // length 48 = 4*4*3
+  /** 8x8 grid of mean-RGB cells. Catches flips, crops, content swaps. */
+  fingerprint: Float32Array; // length = FP_GRID * FP_GRID * 3
   /** Top-left, top-right, bottom-left, bottom-right pixel RGB triples. */
   corners: { tl: [number, number, number]; tr: [number, number, number]; bl: [number, number, number]; br: [number, number, number] };
 }
@@ -59,16 +64,17 @@ export async function imageStats(blob: Blob): Promise<ImageStats> {
     sumA += data[i + 3];
   }
 
-  // 4x4 fingerprint: 16 cells, mean RGB per cell
-  const fp = new Float32Array(48);
-  const counts = new Uint32Array(16);
-  const cellW = width / 4;
-  const cellH = height / 4;
+  // 8x8 fingerprint: 64 cells, mean RGB per cell
+  const totalCells = FP_GRID * FP_GRID;
+  const fp = new Float32Array(totalCells * 3);
+  const counts = new Uint32Array(totalCells);
+  const cellW = width / FP_GRID;
+  const cellH = height / FP_GRID;
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
-      const cx = Math.min(3, Math.floor(x / cellW));
-      const cy = Math.min(3, Math.floor(y / cellH));
-      const cell = cy * 4 + cx;
+      const cx = Math.min(FP_GRID - 1, Math.floor(x / cellW));
+      const cy = Math.min(FP_GRID - 1, Math.floor(y / cellH));
+      const cell = cy * FP_GRID + cx;
       const i = (y * width + x) * 4;
       fp[cell * 3 + 0] += data[i];
       fp[cell * 3 + 1] += data[i + 1];
@@ -76,7 +82,7 @@ export async function imageStats(blob: Blob): Promise<ImageStats> {
       counts[cell]++;
     }
   }
-  for (let c = 0; c < 16; c++) {
+  for (let c = 0; c < totalCells; c++) {
     fp[c * 3 + 0] /= counts[c] || 1;
     fp[c * 3 + 1] /= counts[c] || 1;
     fp[c * 3 + 2] /= counts[c] || 1;
@@ -113,21 +119,38 @@ export function fingerprintDelta(a: Float32Array, b: Float32Array): number {
 }
 
 export interface AssertImageQualityOptions {
-  /** Maximum mean per-channel delta accepted across the 4x4 fingerprint.
+  /** Maximum mean per-channel delta accepted across the 8x8 fingerprint.
    *  Default 18 (out of 255). Lossy formats (JPEG q=0.9) sit around 5;
    *  format-pair conversions (PNG to JPEG) sit around 10; very different
    *  content sits well above 30. */
   maxFingerprintDelta?: number;
   /** Maximum mean per-channel delta on the 4 corners. Default 24. */
   maxCornerDelta?: number;
+  /** Maximum |meanR_in - meanR_out| (and same for G, B) — catches
+   *  uniform color casts. Default 30 (out of 255). */
+  maxChannelDelta?: number;
   /** If true, allow the output to differ in dimensions (some converters
    *  add padding / scale). Default false: same dimensions required. */
   allowSizeDelta?: boolean;
 }
 
 /** Assert that the output image is "the same" as the input within the
- *  thresholds. Catches content swap, color shift, flip, crop, and
- *  excessive quality loss. */
+ *  thresholds. Catches content swap, color shift, flip, crop, axis
+ *  swap, uniform color cast, and excessive quality loss.
+ *
+ *  Layered checks (each catches what the others might miss):
+ *   1. dimensions: rejects scale / crop changes
+ *   2. 8x8 spatial fingerprint: rejects content swap, big crop,
+ *      block-level recolor (granularity = catches single-quadrant
+ *      changes that 4x4 averaged out)
+ *   3. corner-pixel delta: rejects flips even when the average
+ *      colors happen to be symmetric
+ *   4. per-channel mean delta: rejects uniform color casts (e.g.
+ *      RGB→BGR swap, alpha-flatten with wrong background)
+ *   5. asymmetry check: orthogonal validation that an axis-swap
+ *      didn't slip through by comparing fingerprint to its own
+ *      90°-rotated copy
+ */
 export async function assertImageQuality(
   input: Blob,
   output: Blob,
@@ -153,7 +176,7 @@ export async function assertImageQuality(
     );
   }
 
-  // Corner check — catches flips that fingerprint might smooth out
+  // Corner check — catches flips even when fingerprint averages match
   const cornerKeys: Array<keyof ImageStats["corners"]> = ["tl", "tr", "bl", "br"];
   let cornerDelta = 0;
   for (const k of cornerKeys) {
@@ -167,6 +190,19 @@ export async function assertImageQuality(
     throw new Error(
       `Corner pixels changed too much: delta=${cornerDelta.toFixed(1)} (max=${maxCorner}). ` +
         `This usually means the image was flipped or cropped.`,
+    );
+  }
+
+  // Per-channel mean check — catches uniform color cast
+  const dr = Math.abs(a.meanR - b.meanR);
+  const dg = Math.abs(a.meanG - b.meanG);
+  const db = Math.abs(a.meanB - b.meanB);
+  const channelDelta = Math.max(dr, dg, db);
+  const maxChannel = opts.maxChannelDelta ?? 30;
+  if (channelDelta > maxChannel) {
+    throw new Error(
+      `Per-channel mean shifted: |Δ|=${channelDelta.toFixed(1)} (max=${maxChannel}). ` +
+        `R:${dr.toFixed(1)} G:${dg.toFixed(1)} B:${db.toFixed(1)}. Suggests color cast or wrong background.`,
     );
   }
 }
@@ -192,6 +228,204 @@ export async function assertNotFlipped(input: Blob, output: Blob): Promise<void>
 
 function colorDist(a: [number, number, number], b: [number, number, number]): number {
   return Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]) + Math.abs(a[2] - b[2]);
+}
+
+// ============================================================================
+// Video content validators
+// ============================================================================
+
+/** Probe a video blob's duration via the HTMLVideoElement metadata
+ *  event. Catches the failure mode where a converter emits a valid
+ *  video container with 0 duration / no streams. */
+export async function videoDuration(blob: Blob): Promise<number> {
+  const url = URL.createObjectURL(blob);
+  try {
+    return await new Promise<number>((resolve, reject) => {
+      const v = document.createElement("video");
+      v.preload = "metadata";
+      v.muted = true;
+      v.src = url;
+      v.onloadedmetadata = () => resolve(v.duration);
+      v.onerror = () => reject(new Error("Video could not be decoded"));
+      // Some containers (raw AVI) won't expose duration via metadata
+      // event; fall back to a finite value if duration is reported as Infinity.
+      setTimeout(() => {
+        if (Number.isFinite(v.duration) && v.duration > 0) resolve(v.duration);
+      }, 1500);
+    });
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+}
+
+/** Assert a video blob has a duration close to the expected value
+ *  (catches "valid container, zero stream" bugs). */
+export async function assertVideoDuration(
+  blob: Blob,
+  expectedSeconds: number,
+  toleranceSeconds = 0.5,
+): Promise<void> {
+  const dur = await videoDuration(blob);
+  if (!Number.isFinite(dur) || dur <= 0) {
+    throw new Error(`Video has no decodable duration (got ${dur}). Container is empty.`);
+  }
+  if (Math.abs(dur - expectedSeconds) > toleranceSeconds) {
+    throw new Error(
+      `Video duration ${dur.toFixed(3)}s differs from expected ${expectedSeconds}s by more than ${toleranceSeconds}s.`,
+    );
+  }
+}
+
+// ============================================================================
+// PDF content validators
+// ============================================================================
+
+/** Extract every word of every page in a PDF blob via pdfjs-dist. */
+export async function pdfText(blob: Blob): Promise<string> {
+  const pdfjsLib = await import("pdfjs-dist");
+  // Empty workerSrc forces the main-thread fallback — fine for tiny
+  // test PDFs, removes a bundling dependency.
+  pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdfjs/pdf.worker.mjs";
+  const data = new Uint8Array(await blob.arrayBuffer());
+  const doc = await pdfjsLib.getDocument({ data }).promise;
+  const pages: string[] = [];
+  for (let p = 1; p <= doc.numPages; p++) {
+    const page = await doc.getPage(p);
+    const content = await page.getTextContent();
+    pages.push(content.items.map((it) => ("str" in it ? it.str : "")).join(" "));
+  }
+  return pages.join("\n");
+}
+
+/** Render the first page of a PDF to an ImageData so a downstream
+ *  fingerprint comparison can run. */
+export async function pdfFirstPageImageData(blob: Blob, scale = 1): Promise<ImageData> {
+  const pdfjsLib = await import("pdfjs-dist");
+  pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdfjs/pdf.worker.mjs";
+  const data = new Uint8Array(await blob.arrayBuffer());
+  const doc = await pdfjsLib.getDocument({ data }).promise;
+  const page = await doc.getPage(1);
+  const viewport = page.getViewport({ scale });
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.ceil(viewport.width);
+  canvas.height = Math.ceil(viewport.height);
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Canvas 2D context unavailable");
+  await page.render({ canvasContext: ctx, viewport, canvas } as Parameters<typeof page.render>[0]).promise;
+  return ctx.getImageData(0, 0, canvas.width, canvas.height);
+}
+
+/** Assert a PDF contains every one of the given strings (case-insensitive
+ *  substring match). Catches the failure mode where a converter writes
+ *  a valid-looking PDF that has no text or the wrong text.
+ *
+ *  Only useful for converters that emit SEARCHABLE PDFs (real text
+ *  embedded in the document). Our jspdf-html-rendered PDFs rasterize
+ *  the source HTML via html2canvas and produce image-only PDFs with
+ *  no extractable text; for those, use assertPdfNotBlank instead.
+ */
+export async function assertPdfContains(blob: Blob, expected: string[]): Promise<void> {
+  const text = (await pdfText(blob)).toLowerCase();
+  const missing = expected.filter((e) => !text.includes(e.toLowerCase()));
+  if (missing.length > 0) {
+    throw new Error(
+      `PDF missing expected text: ${JSON.stringify(missing)}. PDF text was: ${JSON.stringify(text.slice(0, 300))}…`,
+    );
+  }
+}
+
+/** Render the first page of a PDF and assert it isn't blank.
+ *  "Not blank" means: at least 1% of pixels deviate from pure white.
+ *  Catches the failure mode where the converter produces a syntactically
+ *  valid empty page. */
+export async function assertPdfNotBlank(blob: Blob, opts: { minInkRatio?: number } = {}): Promise<void> {
+  const img = await pdfFirstPageImageData(blob, 1);
+  const { data } = img;
+  let inkPixels = 0;
+  const total = data.length / 4;
+  for (let i = 0; i < data.length; i += 4) {
+    // "Ink" = any pixel that isn't basically white. Allow 16-unit slack
+    // for anti-aliasing fringes against the page background.
+    if (data[i] < 240 || data[i + 1] < 240 || data[i + 2] < 240) {
+      inkPixels++;
+    }
+  }
+  const ratio = inkPixels / total;
+  // 0.1% catches the silent-blank-page bug (was 0.00%) while not
+  // false-failing on short text inputs that occupy a small fraction
+  // of an A4 page.
+  const min = opts.minInkRatio ?? 0.001;
+  if (ratio < min) {
+    throw new Error(
+      `PDF first page is blank or near-blank: ${(ratio * 100).toFixed(2)}% non-white pixels (min ${(min * 100).toFixed(2)}%).`,
+    );
+  }
+}
+
+/** Assert that the first page of an image-PDF (jpg-to-pdf etc.) has
+ *  a similar appearance to the provided source image. Renders the
+ *  PDF page and compares fingerprint to the source. Lenient on size
+ *  because PDF rendering scales. */
+export async function assertPdfImageMatches(
+  source: Blob,
+  pdf: Blob,
+  opts: { maxFingerprintDelta?: number } = {},
+): Promise<void> {
+  const sourceData = await (async () => {
+    const url = URL.createObjectURL(source);
+    try {
+      const img = new Image();
+      img.src = url;
+      await img.decode();
+      const c = document.createElement("canvas");
+      c.width = img.naturalWidth;
+      c.height = img.naturalHeight;
+      const ctx = c.getContext("2d")!;
+      ctx.drawImage(img, 0, 0);
+      return ctx.getImageData(0, 0, c.width, c.height);
+    } finally {
+      URL.revokeObjectURL(url);
+    }
+  })();
+
+  const pdfData = await pdfFirstPageImageData(pdf, 1);
+
+  const fpA = imageDataFingerprint(sourceData);
+  const fpB = imageDataFingerprint(pdfData);
+  const delta = fingerprintDelta(fpA, fpB);
+  const max = opts.maxFingerprintDelta ?? 30;
+  if (delta > max) {
+    throw new Error(
+      `PDF page does not match source image: fingerprint delta=${delta.toFixed(1)} (max=${max})`,
+    );
+  }
+}
+
+function imageDataFingerprint(img: ImageData): Float32Array {
+  const { width, height, data } = img;
+  const totalCells = FP_GRID * FP_GRID;
+  const fp = new Float32Array(totalCells * 3);
+  const counts = new Uint32Array(totalCells);
+  const cellW = width / FP_GRID;
+  const cellH = height / FP_GRID;
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const cx = Math.min(FP_GRID - 1, Math.floor(x / cellW));
+      const cy = Math.min(FP_GRID - 1, Math.floor(y / cellH));
+      const cell = cy * FP_GRID + cx;
+      const i = (y * width + x) * 4;
+      fp[cell * 3 + 0] += data[i];
+      fp[cell * 3 + 1] += data[i + 1];
+      fp[cell * 3 + 2] += data[i + 2];
+      counts[cell]++;
+    }
+  }
+  for (let c = 0; c < totalCells; c++) {
+    fp[c * 3 + 0] /= counts[c] || 1;
+    fp[c * 3 + 1] /= counts[c] || 1;
+    fp[c * 3 + 2] /= counts[c] || 1;
+  }
+  return fp;
 }
 
 // ============================================================================

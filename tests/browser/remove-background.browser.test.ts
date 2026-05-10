@@ -31,11 +31,43 @@ async function makeSubjectImage(): Promise<File> {
   });
 }
 
-describe("remove-background (browser)", () => {
-  it("returns a PNG with the background removed", async () => {
+describe("remove-background (browser, content-checked)", () => {
+  it("returns a transparent-corner PNG of the same dimensions", async () => {
     const img = await makeSubjectImage();
     const result = await run("remove-background", img);
     expect(result.blob.size).toBeGreaterThan(0);
     await expectMagic(result.blob, MAGIC.PNG);
+
+    // Decode output and verify:
+    //   1. dimensions match input (no crop / scale)
+    //   2. corners (background area) are transparent (alpha 0 or close)
+    //   3. center (subject area) still has color (alpha > 0)
+    const url = URL.createObjectURL(result.blob);
+    const decoded = await new Promise<ImageData>((resolve, reject) => {
+      const i = new Image();
+      i.onload = () => {
+        const c = document.createElement("canvas");
+        c.width = i.naturalWidth;
+        c.height = i.naturalHeight;
+        const ctx = c.getContext("2d");
+        if (!ctx) return reject(new Error("ctx unavailable"));
+        ctx.drawImage(i, 0, 0);
+        resolve(ctx.getImageData(0, 0, c.width, c.height));
+      };
+      i.onerror = () => reject(new Error("decode failed"));
+      i.src = url;
+    });
+    URL.revokeObjectURL(url);
+
+    expect(decoded.width).toBe(256);
+    expect(decoded.height).toBe(256);
+
+    // Corner pixel alpha (background area, should be ~transparent)
+    const cornerAlpha = decoded.data[3]; // top-left alpha
+    expect(cornerAlpha).toBeLessThan(64);
+
+    // Center pixel alpha (subject area, should be opaque)
+    const centerIdx = (128 * decoded.width + 128) * 4;
+    expect(decoded.data[centerIdx + 3]).toBeGreaterThan(192);
   }, 600000);
 });

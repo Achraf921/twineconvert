@@ -6,6 +6,7 @@
 import { describe, it, expect } from "vitest";
 import { run } from "../../src/lib/engine/runner";
 import { expectMagic, MAGIC } from "./helpers";
+import { assertPdfContains, assertPdfNotBlank } from "./quality";
 
 const TINY_SVG = `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
@@ -86,27 +87,35 @@ describe("PDF converters (browser)", () => {
     await expectMagic(result.blob, MAGIC.JPEG);
   });
 
-  it("pdf-to-docx produces a DOCX (zip) file", async () => {
+  it("pdf-to-docx preserves the embedded text", async () => {
     const pdf = await makeTinyPdf();
     const result = await run("pdf-to-docx", pdf);
     expect(result.blob.size).toBeGreaterThan(0);
     await expectMagic(result.blob, MAGIC.ZIP);
+    // Open the zip and verify the document.xml has the expected text
+    const JSZip = (await import("jszip")).default;
+    const zip = await JSZip.loadAsync(await result.blob.arrayBuffer());
+    const docXml = await zip.file("word/document.xml")?.async("text");
+    expect(docXml).toBeDefined();
+    expect(docXml!.toLowerCase()).toContain("twineconvert");
   });
 
-  it("compress-pdf returns a valid PDF", async () => {
+  it("compress-pdf preserves text and emits valid PDF", async () => {
     const pdf = await makeTinyPdf();
     const result = await run("compress-pdf", pdf);
     expect(result.blob.size).toBeGreaterThan(0);
     await expectMagic(result.blob, MAGIC.PDF);
+    await assertPdfContains(result.blob, ["twineconvert"]);
   });
 });
 
-describe("DOCX converters (browser)", () => {
-  it("docx-to-pdf produces a real PDF", async () => {
+describe("DOCX converters (browser, content-checked)", () => {
+  it("docx-to-pdf produces a SEARCHABLE PDF with the document text", async () => {
     const docx = await makeTinyDocx();
     const result = await run("docx-to-pdf", docx);
-    expect(result.blob.size).toBeGreaterThan(0);
     await expectMagic(result.blob, MAGIC.PDF);
+    await assertPdfNotBlank(result.blob);
+    await assertPdfContains(result.blob, ["Hello twineconvert", "test document"]);
   });
 });
 
@@ -156,11 +165,15 @@ async function makeTinyEpub(): Promise<File> {
   return new File([blob], "tiny.epub", { type: "application/epub+zip" });
 }
 
-describe("EPUB converters (browser)", () => {
-  it("epub-to-pdf produces a real PDF", async () => {
+describe("EPUB converters (browser, content-checked)", () => {
+  it("epub-to-pdf produces a SEARCHABLE PDF with chapter content", async () => {
     const epub = await makeTinyEpub();
     const result = await run("epub-to-pdf", epub);
-    expect(result.blob.size).toBeGreaterThan(0);
     await expectMagic(result.blob, MAGIC.PDF);
+    await assertPdfNotBlank(result.blob);
+    await assertPdfContains(result.blob, [
+      "Tiny twineconvert EPUB",
+      "Hello twineconvert from a tiny EPUB",
+    ]);
   }, 60000);
 });
