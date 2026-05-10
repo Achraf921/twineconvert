@@ -45,3 +45,6 @@ next-env.d.ts
 /public/ifc/
 /tests/browser/__screenshots__/
 /.vitest-attachments/
+
+# Resume state for the bulk-indexing scripts
+/.indexing-state.json
