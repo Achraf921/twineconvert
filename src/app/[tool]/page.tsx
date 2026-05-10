@@ -62,16 +62,14 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   let keywords: string[];
 
   if (profiles) {
-    // Use the per-format primaryUse strings to compose a description
-    // that's actually unique to this conversion, instead of a template
-    // shared across all 192 pages. Google flags near-identical meta
-    // descriptions on large sites as thin content.
+    // Use the per-format primaryUse strings to compose a description that's
+    // unique per conversion; near-duplicate descriptions across 192 pages
+    // would get flagged as thin content. Keep titles + descriptions in
+    // Title Case to match the SERP convention competitors use.
     const inputName = profiles.input.name;
     const outputName = profiles.output.name;
-    const inputUse = profiles.input.primaryUse.replace(/\.$/, "");
-    const outputUse = profiles.output.primaryUse.replace(/\.$/, "");
     title = `${inputName} to ${outputName} Converter, Free, in Your Browser`;
-    description = `Convert ${inputName} (${inputUse}) to ${outputName} (${outputUse}) in your browser. No upload, no signup, no file size limit.`;
+    description = `Convert ${inputName} to ${outputName} in Your Browser. ${capitalizeFirst(profiles.input.primaryUse)} ${capitalizeFirst(profiles.output.primaryUse)} No Upload, No Signup, No File Size Limit.`;
     keywords = [
       `${inputName} to ${outputName}`,
       `convert ${inputName} to ${outputName}`,
@@ -87,7 +85,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
     const inputName = inKey.toUpperCase();
     const outputName = outKey.toUpperCase();
     title = `${inputName} to ${outputName} Converter, Free, in Your Browser`;
-    description = `Convert ${inputName} files to ${outputName} in your browser. Your file never uploads, no signup, no file size cap.`;
+    description = `Convert ${inputName} Files to ${outputName} in Your Browser. No Upload, No Signup, No File Size Cap, No Watermark.`;
     keywords = [
       `${inputName} to ${outputName}`,
       `convert ${inputName} to ${outputName}`,
@@ -97,7 +95,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
     ];
   } else {
     title = `${meta.label}, Free, in Your Browser`;
-    description = `${meta.label} in your browser. Your file never uploads, no signup, no file size cap, no watermark.`;
+    description = `${meta.label} in Your Browser. Your File Never Uploads. No Signup, No File Size Cap, No Watermark.`;
     keywords = [meta.label.toLowerCase(), "free", "in-browser", "no upload"];
   }
 
@@ -125,4 +123,10 @@ export default async function Page({ params }: { params: Promise<Params> }) {
   const meta = getMeta(tool);
   if (!meta) notFound();
   return <ToolPage toolId={tool} meta={meta} />;
+}
+
+/** Capitalize first letter; preserve already-uppercase abbreviations. */
+function capitalizeFirst(s: string): string {
+  if (!s) return s;
+  return s.charAt(0).toUpperCase() + s.slice(1);
 }
