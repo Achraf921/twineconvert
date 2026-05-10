@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { MobileMenu } from "./MobileMenu";
 
 /**
@@ -47,17 +48,13 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
 
 function Logo() {
   return (
-    <svg
-      width="28"
-      height="28"
-      viewBox="0 0 32 32"
-      fill="none"
-      aria-hidden="true"
+    <Image
+      src="/logo.png"
+      alt=""
+      width={32}
+      height={32}
+      priority
       className="transition-transform duration-300 group-hover:rotate-12"
-    >
-      <circle cx="11" cy="16" r="7" stroke="#E0297B" strokeWidth="2.5" />
-      <circle cx="21" cy="16" r="7" stroke="#E0297B" strokeWidth="2.5" />
-      <circle cx="16" cy="16" r="2" fill="#E0297B" />
-    </svg>
+    />
   );
 }

@@ -29,11 +29,7 @@ export default function Image() {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 20, marginBottom: 40 }}>
-          <svg width="64" height="64" viewBox="0 0 32 32" fill="none">
-            <circle cx="11" cy="16" r="7" stroke="#E0297B" strokeWidth="2.5" />
-            <circle cx="21" cy="16" r="7" stroke="#E0297B" strokeWidth="2.5" />
-            <circle cx="16" cy="16" r="2" fill="#E0297B" />
-          </svg>
+          <img src="https://twineconvert.com/logo.png" width={72} height={72} alt="" />
           <span style={{ fontSize: 44, fontWeight: 700, color: "#0A0A0A", letterSpacing: "-0.02em" }}>
             twineconvert
           </span>

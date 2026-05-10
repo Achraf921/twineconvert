@@ -47,11 +47,7 @@ export default async function Image({ params }: { params: Promise<{ tool: string
       >
         {/* Top band, logo + brand */}
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          <svg width="56" height="56" viewBox="0 0 32 32" fill="none">
-            <circle cx="11" cy="16" r="7" stroke="#E0297B" strokeWidth="2.5" />
-            <circle cx="21" cy="16" r="7" stroke="#E0297B" strokeWidth="2.5" />
-            <circle cx="16" cy="16" r="2" fill="#E0297B" />
-          </svg>
+          <img src="https://twineconvert.com/logo.png" width={64} height={64} alt="" />
           <span style={{ fontSize: 36, fontWeight: 700, color: "#0A0A0A", letterSpacing: "-0.02em" }}>
             twineconvert
           </span>

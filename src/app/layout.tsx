@@ -59,7 +59,7 @@ const ORGANIZATION_JSONLD = {
   "@type": "Organization",
   name: "twineconvert",
   url: "https://twineconvert.com",
-  logo: "https://twineconvert.com/icon",
+  logo: "https://twineconvert.com/logo.png",
 };
 
 const WEBSITE_JSONLD = {

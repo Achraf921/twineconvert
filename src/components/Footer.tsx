@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 /**
  * Site footer. Multi-column layout with category navigation (great
@@ -111,11 +112,5 @@ export function Footer() {
 }
 
 function FooterLogo() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-      <circle cx="11" cy="16" r="7" stroke="#E0297B" strokeWidth="2.5" />
-      <circle cx="21" cy="16" r="7" stroke="#E0297B" strokeWidth="2.5" />
-      <circle cx="16" cy="16" r="2" fill="#E0297B" />
-    </svg>
-  );
+  return <Image src="/logo.png" alt="" width={24} height={24} />;
 }
