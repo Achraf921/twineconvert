@@ -1387,3 +1387,97 @@ describe("Concordance OPT → CSV", () => {
     expect(text).toContain("VOL001");
   });
 });
+
+// ============================================================================
+// Academic: BibTeX expanded family (CSL-JSON / YAML / Markdown / HTML)
+// ============================================================================
+describe("round-trip: BibTeX ↔ CSL-JSON (Zotero/Pandoc native)", () => {
+  it("BibTeX → CSL-JSON → BibTeX preserves citation key, title, authors, year, doi", async () => {
+    const original = fileFromText("refs.bib", FIXTURES.bibtex, "application/x-bibtex");
+    const csl = await chain("bibtex-to-csl-json", original);
+    const back = await chain("csl-json-to-bibtex", csl);
+    const text = await back.text();
+    expect(text).toContain("smith2024");
+    expect(text).toContain("A Sample Paper");
+    expect(text).toContain("Smith, John");
+    expect(text).toContain("Doe, Jane");
+    expect(text).toContain("Nature");
+    expect(text).toContain("2024");
+    expect(text).toContain("10.1038/sample.2024.001");
+  });
+
+  it("CSL-JSON → BibTeX → CSL-JSON preserves the citation list structurally", async () => {
+    const original = fileFromText("refs.json", FIXTURES.cslJson, "application/vnd.citationstyles.csl+json");
+    const bib = await chain("csl-json-to-bibtex", original);
+    const back = await chain("bibtex-to-csl-json", bib);
+    const parsed = JSON.parse(await back.text()) as Array<{
+      id: string;
+      type: string;
+      title: string;
+      author?: Array<{ family: string; given: string }>;
+    }>;
+    expect(parsed).toHaveLength(2);
+    expect(parsed[0].id).toBe("smith2024");
+    expect(parsed[1].id).toBe("brown2023");
+    expect(parsed[0].title).toBe("A Sample Paper");
+    expect(parsed[1].title).toBe("Book on a Topic");
+    expect(parsed[0].author?.[0]).toEqual({ family: "Smith", given: "John" });
+  });
+
+  it("CSL-JSON output is valid JSON with `article-journal` type for articles", async () => {
+    const original = fileFromText("refs.bib", FIXTURES.bibtex, "application/x-bibtex");
+    const csl = await chain("bibtex-to-csl-json", original);
+    const parsed = JSON.parse(await csl.text());
+    expect(Array.isArray(parsed)).toBe(true);
+    expect(parsed[0].type).toBe("article-journal");
+    expect(parsed[0].DOI).toBe("10.1038/sample.2024.001");
+  });
+});
+
+describe("round-trip: BibTeX ↔ YAML (CSL-YAML for Pandoc)", () => {
+  it("BibTeX → YAML → BibTeX preserves the citation fields end-to-end", async () => {
+    const original = fileFromText("refs.bib", FIXTURES.bibtex, "application/x-bibtex");
+    const yamlOut = await chain("bibtex-to-yaml", original);
+    const back = await chain("yaml-to-bibtex", yamlOut);
+    const text = await back.text();
+    expect(text).toContain("smith2024");
+    expect(text).toContain("A Sample Paper");
+    expect(text).toContain("Smith, John");
+    expect(text).toContain("10.1038/sample.2024.001");
+  });
+
+  it("YAML output uses Pandoc's `references:` wrapper convention", async () => {
+    const original = fileFromText("refs.bib", FIXTURES.bibtex, "application/x-bibtex");
+    const yamlOut = await chain("bibtex-to-yaml", original);
+    expect(await yamlOut.text()).toMatch(/^references:/m);
+  });
+});
+
+describe("BibTeX → Markdown bibliography (one-way render)", () => {
+  it("emits a numbered Markdown bibliography with every entry from the BibTeX", async () => {
+    const original = fileFromText("refs.bib", FIXTURES.bibtex, "application/x-bibtex");
+    const md = await chain("bibtex-to-markdown", original);
+    const text = await md.text();
+    expect(text).toMatch(/^# References/m);
+    expect(text).toMatch(/^1\./m);
+    expect(text).toContain("A Sample Paper");
+    expect(text).toContain("Smith");
+    expect(text).toContain("Doe");
+    expect(text).toContain("*Nature*");
+    expect(text).toContain("(2024)");
+  });
+});
+
+describe("BibTeX → HTML bibliography (one-way render)", () => {
+  it("emits a complete HTML document with the citation as an <li>", async () => {
+    const original = fileFromText("refs.bib", FIXTURES.bibtex, "application/x-bibtex");
+    const html = await chain("bibtex-to-html", original);
+    const text = await html.text();
+    expect(text).toMatch(/^<!DOCTYPE html>/);
+    expect(text).toContain("<ol>");
+    expect(text).toContain("<li>");
+    expect(text).toContain("A Sample Paper");
+    expect(text).toContain("<em>Nature</em>");
+    expect(text).toContain("https://doi.org/10.1038/sample.2024.001");
+  });
+});

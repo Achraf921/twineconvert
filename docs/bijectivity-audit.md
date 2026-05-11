@@ -6,13 +6,13 @@ Generated 2026-05-11 from src/lib/engine/converters/.
 
 | Classification | Count |
 |---|---:|
-| Total converters | 295 |
-| **Bijective candidates** (lossless, same-kind, both directions exist) | 146 |
+| Total converters | 301 |
+| **Bijective candidates** (lossless, same-kind, both directions exist) | 150 |
 | **Bijective candidates missing reverse converter** | 8 |
 | **Bijective candidates missing round-trip test** | 20 |
 | Lossy encoding (same kind, but lossy format) | 58 |
 | Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 32 |
-| Single-action (no reverse possible) | 51 |
+| Single-action (no reverse possible) | 53 |
 | Unknown formats (need to add to FORMATS table) | 0 |
 | Compound id (irregular pattern) | 0 |
 
@@ -79,10 +79,14 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `avif-to-png` | lossy-encoding | ✓ | n/a | avif or png uses lossy encoding |
 | `avif-to-webp` | lossy-encoding | ✓ | n/a | avif or webp uses lossy encoding |
 | `base64-to-text` | bijective-candidate | ✓ | ✓ | both lossless encoding formats; should round-trip cleanly |
+| `bibtex-to-csl-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `bibtex-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `bibtex-to-endnote-xml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `bibtex-to-html` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
+| `bibtex-to-markdown` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
 | `bibtex-to-nbib` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `bibtex-to-ris` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `bibtex-to-yaml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `bmp-to-jpg` | lossy-encoding | ✓ | n/a | bmp or jpg uses lossy encoding |
 | `bmp-to-png` | bijective-candidate | ✓ | ✗ MISSING | both lossless raster formats; should round-trip cleanly |
 | `cabrillo-to-adif` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
@@ -92,6 +96,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `cmyk-to-rgb` | lossy-encoding | ✓ | ✓ | cmyk or rgb uses lossy encoding |
 | `color-name-to-hex` | cross-kind | ✓ | ✓ | color -> palette: cross-domain, inherently lossy |
 | `compress-pdf` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
+| `csl-json-to-bibtex` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csp-to-3dl` | bijective-candidate | ✓ | ✓ | both lossless lut formats; should round-trip cleanly |
 | `csp-to-cube` | bijective-candidate | ✓ | ✓ | both lossless lut formats; should round-trip cleanly |
 | `css-to-ase` | bijective-candidate | ✓ | ✓ | both lossless palette formats; should round-trip cleanly |
@@ -346,6 +351,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `xlsx-to-ods` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `xlsx-to-tsv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `xml-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `yaml-to-bibtex` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `yaml-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `yaml-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `yaml-to-toml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |

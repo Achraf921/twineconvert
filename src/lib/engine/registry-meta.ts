@@ -3601,6 +3601,89 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     ],
     "toMime": "text/csv",
     "maxFileSizeBytes": 209715200
+  },
+  "bibtex-to-csl-json": {
+    "label": "BibTeX → CSL-JSON",
+    "accept": [
+      ".bib",
+      ".bibtex"
+    ],
+    "fromMime": [
+      "application/x-bibtex",
+      "text/x-bibtex",
+      "text/plain"
+    ],
+    "toMime": "application/vnd.citationstyles.csl+json",
+    "maxFileSizeBytes": 10485760
+  },
+  "csl-json-to-bibtex": {
+    "label": "CSL-JSON → BibTeX",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/vnd.citationstyles.csl+json",
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "application/x-bibtex",
+    "maxFileSizeBytes": 10485760
+  },
+  "bibtex-to-yaml": {
+    "label": "BibTeX → YAML (CSL)",
+    "accept": [
+      ".bib",
+      ".bibtex"
+    ],
+    "fromMime": [
+      "application/x-bibtex",
+      "text/x-bibtex",
+      "text/plain"
+    ],
+    "toMime": "application/x-yaml",
+    "maxFileSizeBytes": 10485760
+  },
+  "yaml-to-bibtex": {
+    "label": "YAML (CSL) → BibTeX",
+    "accept": [
+      ".yaml",
+      ".yml"
+    ],
+    "fromMime": [
+      "application/x-yaml",
+      "text/yaml",
+      "text/plain"
+    ],
+    "toMime": "application/x-bibtex",
+    "maxFileSizeBytes": 10485760
+  },
+  "bibtex-to-markdown": {
+    "label": "BibTeX → Markdown bibliography",
+    "accept": [
+      ".bib",
+      ".bibtex"
+    ],
+    "fromMime": [
+      "application/x-bibtex",
+      "text/x-bibtex",
+      "text/plain"
+    ],
+    "toMime": "text/markdown",
+    "maxFileSizeBytes": 10485760
+  },
+  "bibtex-to-html": {
+    "label": "BibTeX → HTML bibliography",
+    "accept": [
+      ".bib",
+      ".bibtex"
+    ],
+    "fromMime": [
+      "application/x-bibtex",
+      "text/x-bibtex",
+      "text/plain"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 10485760
   }
 };
 

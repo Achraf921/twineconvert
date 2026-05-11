@@ -626,6 +626,54 @@ crimson
 2025-01-01T00:00:00Z
 `,
 
+  // ---- CSL-JSON (Zotero/Pandoc native bibliography format) ----
+  cslJson: `[
+  {
+    "id": "smith2024",
+    "type": "article-journal",
+    "title": "A Sample Paper",
+    "author": [
+      { "family": "Smith", "given": "John" },
+      { "family": "Doe", "given": "Jane" }
+    ],
+    "issued": { "date-parts": [[2024]] },
+    "container-title": "Nature",
+    "volume": "123",
+    "page": "45-67",
+    "DOI": "10.1038/sample.2024.001"
+  },
+  {
+    "id": "brown2023",
+    "type": "book",
+    "title": "Book on a Topic",
+    "author": [{ "family": "Brown", "given": "Alice" }],
+    "issued": { "date-parts": [[2023]] },
+    "publisher": "MIT Press",
+    "publisher-place": "Cambridge, MA",
+    "ISBN": "978-0-262-04567-8"
+  }
+]
+`,
+
+  // ---- CSL-YAML (Pandoc Markdown bibliography embed format) ----
+  cslYaml: `references:
+  - id: smith2024
+    type: article-journal
+    title: A Sample Paper
+    author:
+      - family: Smith
+        given: John
+      - family: Doe
+        given: Jane
+    issued:
+      date-parts:
+        - - 2024
+    container-title: Nature
+    volume: '123'
+    page: 45-67
+    DOI: 10.1038/sample.2024.001
+`,
+
   // ---- Modern color (OKLCH / LAB CSS Level 4) ----
   oklchList: `oklch(62.8% 0.258 29.23)
 oklch(86.6% 0.295 142.5)

@@ -514,6 +514,14 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "dat-to-csv":  { provider: () => text("production.dat", F.datLoadFile, "application/vnd.concordance-dat"), env: "node" },
   "csv-to-dat":  { provider: () => text("production.csv", `BegBates,EndBates,Date,From,To,Subject\nABC0000001,ABC0000003,2024-01-15,alice@example.com,bob@example.com,Q4 review\n`, "text/csv"), env: "node" },
   "opt-to-csv":  { provider: () => text("images.opt", F.optLoadFile, "application/vnd.concordance-opt"), env: "node" },
+
+  // ===== Academic: BibTeX expanded family =====
+  "bibtex-to-csl-json":  { provider: () => text("refs.bib", F.bibtex, "application/x-bibtex"), env: "node" },
+  "csl-json-to-bibtex":  { provider: () => text("refs.json", F.cslJson, "application/vnd.citationstyles.csl+json"), env: "node" },
+  "bibtex-to-yaml":      { provider: () => text("refs.bib", F.bibtex, "application/x-bibtex"), env: "node" },
+  "yaml-to-bibtex":      { provider: () => text("refs.yaml", F.cslYaml, "application/x-yaml"), env: "node" },
+  "bibtex-to-markdown":  { provider: () => text("refs.bib", F.bibtex, "application/x-bibtex"), env: "node" },
+  "bibtex-to-html":      { provider: () => text("refs.bib", F.bibtex, "application/x-bibtex"), env: "node" },
 };
 
 /** True if we have any fixture for this id (even if it requires browser). */

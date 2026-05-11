@@ -202,6 +202,12 @@ const FORMATS = {
   // ==== Legal eDiscovery ====
   dat: { kind: "data", lossless: true, family: "legal" },
   opt: { kind: "data", lossless: true, family: "legal" },
+  // ==== CSL-JSON (Zotero/Pandoc native bibliography format) ====
+  // Part of the citation family. The unified Citation model in
+  // src/lib/engine/util/citation.ts means csl-json round-trips with
+  // bibtex/ris/nbib/endnote-xml structurally (some BibTeX-specific
+  // fields drop to extra{}, but the core fields survive).
+  "csl-json": { kind: "data", lossless: true, family: "citation" },
 };
 
 // --------------------------------------------------------------------
@@ -266,6 +272,11 @@ const SINGLE_ACTION = new Set([
   // a full template library).
   "ccda-to-html",
   "ccda-to-json",
+  // Rendered bibliography output (APA-ish text). Going back from a
+  // formatted reference list to structured BibTeX is the citation-parsing
+  // problem (Anystyle / ParseCit territory) and not a simple inverse.
+  "bibtex-to-markdown",
+  "bibtex-to-html",
 ]);
 
 // --------------------------------------------------------------------

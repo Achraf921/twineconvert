@@ -957,6 +957,7 @@ const BY_MIME: Record<string, Validator> = {
   "application/cda+xml": validateCcdaXml,
   "application/vnd.concordance-dat": validateDat,
   "application/vnd.concordance-opt": validateOpt,
+  "application/vnd.citationstyles.csl+json": validateJson,
 
   "application/vnd.oasis.opendocument.spreadsheet": validateOds,
   "application/vnd.oasis.opendocument.spreadsheet-template": validateOds,

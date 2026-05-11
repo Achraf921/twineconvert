@@ -752,6 +752,23 @@ export const registry: Record<string, ConverterLoader> = {
     import("./converters/csv-to-dat").then((m) => m.default),
   "opt-to-csv": () =>
     import("./converters/opt-to-csv").then((m) => m.default),
+
+  // Academic: BibTeX expanded family. CSL-JSON is Zotero/Pandoc native;
+  // YAML is the Pandoc Markdown bibliography format; Markdown/HTML are
+  // for embedding rendered bibliographies in blog posts and papers. All
+  // route through the unified Citation model in util/citation.ts.
+  "bibtex-to-csl-json": () =>
+    import("./converters/bibtex-to-csl-json").then((m) => m.default),
+  "csl-json-to-bibtex": () =>
+    import("./converters/csl-json-to-bibtex").then((m) => m.default),
+  "bibtex-to-yaml": () =>
+    import("./converters/bibtex-to-yaml").then((m) => m.default),
+  "yaml-to-bibtex": () =>
+    import("./converters/yaml-to-bibtex").then((m) => m.default),
+  "bibtex-to-markdown": () =>
+    import("./converters/bibtex-to-markdown").then((m) => m.default),
+  "bibtex-to-html": () =>
+    import("./converters/bibtex-to-html").then((m) => m.default),
 };
 
 /** All converter IDs, useful for sitemap generation later. */

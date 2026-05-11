@@ -1291,6 +1291,18 @@ const PROFILES: Record<string, FormatProfile> = {
     binary: false,
   },
 
+  // ===== Bibliography (CSL-JSON for Zotero/Pandoc/Mendeley) =====
+  "csl-json": {
+    name: "CSL-JSON",
+    fullName: "Citation Style Language JSON",
+    description:
+      "CSL-JSON is the modern interop format for citation metadata. Zotero exports it natively (right-click a collection → Export → CSL JSON). Pandoc consumes it as `--bibliography file.json` for reference rendering. Every major reference manager (Zotero, Mendeley, Citavi, Papers, Bookends) reads or writes it. Defined by the Citation Style Language project; covers ~100 fields across journals, books, chapters, theses, software, datasets, and more. The de-facto replacement for BibTeX in modern academic toolchains.",
+    howToOpen:
+      "Any JSON viewer or text editor. Zotero imports via File → Import → CSL JSON. Pandoc references it as bibliography input. JabRef, Citavi, and Bookends all accept CSL-JSON drop-ins.",
+    primaryUse: "Cross-tool bibliography exchange between reference managers.",
+    binary: false,
+  },
+
   // ===== Medical formats =====
   hl7: {
     name: "HL7 v2",
