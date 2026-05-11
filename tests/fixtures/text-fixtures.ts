@@ -151,6 +151,70 @@ AID - 10.1038/test.2024.001
 ER  -
 `,
 
+  // Real-world PubMed NBIB export. Differs from the sanitized `nbib`
+  // fixture above in three ways that regularly break naive parsers:
+  //   1. PT appears LATE in each record (after PMID, IS, VI, IP, DP,
+  //      TI, PG, LID, AB, FAU, AU) — this is how PubMed actually
+  //      serializes records.
+  //   2. Multiple PT lines per record (Journal Article + Review).
+  //   3. Two records separated by a blank line with NO `ER  -` terminator.
+  //   4. AID and LID carry kind suffixes like `[doi]`, `[pii]`, `[pmc]`,
+  //      and only the [doi] one is a real DOI.
+  //   5. AB wraps onto an indented continuation line.
+  nbibRealPubMed: `PMID- 30000001
+OWN - NLM
+STAT- MEDLINE
+DCOM- 20180815
+LR  - 20180815
+IS  - 1097-6256 (Electronic)
+IS  - 1097-6256 (Linking)
+VI  - 21
+IP  - 11
+DP  - 2018 Nov
+TI  - Synaptic plasticity in the mouse hippocampus.
+PG  - 1499-1508
+LID - 10.1038/s41593-018-0244-8 [doi]
+AB  - The mammalian hippocampus undergoes structural changes during
+      learning. We measured spine density across CA1 in awake mice.
+FAU - Smith, John A
+AU  - Smith JA
+FAU - Doe, Jane B
+AU  - Doe JB
+LA  - eng
+PT  - Journal Article
+PT  - Research Support, N.I.H., Extramural
+DEP - 20181001
+PL  - United States
+TA  - Nat Neurosci
+JT  - Nature neuroscience
+JID - 9809671
+AID - S1097-6256(18)30001-1 [pii]
+AID - 10.1038/s41593-018-0244-8 [doi]
+PST - ppublish
+SO  - Nat Neurosci. 2018 Nov;21(11):1499-1508.
+
+PMID- 30000002
+OWN - NLM
+STAT- MEDLINE
+DCOM- 20190101
+IS  - 0028-0836 (Electronic)
+VI  - 565
+DP  - 2019 Jan
+TI  - A meta-review of CRISPR off-target effects.
+PG  - 234-241
+AB  - We surveyed 200 CRISPR studies and quantified off-target rates.
+FAU - Garcia, Maria C
+AU  - Garcia MC
+LA  - eng
+PT  - Review
+PT  - Journal Article
+TA  - Nature
+JT  - Nature
+JID - 0410462
+AID - 10.1038/s41586-019-0001-2 [doi]
+SO  - Nature. 2019 Jan;565:234-241.
+`,
+
   // EndNote XML
   endnoteXml: `<?xml version="1.0" encoding="UTF-8"?>
 <xml>

@@ -57,8 +57,13 @@ const REVERSE_TYPE_MAP: Record<CitationType, string> = {
 
 // NBIB (PubMed) tag → standard RIS tag. PubMed exports use a richer set;
 // we map the common ones into RIS equivalents so the same parser handles both.
+//
+// PT is handled separately (NOT in this map): in real PubMed exports, PT
+// usually appears LATE in each record (after PMID, TI, AU, AB, etc.) and
+// some records have multiple PT lines (Journal Article + Review). Treating
+// PT as a record-start marker like TY drops every field before it and wipes
+// records on each additional PT. See parseRis below for the actual handling.
 const NBIB_TO_RIS: Record<string, string> = {
-  PT: "TY",
   TI: "TI",
   AU: "AU",
   FAU: "AU",
@@ -76,27 +81,81 @@ const NBIB_TO_RIS: Record<string, string> = {
   PMID: "ID",
 };
 
+// PubMed Publication Type (PT) values are human-readable phrases. Map the
+// common ones to citation types. Used only when the record has no TY tag
+// already in play (RIS files take precedence over NBIB-derived type).
+function pubMedPtToType(pt: string): CitationType | undefined {
+  const v = pt.toLowerCase();
+  if (v.includes("book") && v.includes("chapter")) return "inbook";
+  if (v === "book" || /^book(\s|$)/.test(v)) return "book";
+  if (v.includes("thesis") || v.includes("dissertation")) return "thesis";
+  if (v.includes("patent")) return "patent";
+  if (v.includes("conference") || v.includes("congress") || v.includes("proceedings")) return "inproceedings";
+  if (v.includes("video") || v.includes("audio") || v.includes("audiovisual")) return "audiovisual";
+  if (v.includes("report")) return "report";
+  // Journal article, review, editorial, letter, comment, news, etc. all
+  // serialize as "article" in our internal model.
+  if (
+    v.includes("journal article") ||
+    v.includes("review") ||
+    v.includes("editorial") ||
+    v.includes("letter") ||
+    v.includes("comment") ||
+    v.includes("news")
+  )
+    return "article";
+  return undefined;
+}
+
+type CurrentRecord = Partial<Citation> & {
+  _authors: string[];
+  _keywords: string[];
+};
+
 export function parseRis(text: string): Citation[] {
   const citations: Citation[] = [];
-  let current: Partial<Citation> & { _authors?: string[]; _keywords?: string[] } | null = null;
+  let current: CurrentRecord | null = null;
+  let lastTag: string | null = null;
+
+  const ensureRecord = () => {
+    if (!current) {
+      current = { _authors: [], _keywords: [] };
+    }
+  };
 
   /**
    * Materialize the in-progress record into a Citation and push it. Called
-   * on `ER` tag (standard RIS terminator) AND at end-of-file in case the
-   * source omits ER, PubMed NBIB exports often separate records by blank
-   * lines without an explicit terminator.
+   * on `ER` tag (RIS terminator), blank lines (NBIB convention), and at
+   * end-of-file. Records with no meaningful content (e.g., trailing blank
+   * lines or stray whitespace) are dropped rather than emitted as empty
+   * citations.
    */
   const flushCurrent = () => {
     if (!current) return;
     const authors = current._authors;
     const keywords = current._keywords;
-    delete current._authors;
-    delete current._keywords;
+    const hasContent = !!(
+      current.title ||
+      current.id ||
+      current.doi ||
+      authors.length ||
+      current.year ||
+      current.journal ||
+      current.abstract
+    );
+    if (!hasContent) {
+      current = null;
+      lastTag = null;
+      return;
+    }
     citations.push({
       id: current.id ?? generateCitationKey({ ...current, authors }),
-      type: current.type ?? "misc",
+      // Default to "article" rather than "misc": NBIB exports are
+      // overwhelmingly journal articles, and PT may not have been
+      // recognized (rare PubMed PT values).
+      type: current.type ?? "article",
       title: current.title,
-      authors: authors && authors.length ? authors : undefined,
+      authors: authors.length ? authors : undefined,
       year: current.year,
       journal: current.journal,
       publisher: current.publisher,
@@ -109,96 +168,161 @@ export function parseRis(text: string): Citation[] {
       isbn: current.isbn,
       issn: current.issn,
       abstract: current.abstract,
-      keywords: keywords && keywords.length ? keywords : undefined,
+      keywords: keywords.length ? keywords : undefined,
     });
     current = null;
+    lastTag = null;
   };
 
   for (const rawLine of text.split(/\r?\n/)) {
-    // Lines look like "TY  - JOUR", at least one space then "- " then value.
-    const m = rawLine.match(/^([A-Z][A-Z0-9]{1,3})\s*-\s?(.*)$/);
-    if (!m) continue;
-    let tag = m[1];
-    const value = m[2].trim();
-    if (NBIB_TO_RIS[tag]) tag = NBIB_TO_RIS[tag];
-
-    if (tag === "TY") {
-      // New record
-      current = { _authors: [], _keywords: [] };
-      const ct = RIS_TYPE_MAP[value.toUpperCase()] ?? "misc";
-      current.type = ct;
+    // Blank lines terminate records in NBIB; in RIS they're harmless
+    // between/inside records and the ER tag is authoritative anyway.
+    if (rawLine.trim() === "") {
+      flushCurrent();
       continue;
     }
+
+    // Lines look like "TY  - JOUR", at least one space then "- " then value.
+    const m = rawLine.match(/^([A-Z][A-Z0-9]{1,3})\s*-\s?(.*)$/);
+    if (!m) {
+      // Continuation line for multi-line PubMed fields. PubMed wraps long
+      // abstracts (and occasionally titles) onto indented continuation lines
+      // with no tag. We append to whichever field was last written.
+      if (current && lastTag && /^\s/.test(rawLine)) {
+        const cont = rawLine.trim();
+        if (cont) {
+          if (lastTag === "AB" || lastTag === "N2") {
+            current.abstract = current.abstract ? `${current.abstract} ${cont}` : cont;
+          } else if (lastTag === "TI" || lastTag === "T1") {
+            current.title = current.title ? `${current.title} ${cont}` : cont;
+          } else if (lastTag === "JO" || lastTag === "JF" || lastTag === "T2") {
+            current.journal = current.journal ? `${current.journal} ${cont}` : cont;
+          }
+        }
+      }
+      continue;
+    }
+
+    let tag = m[1];
+    const value = m[2].trim();
+
+    // ER: explicit record terminator (RIS spec).
     if (tag === "ER") {
       flushCurrent();
       continue;
     }
-    if (!current) continue;
+
+    // TY: explicit record start (RIS spec). Flushes any record already in
+    // progress (e.g., a previous NBIB record terminated only by a TY).
+    if (tag === "TY") {
+      flushCurrent();
+      ensureRecord();
+      current!.type = RIS_TYPE_MAP[value.toUpperCase()];
+      lastTag = "TY";
+      continue;
+    }
+
+    // PT: PubMed publication type. Sets type on the current record but does
+    // NOT start a new record. Multiple PT lines per record are normal in
+    // PubMed; the first recognized value wins.
+    if (tag === "PT") {
+      ensureRecord();
+      if (!current!.type) {
+        const ct = pubMedPtToType(value);
+        if (ct) current!.type = ct;
+      }
+      lastTag = "PT";
+      continue;
+    }
+
+    // Translate NBIB-specific tags to their RIS equivalents.
+    if (NBIB_TO_RIS[tag]) tag = NBIB_TO_RIS[tag];
+
+    // Implicit record start: any data-bearing tag with no active record
+    // starts one. Real PubMed NBIB records begin with PMID (not PT), so
+    // requiring an explicit type tag first would silently drop everything.
+    ensureRecord();
 
     switch (tag) {
       case "AU":
       case "A1":
       case "A2":
-        current._authors!.push(value);
+        current!._authors.push(value);
         break;
       case "TI":
       case "T1":
-        current.title = value;
+        current!.title = value;
         break;
       case "JO":
       case "JF":
       case "T2":
-        current.journal = value;
+        current!.journal = value;
         break;
       case "PY":
       case "Y1":
       case "DA":
-        current.year = value.match(/\d{4}/)?.[0] ?? value;
+        current!.year = value.match(/\d{4}/)?.[0] ?? value;
         break;
       case "VL":
-        current.volume = value;
+        current!.volume = value;
         break;
       case "IS":
       case "CP":
-        current.issue = value;
+        current!.issue = value;
         break;
       case "SP":
-        // Set start of page range; EP will append the end.
-        current.pages = value;
+        // Set start of page range; EP will append the end. PubMed PG often
+        // carries the full range already (e.g., "1499-1508").
+        current!.pages = value;
         break;
       case "EP":
-        current.pages = current.pages ? `${current.pages}-${value}` : value;
+        current!.pages = current!.pages ? `${current!.pages}-${value}` : value;
         break;
       case "PB":
-        current.publisher = value;
+        current!.publisher = value;
         break;
       case "CY":
       case "AD":
-        current.address = value;
+        current!.address = value;
         break;
-      case "DO":
-        current.doi = value.replace(/^doi:\s*/i, "");
+      case "DO": {
+        // PubMed AID and LID lines carry a trailing kind tag like
+        // "10.1038/foo [doi]", "PMC1234567 [pmc]", or "S0028-... [pii]".
+        // Only the [doi]-tagged variant is a real DOI; [pmc] and [pii]
+        // should be ignored, not stored as DOI.
+        const taggedMatch = value.match(/^(.+?)\s*\[(doi|pii|pmc|pubmed)\]\s*$/i);
+        if (taggedMatch) {
+          const kind = taggedMatch[2].toLowerCase();
+          if (kind === "doi") {
+            current!.doi = taggedMatch[1].trim().replace(/^doi:\s*/i, "");
+          }
+        } else {
+          current!.doi = value.replace(/^doi:\s*/i, "");
+        }
         break;
+      }
       case "UR":
       case "L1":
-        current.url = value;
+        current!.url = value;
         break;
       case "SN":
-        // Could be ISSN or ISBN, heuristic: ISBNs are 10 or 13 digits, ISSNs are 8.
-        if (/^\d{4}-?\d{3}[\dxX]$/.test(value)) current.issn = value;
-        else current.isbn = value;
+        // Could be ISSN or ISBN, heuristic: ISSNs are 8 digits (with
+        // optional dash before the last 4 and an optional X check digit).
+        if (/^\d{4}-?\d{3}[\dxX]$/.test(value)) current!.issn = value;
+        else current!.isbn = value;
         break;
       case "AB":
       case "N2":
-        current.abstract = value;
+        current!.abstract = value;
         break;
       case "KW":
-        current._keywords!.push(value);
+        current!._keywords.push(value);
         break;
       case "ID":
-        current.id = value;
+        current!.id = value;
         break;
     }
+    lastTag = tag;
   }
   // PubMed NBIB exports often omit the trailing ER tag and rely on
   // blank-line separation between records. Flush any in-progress record

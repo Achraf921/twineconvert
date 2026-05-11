@@ -96,6 +96,64 @@ describe("text-format converter smoke tests", () => {
     expect(text).toMatch(/^@\w+\{/);
   });
 
+  // Regression for a production failure caught via PostHog convert_error
+  // on /nbib-to-ris (2026-05-11): real PubMed NBIB exports have PT after
+  // the data fields and multiple PT lines per record. The old parser
+  // treated PT as a record-start marker so it dropped every field before
+  // PT and wiped records on each repeat. Result: zero citations.
+  //
+  // This test uses a faithful PubMed export shape and asserts real data
+  // survives end-to-end, not just that the output has RIS markers.
+  it("nbib-to-ris preserves real PubMed data (regression for PT-after-data)", async () => {
+    const input = fileFromText(
+      "real.nbib",
+      FIXTURES.nbibRealPubMed,
+      "application/x-research-info-systems",
+    );
+    const result = await run("nbib-to-ris", input);
+    const text = await result.blob.text();
+
+    // Both records made it through (not zero, not one).
+    expect(text.match(/^TY\s+- /gm)?.length).toBe(2);
+    expect(text.match(/^ER\s+- ?/gm)?.length).toBe(2);
+
+    // Record 1 fields survived even though PT appears late and twice.
+    expect(text).toContain("Synaptic plasticity in the mouse hippocampus");
+    expect(text).toContain("Smith"); // FAU author
+    expect(text).toContain("Doe"); // second author
+    expect(text).toContain("2018"); // DP year
+    expect(text).toContain("1499"); // page range start
+    expect(text).toContain("10.1038/s41593-018-0244-8"); // DOI from [doi]-tagged LID
+
+    // Record 2 fields survived; second record uses a blank-line separator
+    // (no ER terminator on record 1).
+    expect(text).toContain("CRISPR off-target");
+    expect(text).toContain("Garcia");
+    expect(text).toContain("2019");
+    expect(text).toContain("10.1038/s41586-019-0001-2");
+
+    // PII identifier from record 1 must NOT be stored as the DOI: the
+    // [pii] tag means it's a publisher item ID, not a DOI. Catches the
+    // regression where AID values got blindly assigned to the DOI field.
+    expect(text).not.toContain("S1097-6256(18)30001-1");
+  });
+
+  it("nbib-to-bibtex preserves real PubMed data (regression for PT-after-data)", async () => {
+    const input = fileFromText(
+      "real.nbib",
+      FIXTURES.nbibRealPubMed,
+      "application/x-research-info-systems",
+    );
+    const result = await run("nbib-to-bibtex", input);
+    const text = await result.blob.text();
+    // Two @entries (one per NBIB record).
+    expect(text.match(/^@\w+\{/gm)?.length).toBe(2);
+    expect(text).toContain("Synaptic plasticity in the mouse hippocampus");
+    expect(text).toContain("CRISPR off-target");
+    expect(text).toContain("10.1038/s41593-018-0244-8");
+    expect(text).toContain("10.1038/s41586-019-0001-2");
+  });
+
   it("endnote-xml-to-bibtex parses EndNote XML", async () => {
     const input = fileFromText("test.xml", FIXTURES.endnoteXml, "application/xml");
     const result = await run("endnote-xml-to-bibtex", input);
