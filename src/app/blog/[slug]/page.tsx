@@ -66,8 +66,34 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
     .map((id) => ({ id, meta: getMeta(id) }))
     .filter((t): t is { id: string; meta: NonNullable<ReturnType<typeof getMeta>> } => !!t.meta);
 
+  // Article schema enables Google rich-snippets (author byline, publish
+  // date, image preview) in search results. Without it, blog posts show
+  // as plain blue links. Server-built JSON; no user input flows into it.
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.frontmatter.title,
+    description: post.frontmatter.description,
+    datePublished: post.frontmatter.publishDate,
+    dateModified: post.frontmatter.publishDate,
+    image: `https://twineconvert.com/blog/${slug}/opengraph-image`,
+    author: { "@type": "Organization", name: "twineconvert", url: "https://twineconvert.com" },
+    publisher: {
+      "@type": "Organization",
+      name: "twineconvert",
+      url: "https://twineconvert.com",
+      logo: { "@type": "ImageObject", url: "https://twineconvert.com/logo.png" },
+    },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `https://twineconvert.com/blog/${slug}` },
+  };
+
   return (
     <div className="mx-auto max-w-3xl px-6 py-12">
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
       <nav className="text-xs text-[var(--color-text-3)] mb-6" aria-label="Breadcrumb">
         <ol className="inline-flex items-center gap-2">
           <li>
