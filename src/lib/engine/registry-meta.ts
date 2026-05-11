@@ -2845,6 +2845,262 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     ],
     "toMime": "application/gpx+xml",
     "maxFileSizeBytes": 20971520
+  },
+  "jsonl-to-json": {
+    "label": "JSONL → JSON",
+    "accept": [
+      ".jsonl",
+      ".ndjson"
+    ],
+    "fromMime": [
+      "application/jsonl",
+      "application/x-ndjson",
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "application/json",
+    "maxFileSizeBytes": 52428800
+  },
+  "json-to-jsonl": {
+    "label": "JSON → JSONL",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "application/jsonl",
+    "maxFileSizeBytes": 52428800
+  },
+  "jsonl-to-csv": {
+    "label": "JSONL → CSV",
+    "accept": [
+      ".jsonl",
+      ".ndjson"
+    ],
+    "fromMime": [
+      "application/jsonl",
+      "application/x-ndjson",
+      "text/plain"
+    ],
+    "toMime": "text/csv",
+    "maxFileSizeBytes": 52428800
+  },
+  "csv-to-jsonl": {
+    "label": "CSV → JSONL",
+    "accept": [
+      ".csv"
+    ],
+    "fromMime": [
+      "text/csv",
+      "application/csv",
+      "text/plain"
+    ],
+    "toMime": "application/jsonl",
+    "maxFileSizeBytes": 52428800
+  },
+  "ini-to-json": {
+    "label": "INI → JSON",
+    "accept": [
+      ".ini",
+      ".cfg",
+      ".conf"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-ini"
+    ],
+    "toMime": "application/json",
+    "maxFileSizeBytes": 10485760
+  },
+  "json-to-ini": {
+    "label": "JSON → INI",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "application/x-ini",
+    "maxFileSizeBytes": 10485760
+  },
+  "env-to-json": {
+    "label": ".env → JSON",
+    "accept": [
+      ".env"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-env"
+    ],
+    "toMime": "application/json",
+    "maxFileSizeBytes": 5242880
+  },
+  "json-to-env": {
+    "label": "JSON → .env",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 5242880
+  },
+  "yaml-to-toml": {
+    "label": "YAML → TOML",
+    "accept": [
+      ".yaml",
+      ".yml"
+    ],
+    "fromMime": [
+      "application/x-yaml",
+      "text/yaml",
+      "text/plain"
+    ],
+    "toMime": "application/toml",
+    "maxFileSizeBytes": 10485760
+  },
+  "toml-to-yaml": {
+    "label": "TOML → YAML",
+    "accept": [
+      ".toml"
+    ],
+    "fromMime": [
+      "application/toml",
+      "text/plain"
+    ],
+    "toMime": "application/x-yaml",
+    "maxFileSizeBytes": 10485760
+  },
+  "json5-to-json": {
+    "label": "JSON5 → JSON",
+    "accept": [
+      ".json5"
+    ],
+    "fromMime": [
+      "application/json5",
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "application/json",
+    "maxFileSizeBytes": 10485760
+  },
+  "srt-to-sbv": {
+    "label": "SRT → SBV",
+    "accept": [
+      ".srt"
+    ],
+    "fromMime": [
+      "application/x-subrip",
+      "text/plain"
+    ],
+    "toMime": "text/sbv",
+    "maxFileSizeBytes": 10485760
+  },
+  "sbv-to-srt": {
+    "label": "SBV → SRT",
+    "accept": [
+      ".sbv"
+    ],
+    "fromMime": [
+      "text/sbv",
+      "text/plain"
+    ],
+    "toMime": "application/x-subrip",
+    "maxFileSizeBytes": 10485760
+  },
+  "ods-to-csv": {
+    "label": "ODS → CSV",
+    "accept": [
+      ".ods",
+      ".ots"
+    ],
+    "fromMime": [
+      "application/vnd.oasis.opendocument.spreadsheet",
+      "application/vnd.oasis.opendocument.spreadsheet-template"
+    ],
+    "toMime": "text/csv",
+    "maxFileSizeBytes": 52428800
+  },
+  "ods-to-xlsx": {
+    "label": "ODS → XLSX",
+    "accept": [
+      ".ods",
+      ".ots"
+    ],
+    "fromMime": [
+      "application/vnd.oasis.opendocument.spreadsheet"
+    ],
+    "toMime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "maxFileSizeBytes": 52428800
+  },
+  "csv-to-ods": {
+    "label": "CSV → ODS",
+    "accept": [
+      ".csv"
+    ],
+    "fromMime": [
+      "text/csv",
+      "application/csv",
+      "text/plain"
+    ],
+    "toMime": "application/vnd.oasis.opendocument.spreadsheet",
+    "maxFileSizeBytes": 52428800
+  },
+  "xlsx-to-ods": {
+    "label": "XLSX → ODS",
+    "accept": [
+      ".xlsx",
+      ".xls"
+    ],
+    "fromMime": [
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "application/vnd.ms-excel"
+    ],
+    "toMime": "application/vnd.oasis.opendocument.spreadsheet",
+    "maxFileSizeBytes": 52428800
+  },
+  "ttf-to-woff": {
+    "label": "TTF → WOFF",
+    "accept": [
+      ".ttf"
+    ],
+    "fromMime": [
+      "font/ttf",
+      "application/x-font-ttf",
+      "application/font-sfnt"
+    ],
+    "toMime": "font/woff",
+    "maxFileSizeBytes": 20971520
+  },
+  "woff-to-ttf": {
+    "label": "WOFF → TTF",
+    "accept": [
+      ".woff"
+    ],
+    "fromMime": [
+      "font/woff",
+      "application/font-woff"
+    ],
+    "toMime": "font/ttf",
+    "maxFileSizeBytes": 20971520
+  },
+  "otf-to-ttf": {
+    "label": "OTF → TTF",
+    "accept": [
+      ".otf"
+    ],
+    "fromMime": [
+      "font/otf",
+      "application/x-font-otf",
+      "application/font-sfnt"
+    ],
+    "toMime": "font/ttf",
+    "maxFileSizeBytes": 20971520
   }
 };
 

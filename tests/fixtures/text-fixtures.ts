@@ -501,6 +501,58 @@ cmyk(0%, 0%, 0%, 100%)
 }
 `,
 
+  // ---- JSON Lines (NDJSON) for streaming pipelines ----
+  jsonl: `{"name":"Alice","age":30,"city":"Paris"}
+{"name":"Bob","age":25,"city":"London"}
+{"name":"Carol","age":35,"city":"Tokyo"}
+`,
+
+  // ---- INI (Windows-style config) ----
+  ini: `[database]
+host = localhost
+port = 5432
+user = admin
+
+[server]
+host = 0.0.0.0
+port = 8080
+debug = true
+`,
+
+  // ---- .env (dotenv / Docker style) ----
+  env: `# Application config
+DATABASE_URL=postgres://localhost:5432/mydb
+API_KEY=sk_test_abc123
+NODE_ENV=production
+PORT=3000
+`,
+
+  // ---- JSON5: JSON with comments + trailing commas + unquoted keys ----
+  json5: `{
+  // Top-level config object
+  name: 'Alice',
+  age: 30,
+  /* multi-line
+     comment */
+  roles: [
+    'admin',
+    'editor', // trailing comma OK
+  ],
+  config: {
+    theme: 'dark',
+    notifications: true,
+  },
+}`,
+
+  // ---- SBV (YouTube subtitle) ----
+  sbv: `0:00:01.000,0:00:04.000
+First caption text
+
+0:00:05.500,0:00:08.250
+Second caption
+spanning two lines
+`,
+
   // Minimal MusicXML (one note)
   musicXml: `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 3.1 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">

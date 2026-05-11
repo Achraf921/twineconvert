@@ -596,6 +596,56 @@ export const registry: Record<string, ConverterLoader> = {
     import("./converters/gpx-to-geojson").then((m) => m.default),
   "geojson-to-gpx": () =>
     import("./converters/geojson-to-gpx").then((m) => m.default),
+
+  // JSON Lines (NDJSON) — streaming JSON for data pipelines, ML pipelines.
+  "jsonl-to-json": () =>
+    import("./converters/jsonl-to-json").then((m) => m.default),
+  "json-to-jsonl": () =>
+    import("./converters/json-to-jsonl").then((m) => m.default),
+  "jsonl-to-csv": () =>
+    import("./converters/jsonl-to-csv").then((m) => m.default),
+  "csv-to-jsonl": () =>
+    import("./converters/csv-to-jsonl").then((m) => m.default),
+
+  // Config formats: INI, .env, YAML↔TOML direct, JSON5.
+  "ini-to-json": () =>
+    import("./converters/ini-to-json").then((m) => m.default),
+  "json-to-ini": () =>
+    import("./converters/json-to-ini").then((m) => m.default),
+  "env-to-json": () =>
+    import("./converters/env-to-json").then((m) => m.default),
+  "json-to-env": () =>
+    import("./converters/json-to-env").then((m) => m.default),
+  "yaml-to-toml": () =>
+    import("./converters/yaml-to-toml").then((m) => m.default),
+  "toml-to-yaml": () =>
+    import("./converters/toml-to-yaml").then((m) => m.default),
+  "json5-to-json": () =>
+    import("./converters/json5-to-json").then((m) => m.default),
+
+  // SBV subtitles (YouTube SubViewer format).
+  "srt-to-sbv": () =>
+    import("./converters/srt-to-sbv").then((m) => m.default),
+  "sbv-to-srt": () =>
+    import("./converters/sbv-to-srt").then((m) => m.default),
+
+  // OpenDocument spreadsheets (LibreOffice / OpenOffice / Numbers fallback).
+  "ods-to-csv": () =>
+    import("./converters/ods-to-csv").then((m) => m.default),
+  "ods-to-xlsx": () =>
+    import("./converters/ods-to-xlsx").then((m) => m.default),
+  "csv-to-ods": () =>
+    import("./converters/csv-to-ods").then((m) => m.default),
+  "xlsx-to-ods": () =>
+    import("./converters/xlsx-to-ods").then((m) => m.default),
+
+  // Web font formats via fonteditor-core.
+  "ttf-to-woff": () =>
+    import("./converters/ttf-to-woff").then((m) => m.default),
+  "woff-to-ttf": () =>
+    import("./converters/woff-to-ttf").then((m) => m.default),
+  "otf-to-ttf": () =>
+    import("./converters/otf-to-ttf").then((m) => m.default),
 };
 
 /** All converter IDs, useful for sitemap generation later. */

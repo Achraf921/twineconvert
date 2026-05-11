@@ -26,7 +26,7 @@
 import { describe, it, expect } from "vitest";
 import { run } from "../src/lib/engine/runner";
 import { fileFromText, FIXTURES } from "./fixtures/text-fixtures";
-import { fileFromBytes, makeTinyAse, makeTinyAco, makeTinyDst, makeTinyPes, makeTinyJef, makeTinyExp, makeTinyStl, makeTiny3mf } from "./fixtures/binary-fixtures";
+import { fileFromBytes, makeTinyAse, makeTinyAco, makeTinyDst, makeTinyPes, makeTinyJef, makeTinyExp, makeTinyStl, makeTiny3mf, makeTinyXlsx } from "./fixtures/binary-fixtures";
 
 /** Convert a Blob/File chain. The output of run() is { blob, filename };
  *  this just wraps it back into a File so the next converter accepts it. */
@@ -812,5 +812,146 @@ describe("round-trip: KML ↔ GPX (lossy on polygons)", () => {
     expect(text).toContain("2.2945");
     // The Sample track LineString survives via trk → LineString
     expect(text).toContain("Sample track");
+  });
+});
+
+// ============================================================================
+// JSONL ↔ JSON / CSV
+// ============================================================================
+describe("round-trip: JSONL ↔ JSON", () => {
+  it("JSONL → JSON → JSONL preserves all records and field values", async () => {
+    const original = fileFromText("test.jsonl", FIXTURES.jsonl, "application/jsonl");
+    const json = await chain("jsonl-to-json", original);
+    const back = await chain("json-to-jsonl", json);
+    const text = await back.text();
+    const lines = text.split("\n").filter(Boolean);
+    expect(lines.length).toBe(3);
+    expect(text).toContain('"Alice"');
+    expect(text).toContain('"Bob"');
+    expect(text).toContain('"Carol"');
+    expect(text).toContain('"Paris"');
+  });
+});
+
+describe("round-trip: JSONL ↔ CSV", () => {
+  it("JSONL → CSV → JSONL preserves all records", async () => {
+    const original = fileFromText("test.jsonl", FIXTURES.jsonl, "application/jsonl");
+    const csv = await chain("jsonl-to-csv", original);
+    const back = await chain("csv-to-jsonl", csv);
+    const text = await back.text();
+    expect(text).toContain('"Alice"');
+    expect(text).toContain('"Bob"');
+    expect(text).toContain('"Paris"');
+    expect(text.split("\n").filter(Boolean).length).toBe(3);
+  });
+});
+
+// ============================================================================
+// Config formats
+// ============================================================================
+describe("round-trip: INI ↔ JSON", () => {
+  it("INI → JSON → INI preserves sections and key/value pairs", async () => {
+    const original = fileFromText("config.ini", FIXTURES.ini);
+    const json = await chain("ini-to-json", original);
+    const back = await chain("json-to-ini", json);
+    const text = await back.text();
+    expect(text).toContain("[database]");
+    expect(text).toContain("[server]");
+    expect(text).toContain("localhost");
+    // Both port values should round-trip
+    expect(text).toContain("5432");
+    expect(text).toContain("8080");
+  });
+});
+
+describe("round-trip: .env ↔ JSON", () => {
+  it(".env → JSON → .env preserves all variables", async () => {
+    const original = fileFromText(".env", FIXTURES.env);
+    const json = await chain("env-to-json", original);
+    const back = await chain("json-to-env", json);
+    const text = await back.text();
+    expect(text).toContain("DATABASE_URL=");
+    expect(text).toContain("postgres://localhost:5432/mydb");
+    expect(text).toContain("API_KEY=");
+    expect(text).toContain("sk_test_abc123");
+    expect(text).toContain("NODE_ENV=");
+    expect(text).toContain("PORT=");
+  });
+});
+
+describe("round-trip: YAML ↔ TOML", () => {
+  it("YAML → TOML → YAML preserves nested config", async () => {
+    const original = fileFromText("config.yaml", FIXTURES.yaml, "application/x-yaml");
+    const toml = await chain("yaml-to-toml", original);
+    const back = await chain("toml-to-yaml", toml);
+    const text = await back.text();
+    expect(text).toContain("Alice");
+    expect(text).toContain("admin");
+    expect(text).toContain("editor");
+    expect(text).toContain("dark");
+    expect(text).toContain("notifications");
+  });
+});
+
+describe("JSON5 → JSON (one-way; JSON IS valid JSON5)", () => {
+  it("strips comments and trailing commas while preserving values", async () => {
+    const original = fileFromText("config.json5", FIXTURES.json5, "application/json5");
+    const json = await chain("json5-to-json", original);
+    const text = await json.text();
+    // Output must parse as strict JSON (no comments, double quotes, etc.)
+    const parsed = JSON.parse(text) as Record<string, unknown>;
+    expect(parsed.name).toBe("Alice");
+    expect(parsed.age).toBe(30);
+    expect(parsed.roles).toEqual(["admin", "editor"]);
+    expect(parsed.config).toEqual({ theme: "dark", notifications: true });
+  });
+});
+
+// ============================================================================
+// SBV subtitles
+// ============================================================================
+describe("round-trip: SRT ↔ SBV", () => {
+  it("SRT → SBV → SRT preserves cue text and timestamps", async () => {
+    const original = fileFromText("test.srt", FIXTURES.srt, "application/x-subrip");
+    const sbv = await chain("srt-to-sbv", original);
+    const back = await chain("sbv-to-srt", sbv);
+    const text = await back.text();
+    expect(text).toContain("First caption text");
+    expect(text).toContain("Second caption");
+    expect(text).toContain("00:00:01,000 --> 00:00:04,000");
+    expect(text).toContain("00:00:05,500 --> 00:00:08,250");
+  });
+});
+
+// ============================================================================
+// ODS ↔ XLSX ↔ CSV
+// ============================================================================
+describe("round-trip: ODS ↔ XLSX", () => {
+  it("CSV → ODS → CSV preserves rows and values", async () => {
+    const original = fileFromText("test.csv", FIXTURES.genericCsv, "text/csv");
+    const ods = await chain("csv-to-ods", original);
+    const back = await chain("ods-to-csv", ods);
+    const text = await back.text();
+    expect(text).toContain("Alice");
+    expect(text).toContain("Bob");
+    expect(text).toContain("Carol");
+    expect(text).toContain("Paris");
+    expect(text).toContain("Tokyo");
+  });
+
+  it("XLSX → ODS → XLSX preserves cell values via SheetJS workbook model", async () => {
+    const xlsxBytes = await makeTinyXlsx();
+    const original = fileFromBytes("test.xlsx", xlsxBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    const ods = await chain("xlsx-to-ods", original);
+    const back = await chain("ods-to-xlsx", ods);
+    // Verify the round-tripped XLSX is valid + contains the original data
+    const XLSX = await import("xlsx");
+    const wb = XLSX.read(await back.arrayBuffer(), { type: "array" });
+    const sheet = wb.Sheets[wb.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json<Record<string, unknown>>(sheet);
+    expect(rows.length).toBeGreaterThan(0);
+    const allValues = rows.map((r) => Object.values(r).join(",")).join(",");
+    expect(allValues).toContain("Alice");
+    expect(allValues).toContain("Paris");
   });
 });

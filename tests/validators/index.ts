@@ -654,6 +654,88 @@ export const validateGeoJson: Validator = async ({ blob, minSize = 20 }) => {
   }
 };
 
+export const validateJsonl: Validator = async ({ blob, minSize = 1 }) => {
+  assertMinSize(blob, minSize, "JSONL");
+  const text = await readText(blob);
+  const lines = text.split(/\r?\n/).filter((l) => l.trim());
+  if (lines.length === 0) throw new Error("JSONL has no non-blank lines");
+  // Each non-blank line must be parseable JSON
+  for (let i = 0; i < lines.length; i++) {
+    try {
+      JSON.parse(lines[i]);
+    } catch (e) {
+      throw new Error(
+        `JSONL line ${i + 1} is not valid JSON: ${e instanceof Error ? e.message : String(e)}`,
+      );
+    }
+  }
+};
+
+export const validateIni: Validator = async ({ blob, minSize = 5 }) => {
+  assertMinSize(blob, minSize, "INI");
+  const text = await readText(blob);
+  // Either has a [section] header or at least one key=value line
+  if (!/^\[[^\]\n]+\]/m.test(text) && !/^[A-Za-z_][\w.-]*\s*=/m.test(text)) {
+    throw new Error("INI has no [section] or key=value lines");
+  }
+};
+
+export const validateDotenv: Validator = async ({ blob, minSize = 3 }) => {
+  assertMinSize(blob, minSize, ".env");
+  const text = await readText(blob);
+  // Must have at least one KEY=value line (comments + blanks are fine but
+  // a file with only comments isn't useful as a config)
+  if (!/^[A-Z_][\w.-]*=/m.test(text)) {
+    throw new Error(".env has no KEY=value entries");
+  }
+};
+
+export const validateSbv: Validator = async ({ blob, minSize = 15 }) => {
+  assertMinSize(blob, minSize, "SBV");
+  const text = await readText(blob);
+  // SBV: `H:MM:SS.mmm,H:MM:SS.mmm` per cue header
+  if (!/\d{1,2}:\d{2}:\d{2}\.\d{1,3},\d{1,2}:\d{2}:\d{2}\.\d{1,3}/.test(text)) {
+    throw new Error("SBV has no recognizable timestamp line");
+  }
+};
+
+export const validateOds: Validator = async ({ blob, minSize = 200 }) => {
+  // ODS = ZIP with `mimetype` first entry containing application/vnd.oasis...
+  assertMinSize(blob, minSize, "ODS");
+  const head = await readBytes(blob, 4);
+  assertMagicBytes(head, [0x50, 0x4b, 0x03, 0x04], "ODS (ZIP)");
+  const JSZip = (await import("jszip")).default;
+  const zip = await JSZip.loadAsync(await blob.arrayBuffer());
+  // ODS package must contain content.xml
+  if (!zip.file("content.xml")) {
+    throw new Error("ODS missing content.xml — not a valid OpenDocument package");
+  }
+};
+
+export const validateWoff: Validator = async ({ blob, minSize = 44 }) => {
+  // WOFF: starts with "wOFF" (0x77 0x4F 0x46 0x46)
+  assertMinSize(blob, minSize, "WOFF");
+  const head = await readBytes(blob, 4);
+  assertMagicBytes(head, [0x77, 0x4f, 0x46, 0x46], "WOFF");
+};
+
+export const validateTtf: Validator = async ({ blob, minSize = 40 }) => {
+  // TTF: SFNT version 0x00010000 (TrueType) or "true" / "typ1" / "OTTO"
+  assertMinSize(blob, minSize, "TTF/OTF");
+  const head = await readBytes(blob, 4);
+  const isTrueType =
+    head[0] === 0x00 && head[1] === 0x01 && head[2] === 0x00 && head[3] === 0x00;
+  const isOpenType =
+    head[0] === 0x4f && head[1] === 0x54 && head[2] === 0x54 && head[3] === 0x4f; // OTTO
+  const isTrue =
+    head[0] === 0x74 && head[1] === 0x72 && head[2] === 0x75 && head[3] === 0x65; // "true"
+  if (!isTrueType && !isOpenType && !isTrue) {
+    throw new Error(
+      `Font missing SFNT signature (got bytes 0x${head[0]?.toString(16)} 0x${head[1]?.toString(16)} 0x${head[2]?.toString(16)} 0x${head[3]?.toString(16)})`,
+    );
+  }
+};
+
 /**
  * Validate `md5sum`/`shasum` checksum line format: `<hex>  <filename>\n`.
  * Hex length determines algorithm — 32=md5, 40=sha1, 64=sha256, 128=sha512.
@@ -756,6 +838,22 @@ const BY_MIME: Record<string, Validator> = {
   "application/toml": validateToml,
   "text/vtt": validateVtt,
   "application/x-subrip": validateSrt,
+  "text/sbv": validateSbv,
+
+  "application/jsonl": validateJsonl,
+  "application/x-ndjson": validateJsonl,
+  "application/x-ini": validateIni,
+  "application/json5": validateJson,
+
+  "application/vnd.oasis.opendocument.spreadsheet": validateOds,
+  "application/vnd.oasis.opendocument.spreadsheet-template": validateOds,
+
+  "font/ttf": validateTtf,
+  "font/otf": validateTtf,
+  "application/x-font-ttf": validateTtf,
+  "application/x-font-otf": validateTtf,
+  "font/woff": validateWoff,
+  "application/font-woff": validateWoff,
 
   // TSV: validate as a plain-text file with at least one tab character
   // somewhere (otherwise it's degenerate single-column data).
@@ -785,6 +883,15 @@ const BY_EXT: Record<string, Validator> = {
   kml: validateKml,
   gpx: validateGpx,
   geojson: validateGeoJson,
+  jsonl: validateJsonl,
+  ndjson: validateJsonl,
+  ini: validateIni,
+  env: validateDotenv,
+  sbv: validateSbv,
+  ods: validateOds,
+  ttf: validateTtf,
+  otf: validateTtf,
+  woff: validateWoff,
 };
 
 /**

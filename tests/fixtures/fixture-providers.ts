@@ -28,6 +28,7 @@ import {
   makeTinyStl,
   makeTinyDocx,
   makeTinyXlsx,
+  makeTinyOds,
   makeTinyEpub,
   makeTiny3mf,
   makeTinyMidi,
@@ -404,6 +405,39 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "geojson-to-kml": { provider: () => text("test.geojson", F.geojson, "application/geo+json"), env: "node" },
   "gpx-to-geojson": { provider: () => text("test.gpx", F.gpx, "application/gpx+xml"), env: "node" },
   "geojson-to-gpx": { provider: () => text("test.geojson", F.geojson, "application/geo+json"), env: "node" },
+
+  // ===== JSONL (NDJSON) family =====
+  "jsonl-to-json": { provider: () => text("test.jsonl", F.jsonl, "application/jsonl"), env: "node" },
+  "json-to-jsonl": { provider: () => text("test.json", F.jsonArray, "application/json"), env: "node" },
+  "jsonl-to-csv":  { provider: () => text("test.jsonl", F.jsonl, "application/jsonl"), env: "node" },
+  "csv-to-jsonl":  { provider: () => text("test.csv", F.genericCsv, "text/csv"), env: "node" },
+
+  // ===== Config formats: INI, .env, YAML↔TOML direct, JSON5 =====
+  "ini-to-json":   { provider: () => text("config.ini", F.ini, "application/x-ini"), env: "node" },
+  "json-to-ini":   { provider: () => text("config.json", `{"database":{"host":"localhost","port":5432},"server":{"port":8080}}`, "application/json"), env: "node" },
+  "env-to-json":   { provider: () => text(".env", F.env, "text/plain"), env: "node" },
+  "json-to-env":   { provider: () => text("config.json", `{"DATABASE_URL":"postgres://localhost:5432/db","API_KEY":"sk_test_abc","NODE_ENV":"production"}`, "application/json"), env: "node" },
+  "yaml-to-toml":  { provider: () => text("config.yaml", F.yaml, "application/x-yaml"), env: "node" },
+  "toml-to-yaml":  { provider: () => text("config.toml", F.toml, "application/toml"), env: "node" },
+  "json5-to-json": { provider: () => text("config.json5", F.json5, "application/json5"), env: "node" },
+
+  // ===== SBV subtitles =====
+  "srt-to-sbv": { provider: () => text("test.srt", F.srt, "application/x-subrip"), env: "node" },
+  "sbv-to-srt": { provider: () => text("test.sbv", F.sbv, "text/sbv"), env: "node" },
+
+  // ===== ODS spreadsheets (SheetJS handles ODS read/write natively) =====
+  "ods-to-csv":  { provider: async () => fileFromBytes("test.ods", await makeTinyOds(), "application/vnd.oasis.opendocument.spreadsheet"), env: "node" },
+  "ods-to-xlsx": { provider: async () => fileFromBytes("test.ods", await makeTinyOds(), "application/vnd.oasis.opendocument.spreadsheet"), env: "node" },
+  "csv-to-ods":  { provider: () => text("test.csv", F.genericCsv, "text/csv"), env: "node" },
+  "xlsx-to-ods": { provider: async () => fileFromBytes("test.xlsx", await makeTinyXlsx(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"), env: "node" },
+
+  // ===== Web fonts (need committed real-font fixtures; skip in CI for now) =====
+  // fonteditor-core needs an actual font file to round-trip — generating a
+  // valid SFNT from scratch is non-trivial. These get tested manually until
+  // we commit a tiny CC0 font fixture.
+  "ttf-to-woff": { provider: () => Promise.reject(new Error("ttf fixture pending")), env: "browser" },
+  "woff-to-ttf": { provider: () => Promise.reject(new Error("woff fixture pending")), env: "browser" },
+  "otf-to-ttf":  { provider: () => Promise.reject(new Error("otf fixture pending")), env: "browser" },
 };
 
 /** True if we have any fixture for this id (even if it requires browser). */

@@ -38,6 +38,9 @@ export interface Cue {
 
 const TIMESTAMP_SRT = /^(\d{1,2}):(\d{2}):(\d{2}),(\d{1,3})\s*-->\s*(\d{1,2}):(\d{2}):(\d{2}),(\d{1,3})/;
 const TIMESTAMP_VTT = /^(\d{1,2}):(\d{2}):(\d{2})\.(\d{1,3})\s*-->\s*(\d{1,2}):(\d{2}):(\d{2})\.(\d{1,3})/;
+// SBV (YouTube SubViewer): `H:MM:SS.mmm,H:MM:SS.mmm` — comma between start
+// and end (no `-->`), single-digit hour allowed, `.` decimal like VTT.
+const TIMESTAMP_SBV = /^(\d{1,2}):(\d{2}):(\d{2})\.(\d{1,3}),(\d{1,2}):(\d{2}):(\d{2})\.(\d{1,3})/;
 
 function partsToMs(h: string, m: string, s: string, ms: string): number {
   return (
@@ -80,14 +83,16 @@ export function parseSubtitle(text: string): Cue[] {
     let timestampLine = line;
     let match =
       timestampLine.match(TIMESTAMP_SRT) ||
-      timestampLine.match(TIMESTAMP_VTT);
+      timestampLine.match(TIMESTAMP_VTT) ||
+      timestampLine.match(TIMESTAMP_SBV);
 
     // SRT often puts the index on its own line above the timestamp.
     if (!match && /^\d+$/.test(line) && i + 1 < lines.length) {
       timestampLine = lines[i + 1].trim();
       match =
         timestampLine.match(TIMESTAMP_SRT) ||
-        timestampLine.match(TIMESTAMP_VTT);
+        timestampLine.match(TIMESTAMP_VTT) ||
+        timestampLine.match(TIMESTAMP_SBV);
       if (match) i++;
     }
 
@@ -149,6 +154,25 @@ export function buildVtt(cues: Cue[]): string {
   for (const c of cues) {
     blocks.push(
       `${msToVttTimestamp(c.startMs)} --> ${msToVttTimestamp(c.endMs)}\n${c.text}\n`,
+    );
+  }
+  return blocks.join("\n");
+}
+
+/** SBV uses single-digit hours like `0:00:01.000` (YouTube convention). */
+function msToSbvTimestamp(ms: number): string {
+  const h = Math.floor(ms / 3600_000);
+  const m = Math.floor((ms % 3600_000) / 60_000);
+  const s = Math.floor((ms % 60_000) / 1_000);
+  const millis = ms % 1_000;
+  return `${h}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}.${String(millis).padStart(3, "0")}`;
+}
+
+export function buildSbv(cues: Cue[]): string {
+  const blocks: string[] = [];
+  for (const c of cues) {
+    blocks.push(
+      `${msToSbvTimestamp(c.startMs)},${msToSbvTimestamp(c.endMs)}\n${c.text}\n`,
     );
   }
   return blocks.join("\n");

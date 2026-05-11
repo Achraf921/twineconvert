@@ -157,6 +157,18 @@ const FORMATS = {
   sha512: { kind: "checksum", lossless: false, family: "integrity" },
   // `file` is the synthetic "any input" used by file-to-<hash>
   file: { kind: "any", lossless: false, family: "any" },
+  // ==== Streaming JSON / config / spreadsheet variants ====
+  jsonl: { kind: "data", lossless: true, family: "data" }, // line-delimited JSON
+  json5: { kind: "data", lossless: true, family: "data" }, // JSON superset
+  ini: { kind: "data", lossless: true, family: "config" },
+  env: { kind: "data", lossless: true, family: "config" }, // dotenv
+  ods: { kind: "data", lossless: true, family: "data" }, // OpenDocument spreadsheet
+  // ==== Subtitles (SBV adds to existing srt/vtt family) ====
+  sbv: { kind: "data", lossless: true, family: "subtitle" },
+  // ==== Web fonts ====
+  ttf: { kind: "font", lossless: true, family: "font" },
+  otf: { kind: "font", lossless: true, family: "font" },
+  woff: { kind: "font", lossless: true, family: "font" },
 };
 
 // --------------------------------------------------------------------

@@ -160,6 +160,22 @@ export async function makeTinyXlsx(): Promise<Uint8Array> {
   return out instanceof Uint8Array ? out : new Uint8Array(out as ArrayBuffer);
 }
 
+/** A minimal valid ODS (OpenDocument spreadsheet). Same in-memory workbook
+ *  as makeTinyXlsx() — SheetJS handles both formats from a single book model. */
+export async function makeTinyOds(): Promise<Uint8Array> {
+  const XLSXModule = await import("xlsx");
+  const XLSX = XLSXModule.default ?? XLSXModule;
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.aoa_to_sheet([
+    ["name", "age", "city"],
+    ["Alice", 30, "Paris"],
+    ["Bob", 25, "London"],
+  ]);
+  XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+  const out = XLSX.write(wb, { type: "array", bookType: "ods" });
+  return out instanceof Uint8Array ? out : new Uint8Array(out as ArrayBuffer);
+}
+
 /** A minimal valid EPUB. Built by hand-assembling the zip structure. */
 export async function makeTinyEpub(): Promise<Uint8Array> {
   const JSZip = (await import("jszip")).default;
