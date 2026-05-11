@@ -36,7 +36,15 @@ async function fetchSitemapUrls() {
   const res = await fetch("https://twineconvert.com/sitemap.xml");
   if (!res.ok) throw new Error(`sitemap fetch failed: ${res.status}`);
   const xml = await res.text();
-  return [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+  return [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)]
+    .map((m) => m[1])
+    // Indexing API does literal prefix matching against the verified URL
+    // prefix property in Search Console (which always ends in `/`). A
+    // bare URL with no path ("https://twineconvert.com") therefore
+    // doesn't match the property "https://twineconvert.com/" and gets a
+    // "Permission denied: Failed to verify the URL ownership" error.
+    // Normalize bare URLs to end in `/`.
+    .map((u) => (/^https?:\/\/[^\/]+$/.test(u) ? `${u}/` : u));
 }
 
 // Track which URLs succeeded so we can resume on day 2 without burning
