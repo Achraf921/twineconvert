@@ -17,7 +17,9 @@ const htmlTableToCsv: Converter = {
     try {
       const Papa = (await import("papaparse")).default;
       const table = parseHtmlTable(await input.text());
-      csv = Papa.unparse(tableToCsvRows(table));
+      // Force `\n` line endings — see markdown-table-to-csv for the CRLF/LF
+      // mismatch bug this avoids.
+      csv = Papa.unparse(tableToCsvRows(table), { newline: "\n" });
     } catch (err) {
       throw new ConvertFailedError(
         err instanceof Error ? err.message : "Could not convert HTML table to CSV",

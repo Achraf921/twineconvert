@@ -17,10 +17,13 @@ const sqlToCsv: Converter = {
     try {
       const Papa = (await import("papaparse")).default;
       const table = parseSqlDump(await input.text());
-      csv = Papa.unparse({
-        fields: table.columns,
-        data: table.rows.map((r) => r.map((v) => (v == null ? "" : v))),
-      });
+      csv = Papa.unparse(
+        {
+          fields: table.columns,
+          data: table.rows.map((r) => r.map((v) => (v == null ? "" : v))),
+        },
+        { newline: "\n" }, // see markdown-table-to-csv for the CRLF/LF bug
+      );
     } catch (err) {
       throw new ConvertFailedError(
         err instanceof Error ? err.message : "Could not convert SQL to CSV",

@@ -35,7 +35,10 @@ const jsonlToCsv: Converter = {
           return set;
         }, new Set<string>()),
       );
-      csv = Papa.unparse({ fields: columns, data: records.map((r) => columns.map((c) => r[c] ?? "")) });
+      csv = Papa.unparse(
+        { fields: columns, data: records.map((r) => columns.map((c) => r[c] ?? "")) },
+        { newline: "\n" }, // see markdown-table-to-csv for the CRLF/LF bug
+      );
     } catch (err) {
       throw new ConvertFailedError(
         err instanceof Error ? err.message : "Could not convert JSONL to CSV",

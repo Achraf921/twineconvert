@@ -17,7 +17,10 @@ const markdownTableToCsv: Converter = {
     try {
       const Papa = (await import("papaparse")).default;
       const table = parseMarkdownTable(await input.text());
-      csv = Papa.unparse(tableToCsvRows(table));
+      // Force `\n` line endings so the trailing newline below doesn't
+      // mismatch Papa.unparse's default `\r\n` and corrupt the last cell
+      // when re-parsed (CRLF vs LF round-trip bug).
+      csv = Papa.unparse(tableToCsvRows(table), { newline: "\n" });
     } catch (err) {
       throw new ConvertFailedError(
         err instanceof Error ? err.message : "Could not convert Markdown table to CSV",
