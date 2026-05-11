@@ -50,3 +50,5 @@ next-env.d.ts
 /.indexing-state.json
 # Tutorial build artifacts (large + contains generated output)
 /tutorials/output/
+/tutorials/assets/music/
+/tutorials/assets/icons/

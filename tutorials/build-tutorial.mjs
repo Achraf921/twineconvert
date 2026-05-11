@@ -1,39 +1,37 @@
 /**
- * End-to-end tutorial video builder.
+ * End-to-end tutorial video builder, v3.
  *
- * Pipeline:
- *   1. Read script JSON (segments with voice text + overlay text + screenshot ref)
- *   2. Generate one voice MP3 per segment via ElevenLabs API
- *   3. Capture screenshots from twineconvert.com via Playwright (homepage,
- *      tool page in idle/converting/done states)
- *   4. Build per-segment video clips with ffmpeg: screenshot with subtle
- *      Ken Burns zoom + bold animated text overlay + that segment's audio
- *   5. Concat all segment clips into final tutorial MP4
- *   6. Generate Fireship-style thumbnail PNG
- *
- * Output:
- *   tutorials/output/<tool>.mp4
- *   tutorials/output/<tool>-thumb.png
+ * v3 changes vs v2:
+ *   - Scene-based composition instead of "screenshot in background"
+ *     - Dark Fireship-style backgrounds with iconography
+ *     - Per-scene templates: logo-text, fail-list, logo-row, warning,
+ *       centered-headline, cta, demo-recording
+ *   - Real Playwright recording for the demo segment only (the only
+ *     place where actually showing the UI matters)
+ *   - Background music ducked under voice via ffmpeg amix
+ *   - More cuts (9 segments instead of 6), shorter each
+ *   - Crossfade transitions kept from v2
  *
  * Usage:
  *   ELEVENLABS_API_KEY=... ELEVENLABS_VOICE_ID=... \
+ *     [MUSIC_PATH=tutorials/assets/music/bg.mp3] \
  *     node tutorials/build-tutorial.mjs heic-to-jpg
  */
 
 import { execFileSync } from "node:child_process";
-import { writeFileSync, readFileSync, mkdirSync, existsSync } from "node:fs";
+import { writeFileSync, readFileSync, mkdirSync, existsSync, statSync, readdirSync } from "node:fs";
 import { resolve, join } from "node:path";
 import { chromium } from "playwright";
 
 const tool = process.argv[2];
 if (!tool) {
   console.error("Usage: node build-tutorial.mjs <tool-id>");
-  console.error("Example: node build-tutorial.mjs heic-to-jpg");
   process.exit(1);
 }
 
 const KEY = process.env.ELEVENLABS_API_KEY;
 const VOICE = process.env.ELEVENLABS_VOICE_ID;
+const MUSIC_PATH = process.env.MUSIC_PATH;
 if (!KEY || !VOICE) {
   console.error("Set ELEVENLABS_API_KEY and ELEVENLABS_VOICE_ID env vars.");
   process.exit(1);
@@ -42,6 +40,8 @@ if (!KEY || !VOICE) {
 const SCRIPT_PATH = resolve(`tutorials/scripts/${tool}.json`);
 const OUT_DIR = resolve("tutorials/output");
 const WORK_DIR = resolve(`tutorials/output/.work-${tool}`);
+const ICONS_DIR = resolve("tutorials/assets/icons");
+const HEIC_FIXTURE = resolve("tests/browser/fixtures/sample.heic");
 
 if (!existsSync(SCRIPT_PATH)) {
   console.error(`Script not found: ${SCRIPT_PATH}`);
@@ -52,18 +52,181 @@ mkdirSync(OUT_DIR, { recursive: true });
 mkdirSync(WORK_DIR, { recursive: true });
 
 const script = JSON.parse(readFileSync(SCRIPT_PATH, "utf8"));
-console.log(`Building tutorial: ${script.title}`);
-console.log(`  ${script.segments.length} segments`);
+console.log(`Building: ${script.title}  (${script.segments.length} segments)`);
 
-function run(cmd, args, opts = {}) {
-  return execFileSync(cmd, args, { encoding: "utf8", stdio: "pipe", ...opts });
+function run(cmd, args) {
+  return execFileSync(cmd, args, { encoding: "utf8", stdio: "pipe" });
+}
+
+function probeDuration(path) {
+  return parseFloat(
+    run("ffprobe", [
+      "-i",
+      path,
+      "-show_entries",
+      "format=duration",
+      "-v",
+      "quiet",
+      "-of",
+      "csv=p=0",
+    ]).trim(),
+  );
+}
+
+function iconB64(name) {
+  const p = join(ICONS_DIR, name);
+  if (!existsSync(p)) return null;
+  return readFileSync(p).toString("base64");
 }
 
 // ============================================================================
-// Step 1: generate voice audio per segment
+// Scene templates (HTML+CSS, rendered to 1920x1080 PNG via Playwright)
 // ============================================================================
 
-console.log("\n[1/5] generating voice audio (ElevenLabs)...");
+const COMMON_STYLES = `
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;700;800;900&display=swap');
+  html, body { margin: 0; padding: 0; }
+  body {
+    width: 1920px; height: 1080px;
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: radial-gradient(ellipse at top, #1a1024 0%, #0a0710 60%, #050308 100%);
+    color: white;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+  body::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(224, 41, 123, 0.18) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(157, 78, 221, 0.12) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  body::after {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+  .stage { position: relative; z-index: 2; text-align: center; padding: 60px; max-width: 1700px; }
+  .accent { color: #E0297B; }
+  .h1 { font-weight: 900; font-size: 156px; letter-spacing: -0.04em; line-height: 0.98; }
+  .h2 { font-weight: 900; font-size: 112px; letter-spacing: -0.04em; line-height: 1.0; }
+  .sub { font-weight: 500; font-size: 44px; color: rgba(255,255,255,0.65); margin-top: 36px; letter-spacing: -0.01em; }
+  .logo-img { width: 200px; height: 200px; object-fit: contain; border-radius: 36px;
+    background: rgba(255,255,255,0.06); padding: 28px; box-sizing: border-box;
+    box-shadow: 0 30px 80px -20px rgba(224, 41, 123, 0.4);
+    border: 1px solid rgba(255,255,255,0.08); }
+  .logo-label { font-weight: 700; font-size: 28px; margin-top: 20px; color: rgba(255,255,255,0.7); }
+  .pill { display: inline-flex; align-items: center; gap: 16px;
+    background: linear-gradient(180deg, #E0297B 0%, #B01368 100%); color: white;
+    padding: 18px 40px; border-radius: 999px; font-weight: 800; font-size: 36px;
+    box-shadow: 0 20px 60px -10px rgba(224, 41, 123, 0.5); letter-spacing: -0.01em; }
+`;
+
+function renderScene(scene) {
+  const t = scene.type;
+  if (t === "logo-text") {
+    const logos = scene.logos
+      .map((l) => {
+        const b64 = iconB64(l.src);
+        return `<div style="display:flex;flex-direction:column;align-items:center">
+            <img class="logo-img" src="data:image/png;base64,${b64}">
+            <div class="logo-label">${l.label}</div>
+          </div>`;
+      })
+      .join("");
+    return `
+      <div class="stage">
+        <div style="display:flex;gap:80px;justify-content:center;align-items:center;margin-bottom:60px">
+          ${logos}
+        </div>
+        <div class="h1 accent">${scene.headline}</div>
+        ${scene.sub ? `<div class="sub">${scene.sub}</div>` : ""}
+      </div>
+    `;
+  }
+
+  if (t === "fail-list") {
+    const items = scene.items
+      .map(
+        (it) =>
+          `<li style="display:flex;align-items:center;gap:32px;font-size:64px;font-weight:700;margin:24px 0;letter-spacing:-0.02em">
+             <span style="color:#E0297B;font-size:80px;line-height:1">×</span>
+             <span>${it}</span>
+           </li>`,
+      )
+      .join("");
+    return `
+      <div class="stage" style="text-align:left;max-width:1300px">
+        <div class="h2" style="margin-bottom:40px">${scene.headline}</div>
+        <ul style="list-style:none;padding:0;margin:0">${items}</ul>
+      </div>
+    `;
+  }
+
+  if (t === "logo-row") {
+    const logos = scene.logos
+      .map(
+        (l) => `<div style="display:flex;flex-direction:column;align-items:center">
+            <img class="logo-img" style="width:180px;height:180px;padding:22px"
+                 src="data:image/png;base64,${iconB64(l.src)}">
+            <div class="logo-label">${l.label}</div>
+          </div>`,
+      )
+      .join("");
+    return `
+      <div class="stage">
+        <div class="h2" style="margin-bottom:80px">${scene.headline}</div>
+        <div style="display:flex;gap:90px;justify-content:center;align-items:flex-start">${logos}</div>
+      </div>
+    `;
+  }
+
+  if (t === "warning") {
+    return `
+      <div class="stage" style="text-align:center">
+        <div style="font-size:240px;line-height:1;margin-bottom:40px">⚠️</div>
+        <div class="h1 accent" style="white-space:pre-line">${scene.headline}</div>
+      </div>
+    `;
+  }
+
+  if (t === "centered-headline") {
+    return `
+      <div class="stage">
+        <div class="h1 accent">${scene.headline}</div>
+        ${scene.sub ? `<div class="sub">${scene.sub}</div>` : ""}
+      </div>
+    `;
+  }
+
+  if (t === "cta") {
+    const b64 = iconB64("twineconvert.png");
+    return `
+      <div class="stage">
+        <img class="logo-img" style="width:220px;height:220px;margin-bottom:50px"
+             src="data:image/png;base64,${b64}">
+        <div class="h2" style="margin-bottom:30px">${scene.tagline}</div>
+        <div class="pill" style="font-size:44px;padding:24px 56px;">${scene.url}</div>
+      </div>
+    `;
+  }
+
+  // demo-recording handled separately (uses live MP4)
+  throw new Error(`Unknown scene type: ${t}`);
+}
+
+// ============================================================================
+// Step 1: voice audio per segment
+// ============================================================================
+
+console.log("\n[1/7] generating voice audio (ElevenLabs)...");
 for (let i = 0; i < script.segments.length; i++) {
   const seg = script.segments[i];
   const audioPath = join(WORK_DIR, `audio-${i}.mp3`);
@@ -75,277 +238,332 @@ for (let i = 0; i < script.segments.length; i++) {
     `https://api.elevenlabs.io/v1/text-to-speech/${VOICE}`,
     {
       method: "POST",
-      headers: {
-        "xi-api-key": KEY,
-        "Content-Type": "application/json",
-      },
+      headers: { "xi-api-key": KEY, "Content-Type": "application/json" },
       body: JSON.stringify({
         text: seg.voice,
         model_id: "eleven_multilingual_v2",
         voice_settings: {
-          stability: 0.5,
-          similarity_boost: 0.75,
-          style: 0.4,
+          stability: 0.45,
+          similarity_boost: 0.8,
+          style: 0.55,
           use_speaker_boost: true,
         },
       }),
     },
   );
-  if (!res.ok) {
-    throw new Error(`ElevenLabs ${res.status}: ${await res.text()}`);
-  }
+  if (!res.ok) throw new Error(`ElevenLabs ${res.status}: ${await res.text()}`);
   const buf = Buffer.from(await res.arrayBuffer());
   writeFileSync(audioPath, buf);
   console.log(`  segment ${i}: ${buf.length} bytes`);
 }
 
 // ============================================================================
-// Step 2: capture screenshots from twineconvert.com
+// Step 2: live conversion recording (Playwright) for demo segments
 // ============================================================================
 
-console.log("\n[2/5] capturing screenshots (Playwright)...");
-const SCREENSHOT_TYPES = new Set(script.segments.map((s) => s.screenshot));
-const screenshotPaths = {};
+const hasDemoSegment = script.segments.some((s) => s.scene.type === "demo-recording");
+let recordingPath = null;
 
-const browser = await chromium.launch();
-const ctx = await browser.newContext({ viewport: { width: 1920, height: 1080 } });
-const page = await ctx.newPage();
-
-if (SCREENSHOT_TYPES.has("homepage")) {
-  await page.goto("https://twineconvert.com/", { waitUntil: "networkidle" });
-  const path = join(WORK_DIR, "shot-homepage.png");
-  await page.screenshot({ path, fullPage: false });
-  screenshotPaths.homepage = path;
-  console.log(`  homepage: captured`);
-}
-
-if (
-  SCREENSHOT_TYPES.has("tool-idle") ||
-  SCREENSHOT_TYPES.has("tool-converting") ||
-  SCREENSHOT_TYPES.has("tool-done")
-) {
-  await page.goto(`https://twineconvert.com/${tool}`, {
-    waitUntil: "networkidle",
+if (hasDemoSegment) {
+  console.log("\n[2/7] recording live conversion (Playwright)...");
+  const browser = await chromium.launch();
+  const ctx = await browser.newContext({
+    viewport: { width: 1920, height: 1080 },
+    recordVideo: { dir: WORK_DIR, size: { width: 1920, height: 1080 } },
   });
-  await page.waitForTimeout(500);
-  if (SCREENSHOT_TYPES.has("tool-idle")) {
-    const path = join(WORK_DIR, "shot-tool-idle.png");
-    await page.screenshot({ path, fullPage: false });
-    screenshotPaths["tool-idle"] = path;
-    console.log(`  tool-idle: captured`);
-  }
-  // For converting/done states we'd ideally drop a real file and capture
-  // the live UI mid-conversion. Simpler for the prototype: reuse the idle
-  // shot with different overlays. The video viewer's eye won't track that
-  // closely in a 60-90 second tutorial.
-  if (SCREENSHOT_TYPES.has("tool-converting")) {
-    screenshotPaths["tool-converting"] = screenshotPaths["tool-idle"];
-  }
-  if (SCREENSHOT_TYPES.has("tool-done")) {
-    screenshotPaths["tool-done"] = screenshotPaths["tool-idle"];
-  }
-}
+  const page = await ctx.newPage();
+  await page.goto(`https://twineconvert.com/${tool}`, { waitUntil: "networkidle" });
+  await page.waitForTimeout(800);
+  const fileInput = await page.$('input[type="file"]');
+  if (!fileInput) throw new Error("no file input on tool page");
+  await fileInput.setInputFiles(HEIC_FIXTURE);
+  await page.waitForTimeout(1200);
+  const convertBtn = page.locator('button:has-text("Convert")').first();
+  if (await convertBtn.isVisible()) await convertBtn.click();
+  await page
+    .waitForSelector('button:has-text("Download")', { timeout: 30000 })
+    .catch(() => {});
+  await page.waitForTimeout(1500);
+  await page.close();
+  await ctx.close();
+  await browser.close();
 
-// Render each segment's overlay text as a transparent PNG via Playwright.
-// Avoids relying on ffmpeg's drawtext filter (Homebrew ffmpeg ships
-// without freetype support). Bonus: full CSS typography control.
-console.log("\n[2b/5] rendering text overlays as PNGs...");
-const overlayPaths = [];
-for (let i = 0; i < script.segments.length; i++) {
-  const seg = script.segments[i];
-  const html = `<!DOCTYPE html><html><head><style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap');
-    html, body { margin: 0; padding: 0; background: transparent; font-family: 'Inter', system-ui, -apple-system, sans-serif; }
-    body { width: 1920px; height: 1080px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 80px; box-sizing: border-box; }
-    .overlay {
-      background: linear-gradient(180deg, #E0297B 0%, #C2185B 100%);
-      color: white;
-      font-weight: 900;
-      font-size: 88px;
-      letter-spacing: -0.03em;
-      padding: 28px 56px;
-      border-radius: 16px;
-      box-shadow: 0 30px 80px -10px rgba(224, 41, 123, 0.6);
-      text-align: center;
-      line-height: 1.05;
-      max-width: 1700px;
-      text-shadow: 0 4px 20px rgba(0,0,0,0.3);
-    }
-  </style></head><body>
-    <div class="overlay">${seg.overlay.replace(/</g, "&lt;")}</div>
-  </body></html>`;
-  const overlayPage = await ctx.newPage();
-  await overlayPage.setViewportSize({ width: 1920, height: 1080 });
-  await overlayPage.setContent(html);
-  await overlayPage.waitForTimeout(500); // let webfont load
-  const overlayPath = join(WORK_DIR, `overlay-${i}.png`);
-  await overlayPage.screenshot({
-    path: overlayPath,
-    fullPage: false,
-    omitBackground: true,
-  });
-  overlayPaths.push(overlayPath);
-  await overlayPage.close();
-  console.log(`  overlay ${i}: rendered`);
-}
-
-await browser.close();
-
-// ============================================================================
-// Step 3: build per-segment video clips
-// ============================================================================
-
-console.log("\n[3/5] building per-segment clips (ffmpeg)...");
-const segmentClips = [];
-for (let i = 0; i < script.segments.length; i++) {
-  const seg = script.segments[i];
-  const audioPath = join(WORK_DIR, `audio-${i}.mp3`);
-  const screenshotPath = screenshotPaths[seg.screenshot];
-  const clipPath = join(WORK_DIR, `clip-${i}.mp4`);
-
-  // Get audio duration so the video matches
-  const probeOut = run("ffprobe", [
-    "-i",
-    audioPath,
-    "-show_entries",
-    "format=duration",
-    "-v",
-    "quiet",
-    "-of",
-    "csv=p=0",
-  ]);
-  const duration = parseFloat(probeOut.trim());
-  console.log(`  segment ${i}: ${duration.toFixed(2)}s, "${seg.overlay}"`);
-
-  const fps = 30;
-  const totalFrames = Math.ceil(duration * fps);
-  const overlayPath = overlayPaths[i];
-
-  // Filter graph:
-  //   [0:v] = base screenshot, scale to 1920x1080, slow Ken Burns zoom
-  //   [1:v] = transparent overlay PNG
-  //   composite via overlay filter
-  const filterComplex = [
-    `[0:v]scale=1920:1080,setsar=1,zoompan=z='min(zoom+0.0008,1.05)':d=${totalFrames}:s=1920x1080:fps=${fps}[zoomed]`,
-    `[zoomed][1:v]overlay=0:0:format=auto[final]`,
-  ].join(";");
-
+  const webm = readdirSync(WORK_DIR).find((f) => f.endsWith(".webm"));
+  if (!webm) throw new Error("recording webm not found");
+  recordingPath = join(WORK_DIR, "conversion-recording.mp4");
   run("ffmpeg", [
     "-y",
-    "-loop",
-    "1",
     "-i",
-    screenshotPath,
-    "-i",
-    overlayPath,
-    "-i",
-    audioPath,
-    "-filter_complex",
-    filterComplex,
-    "-map",
-    "[final]",
-    "-map",
-    "2:a",
+    join(WORK_DIR, webm),
     "-c:v",
     "libx264",
     "-preset",
     "fast",
     "-crf",
     "20",
-    "-c:a",
-    "aac",
-    "-b:a",
-    "192k",
     "-pix_fmt",
     "yuv420p",
-    "-shortest",
-    "-r",
-    String(fps),
-    clipPath,
+    recordingPath,
   ]);
+  console.log(`  recording: ${probeDuration(recordingPath).toFixed(2)}s`);
+}
 
+// ============================================================================
+// Step 3: render scene PNGs (one per segment, except demo segments)
+// ============================================================================
+
+console.log("\n[3/7] rendering scene PNGs (Playwright)...");
+const scenePaths = [];
+const sceneBrowser = await chromium.launch();
+const sceneCtx = await sceneBrowser.newContext({
+  viewport: { width: 1920, height: 1080 },
+});
+for (let i = 0; i < script.segments.length; i++) {
+  const seg = script.segments[i];
+  if (seg.scene.type === "demo-recording") {
+    scenePaths.push(null);
+    console.log(`  segment ${i}: demo (uses recording)`);
+    continue;
+  }
+  const html = `<!DOCTYPE html><html><head><style>${COMMON_STYLES}</style></head><body>${renderScene(seg.scene)}</body></html>`;
+  const page = await sceneCtx.newPage();
+  await page.setContent(html);
+  await page.waitForTimeout(700);
+  const scenePath = join(WORK_DIR, `scene-${i}.png`);
+  await page.screenshot({ path: scenePath, fullPage: false });
+  scenePaths.push(scenePath);
+  await page.close();
+  console.log(`  segment ${i}: ${seg.scene.type} rendered`);
+}
+await sceneCtx.close();
+await sceneBrowser.close();
+
+// ============================================================================
+// Step 4: per-segment video clips
+// ============================================================================
+
+console.log("\n[4/7] building per-segment clips...");
+const segmentClips = [];
+for (let i = 0; i < script.segments.length; i++) {
+  const seg = script.segments[i];
+  const audioPath = join(WORK_DIR, `audio-${i}.mp3`);
+  const clipPath = join(WORK_DIR, `clip-${i}.mp4`);
+  const duration = probeDuration(audioPath);
+  const fps = 30;
+  const totalFrames = Math.ceil(duration * fps);
+
+  if (seg.scene.type === "demo-recording" && recordingPath) {
+    // Use the live recording. Trim to audio duration; scale; overlay a
+    // small "live demo" pill.
+    const filterComplex = [
+      `[0:v]scale=1920:1080,setsar=1,trim=duration=${duration},setpts=PTS-STARTPTS[base]`,
+      `color=c=#E0297B@0.95:s=380x68:d=${duration},format=rgba,drawtext=text='LIVE DEMO':x=(w-text_w)/2:y=(h-text_h)/2:fontcolor=white:fontsize=32[pill]`,
+    ];
+    // drawtext may fail on this Homebrew build; fall back to no pill.
+    let useTextPill = false;
+    try {
+      run("ffmpeg", ["-y", "-f", "lavfi", "-i", "color=c=red:s=10x10:d=0.1", "-vf", "drawtext=text=test:x=0:y=0", "-frames:v", "1", "/tmp/.drawtext-test.png"]);
+      useTextPill = true;
+    } catch {
+      useTextPill = false;
+    }
+    const finalGraph = useTextPill
+      ? filterComplex.concat([`[base][pill]overlay=x=W-w-60:y=60:format=auto[final]`]).join(";")
+      : `[0:v]scale=1920:1080,setsar=1,trim=duration=${duration},setpts=PTS-STARTPTS[final]`;
+    run("ffmpeg", [
+      "-y",
+      "-i",
+      recordingPath,
+      "-i",
+      audioPath,
+      "-filter_complex",
+      finalGraph,
+      "-map",
+      "[final]",
+      "-map",
+      "1:a",
+      "-c:v",
+      "libx264",
+      "-preset",
+      "fast",
+      "-crf",
+      "20",
+      "-c:a",
+      "aac",
+      "-b:a",
+      "192k",
+      "-pix_fmt",
+      "yuv420p",
+      "-shortest",
+      "-r",
+      String(fps),
+      clipPath,
+    ]);
+    console.log(`  segment ${i}: demo  ${duration.toFixed(2)}s`);
+  } else {
+    // Scene PNG: Ken Burns zoom-in (different starting zoom per segment
+    // adds visual variety).
+    const startZoom = 1.0 + (i % 3) * 0.02;
+    const endZoom = startZoom + 0.08;
+    const filterComplex = `[0:v]scale=1920:1080,setsar=1,zoompan=z='if(lte(zoom,${startZoom}),${startZoom},min(zoom+0.0015,${endZoom}))':d=${totalFrames}:s=1920x1080:fps=${fps}[final]`;
+    run("ffmpeg", [
+      "-y",
+      "-loop",
+      "1",
+      "-i",
+      scenePaths[i],
+      "-i",
+      audioPath,
+      "-filter_complex",
+      filterComplex,
+      "-map",
+      "[final]",
+      "-map",
+      "1:a",
+      "-c:v",
+      "libx264",
+      "-preset",
+      "fast",
+      "-crf",
+      "20",
+      "-c:a",
+      "aac",
+      "-b:a",
+      "192k",
+      "-pix_fmt",
+      "yuv420p",
+      "-shortest",
+      "-r",
+      String(fps),
+      clipPath,
+    ]);
+    console.log(`  segment ${i}: ${seg.scene.type}  ${duration.toFixed(2)}s`);
+  }
   segmentClips.push(clipPath);
 }
 
 // ============================================================================
-// Step 4: concat all segment clips
+// Step 5: crossfade-concat segments
 // ============================================================================
 
-console.log("\n[4/5] concatenating segments...");
-const concatList = segmentClips.map((p) => `file '${p}'`).join("\n");
-const concatPath = join(WORK_DIR, "concat.txt");
-writeFileSync(concatPath, concatList);
-
-const finalPath = join(OUT_DIR, `${tool}.mp4`);
+console.log("\n[5/7] crossfade-concatenating...");
+const XFADE_DUR = 0.25;
+const segmentDurations = segmentClips.map(probeDuration);
+let lastV = "0:v";
+let lastA = "0:a";
+const xfadeFilters = [];
+let cumulative = segmentDurations[0];
+for (let i = 1; i < segmentClips.length; i++) {
+  const offset = cumulative - XFADE_DUR;
+  const vOut = `v${i}`;
+  const aOut = `a${i}`;
+  xfadeFilters.push(`[${lastV}][${i}:v]xfade=transition=fade:duration=${XFADE_DUR}:offset=${offset}[${vOut}]`);
+  xfadeFilters.push(`[${lastA}][${i}:a]acrossfade=d=${XFADE_DUR}[${aOut}]`);
+  lastV = vOut;
+  lastA = aOut;
+  cumulative += segmentDurations[i] - XFADE_DUR;
+}
+const concatPath = join(WORK_DIR, "concat.mp4");
+const concatInputs = segmentClips.flatMap((p) => ["-i", p]);
 run("ffmpeg", [
   "-y",
-  "-f",
-  "concat",
-  "-safe",
-  "0",
-  "-i",
+  ...concatInputs,
+  "-filter_complex",
+  xfadeFilters.join(";"),
+  "-map",
+  `[${lastV}]`,
+  "-map",
+  `[${lastA}]`,
+  "-c:v",
+  "libx264",
+  "-preset",
+  "fast",
+  "-crf",
+  "20",
+  "-c:a",
+  "aac",
+  "-b:a",
+  "192k",
+  "-pix_fmt",
+  "yuv420p",
   concatPath,
-  "-c",
-  "copy",
-  finalPath,
 ]);
-console.log(`  wrote ${finalPath}`);
+console.log(`  concat: ${probeDuration(concatPath).toFixed(2)}s`);
 
 // ============================================================================
-// Step 5: generate Fireship-style thumbnail (Playwright + ffmpeg overlay)
+// Step 6: mix in background music
 // ============================================================================
 
-console.log("\n[5/5] generating thumbnail...");
+const finalPath = join(OUT_DIR, `${tool}.mp4`);
+if (MUSIC_PATH && existsSync(MUSIC_PATH)) {
+  console.log(`\n[6/7] mixing in background music: ${MUSIC_PATH}...`);
+  run("ffmpeg", [
+    "-y",
+    "-i",
+    concatPath,
+    "-stream_loop",
+    "-1",
+    "-i",
+    MUSIC_PATH,
+    "-filter_complex",
+    "[1:a]volume=0.10,aloop=loop=-1:size=2e9[bg];[0:a][bg]amix=inputs=2:duration=first:dropout_transition=0[a]",
+    "-map",
+    "0:v",
+    "-map",
+    "[a]",
+    "-c:v",
+    "copy",
+    "-c:a",
+    "aac",
+    "-b:a",
+    "192k",
+    "-shortest",
+    finalPath,
+  ]);
+} else {
+  console.log(`\n[6/7] no MUSIC_PATH set or file missing, skipping music`);
+  run("ffmpeg", ["-y", "-i", concatPath, "-c", "copy", finalPath]);
+}
+
+// ============================================================================
+// Step 7: thumbnail
+// ============================================================================
+
+console.log("\n[7/7] generating thumbnail...");
 const thumbPath = join(OUT_DIR, `${tool}-thumb.png`);
 const hookText = script.thumbnailHook || script.title;
-
-// Render the thumbnail entirely in Playwright since it's just a static image.
-// More typographic control than ffmpeg + no font dependency.
 const thumbBrowser = await chromium.launch();
-const thumbPage = await thumbBrowser.newPage({
-  viewport: { width: 1280, height: 720 },
-});
-const baseShot = screenshotPaths.homepage || Object.values(screenshotPaths)[0];
-const baseB64 = readFileSync(baseShot).toString("base64");
+const thumbPage = await thumbBrowser.newPage({ viewport: { width: 1280, height: 720 } });
+const iconB64Twine = iconB64("twineconvert.png");
 const thumbHtml = `<!DOCTYPE html><html><head><style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap');
-  html, body { margin: 0; padding: 0; height: 100%; font-family: 'Inter', system-ui, sans-serif; }
-  body {
-    width: 1280px; height: 720px;
-    background-image: linear-gradient(180deg, rgba(16,16,25,0.55), rgba(16,16,25,0.85)), url('data:image/png;base64,${baseB64}');
-    background-size: cover; background-position: center;
-    display: flex; align-items: center; justify-content: center;
-    overflow: hidden; position: relative;
-  }
-  body::before {
-    content: ''; position: absolute; inset: 0;
-    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-  }
+  ${COMMON_STYLES}
+  body { width: 1280px; height: 720px; }
+  .thumb-stage { position:relative; z-index:2; text-align:center; }
   .hook {
-    position: relative;
-    background: linear-gradient(180deg, #E0297B 0%, #C2185B 100%);
-    color: white;
-    font-weight: 900;
-    font-size: 128px;
-    letter-spacing: -0.04em;
-    line-height: 0.95;
-    padding: 36px 60px;
-    border-radius: 18px;
+    background: linear-gradient(180deg, #E0297B 0%, #B01368 100%);
+    color: white; font-weight: 900; font-size: 128px; letter-spacing: -0.04em;
+    line-height: 0.95; padding: 36px 60px; border-radius: 20px;
     box-shadow: 0 30px 80px -10px rgba(224, 41, 123, 0.7);
-    text-align: center;
-    text-shadow: 0 4px 24px rgba(0,0,0,0.35);
-    transform: rotate(-2deg);
-    white-space: pre-line;
+    text-align: center; text-shadow: 0 4px 24px rgba(0,0,0,0.4);
+    transform: rotate(-2deg); white-space: pre-line;
+    display: inline-block;
   }
+  .brand { position:absolute; top:30px; right:30px; display:flex; align-items:center; gap:12px;
+    background: rgba(255,255,255,0.08); padding: 12px 20px; border-radius: 12px; backdrop-filter: blur(8px);
+    font-weight: 800; font-size: 22px;
+  }
+  .brand img { width: 32px; height: 32px; }
 </style></head><body>
-  <div class="hook">${hookText.replace(/</g, "&lt;")}</div>
+  <div class="brand"><img src="data:image/png;base64,${iconB64Twine}">twineconvert</div>
+  <div class="thumb-stage"><div class="hook">${hookText.replace(/</g, "&lt;")}</div></div>
 </body></html>`;
 await thumbPage.setContent(thumbHtml);
 await thumbPage.waitForTimeout(800);
 await thumbPage.screenshot({ path: thumbPath, fullPage: false });
 await thumbBrowser.close();
-console.log(`  wrote ${thumbPath}`);
 
-console.log(`\nDone. Open with:`);
-console.log(`  open ${finalPath}`);
-console.log(`  open ${thumbPath}`);
+console.log(`\nDone.`);
+const finalSize = (statSync(finalPath).size / 1024 / 1024).toFixed(2);
+console.log(`  ${finalPath}  (${probeDuration(finalPath).toFixed(2)}s, ${finalSize} MB)`);
+console.log(`  ${thumbPath}`);
+console.log(`\nopen ${finalPath}`);

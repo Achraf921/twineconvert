@@ -4,34 +4,84 @@
   "thumbnailHook": "HEIC PHOTOS\nARE A TRAP",
   "segments": [
     {
-      "voice": "Your iPhone takes photos in HEIC. Apple thought this was great. Email recipients disagree.",
-      "overlay": "HEIC. Why?",
-      "screenshot": "homepage"
+      "voice": "Your iPhone takes photos in HEIC.",
+      "scene": {
+        "type": "logo-text",
+        "logos": [{ "src": "iphone.png", "label": "iPhone" }],
+        "headline": "HEIC",
+        "sub": "the default photo format since iOS 11"
+      }
     },
     {
-      "voice": "HEIC files are smaller than JPG, but barely anything outside Apple's ecosystem can open them. Try uploading one to a job application form.",
-      "overlay": "Outside Apple = broken",
-      "screenshot": "homepage"
+      "voice": "It's smaller than JPG. It's also broken everywhere outside Apple.",
+      "scene": {
+        "type": "fail-list",
+        "headline": "Where HEIC breaks",
+        "items": [
+          "Email attachments",
+          "Job applications",
+          "Sharing with non-iPhone family"
+        ]
+      }
     },
     {
-      "voice": "The fix is converting to JPG. The popular tools, Smallpdf, CloudConvert, iLovePDF, all want to upload your photos to their servers first. Your face. Your kids. Sitting on someone else's hard drive.",
-      "overlay": "Upload? No thanks.",
-      "screenshot": "homepage"
+      "voice": "The fix? Convert to JPG.",
+      "scene": {
+        "type": "centered-headline",
+        "headline": "Convert to JPG",
+        "sub": "universally readable. zero compatibility issues."
+      }
     },
     {
-      "voice": "So we built twineconvert. Drop your HEIC here. Hit convert. Done. The whole thing runs in your browser via WebAssembly.",
-      "overlay": "100% in your browser",
-      "screenshot": "tool-idle"
+      "voice": "Smallpdf. CloudConvert. iLovePDF. They all want to upload your photos to their servers first.",
+      "scene": {
+        "type": "logo-row",
+        "logos": [
+          { "src": "smallpdf.png", "label": "Smallpdf" },
+          { "src": "cloudconvert.png", "label": "CloudConvert" },
+          { "src": "ilovepdf.png", "label": "iLovePDF" }
+        ],
+        "headline": "All upload your file."
+      }
     },
     {
-      "voice": "No upload. No signup. No file size limit. Your photo never leaves your device.",
-      "overlay": "Nothing uploaded",
-      "screenshot": "tool-converting"
+      "voice": "Your face. Your kids. Sitting on someone else's hard drive.",
+      "scene": {
+        "type": "warning",
+        "headline": "On someone\nelse's server."
+      }
     },
     {
-      "voice": "Try it now at twineconvert dot com slash heic to jpg.",
-      "overlay": "twineconvert.com/heic-to-jpg",
-      "screenshot": "tool-done"
+      "voice": "We built twineconvert.",
+      "scene": {
+        "type": "logo-text",
+        "logos": [{ "src": "twineconvert.png", "label": "twineconvert" }],
+        "headline": "Built different.",
+        "sub": "drop, convert, done"
+      }
+    },
+    {
+      "voice": "Drop the file. Hit convert. Watch this.",
+      "scene": {
+        "type": "demo-recording"
+      }
+    },
+    {
+      "voice": "All in your browser. Powered by WebAssembly. Your photo never touches a server.",
+      "scene": {
+        "type": "logo-text",
+        "logos": [{ "src": "webassembly.png", "label": "WebAssembly" }],
+        "headline": "100% in your browser.",
+        "sub": "no upload. no server. no leak."
+      }
+    },
+    {
+      "voice": "twineconvert dot com slash heic to jpg. Stop uploading your photos.",
+      "scene": {
+        "type": "cta",
+        "url": "twineconvert.com/heic-to-jpg",
+        "tagline": "Stop uploading your photos."
+      }
     }
   ]
 }
