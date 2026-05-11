@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
+import { BUY_ME_A_COFFEE_URL } from "@/lib/links";
 
 export const metadata: Metadata = {
   title: "About",
@@ -81,6 +83,30 @@ export default function AboutPage() {
           value proposition (convert files in your browser, fast, private,
           free).
         </p>
+
+        <h2 className="text-xl font-bold text-[var(--color-text)] pt-6">
+          Support
+        </h2>
+        <p>
+          twineconvert is a one-person project. If it saved you time and
+          you&apos;d like to help cover the Vercel bill, the tip jar is below.
+          Always optional; the converters stay free either way.
+        </p>
+        <a
+          href={BUY_ME_A_COFFEE_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block mt-1 transition-transform hover:scale-[1.03]"
+          aria-label="Buy me a coffee"
+        >
+          <Image
+            src="/buy-me-a-coffee.png"
+            alt="Buy me a coffee"
+            width={180}
+            height={51}
+            unoptimized
+          />
+        </a>
 
       </div>
     </article>

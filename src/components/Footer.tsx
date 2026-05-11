@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { BUY_ME_A_COFFEE_URL } from "@/lib/links";
 
 /**
  * Site footer. Multi-column layout with category navigation (great
@@ -61,9 +62,24 @@ export function Footer() {
               <FooterLogo />
               <span className="font-bold text-[15px] tracking-tight">twineconvert</span>
             </div>
-            <p className="text-sm text-[var(--color-text-2)] leading-relaxed">
+            <p className="text-sm text-[var(--color-text-2)] leading-relaxed mb-4">
               Convert files in your browser. Nothing uploaded. No signup. No file size limit.
             </p>
+            <a
+              href={BUY_ME_A_COFFEE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block transition-transform hover:scale-[1.03]"
+              aria-label="Buy me a coffee"
+            >
+              <Image
+                src="/buy-me-a-coffee.png"
+                alt="Buy me a coffee"
+                width={150}
+                height={42}
+                unoptimized
+              />
+            </a>
           </div>
 
           {FOOTER_GROUPS.map((group) => (
