@@ -14,7 +14,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import type { FormatGraph } from "@/lib/dropzone-routes";
+import { lookupToolId, type FormatGraph } from "@/lib/dropzone-routes";
 import { groupByCategory, type FormatCategory } from "@/lib/format-categories";
 
 interface Props {
@@ -64,21 +64,21 @@ export function HeroFlow({ graph, initialInput, initialOutput }: Props) {
     [outputsForInput, output],
   );
 
-  const currentToolId = graph.toolByPair[`${input}|${effectiveOutput}`];
-  const reverseToolId = graph.toolByPair[`${effectiveOutput}|${input}`];
+  const currentToolId = lookupToolId(graph, input, effectiveOutput);
+  const reverseToolId = lookupToolId(graph, effectiveOutput, input);
   const canReverse = Boolean(reverseToolId);
 
   const onPickInput = (next: string) => {
     setInput(next);
     // Try to keep the same output if the new input still supports it
-    if (graph.toolByPair[`${next}|${output}`]) return;
+    if (lookupToolId(graph, next, output)) return;
     const firstOut = graph.outputsByInput[next]?.[0];
     if (firstOut) setOutput(firstOut.format);
   };
 
   const onPickOutput = (next: string) => {
     setOutput(next);
-    const toolId = graph.toolByPair[`${input}|${next}`];
+    const toolId = lookupToolId(graph, input, next);
     if (toolId) router.push(`/${toolId}`);
   };
 

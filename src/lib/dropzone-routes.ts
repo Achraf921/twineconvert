@@ -46,16 +46,16 @@ export interface FormatPair {
 export interface FormatGraph {
   /** Sorted list of every input format (upper-case, e.g. "HEIC"). */
   inputFormats: string[];
-  /** For each input format, the sorted list of output formats. */
+  /** For each input format, the sorted list of output formats. The
+   *  toolId is already in each FormatPair, so we removed the
+   *  separate `toolByPair` redundant lookup map that used to live here.
+   *  Pair-to-toolId lookups happen via the lookupToolId() helper below
+   *  (constant-time after a one-pass O(N) memoize on first call). */
   outputsByInput: Record<string, FormatPair[]>;
-  /** Lookup table: `${input}|${output}` -> toolId. Used to route on
-   *  swap / output-pick. */
-  toolByPair: Record<string, string>;
 }
 
 export function buildFormatGraph(toolIds: string[]): FormatGraph {
   const outputsByInput: Record<string, FormatPair[]> = {};
-  const toolByPair: Record<string, string> = {};
   const inputs = new Set<string>();
 
   for (const id of toolIds) {
@@ -63,14 +63,13 @@ export function buildFormatGraph(toolIds: string[]): FormatGraph {
     if (parts.length !== 2) continue;
     const [rawIn, rawOut] = parts;
     // Skip ugly compound names like "kindle-clippings-to-csv" for the
-    // bidirectional picker — those need their own pages (visible in
+    // bidirectional picker. Those need their own pages (visible in
     // categories) but would confuse a "HEIC/JPG/PNG" picker UI.
     if (rawIn.includes("-") || rawOut.includes("-")) continue;
     const input = rawIn.toUpperCase();
     const output = rawOut.toUpperCase();
     inputs.add(input);
     (outputsByInput[input] ??= []).push({ format: output, toolId: id });
-    toolByPair[`${input}|${output}`] = id;
   }
 
   for (const k of Object.keys(outputsByInput)) {
@@ -80,6 +79,19 @@ export function buildFormatGraph(toolIds: string[]): FormatGraph {
   return {
     inputFormats: [...inputs].sort(),
     outputsByInput,
-    toolByPair,
   };
+}
+
+/** Find the converter tool id for a given (input, output) pair, or
+ *  undefined if no direct converter exists. O(N) per call where N is the
+ *  number of output formats for the input; with ~5-10 outputs per input
+ *  that's effectively constant. Replaces the old `graph.toolByPair`
+ *  hash map, which was redundant data shipped in every page's HTML
+ *  (the toolId is already inside each FormatPair). */
+export function lookupToolId(
+  graph: FormatGraph,
+  input: string,
+  output: string,
+): string | undefined {
+  return graph.outputsByInput[input]?.find((p) => p.format === output)?.toolId;
 }
