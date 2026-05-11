@@ -4,6 +4,49 @@
  */
 
 export const FIXTURES = {
+  // YAML 1.2 with nested objects and arrays
+  yaml: `name: Alice
+age: 30
+roles:
+  - admin
+  - editor
+config:
+  theme: dark
+  notifications: true
+`,
+
+  // TOML 1.0 with a top-level table and a nested one
+  toml: `name = "Alice"
+age = 30
+roles = ["admin", "editor"]
+
+[config]
+theme = "dark"
+notifications = true
+`,
+
+  // SRT with two cues
+  srt: `1
+00:00:01,000 --> 00:00:04,000
+First caption text
+
+2
+00:00:05,500 --> 00:00:08,250
+Second caption
+spanning two lines
+`,
+
+  // WebVTT with two cues
+  vtt: `WEBVTT
+
+00:00:01.000 --> 00:00:04.000
+First caption text
+
+00:00:05.500 --> 00:00:08.250
+Second caption
+spanning two lines
+`,
+
   // CSV with bank-style transaction columns (auto-detected by finance-csv util)
   bankCsv: `Date,Description,Amount
 2024-03-15,Coffee Shop,-4.50

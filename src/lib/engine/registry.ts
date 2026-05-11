@@ -157,6 +157,25 @@ export const registry: Record<string, ConverterLoader> = {
   "json-to-xlsx": () =>
     import("./converters/json-to-xlsx").then((m) => m.default),
 
+  // YAML/TOML/JSON cross-conversions, lossless data interchange between
+  // the three configuration languages developers actually use
+  "yaml-to-json": () =>
+    import("./converters/yaml-to-json").then((m) => m.default),
+  "json-to-yaml": () =>
+    import("./converters/json-to-yaml").then((m) => m.default),
+  "toml-to-json": () =>
+    import("./converters/toml-to-json").then((m) => m.default),
+  "json-to-toml": () =>
+    import("./converters/json-to-toml").then((m) => m.default),
+
+  // Subtitle format pair (SRT ↔ WebVTT). Captions are identical content
+  // between the two; only timestamp punctuation and the WEBVTT header
+  // differ. Heavy search demand from YouTubers / video editors.
+  "srt-to-vtt": () =>
+    import("./converters/srt-to-vtt").then((m) => m.default),
+  "vtt-to-srt": () =>
+    import("./converters/vtt-to-srt").then((m) => m.default),
+
   // EPUB, JSZip + DOMParser (lighter than epubjs for headless extraction)
   "epub-to-text": () =>
     import("./converters/epub-to-text").then((m) => m.default),

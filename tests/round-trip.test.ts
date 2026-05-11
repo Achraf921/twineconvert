@@ -517,6 +517,63 @@ describe("round-trip: new Phase-4 reverse converters", () => {
   });
 });
 
+describe("round-trip: data interchange (YAML/TOML/JSON)", () => {
+  it("YAML -> JSON -> YAML preserves nested structure and arrays", async () => {
+    const original = fileFromText("test.yaml", FIXTURES.yaml, "application/x-yaml");
+    const json = await chain("yaml-to-json", original);
+    const back = await chain("json-to-yaml", json);
+    const text = await back.text();
+    expect(text).toContain("name:");
+    expect(text).toContain("Alice");
+    expect(text).toContain("admin");
+    expect(text).toContain("editor");
+    expect(text).toContain("config:");
+    expect(text).toContain("theme: dark");
+  });
+
+  it("TOML -> JSON -> TOML preserves top-level keys and tables", async () => {
+    const original = fileFromText("test.toml", FIXTURES.toml, "application/toml");
+    const json = await chain("toml-to-json", original);
+    const back = await chain("json-to-toml", json);
+    const text = await back.text();
+    expect(text).toContain("name");
+    expect(text).toContain("Alice");
+    expect(text).toContain("[config]");
+    expect(text).toContain("theme");
+    expect(text).toContain("dark");
+  });
+});
+
+describe("round-trip: subtitles (SRT ↔ WebVTT)", () => {
+  it("SRT -> WebVTT -> SRT preserves cues and timestamps", async () => {
+    const original = fileFromText("test.srt", FIXTURES.srt, "application/x-subrip");
+    const vtt = await chain("srt-to-vtt", original);
+    const back = await chain("vtt-to-srt", vtt);
+    const text = await back.text();
+    expect(text).toContain("First caption text");
+    expect(text).toContain("Second caption");
+    expect(text).toContain("spanning two lines");
+    // SRT timestamps use comma decimals
+    expect(text).toMatch(/00:00:01,000\s*-->\s*00:00:04,000/);
+    expect(text).toMatch(/00:00:05,500\s*-->\s*00:00:08,250/);
+    // Cue indices are renumbered starting at 1
+    expect(text).toMatch(/^1\b/m);
+    expect(text).toMatch(/^2\b/m);
+  });
+
+  it("WebVTT -> SRT -> WebVTT preserves cues and re-adds the WEBVTT header", async () => {
+    const original = fileFromText("test.vtt", FIXTURES.vtt, "text/vtt");
+    const srt = await chain("vtt-to-srt", original);
+    const back = await chain("srt-to-vtt", srt);
+    const text = await back.text();
+    expect(text).toMatch(/^WEBVTT/);
+    expect(text).toContain("First caption text");
+    expect(text).toContain("Second caption");
+    // VTT timestamps use period decimals
+    expect(text).toMatch(/00:00:01\.000\s*-->\s*00:00:04\.000/);
+  });
+});
+
 describe("round-trip: 3D mesh OBJ ↔ 3MF", () => {
   it("3MF → OBJ → 3MF preserves triangle count", async () => {
     // Build a 3MF from the sample mesh first since we don't have a

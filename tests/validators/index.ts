@@ -577,6 +577,46 @@ export const validateGlb: Validator = async ({ blob, minSize = 12 }) => {
   assertMagicBytes(head, [0x67, 0x6c, 0x54, 0x46], "glTF Binary");
 };
 
+export const validateYaml: Validator = async ({ blob, minSize = 1 }) => {
+  assertMinSize(blob, minSize, "YAML");
+  const text = await readText(blob);
+  if (!text.trim()) throw new Error("YAML is empty");
+  // Don't try to parse it (would require pulling js-yaml into the
+  // validator); check it's plausibly YAML (has a `key:` line OR a list
+  // marker `- `) and not just an opaque blob.
+  if (!/^[ \t]*[\w"'][^:\n]*:\s*/m.test(text) && !/^[ \t]*-\s+/m.test(text)) {
+    throw new Error("YAML has no key: or - list markers");
+  }
+};
+
+export const validateToml: Validator = async ({ blob, minSize = 1 }) => {
+  assertMinSize(blob, minSize, "TOML");
+  const text = await readText(blob);
+  if (!text.trim()) throw new Error("TOML is empty");
+  if (!/^\s*[\w"][^=\n]*=\s*/m.test(text) && !/^\[[^\]\n]+\]/m.test(text)) {
+    throw new Error("TOML has no key=value or [table] markers");
+  }
+};
+
+export const validateSrt: Validator = async ({ blob, minSize = 20 }) => {
+  assertMinSize(blob, minSize, "SRT");
+  const text = await readText(blob);
+  // SRT timestamps use `,` as decimal separator
+  if (!/\d{2}:\d{2}:\d{2},\d{1,3}\s*-->\s*\d{2}:\d{2}:\d{2},\d{1,3}/.test(text)) {
+    throw new Error("SRT has no recognizable timestamp line");
+  }
+};
+
+export const validateVtt: Validator = async ({ blob, minSize = 20 }) => {
+  assertMinSize(blob, minSize, "WebVTT");
+  const text = await readText(blob);
+  if (!/^WEBVTT/m.test(text)) throw new Error("WebVTT missing WEBVTT header");
+  // VTT timestamps use `.` as decimal separator
+  if (!/\d{2}:\d{2}:\d{2}\.\d{1,3}\s*-->\s*\d{2}:\d{2}:\d{2}\.\d{1,3}/.test(text)) {
+    throw new Error("WebVTT has no recognizable timestamp line");
+  }
+};
+
 // ============================================================================
 // Validator dispatch, pick by output MIME or by filename extension fallback
 // ============================================================================
@@ -653,6 +693,13 @@ const BY_MIME: Record<string, Validator> = {
   "application/mbox": validateMbox,
   "application/vnd.google-earth.kml+xml": validateXml,
   "message/rfc822": validateEml,
+
+  // YAML / TOML / Subtitle (defined above this map)
+  "application/x-yaml": validateYaml,
+  "text/yaml": validateYaml,
+  "application/toml": validateToml,
+  "text/vtt": validateVtt,
+  "application/x-subrip": validateSrt,
 };
 
 // Extension-keyed fallback, used when toMime is generic (octet-stream)

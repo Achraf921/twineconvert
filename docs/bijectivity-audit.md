@@ -6,8 +6,8 @@ Generated 2026-05-11 from src/lib/engine/converters/.
 
 | Classification | Count |
 |---|---:|
-| Total converters | 196 |
-| **Bijective candidates** (lossless, same-kind, both directions exist) | 84 |
+| Total converters | 202 |
+| **Bijective candidates** (lossless, same-kind, both directions exist) | 90 |
 | **Bijective candidates missing reverse converter** | 3 |
 | **Bijective candidates missing round-trip test** | 18 |
 | Lossy encoding (same kind, but lossy format) | 49 |
@@ -157,7 +157,9 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `jpg-to-webp` | lossy-encoding | ✓ | n/a | jpg or webp uses lossy encoding |
 | `json-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `json-to-gedcom` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `json-to-toml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `json-to-xlsx` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `json-to-yaml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `keynote-to-pdf` | lossy-encoding | (`pdf-to-keynote` missing) | n/a | keynote or pdf uses lossy encoding |
 | `kindle-clippings-to-csv` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
 | `kindle-clippings-to-json` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
@@ -222,6 +224,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `ris-to-nbib` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `sarif-to-csv` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
 | `sarif-to-html` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
+| `srt-to-vtt` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `stl-to-3mf` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
 | `stl-to-obj` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
 | `svg-to-jpg` | cross-kind | (`jpg-to-svg` missing) | n/a | vector -> raster: cross-domain, inherently lossy |
@@ -229,9 +232,11 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `tiff-to-jpg` | lossy-encoding | (`jpg-to-tiff` missing) | n/a | tiff or jpg uses lossy encoding |
 | `tiff-to-pdf` | cross-kind | (`pdf-to-tiff` missing) | n/a | raster -> doc: cross-domain, inherently lossy |
 | `tiff-to-png` | bijective-candidate | (`png-to-tiff` missing) | n/a | both lossless raster formats; should round-trip cleanly |
+| `toml-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `twitter-archive-to-csv` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
 | `twitter-archive-to-html` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
 | `txt-to-docx` | lossy-encoding | ✓ | n/a | txt or docx uses lossy encoding |
+| `vtt-to-srt` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `wav-to-mp3` | lossy-encoding | ✓ | n/a | wav or mp3 uses lossy encoding |
 | `webm-to-mp4` | lossy-encoding | (`mp4-to-webm` missing) | n/a | webm or mp4 uses lossy encoding |
 | `webp-to-avif` | lossy-encoding | ✓ | n/a | webp or avif uses lossy encoding |
@@ -244,3 +249,4 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `whatsapp-chat-to-pdf` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
 | `xlsx-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `xlsx-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `yaml-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |

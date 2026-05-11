@@ -55,6 +55,12 @@ const FORMATS = {
   csv: { kind: "data", lossless: true, family: "data" },
   json: { kind: "data", lossless: true, family: "data" },
   xlsx: { kind: "data", lossless: true, family: "data" }, // tabular data only; if no formulas/styles
+  yaml: { kind: "data", lossless: true, family: "data" }, // semantic equivalence with JSON
+  yml: { kind: "data", lossless: true, family: "data" },
+  toml: { kind: "data", lossless: true, family: "data" }, // top-level table only
+  // ==== Subtitles ====
+  srt: { kind: "data", lossless: true, family: "subtitle" },
+  vtt: { kind: "data", lossless: true, family: "subtitle" },
   // ==== Audio ====
   mp3: { kind: "audio", lossless: false, family: "audio" },
   m4a: { kind: "audio", lossless: false, family: "audio" }, // AAC = lossy

@@ -662,6 +662,80 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     "maxFileSizeBytes": 52428800
   },
+  "yaml-to-json": {
+    "label": "YAML → JSON",
+    "accept": [
+      ".yaml",
+      ".yml"
+    ],
+    "fromMime": [
+      "application/x-yaml",
+      "text/yaml",
+      "text/plain"
+    ],
+    "toMime": "application/json",
+    "maxFileSizeBytes": 20971520
+  },
+  "json-to-yaml": {
+    "label": "JSON → YAML",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "application/x-yaml",
+    "maxFileSizeBytes": 20971520
+  },
+  "toml-to-json": {
+    "label": "TOML → JSON",
+    "accept": [
+      ".toml"
+    ],
+    "fromMime": [
+      "application/toml",
+      "text/plain"
+    ],
+    "toMime": "application/json",
+    "maxFileSizeBytes": 10485760
+  },
+  "json-to-toml": {
+    "label": "JSON → TOML",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "application/toml",
+    "maxFileSizeBytes": 10485760
+  },
+  "srt-to-vtt": {
+    "label": "SRT → WebVTT",
+    "accept": [
+      ".srt"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-subrip"
+    ],
+    "toMime": "text/vtt",
+    "maxFileSizeBytes": 10485760
+  },
+  "vtt-to-srt": {
+    "label": "WebVTT → SRT",
+    "accept": [
+      ".vtt"
+    ],
+    "fromMime": [
+      "text/vtt",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 10485760
+  },
   "epub-to-text": {
     "label": "EPUB → Text",
     "accept": [

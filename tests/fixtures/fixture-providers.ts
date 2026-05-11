@@ -196,6 +196,16 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "csv-to-adif":   { provider: () => text("test.csv", F.bankCsv, "text/csv"), env: "node" },
   "json-to-csv":   { provider: () => text("test.json", F.jsonArray, "application/json"), env: "node" },
   "json-to-xlsx":  { provider: () => text("test.json", F.jsonArray, "application/json"), env: "node" },
+
+  // YAML/TOML cross-conversions with the JSON pivot in both directions
+  "yaml-to-json":  { provider: () => text("test.yaml", F.yaml, "application/x-yaml"), env: "node" },
+  "json-to-yaml":  { provider: () => text("test.json", `{"name":"Alice","age":30,"roles":["admin","editor"]}`, "application/json"), env: "node" },
+  "toml-to-json":  { provider: () => text("test.toml", F.toml, "application/toml"), env: "node" },
+  "json-to-toml":  { provider: () => text("test.json", `{"name":"Alice","age":30,"roles":["admin","editor"]}`, "application/json"), env: "node" },
+
+  // Subtitle pair
+  "srt-to-vtt":    { provider: () => text("test.srt", F.srt, "application/x-subrip"), env: "node" },
+  "vtt-to-srt":    { provider: () => text("test.vtt", F.vtt, "text/vtt"), env: "node" },
   "json-to-gedcom":{ provider: () => text("test.json", `{"individuals":[{"id":"I1","name":"John /Smith/","sex":"M","familyAsSpouse":[]}]}`, "application/json"), env: "node" },
   "xlsx-to-csv":   { provider: async () => fileFromBytes("test.xlsx", await makeTinyXlsx(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"), env: "node" },
   "xlsx-to-json":  { provider: async () => fileFromBytes("test.xlsx", await makeTinyXlsx(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"), env: "node" },
