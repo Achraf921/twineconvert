@@ -188,15 +188,22 @@ export function parseRis(text: string): Citation[] {
       // Continuation line for multi-line PubMed fields. PubMed wraps long
       // abstracts (and occasionally titles) onto indented continuation lines
       // with no tag. We append to whichever field was last written.
-      if (current && lastTag && /^\s/.test(rawLine)) {
+      //
+      // Explicit widening cast: TypeScript's control-flow analyzer sees the
+      // `current = null` mutation inside flushCurrent() and narrows `current`
+      // to `never` here, even though the closure might not have run on this
+      // iteration. The cast restores the declared union so the truthy check
+      // narrows correctly.
+      const rec = current as CurrentRecord | null;
+      if (rec && lastTag && /^\s/.test(rawLine)) {
         const cont = rawLine.trim();
         if (cont) {
           if (lastTag === "AB" || lastTag === "N2") {
-            current.abstract = current.abstract ? `${current.abstract} ${cont}` : cont;
+            rec.abstract = rec.abstract ? `${rec.abstract} ${cont}` : cont;
           } else if (lastTag === "TI" || lastTag === "T1") {
-            current.title = current.title ? `${current.title} ${cont}` : cont;
+            rec.title = rec.title ? `${rec.title} ${cont}` : cont;
           } else if (lastTag === "JO" || lastTag === "JF" || lastTag === "T2") {
-            current.journal = current.journal ? `${current.journal} ${cont}` : cont;
+            rec.journal = rec.journal ? `${rec.journal} ${cont}` : cont;
           }
         }
       }
