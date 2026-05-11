@@ -1,7 +1,7 @@
 import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
-import { buildRis, parseRis } from "../util/ris";
+import { buildNbib, parseRis } from "../util/ris";
 
 const risToNbib: Converter = {
   id: "ris-to-nbib",
@@ -17,7 +17,7 @@ const risToNbib: Converter = {
     try {
       const citations = parseRis(await input.text());
       if (citations.length === 0) throw new Error("No citations found in RIS");
-      nbib = buildRis(citations);
+      nbib = buildNbib(citations);
     } catch (err) {
       throw new ConvertFailedError(
         err instanceof Error ? err.message : "Could not convert RIS to NBIB",

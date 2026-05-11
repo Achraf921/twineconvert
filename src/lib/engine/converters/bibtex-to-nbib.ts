@@ -2,7 +2,7 @@ import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
 import { parseBibtex } from "../util/bibtex";
-import { buildRis } from "../util/ris";
+import { buildNbib } from "../util/ris";
 
 /**
  * BibTeX → NBIB. NBIB (PubMed format) is structurally identical to RIS
@@ -24,7 +24,7 @@ const bibtexToNbib: Converter = {
     try {
       const citations = parseBibtex(await input.text());
       if (citations.length === 0) throw new Error("No citations found in BibTeX");
-      nbib = buildRis(citations);
+      nbib = buildNbib(citations);
     } catch (err) {
       throw new ConvertFailedError(
         err instanceof Error ? err.message : "Could not convert BibTeX to NBIB",

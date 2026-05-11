@@ -417,10 +417,14 @@ export const validateBibtex: Validator = async ({ blob, minSize = 10 }) => {
 };
 
 export const validateRis: Validator = async ({ blob, minSize = 10 }) => {
-  assertMinSize(blob, minSize, "RIS");
+  assertMinSize(blob, minSize, "RIS/NBIB");
   const text = await readText(blob);
-  if (!/^TY\s*-/m.test(text)) throw new Error("RIS missing TY (record type) tag");
-  if (!/^ER\s*-/m.test(text)) throw new Error("RIS missing ER (end of record) tag");
+  // RIS uses TY (record type); NBIB uses PT (publication type) for the
+  // same role. Accept either since the MIME type doesn't distinguish them.
+  if (!/^TY\s*-/m.test(text) && !/^PT\s+-/m.test(text)) {
+    throw new Error("RIS/NBIB missing record-type tag (TY for RIS, PT for NBIB)");
+  }
+  if (!/^ER\s*-/m.test(text)) throw new Error("RIS/NBIB missing ER (end of record) tag");
 };
 
 export const validateGedcom: Validator = async ({ blob, minSize = 50 }) => {

@@ -27,7 +27,11 @@ const cabrilloToAdif: Converter = {
         if (!line.startsWith("QSO:")) continue;
         // Cabrillo QSO line, whitespace-delimited fields after "QSO:"
         const parts = line.slice(4).trim().split(/\s+/);
-        if (parts.length < 9) continue;
+        // Spec defines 10 fields (freq mo date time mycall mysent myexch
+        // hiscall hissent hisexch), but some loggers omit the trailing
+        // received exchange when it's empty. Allow 8+ so we don't drop
+        // valid lines just because the exchange is missing.
+        if (parts.length < 8) continue;
         const [freqKHz, mode, date, time, myCall, sentRst, sentExch, theirCall, rcvdRst, ...rest] = parts;
         const fields: Record<string, string> = {
           FREQ: (parseInt(freqKHz, 10) / 1000).toFixed(6),

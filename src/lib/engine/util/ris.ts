@@ -207,6 +207,65 @@ export function parseRis(text: string): Citation[] {
   return citations;
 }
 
+// Citation type -> NBIB PT (Publication Type) value. PubMed uses
+// human-readable phrases here, not abbreviations.
+const NBIB_PT_MAP: Record<CitationType, string> = {
+  article: "Journal Article",
+  book: "Book",
+  inbook: "Book Chapter",
+  incollection: "Book Chapter",
+  inproceedings: "Conference Paper",
+  thesis: "Thesis",
+  report: "Report",
+  manual: "Report",
+  misc: "General",
+  online: "Web Resource",
+  patent: "Patent",
+  audiovisual: "Audiovisual Material",
+};
+
+/**
+ * Serialize citations in NBIB (PubMed) tag format. Distinct from
+ * buildRis() which uses RIS tags (TY, JO, PY, VL, IS, SP, EP, DO):
+ * NBIB uses (PT, JT/TA, DP, VI, IP, PG, AID). The body content is
+ * the same Citation objects; only the tag dictionary differs.
+ *
+ * Used by ris-to-nbib so the round-trip RIS -> NBIB -> RIS preserves
+ * actual NBIB structure rather than just renaming the file.
+ */
+export function buildNbib(citations: Citation[]): string {
+  const out: string[] = [];
+  for (const c of citations) {
+    // Numeric ids are most likely PMIDs (PubMed primary identifier).
+    if (c.id && /^\d+$/.test(c.id)) {
+      out.push(`PMID- ${c.id}`);
+    }
+    out.push(`PT  - ${NBIB_PT_MAP[c.type] ?? "General"}`);
+    if (c.title) out.push(`TI  - ${c.title}`);
+    for (const a of c.authors ?? []) out.push(`AU  - ${a}`);
+    if (c.address) out.push(`AD  - ${c.address}`);
+    if (c.journal) {
+      // PubMed has both abbreviated (TA) and full (JT) journal titles;
+      // we don't track the distinction so duplicate to both.
+      out.push(`TA  - ${c.journal}`);
+      out.push(`JT  - ${c.journal}`);
+    }
+    if (c.year) out.push(`DP  - ${c.year}`);
+    if (c.volume) out.push(`VI  - ${c.volume}`);
+    if (c.issue) out.push(`IP  - ${c.issue}`);
+    if (c.pages) out.push(`PG  - ${c.pages}`);
+    if (c.abstract) out.push(`AB  - ${c.abstract}`);
+    // PubMed AID for DOIs always carries a "[doi]" trailing tag.
+    if (c.doi) out.push(`AID - ${c.doi} [doi]`);
+    if (c.issn) out.push(`IS  - ${c.issn}`);
+    if (c.isbn) out.push(`ISBN- ${c.isbn}`);
+    for (const k of c.keywords ?? []) out.push(`MH  - ${k}`);
+    out.push(`ER  -`);
+    out.push("");
+  }
+  return out.join("\n");
+}
+
 export function buildRis(citations: Citation[]): string {
   const out: string[] = [];
   for (const c of citations) {

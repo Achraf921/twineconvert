@@ -79,10 +79,15 @@ function buildCabrillo(qsos: import("../util/adif").AdifQso[]): string {
     const time = (f.TIME_ON ?? "").slice(0, 4);
     const myCall = (f.STATION_CALLSIGN ?? f.OPERATOR ?? "REPLACE-ME").padEnd(13);
     const sentRst = (f.RST_SENT ?? "59").padEnd(3);
-    const sentExch = (f.STX ?? f.MY_STATE ?? "").padEnd(6);
+    // Cabrillo spec requires every QSO line to have non-empty exchange
+    // fields. ADIF logs that don't carry an exchange (general logging
+    // vs contest logging) get "0" as a placeholder so the line stays
+    // a valid 10-token QSO row, which is what cabrillo-to-adif's
+    // whitespace-split parser needs to round-trip cleanly.
+    const sentExch = (f.STX || f.MY_STATE || "0").padEnd(6);
     const theirCall = (f.CALL ?? "").padEnd(13);
     const rcvdRst = (f.RST_RCVD ?? "59").padEnd(3);
-    const rcvdExch = (f.SRX ?? f.STATE ?? "").padEnd(6);
+    const rcvdExch = (f.SRX || f.STATE || "0").padEnd(6);
     lines.push(
       `QSO: ${freqKHz.padStart(5)} ${mode} ${date} ${time} ${myCall} ${sentRst} ${sentExch} ${theirCall} ${rcvdRst} ${rcvdExch}`,
     );

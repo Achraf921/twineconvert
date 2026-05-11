@@ -294,31 +294,17 @@ describe("round-trip: more citation pairs", () => {
     expect(text).toMatch(/@\w+\{/);
   });
 
-  // KNOWN BUG flagged by the round-trip audit: ris-to-nbib outputs RIS
-  // field tags (TY, JO, PY, VL, IS, SP, EP, DO) instead of NBIB tags
-  // (PT, JT, DP, VI, IP, PG, AID). The body content is correct but the
-  // field-name mapping isn't applied. Phase 3 fix: ris-to-nbib needs
-  // a proper field translation table.
-  it.fails(
-    "NBIB -> RIS -> NBIB preserves title in NBIB format (known: PT/TI tags missing, Phase 3 fix)",
-    async () => {
-      const original = fileFromText("test.nbib", FIXTURES.nbib, "text/plain");
-      const ris = await chain("nbib-to-ris", original);
-      const back = await chain("ris-to-nbib", ris);
-      const text = await back.text();
-      expect(text).toMatch(/^PT\s+- /m);
-      expect(text).toMatch(/^TI\s+- /m);
-    },
-  );
-
-  it("NBIB -> RIS -> NBIB preserves title and structure", async () => {
-    // The content survives the round trip even though tag names don't.
-    // Title is the strongest invariant here.
+  it("NBIB -> RIS -> NBIB preserves title and proper NBIB tags", async () => {
+    // Phase-3 fix landed: ris-to-nbib now uses buildNbib() which
+    // outputs NBIB-style tags (PT, TI, JT, DP, VI, IP, PG, AID)
+    // instead of RIS tags. Round-trip is now structurally correct.
     const original = fileFromText("test.nbib", FIXTURES.nbib, "text/plain");
     const ris = await chain("nbib-to-ris", original);
     const back = await chain("ris-to-nbib", ris);
     const text = await back.text();
     expect(text).toContain("PubMed Sample Paper");
+    expect(text).toMatch(/^PT\s+- /m);
+    expect(text).toMatch(/^TI\s+- /m);
     expect(text).toMatch(/^ER\s+-/m);
   });
 
@@ -401,27 +387,25 @@ describe("round-trip: more CSV-pivoted pairs", () => {
 });
 
 describe("round-trip: ham radio formats", () => {
-  // KNOWN BUG flagged by the round-trip audit: ADIF -> Cabrillo loses QSO
-  // records on the way out (or Cabrillo -> ADIF can't parse them back).
-  // Back-converted ADIF only has the header + EOH and no QSO blocks, so
-  // the round-trip is currently lossy in a way it shouldn't be (Cabrillo
-  // technically encodes everything Cabrillo allows, plus our QSOs are
-  // simple). Phase 3 fix: investigate which side drops the records.
-  it.fails(
-    "ADIF -> Cabrillo -> ADIF preserves QSOs (known: lossy, Phase 3 fix)",
-    async () => {
-      const original = fileFromText("test.adi", FIXTURES.adif, "text/plain");
-      const cabrillo = await chain("adif-to-cabrillo", original);
-      const back = await chain("cabrillo-to-adif", cabrillo);
-      const text = await back.text();
-      // Should preserve at least one QSO with the K1ABC callsign
-      expect(text).toMatch(/K1ABC/i);
-    },
-  );
+  // Phase-3 fix landed: adif-to-cabrillo emits a "0" placeholder for
+  // empty exchange fields (Cabrillo spec requires the field to be
+  // present), and cabrillo-to-adif accepts 8+ tokens (some loggers
+  // omit the trailing received exchange). Round-trip now preserves
+  // QSO records as expected.
+  it("ADIF -> Cabrillo -> ADIF preserves QSOs and callsigns", async () => {
+    const original = fileFromText("test.adi", FIXTURES.adif, "text/plain");
+    const cabrillo = await chain("adif-to-cabrillo", original);
+    const back = await chain("cabrillo-to-adif", cabrillo);
+    const text = await back.text();
+    expect(text).toMatch(/K1ABC/i);
+    expect(text).toMatch(/W2DEF/i);
+    expect(text).toMatch(/<call:/i);
+    // Both QSO_DATE values should survive
+    expect(text).toContain("20240101");
+    expect(text).toContain("20240102");
+  });
 
   it("ADIF -> Cabrillo -> ADIF preserves header structure", async () => {
-    // The structural part still survives (ADIF version, EOH marker).
-    // This test is the floor; the it.fails above tracks the real bug.
     const original = fileFromText("test.adi", FIXTURES.adif, "text/plain");
     const cabrillo = await chain("adif-to-cabrillo", original);
     const back = await chain("cabrillo-to-adif", cabrillo);
