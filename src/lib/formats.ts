@@ -1291,6 +1291,69 @@ const PROFILES: Record<string, FormatProfile> = {
     binary: false,
   },
 
+  // ===== Medical formats =====
+  hl7: {
+    name: "HL7 v2",
+    fullName: "Health Level 7 version 2.x messaging",
+    description:
+      "HL7 v2 is the universal messaging standard between U.S. hospital systems — Epic, Cerner, Meditech, Allscripts, Athena all speak it for ADT (admit/discharge/transfer), ORU (observation results), ORM (orders), and billing messages. Format dates to 1989; v2.5 (2003) is the most-deployed version. Pipe-delimited segments with caret-separated components and tilde-separated repetitions; the MSH header carries encoding characters and routing metadata. Despite FHIR's modern push, v2 still powers the operational backbone of most hospital networks.",
+    howToOpen:
+      "Any text editor — HL7 v2 is plain text with `|`/`^`/`~` as delimiters. Specialized viewers (Mirth Connect, Iguana, NextGen Connect, IBM Sterling) parse + index segments. For programmatic use, libraries exist for every language (HAPI in Java/.NET, hl7v2-js in Node).",
+    primaryUse: "Hospital-to-hospital and intra-hospital clinical messaging.",
+    binary: false,
+  },
+  fhir: {
+    name: "FHIR",
+    fullName: "Fast Healthcare Interoperability Resources (HL7 R4)",
+    description:
+      "FHIR is HL7's modern healthcare data standard — REST APIs over JSON resources (Patient, Observation, Condition, MedicationRequest, etc.) plus a Bundle wrapper for batch transfer. Released as Standard for Trial Use in 2014, R4 (current normative release) finalized 2019. Adopted by Apple Health, Epic's MyChart API, the U.S. ONC Cures Act 21st Century interoperability rules, every EHR vendor. Replacing HL7 v2 for new integrations though v2 remains dominant for legacy systems.",
+    howToOpen:
+      "FHIR is JSON, so any text editor + JSON viewer. Specialized tools: Postman with FHIR collections, HAPI FHIR's reference server, Inferno test harness. Most modern EHRs expose FHIR endpoints directly via OAuth-secured REST.",
+    primaryUse: "Modern healthcare API integrations and clinical data exchange.",
+    binary: false,
+  },
+  "fhir-bundle": {
+    name: "FHIR Bundle",
+    fullName: "FHIR R4 Bundle resource",
+    description:
+      "A FHIR Bundle is a JSON wrapper that carries multiple FHIR resources (Patient, Observation, Condition, MedicationRequest) as a single transferable unit. Bundle types: `transaction` (atomic batch of API operations), `collection` (grouped resources without operation semantics), `searchset` (server search response). The standard format for cross-system clinical data transfer in modern healthcare integrations.",
+    howToOpen:
+      "Any JSON viewer or FHIR-aware tool. Postman with FHIR collections, HAPI FHIR's reference server, Smart Health Cards verifier. EHR vendors accept Bundles via standard `$process-message` and `$transaction` endpoints.",
+    primaryUse: "Atomic batch transfer of clinical resources between FHIR servers.",
+    binary: false,
+  },
+  ccda: {
+    name: "C-CDA",
+    fullName: "Consolidated Clinical Document Architecture",
+    description:
+      "C-CDA is the HL7 XML format every U.S. EHR exports for transition-of-care documents — discharge summary, continuity of care document (CCD), referral note, history & physical. Required for ONC certification and Meaningful Use / Promoting Interoperability incentive programs. Templates standardize how to represent allergies, medications, problems, vital signs, lab results across vendors. Files are typically 100KB-2MB of XML; the document is human-readable when rendered with a stylesheet.",
+    howToOpen:
+      "Most browsers render C-CDA inline if the embedded XSL stylesheet loads. EHR portals (Epic MyChart, Cerner HealtheLife) auto-render. Standalone viewers: HealthIT.gov C-CDA Renderer, Lantana CDA Validator. Convert to HTML for portable viewing.",
+    primaryUse: "Cross-EHR clinical document exchange and patient record sharing.",
+    binary: false,
+  },
+
+  // ===== Legal eDiscovery formats =====
+  dat: {
+    name: "DAT",
+    fullName: "Concordance/Relativity load file",
+    description:
+      "DAT is the metadata + extracted-text load file format every U.S. eDiscovery production uses. Produced by Concordance, Relativity, Reveal, Logikcull, Everlaw, and every law firm review platform. Uses non-printable Unicode characters (U+0014 field delimiter, U+00FE text qualifier) instead of CSV's commas + quotes — the unusual delimiters avoid collisions with quoted text inside fields like email body content. CRLF line terminators (Concordance is Windows-native).",
+    howToOpen:
+      "Concordance, Relativity, Reveal, Everlaw, Logikcull, and every other eDiscovery review platform load DAT files natively. Excel opens them but shows garbled þ characters. Convert to CSV for spreadsheet workflows; the original DAT remains the production-of-record format.",
+    primaryUse: "eDiscovery document production metadata exchange between law firms.",
+    binary: false,
+  },
+  opt: {
+    name: "OPT",
+    fullName: "Concordance image load file",
+    description:
+      "OPT is the comma-separated image-mapping file that accompanies a DAT in a Concordance/Relativity production. Each row describes one page: PageID (Bates number), Volume, ImagePath (TIF, PDF, or JPG), IsBoundary (Y for first page of a doc), GroupIdentifier, Type, PagesInDoc. Required to load production images alongside the metadata.",
+    howToOpen:
+      "Concordance and Relativity load OPT directly when ingesting a production. Excel opens the comma-separated content but loses the implicit column meanings. Convert to CSV with proper headers for paralegals reviewing image-to-Bates mappings.",
+    primaryUse: "Mapping production document images to Bates page identifiers.",
+    binary: false,
+  },
 };
 
 /** Look up by extension or by name (case-insensitive). */

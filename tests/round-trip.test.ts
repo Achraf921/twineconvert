@@ -1207,3 +1207,183 @@ describe("JWT → JSON decoder", () => {
     expect(parsed.payload.sub).toBe("1234567890");
   });
 });
+
+// ============================================================================
+// Medical: HL7 v2.x messaging round-trip
+// ============================================================================
+describe("round-trip: HL7 v2 ↔ JSON", () => {
+  it("HL7 → JSON decodes the patient identity from PID-5", async () => {
+    const original = fileFromText("test.hl7", FIXTURES.hl7v2, "application/hl7-v2");
+    const json = await chain("hl7-to-json", original);
+    const parsed = JSON.parse(await json.text()) as {
+      MSH: Array<Record<string, unknown>>;
+      PID: Array<Record<string, unknown>>;
+    };
+    expect(parsed.MSH).toHaveLength(1);
+    expect(parsed.PID).toHaveLength(1);
+    // PID-5 is patient name, expanded to ["DOE", "JOHN", "A"] components
+    expect(parsed.PID[0]["PID.5"]).toEqual(["DOE", "JOHN", "A"]);
+    // PID-7 is birth date as a string
+    expect(parsed.PID[0]["PID.7"]).toBe("19800515");
+    // PID-8 is gender
+    expect(parsed.PID[0]["PID.8"]).toBe("M");
+  });
+
+  it("JSON → HL7 → JSON preserves segments and field values", async () => {
+    const originalJson = fileFromText(
+      "test.json",
+      JSON.stringify({
+        MSH: [
+          {
+            "MSH.1": "|",
+            "MSH.2": "^~\\&",
+            "MSH.3": "TEST",
+            "MSH.7": "20240101120000",
+            "MSH.9": "ADT^A01",
+            "MSH.10": "MSG999",
+            "MSH.11": "P",
+            "MSH.12": "2.5",
+          },
+        ],
+        PID: [
+          {
+            "PID.1": "1",
+            "PID.5": ["SMITH", "JANE"],
+            "PID.7": "19900315",
+            "PID.8": "F",
+          },
+        ],
+      }),
+      "application/json",
+    );
+    const hl7 = await chain("json-to-hl7", originalJson);
+    const back = await chain("hl7-to-json", hl7);
+    const parsed = JSON.parse(await back.text()) as {
+      MSH: Array<Record<string, unknown>>;
+      PID: Array<Record<string, unknown>>;
+    };
+    expect(parsed.MSH[0]["MSH.10"]).toBe("MSG999");
+    expect(parsed.PID[0]["PID.5"]).toEqual(["SMITH", "JANE"]);
+    expect(parsed.PID[0]["PID.7"]).toBe("19900315");
+    expect(parsed.PID[0]["PID.8"]).toBe("F");
+  });
+});
+
+describe("HL7 → CSV (one row per segment, columns per field index)", () => {
+  it("emits one row per segment with the segment type as the first column", async () => {
+    const original = fileFromText("test.hl7", FIXTURES.hl7v2, "application/hl7-v2");
+    const csv = await chain("hl7-to-csv", original);
+    const text = await csv.text();
+    // Headers: segment + per-segment field-index columns
+    expect(text.split("\n")[0]).toContain("segment");
+    // Should mention every segment type from our fixture
+    expect(text).toContain("MSH");
+    expect(text).toContain("PID");
+    expect(text).toContain("PV1");
+    expect(text).toContain("DG1");
+    expect(text).toContain("DOE^JOHN^A");
+  });
+});
+
+// ============================================================================
+// Medical: FHIR Bundle round-trip
+// ============================================================================
+describe("round-trip: FHIR Bundle ↔ CSV", () => {
+  it("FHIR Bundle → CSV → FHIR Bundle preserves resource ids and types", async () => {
+    const original = fileFromText("bundle.json", FIXTURES.fhirBundle, "application/fhir+json");
+    const csv = await chain("fhir-bundle-to-csv", original);
+    const back = await chain("csv-to-fhir-bundle", csv);
+    const text = await back.text();
+    const parsed = JSON.parse(text) as {
+      resourceType: string;
+      entry: Array<{ resource: { resourceType: string; id: string } }>;
+    };
+    expect(parsed.resourceType).toBe("Bundle");
+    expect(parsed.entry).toHaveLength(3);
+    // All three resource types from the fixture survive
+    const types = parsed.entry.map((e) => e.resource.resourceType).sort();
+    expect(types).toEqual(["Condition", "Observation", "Patient"]);
+    // The Patient id survives
+    const patient = parsed.entry.find((e) => e.resource.resourceType === "Patient");
+    expect(patient?.resource.id).toBe("patient-001");
+  });
+});
+
+// ============================================================================
+// Medical: C-CDA → HTML / JSON
+// ============================================================================
+describe("C-CDA → HTML rendering", () => {
+  it("extracts patient identity, document title, and section titles", async () => {
+    const original = fileFromText("ccd.xml", FIXTURES.ccda, "application/cda+xml");
+    const html = await chain("ccda-to-html", original);
+    const text = await html.text();
+    expect(text).toContain("<!DOCTYPE html>");
+    expect(text).toContain("Continuity of Care Document");
+    expect(text).toContain("John");
+    expect(text).toContain("Doe");
+    expect(text).toContain("1980-05-15"); // birthdate normalized from YYYYMMDD
+    expect(text).toContain("Allergies");
+    expect(text).toContain("Medications");
+    expect(text).toContain("Problems");
+    expect(text).toContain("Albuterol");
+  });
+});
+
+describe("C-CDA → JSON extraction", () => {
+  it("extracts patient demographics and section titles", async () => {
+    const original = fileFromText("ccd.xml", FIXTURES.ccda, "application/cda+xml");
+    const json = await chain("ccda-to-json", original);
+    const parsed = JSON.parse(await json.text()) as {
+      documentTitle: string;
+      patient: { givenName: string; familyName: string; birthTime: string };
+      sections: Array<{ title: string }>;
+    };
+    expect(parsed.documentTitle).toBe("Continuity of Care Document");
+    expect(parsed.patient.givenName).toBe("John");
+    expect(parsed.patient.familyName).toBe("Doe");
+    expect(parsed.patient.birthTime).toBe("19800515");
+    expect(parsed.sections.map((s) => s.title)).toEqual([
+      "Allergies",
+      "Medications",
+      "Problems",
+    ]);
+  });
+});
+
+// ============================================================================
+// Legal: Concordance DAT/OPT load files
+// ============================================================================
+describe("round-trip: Concordance DAT ↔ CSV", () => {
+  it("DAT → CSV → DAT preserves headers and every row", async () => {
+    const original = fileFromText("production.dat", FIXTURES.datLoadFile, "application/vnd.concordance-dat");
+    const csv = await chain("dat-to-csv", original);
+    const back = await chain("csv-to-dat", csv);
+    const text = await back.text();
+    // Round-trip must preserve every Bates number from the fixture
+    expect(text).toContain("ABC0000001");
+    expect(text).toContain("ABC0000003");
+    expect(text).toContain("ABC0000004");
+    expect(text).toContain("ABC0000005");
+    expect(text).toContain("alice@example.com");
+    expect(text).toContain("Q4 review meeting");
+    expect(text).toContain("Contract draft");
+    // Output has the Concordance text qualifier (þ) wrapping cells
+    expect(text).toContain("þ");
+  });
+});
+
+describe("Concordance OPT → CSV", () => {
+  it("emits headers and one row per page", async () => {
+    const original = fileFromText("images.opt", FIXTURES.optLoadFile, "application/vnd.concordance-opt");
+    const csv = await chain("opt-to-csv", original);
+    const text = await csv.text();
+    // Headers from optToTable
+    expect(text).toMatch(/^PageID,Volume,ImagePath/m);
+    // 5 data rows from fixture
+    expect(text.split("\n").filter(Boolean)).toHaveLength(6); // header + 5 rows
+    // Bates IDs and the boundary marker survive
+    expect(text).toContain("ABC0000001");
+    expect(text).toContain("ABC0000005");
+    expect(text).toContain("VOL001");
+  });
+});

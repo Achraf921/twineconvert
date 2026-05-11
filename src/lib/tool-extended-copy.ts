@@ -488,6 +488,145 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       },
     ],
   },
+
+  // ===== Medical: HL7 v2.x =====
+  "hl7-to-csv": {
+    whyConvert:
+      "HL7 v2 messages are pipe-delimited blobs that defy spreadsheet inspection — you can't open one in Excel and triage what's inside. Converting to CSV lets a clinical data analyst, integration engineer, or QA team scan a day's worth of ADT/ORU/ORM messages, filter by segment type, and audit message volumes without standing up Mirth Connect or a HAPI FHIR server. Also useful for HIPAA audit logs that need flat-file export.",
+    example:
+      "Your hospital's interface engine logged 18,000 HL7 messages overnight. You suspect an outbound feed dropped a third of its ADT^A04s. Drop the message log, get a CSV with one row per segment, filter for segment='MSH' and message type, count rows. Three minutes vs three hours building a Mirth dashboard.",
+    troubleshooting: [
+      {
+        problem: "My CSV has way more rows than messages — what's happening?",
+        solution:
+          "Each HL7 message contains multiple segments (MSH + EVN + PID + PV1 + ...). The CSV emits one row per SEGMENT, not per message. To count messages, filter for segment='MSH'. To group by message, you'd add a `message_id` column based on MSH-10 — easier in your spreadsheet's pivot table than at conversion time.",
+      },
+      {
+        problem: "Some segments are missing fields I expect to see.",
+        solution:
+          "HL7 v2 allows trailing field omission — a message with PID-1 through PID-15 may simply end after PID-15 with no trailing pipes. We treat those as empty strings in the output CSV. If your downstream tool needs explicit nulls, replace empty cells with `NULL` in a spreadsheet pass.",
+      },
+      {
+        problem: "Non-ASCII characters in patient names came out garbled.",
+        solution:
+          "HL7 v2 doesn't mandate an encoding; older feeds use Windows-1252 or ISO-8859-1, modern ones use UTF-8. We assume UTF-8 (matching the JS string default). If yours was Windows-1252, open the source file in a text editor and re-save as UTF-8 first, then re-run.",
+      },
+    ],
+  },
+  "hl7-to-json": {
+    whyConvert:
+      "HL7 v2 → JSON is the first step of every modernization project — feeding legacy v2 feeds into a FHIR server, a data warehouse (Snowflake/Databricks/BigQuery), or a no-code automation platform. The structural translation is mechanical (segment.field.component path), but writing it by hand is error-prone for the first time. The JSON output is keyed by segment type with `MSH.10`-style field paths so downstream code can address fields without re-parsing pipes.",
+    example:
+      "You're building a ML pipeline that flags admissions with elevated readmission risk. Your input is a stream of ADT^A01 messages from your interface engine. Convert each to JSON, drop into your feature store, train. The JSON keys (`PID.5`, `PV1.10`, `DG1.3`) are stable across messages so your feature extraction code doesn't break.",
+    troubleshooting: [
+      {
+        problem: "Component values are sometimes strings, sometimes arrays.",
+        solution:
+          "When a field has a single component (just a value), we emit a string. When it has multiple components (e.g. `DOE^JOHN^A`), we emit an array `['DOE', 'JOHN', 'A']`. Code that consumes the JSON should normalize: `Array.isArray(v) ? v : [v]`.",
+      },
+      {
+        problem: "Repeated fields are nested arrays — how do I flatten?",
+        solution:
+          "HL7 allows tilde-separated repetitions in a single field (multiple addresses, multiple insurance IDs). When repetitions exist, the value is an array of components-arrays. Most of the time you only care about the first repetition: `Array.isArray(v[0]) ? v[0] : v`.",
+      },
+    ],
+  },
+
+  // ===== Medical: FHIR =====
+  "fhir-bundle-to-csv": {
+    whyConvert:
+      "FHIR Bundles in production carry hundreds to thousands of mixed resources (Patient + Observation + Condition + MedicationRequest from a single $everything operation). Triaging that as JSON is exhausting; piping it through a spreadsheet to spot duplicates, audit data quality, or compare across patients is the analyst's go-to workflow. CSV with one row per resource and a unified column set across resource types is what makes that workflow possible.",
+    example:
+      "You called the Epic FHIR `Patient/$everything` endpoint and got back a 4,000-resource Bundle for a single patient's lifetime record. You want to count Observations by code, find the date range, and spot any nulls. Convert to CSV, pivot in Excel, done in 5 minutes.",
+    troubleshooting: [
+      {
+        problem: "Some columns are full of '[object Object]'-style values.",
+        solution:
+          "FHIR resources have nested objects (CodeableConcept, Reference, Quantity) that don't flatten cleanly to a single CSV cell. We JSON-encode them so no data is lost; if you need them flat, post-process in your spreadsheet (`=JSON_VALUE(A1, '$.coding[0].code')` in Sheets) or convert to JSON first, jq the nested fields out, then back to CSV.",
+      },
+      {
+        problem: "Resources of different types share a column header but mean different things.",
+        solution:
+          "We compute the column union across all resources, so `id` appears once but every resource has it. This is intentional — analysts want one wide table to scan, not multiple per-type sub-tables. To split by type after the fact: filter on the `resourceType` column and re-export each subset.",
+      },
+    ],
+  },
+
+  // ===== Medical: C-CDA =====
+  "ccda-to-html": {
+    whyConvert:
+      "Patients receive C-CDA files from EHR portals (Epic MyChart, Cerner HealtheLife) when they request a copy of their records — and those XML files are unreadable to humans. The HL7 stylesheet that's supposed to render them often doesn't load (security policies, missing local CSS, browser quirks). Converting to standalone HTML gives the patient a clean, print-friendly view of their own discharge summary, problem list, medications, and allergies.",
+    example:
+      "Your parent had heart surgery, the hospital sent home a thumb drive with a CCD.xml of the discharge summary. They can't read XML. Drop the file, download the HTML, open it on their computer — they see name, DOB, the section list (Allergies, Medications, Problems), and human-readable text under each.",
+    troubleshooting: [
+      {
+        problem: "Some sections show '(no content)' even though I know there's data.",
+        solution:
+          "C-CDA stores section content in two places: the `<text>` element (human-readable narrative) and the `<entry>` elements (machine-readable structured data). We render the narrative because it's reliably present and human-targeted. If your sections only have entries, you'd need a more sophisticated viewer like the HealthIT.gov reference renderer.",
+      },
+      {
+        problem: "My provider's name and contact info aren't shown.",
+        solution:
+          "The patient header we render is intentionally minimal (name, DOB, gender, MRN). Provider/author information lives in the `<author>` and `<custodian>` elements; we omit them to keep the rendered document focused on the patient. To see them, convert to JSON and inspect the surrounding metadata.",
+      },
+    ],
+  },
+
+  // ===== Legal: Concordance DAT =====
+  "dat-to-csv": {
+    whyConvert:
+      "Receiving a production from opposing counsel means a folder of DAT load files that Excel renders as garbage (those mysterious þ characters are U+00FE text qualifiers, paired with U+0014 field delimiters). Converting to CSV is the first step every paralegal does to triage what's been produced — count documents, sort by date, search for hot terms in extracted text — before the formal review platform load.",
+    example:
+      "You receive a 50,000-document production from opposing counsel as a DAT + OPT pair. Before loading into Relativity (which costs your client per GB hosted), you want to spot-check what's there. Convert the DAT to CSV, sort by `EmailFrom`, and pull out the 200 communications between two specific custodians for an early-case strategy review.",
+    troubleshooting: [
+      {
+        problem: "Extracted text fields contain literal newlines that break my CSV import.",
+        solution:
+          "DAT extracted-text fields routinely contain embedded newlines (paragraph breaks in emails, attachments). We preserve them inside CSV cells, properly quoted per RFC 4180. If your downstream tool can't handle multi-line cells, replace `\\n` with ` ` in the extracted-text column post-conversion.",
+      },
+      {
+        problem: "My DAT uses `|` delimiters instead of the Unicode characters.",
+        solution:
+          "Older Concordance exports (pre-2010) sometimes use pipe-and-comma fallbacks. We auto-detect: if no U+0014 characters appear in the input, we fall back to `|` as field delimiter. If your file uses something else entirely (rare), pre-process with sed or open in a hex editor to confirm the delimiter byte.",
+      },
+      {
+        problem: "Bates numbers got reformatted (leading zeros dropped).",
+        solution:
+          "Excel auto-detects Bates numbers like `ABC0000123` as text correctly, but plain CSV import sometimes treats numeric-looking values as numbers and strips leading zeros. We preserve them as text in the CSV output. If your spreadsheet still strips them, use Excel's Import Wizard and explicitly set the Bates column to Text type.",
+      },
+    ],
+  },
+  "csv-to-dat": {
+    whyConvert:
+      "If you've built up a custom document set in a spreadsheet (from a database export, an ad-hoc collection, or a third-party platform that doesn't speak DAT), getting it into Relativity or Concordance for review requires a proper DAT file with the Unicode delimiters and text qualifiers their importers expect. Producing one by hand is error-prone — wrong delimiter, wrong line terminator, missing header line, and Relativity rejects the entire load.",
+    example:
+      "Your client's IT team exported a custom email database as CSV with columns `BegBates, EndBates, From, To, Subject, BodyText`. You need it in Relativity for review. Convert to DAT, hand to the litigation support team, they load it without further reformatting.",
+    troubleshooting: [
+      {
+        problem: "Relativity's import wizard rejects my DAT with 'invalid delimiter' errors.",
+        solution:
+          "Some Relativity instances are configured to expect the visible-character delimiter pair (`|`/`\"`) instead of the Unicode pair we emit by default (which is the Concordance standard). Confirm with your litigation support contact which delimiters their workspace expects. If Unicode, our output works as-is.",
+      },
+      {
+        problem: "Bates ranges look wrong after import.",
+        solution:
+          "Make sure your CSV has explicit `BegBates` and `EndBates` columns (not just a single `BatesNumber`). For one-page documents, BegBates = EndBates. Most review platforms require the range explicitly.",
+      },
+    ],
+  },
+  "opt-to-csv": {
+    whyConvert:
+      "OPT files map every Bates page in a production to its image file path on disk. Loading them into Excel directly preserves the data but loses the column meaning — you're stuck remembering that column 4 is `IsBoundary` and column 7 is `PagesInDoc`. Converting to a real CSV with proper headers makes the file self-documenting and shareable across teams without a Concordance manual.",
+    example:
+      "Your firm received a production where the image folder structure looks broken — some pages are missing TIF files. Drop the OPT, get a CSV, sort by ImagePath, and immediately see the 47 pages with empty path values that need to be re-requested from opposing counsel.",
+    troubleshooting: [
+      {
+        problem: "Image paths use backslashes and break in my Mac/Linux tool.",
+        solution:
+          "Concordance is Windows-native and OPT files use Windows path separators (`\\`). We preserve them verbatim. To convert for Mac/Linux: search-replace `\\` → `/` in the resulting CSV. If your downstream tool needs absolute paths, prepend the production root to ImagePath.",
+      },
+    ],
+  },
 };
 
 export function getExtendedCopy(toolId: string): ExtendedCopy | undefined {

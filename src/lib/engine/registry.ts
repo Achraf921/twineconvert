@@ -724,6 +724,34 @@ export const registry: Record<string, ConverterLoader> = {
     import("./converters/pem-to-der").then((m) => m.default),
   "der-to-pem": () =>
     import("./converters/der-to-pem").then((m) => m.default),
+
+  // Medical: HL7 v2.x messaging (universal hospital data exchange).
+  "hl7-to-csv": () =>
+    import("./converters/hl7-to-csv").then((m) => m.default),
+  "hl7-to-json": () =>
+    import("./converters/hl7-to-json").then((m) => m.default),
+  "json-to-hl7": () =>
+    import("./converters/json-to-hl7").then((m) => m.default),
+
+  // Medical: FHIR R4 Bundle resources (modern interop).
+  "fhir-bundle-to-csv": () =>
+    import("./converters/fhir-bundle-to-csv").then((m) => m.default),
+  "csv-to-fhir-bundle": () =>
+    import("./converters/csv-to-fhir-bundle").then((m) => m.default),
+
+  // Medical: C-CDA Clinical Document Architecture (Meaningful Use docs).
+  "ccda-to-html": () =>
+    import("./converters/ccda-to-html").then((m) => m.default),
+  "ccda-to-json": () =>
+    import("./converters/ccda-to-json").then((m) => m.default),
+
+  // Legal: eDiscovery production load files (Concordance/Relativity).
+  "dat-to-csv": () =>
+    import("./converters/dat-to-csv").then((m) => m.default),
+  "csv-to-dat": () =>
+    import("./converters/csv-to-dat").then((m) => m.default),
+  "opt-to-csv": () =>
+    import("./converters/opt-to-csv").then((m) => m.default),
 };
 
 /** All converter IDs, useful for sitemap generation later. */

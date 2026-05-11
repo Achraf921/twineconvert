@@ -658,6 +658,116 @@ AAAAAAAAAAAAAAAAAAAA
 -----END CERTIFICATE-----
 `,
 
+  // ---- HL7 v2.x ADT^A01 admission message (real-shape, fictional patient) ----
+  hl7v2: `MSH|^~\\&|EPIC|REGIONAL|LAB|REGIONAL|20240101120000||ADT^A01|MSG00001|P|2.5
+EVN|A01|20240101120000
+PID|1||10001234^^^MRN||DOE^JOHN^A||19800515|M|||123 MAIN ST^^BOSTON^MA^02101||(617)555-0100|||S|||000-00-0000
+PV1|1|I|2W^208^A|||||||SUR||||7|||DOE^JANE|I|123456|||||||||||||||||||||REGIONAL|||||20240101120000
+DG1|1||I10^J45.909^Asthma, unspecified, uncomplicated|||A
+`,
+
+  // ---- FHIR R4 Bundle with Patient + Observation resources ----
+  fhirBundle: `{
+  "resourceType": "Bundle",
+  "type": "collection",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-001",
+        "active": true,
+        "name": [{ "use": "official", "family": "Doe", "given": ["John"] }],
+        "gender": "male",
+        "birthDate": "1980-05-15"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-001",
+        "status": "final",
+        "code": { "text": "Heart rate" },
+        "subject": { "reference": "Patient/patient-001" },
+        "valueQuantity": { "value": 72, "unit": "/min" },
+        "effectiveDateTime": "2024-01-01T12:00:00Z"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "cond-001",
+        "clinicalStatus": { "text": "active" },
+        "code": { "text": "Asthma" },
+        "subject": { "reference": "Patient/patient-001" }
+      }
+    }
+  ]
+}
+`,
+
+  // ---- C-CDA Continuity of Care Document (minimal but real-shape) ----
+  ccda: `<?xml version="1.0" encoding="UTF-8"?>
+<ClinicalDocument xmlns="urn:hl7-org:v3">
+  <typeId root="2.16.840.1.113883.1.3" extension="POCD_HD000040"/>
+  <templateId root="2.16.840.1.113883.10.20.22.1.2"/>
+  <id root="db734647-fc99-424c-a864-7e3cda82e703"/>
+  <code code="34133-9" displayName="Summarization of Episode Note"/>
+  <title>Continuity of Care Document</title>
+  <effectiveTime value="20240101120000"/>
+  <recordTarget>
+    <patientRole>
+      <id extension="10001234" root="2.16.840.1.113883.4.6"/>
+      <patient>
+        <name>
+          <given>John</given>
+          <given>A</given>
+          <family>Doe</family>
+        </name>
+        <administrativeGenderCode code="M"/>
+        <birthTime value="19800515"/>
+      </patient>
+    </patientRole>
+  </recordTarget>
+  <component>
+    <structuredBody>
+      <component>
+        <section>
+          <title>Allergies</title>
+          <text>No known drug allergies.</text>
+        </section>
+      </component>
+      <component>
+        <section>
+          <title>Medications</title>
+          <text>Albuterol inhaler 90 mcg, 2 puffs every 4 hours as needed.</text>
+        </section>
+      </component>
+      <component>
+        <section>
+          <title>Problems</title>
+          <text>Asthma, unspecified, uncomplicated (ICD-10 J45.909).</text>
+        </section>
+      </component>
+    </structuredBody>
+  </component>
+</ClinicalDocument>
+`,
+
+  // ---- Concordance DAT load file (using Unicode delimiters) ----
+  // Format: þ wrapped fields,  field separator (U+0014)
+  datLoadFile:
+    "þBegBatesþþEndBatesþþDocDateþþFromþþToþþSubjectþ\r\n" +
+    "þABC0000001þþABC0000003þþ2024-01-15þþalice@example.comþþbob@example.comþþQ4 review meetingþ\r\n" +
+    "þABC0000004þþABC0000005þþ2024-01-16þþcarol@example.comþþdave@example.comþþContract draftþ\r\n",
+
+  // ---- Concordance OPT image load file ----
+  optLoadFile: `ABC0000001,VOL001,IMAGES\\001\\ABC0000001.tif,Y,,,3
+ABC0000002,VOL001,IMAGES\\001\\ABC0000002.tif,,,,3
+ABC0000003,VOL001,IMAGES\\001\\ABC0000003.tif,,,,3
+ABC0000004,VOL001,IMAGES\\001\\ABC0000004.tif,Y,,,2
+ABC0000005,VOL001,IMAGES\\001\\ABC0000005.tif,,,,2
+`,
+
   // ---- SBV (YouTube subtitle) ----
   sbv: `0:00:01.000,0:00:04.000
 First caption text

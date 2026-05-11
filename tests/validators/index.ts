@@ -672,6 +672,64 @@ export const validateDer: Validator = async ({ blob, minSize = 4 }) => {
   }
 };
 
+// ============================================================================
+// Medical / legal format validators
+// ============================================================================
+
+export const validateHl7: Validator = async ({ blob, minSize = 10 }) => {
+  assertMinSize(blob, minSize, "HL7");
+  const text = await readText(blob);
+  if (!/^MSH/m.test(text)) throw new Error("HL7 missing required MSH segment at start");
+  // First segment must be MSH followed immediately by the field-separator char.
+  // Tolerant of whatever delimiter the message declared (`|` is conventional).
+  if (!/^MSH./.test(text)) throw new Error("HL7 MSH segment missing field separator");
+};
+
+export const validateFhirJson: Validator = async ({ blob }) => {
+  const text = await readText(blob);
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(text);
+  } catch (e) {
+    throw new Error(`FHIR JSON failed to parse: ${e instanceof Error ? e.message : String(e)}`);
+  }
+  const root = parsed as { resourceType?: string };
+  if (typeof root.resourceType !== "string") {
+    throw new Error("FHIR resource missing required `resourceType` field");
+  }
+};
+
+export const validateCcdaXml: Validator = async ({ blob, minSize = 100 }) => {
+  assertMinSize(blob, minSize, "C-CDA");
+  const text = await readText(blob);
+  if (!/<ClinicalDocument\b/.test(text)) {
+    throw new Error("C-CDA missing <ClinicalDocument> root element");
+  }
+};
+
+export const validateDat: Validator = async ({ blob, minSize = 10 }) => {
+  // Concordance DAT load file: must have at least one Unicode field
+  // delimiter (U+0014) OR fall back to pipe `|` for legacy producers.
+  assertMinSize(blob, minSize, "DAT");
+  const text = await readText(blob);
+  const hasUnicode = text.includes("");
+  const hasPipe = text.includes("|");
+  if (!hasUnicode && !hasPipe) {
+    throw new Error("DAT load file has no recognizable field delimiter (U+0014 or |)");
+  }
+};
+
+export const validateOpt: Validator = async ({ blob, minSize = 10 }) => {
+  // Concordance image load file: comma-separated, each row has 4-7 fields
+  assertMinSize(blob, minSize, "OPT");
+  const text = await readText(blob);
+  const firstLine = text.split(/\r?\n/)[0];
+  const cols = firstLine.split(",");
+  if (cols.length < 3) {
+    throw new Error(`OPT first row has only ${cols.length} columns (expected at least 3)`);
+  }
+};
+
 export const validatePem: Validator = async ({ blob, minSize = 30 }) => {
   assertMinSize(blob, minSize, "PEM");
   const text = await readText(blob);
@@ -894,6 +952,11 @@ const BY_MIME: Record<string, Validator> = {
   "application/x-pem-file": validatePem,
   "application/pkix-cert": validateDer,
   "application/x-x509-ca-cert": validateDer,
+  "application/hl7-v2": validateHl7,
+  "application/fhir+json": validateFhirJson,
+  "application/cda+xml": validateCcdaXml,
+  "application/vnd.concordance-dat": validateDat,
+  "application/vnd.concordance-opt": validateOpt,
 
   "application/vnd.oasis.opendocument.spreadsheet": validateOds,
   "application/vnd.oasis.opendocument.spreadsheet-template": validateOds,
@@ -948,6 +1011,11 @@ const BY_EXT: Record<string, Validator> = {
   pem: validatePem,
   der: validateDer,
   cer: validateDer,
+  hl7: validateHl7,
+  ccda: validateCcdaXml,
+  cda: validateCcdaXml,
+  dat: validateDat,
+  opt: validateOpt,
 };
 
 /**

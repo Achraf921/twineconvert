@@ -496,6 +496,24 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
     for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
     return fileFromBytes("cert.der", bytes, "application/pkix-cert");
   }, env: "node" },
+
+  // ===== Medical: HL7 v2.x =====
+  "hl7-to-csv":  { provider: () => text("test.hl7", F.hl7v2, "application/hl7-v2"), env: "node" },
+  "hl7-to-json": { provider: () => text("test.hl7", F.hl7v2, "application/hl7-v2"), env: "node" },
+  "json-to-hl7": { provider: () => text("test.json", `{"MSH":[{"MSH.1":"|","MSH.2":"^~\\\\&","MSH.3":"EPIC","MSH.4":"REGIONAL","MSH.7":"20240101120000","MSH.9":"ADT^A01","MSH.10":"MSG00001","MSH.11":"P","MSH.12":"2.5"}],"PID":[{"PID.1":"1","PID.3":"10001234^^^MRN","PID.5":"DOE^JOHN^A","PID.7":"19800515","PID.8":"M"}]}`, "application/json"), env: "node" },
+
+  // ===== Medical: FHIR =====
+  "fhir-bundle-to-csv": { provider: () => text("bundle.json", F.fhirBundle, "application/fhir+json"), env: "node" },
+  "csv-to-fhir-bundle": { provider: () => text("patients.csv", `resourceType,id,active,birthDate\nPatient,p1,true,1980-05-15\nPatient,p2,true,1985-08-22\n`, "text/csv"), env: "node" },
+
+  // ===== Medical: C-CDA =====
+  "ccda-to-html": { provider: () => text("ccd.xml", F.ccda, "application/cda+xml"), env: "node" },
+  "ccda-to-json": { provider: () => text("ccd.xml", F.ccda, "application/cda+xml"), env: "node" },
+
+  // ===== Legal: Concordance DAT/OPT =====
+  "dat-to-csv":  { provider: () => text("production.dat", F.datLoadFile, "application/vnd.concordance-dat"), env: "node" },
+  "csv-to-dat":  { provider: () => text("production.csv", `BegBates,EndBates,Date,From,To,Subject\nABC0000001,ABC0000003,2024-01-15,alice@example.com,bob@example.com,Q4 review\n`, "text/csv"), env: "node" },
+  "opt-to-csv":  { provider: () => text("images.opt", F.optLoadFile, "application/vnd.concordance-opt"), env: "node" },
 };
 
 /** True if we have any fixture for this id (even if it requires browser). */

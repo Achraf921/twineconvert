@@ -194,6 +194,14 @@ const FORMATS = {
   jwt: { kind: "data", lossless: true, family: "crypto" }, // decode-only
   pem: { kind: "data", lossless: true, family: "crypto" }, // text-armored binary
   der: { kind: "data", lossless: true, family: "crypto" }, // raw ASN.1 bytes
+  // ==== Medical formats ====
+  hl7: { kind: "data", lossless: true, family: "medical" },
+  fhir: { kind: "data", lossless: true, family: "medical" },
+  "fhir-bundle": { kind: "data", lossless: true, family: "medical" },
+  ccda: { kind: "doc", lossless: false, family: "medical" }, // narrative→HTML loses entries
+  // ==== Legal eDiscovery ====
+  dat: { kind: "data", lossless: true, family: "legal" },
+  opt: { kind: "data", lossless: true, family: "legal" },
 };
 
 // --------------------------------------------------------------------
@@ -253,6 +261,11 @@ const SINGLE_ACTION = new Set([
   "hcl-to-json",
   // JWT is decode-only (no JSON → JWT converter, that requires signing)
   "jwt-to-json",
+  // C-CDA → HTML/JSON: structured XML to flatter formats (impractical to
+  // reconstruct conformant CDA schema from generic HTML/JSON without
+  // a full template library).
+  "ccda-to-html",
+  "ccda-to-json",
 ]);
 
 // --------------------------------------------------------------------

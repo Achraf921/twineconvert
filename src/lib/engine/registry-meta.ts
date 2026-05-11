@@ -3471,6 +3471,136 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     ],
     "toMime": "application/x-pem-file",
     "maxFileSizeBytes": 5242880
+  },
+  "hl7-to-csv": {
+    "label": "HL7 → CSV",
+    "accept": [
+      ".hl7",
+      ".txt"
+    ],
+    "fromMime": [
+      "application/hl7-v2",
+      "text/plain"
+    ],
+    "toMime": "text/csv",
+    "maxFileSizeBytes": 52428800
+  },
+  "hl7-to-json": {
+    "label": "HL7 → JSON",
+    "accept": [
+      ".hl7",
+      ".txt"
+    ],
+    "fromMime": [
+      "application/hl7-v2",
+      "text/plain"
+    ],
+    "toMime": "application/json",
+    "maxFileSizeBytes": 52428800
+  },
+  "json-to-hl7": {
+    "label": "JSON → HL7",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "application/hl7-v2",
+    "maxFileSizeBytes": 52428800
+  },
+  "fhir-bundle-to-csv": {
+    "label": "FHIR Bundle → CSV",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/fhir+json",
+      "application/json"
+    ],
+    "toMime": "text/csv",
+    "maxFileSizeBytes": 52428800
+  },
+  "csv-to-fhir-bundle": {
+    "label": "CSV → FHIR Bundle",
+    "accept": [
+      ".csv"
+    ],
+    "fromMime": [
+      "text/csv",
+      "application/csv",
+      "text/plain"
+    ],
+    "toMime": "application/fhir+json",
+    "maxFileSizeBytes": 52428800
+  },
+  "ccda-to-html": {
+    "label": "C-CDA → HTML",
+    "accept": [
+      ".xml",
+      ".cda",
+      ".ccda"
+    ],
+    "fromMime": [
+      "application/cda+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 52428800
+  },
+  "ccda-to-json": {
+    "label": "C-CDA → JSON",
+    "accept": [
+      ".xml",
+      ".cda",
+      ".ccda"
+    ],
+    "fromMime": [
+      "application/cda+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "application/json",
+    "maxFileSizeBytes": 52428800
+  },
+  "dat-to-csv": {
+    "label": "DAT → CSV",
+    "accept": [
+      ".dat"
+    ],
+    "fromMime": [
+      "application/vnd.concordance-dat",
+      "text/plain"
+    ],
+    "toMime": "text/csv",
+    "maxFileSizeBytes": 209715200
+  },
+  "csv-to-dat": {
+    "label": "CSV → DAT",
+    "accept": [
+      ".csv"
+    ],
+    "fromMime": [
+      "text/csv",
+      "application/csv",
+      "text/plain"
+    ],
+    "toMime": "application/vnd.concordance-dat",
+    "maxFileSizeBytes": 209715200
+  },
+  "opt-to-csv": {
+    "label": "OPT → CSV",
+    "accept": [
+      ".opt"
+    ],
+    "fromMime": [
+      "application/vnd.concordance-opt",
+      "text/plain"
+    ],
+    "toMime": "text/csv",
+    "maxFileSizeBytes": 209715200
   }
 };
 
