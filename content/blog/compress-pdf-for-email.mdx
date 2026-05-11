@@ -1,0 +1,77 @@
+---
+title: "How to compress a PDF for email (without losing readability)"
+description: "Most PDFs are too big because of unoptimized images. Here is the four-step compression that cuts file size by 80-90% without making text unreadable."
+publishDate: "2026-05-19"
+tags: ["pdf", "compression", "email"]
+relatedTools: ["compress-pdf", "pdf-to-jpg", "jpg-to-pdf"]
+---
+
+Gmail caps attachments at 25 MB. Outlook ranges from 20 MB to 35 MB depending on the account type. Most corporate mail servers cap at 10-25 MB. A scanned 30-page document at default settings is often 40-80 MB. The math does not work.
+
+Here is what makes PDFs big and the order of operations that gets them under any practical email limit.
+
+## What is actually large in a PDF
+
+A PDF that "feels too big" is almost always large because of one of three things:
+
+1. **High-resolution embedded images.** Scans, photos, screenshots. A single 12-megapixel iPhone photo embedded at full resolution adds 3-5 MB.
+2. **Unoptimized fonts.** Every font referenced gets embedded. If the PDF uses 8 different fonts and embeds them all, that is 2-5 MB of fonts alone.
+3. **Object streams that were never compressed.** PDF supports compression but generators do not always use it. Old PDFs from pre-2010 are especially likely to have uncompressed streams.
+
+Text and vectors are almost never the bottleneck. A 200-page text-only book in PDF is maybe 1-2 MB. The moment you have scanned pages or embedded photos, the size explodes.
+
+## The four-step compression
+
+### Step 1: figure out what is bloating the file
+
+If you have access to the original, look at it. Is it mostly scanned pages? Photos? Or just text with a few diagrams?
+
+If you do not have the original, the file size itself tells you. A 30-page PDF over 5 MB almost certainly has high-resolution scans. A 30-page PDF over 30 MB has photo-quality scans at 600 DPI or higher (overkill for almost any purpose).
+
+### Step 2: downsample the images
+
+For scanned documents or PDFs with photos, the biggest single win is reducing image resolution. A typical scan is 600 DPI; for screen viewing or printing on most home printers, 150 DPI is plenty. Going from 600 DPI to 150 DPI reduces image size by 16x (4x in each dimension, squared).
+
+Our [PDF compressor](/compress-pdf) does this automatically: downsamples embedded images to 150 DPI and re-encodes them as JPG with quality 85. For most documents the visual difference is imperceptible; the file size drops 80-90%.
+
+### Step 3: re-encode images as JPG (if they were PNG or TIF)
+
+PNG and TIF are lossless image formats. For text and line drawings they compress well. For photographs and screenshots with lots of color variation, they are 5-10x larger than JPG of the same image at quality 90.
+
+Many scanners default to TIF for "archival quality." For email purposes, TIF is overkill. The compressor re-encodes images to JPG which gives the same size reduction whether the source was PNG, TIF, or already-JPG.
+
+### Step 4: subset embedded fonts
+
+If the PDF embeds full fonts (every glyph from "A" through "ÿ"), it can drop them and embed only the actual characters used. A "subsetted" font is typically 80-95% smaller than the full font.
+
+This step is complicated to do without access to the source. Adobe Acrobat does it as part of its "Reduce File Size" feature. Most browser-based compressors (including ours) do not, because the font subsetting libraries are heavy. For most documents the image downsampling alone is enough; font subsetting is a marginal win on top.
+
+## When even compression is not enough
+
+A few cases where the file refuses to shrink below the email limit:
+
+### A 100+ page scanned book
+
+Even after compression, a 200-page scanned book is 15-30 MB. Sometimes more. The fix is to split the PDF into volumes (chapters 1-3 in one file, 4-6 in another) and send them as separate emails.
+
+We do not currently ship a PDF-split tool, but Preview on Mac (open PDF, Edit menu, select pages, drag out into a new window, save) and most desktop PDF tools handle this.
+
+### A PDF with embedded video
+
+Yes, PDFs can embed video. They become enormous (50-200 MB). The fix is to convert the video to a YouTube/Vimeo link and put that in the PDF instead of the embedded video.
+
+### Already-compressed PDFs
+
+If someone gave you a 5 MB PDF and you try to compress it further, you might get to 4 MB or 3.5 MB but not much less. The original was already optimized. Diminishing returns hit fast after the first pass.
+
+## The escape hatch: use a link
+
+If the PDF must stay original quality AND go to someone over email AND it is over the email limit, the practical answer is to upload it to a file-sharing service (Google Drive, Dropbox, WeTransfer) and email the link instead of the file. Yes, this is "not really email attachment" but it is how everyone actually handles oversized files in practice.
+
+For client-confidential documents where uploading to a third party is not okay, the answer is compression first (which usually solves it), then splitting into multiple files if needed.
+
+## What our compressor actually does
+
+Drop the PDF into [our compressor](/compress-pdf). It runs in your browser, downsamples embedded images to 150 DPI, re-encodes as JPG quality 85, and re-packages the PDF. Output is typically 70-90% smaller for image-heavy PDFs, 10-30% smaller for text-heavy PDFs (where there is less to optimize).
+
+Your file does not upload anywhere. Important for legal documents, signed contracts, medical records, anything you want to keep on your machine.

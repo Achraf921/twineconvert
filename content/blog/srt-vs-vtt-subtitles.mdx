@@ -1,0 +1,103 @@
+---
+title: "SRT vs WebVTT subtitles: which to use, and the one-character difference that matters"
+description: "Same data, different syntax, different use cases. The one-second guide and the gotchas that bite when you convert between them."
+publishDate: "2026-05-17"
+tags: ["srt", "vtt", "subtitles", "video"]
+relatedTools: ["srt-to-vtt", "vtt-to-srt", "srt-to-sbv"]
+---
+
+If you have ever tried to add subtitles to a video and gotten lost in format names, this is the short version.
+
+## The actual difference
+
+SRT and WebVTT are 95% the same format. Both are plain-text files with a list of timed cues. The differences are mostly cosmetic:
+
+| Feature | SRT | WebVTT |
+|---|---|---|
+| Decimal separator in timestamps | comma `,` | period `.` |
+| Required header | none | `WEBVTT` |
+| Cue numbers | required | optional |
+| Styling support | none | yes (colors, position, italic) |
+| Standard developed by | community (2001) | W3C (2010) |
+
+A simple SRT cue:
+```
+1
+00:00:01,000 --> 00:00:04,000
+First caption
+```
+
+The WebVTT equivalent:
+```
+WEBVTT
+
+00:00:01.000 --> 00:00:04.000
+First caption
+```
+
+If you replaced the commas with periods and added the `WEBVTT` header line, you converted SRT to WebVTT. That is literally the whole conversion for simple files.
+
+## Which one to use
+
+### Use SRT if
+
+- You are sending subtitles to a video editor (Adobe Premiere, Final Cut, DaVinci Resolve all import SRT directly)
+- You are uploading to YouTube (which accepts SRT)
+- You are using VLC, MPV, or any desktop video player (all read SRT by default)
+- You want maximum compatibility with old or custom playback systems
+
+### Use WebVTT if
+
+- You are embedding video in a webpage with `<track src="captions.vtt">` on a `<video>` element (this is the format browsers require)
+- You need styling (colors, italic, positioning) that SRT can not express
+- You are working with an HTML5 video framework (Video.js, Plyr, JW Player)
+
+### Use SBV if
+
+- You are downloading captions from YouTube Studio (which exports as SBV by default in some workflows)
+- Otherwise, no real reason to use SBV in 2026
+
+## The gotchas
+
+### Timestamp decimal separator
+
+The most common bug when converting by hand: forgetting to replace `,` with `.` in WebVTT timestamps. The file looks fine, your editor opens it, but the video player ignores every cue silently because the timestamps fail the WebVTT spec parser.
+
+Our [SRT to WebVTT converter](/srt-to-vtt) handles this automatically. So does our [WebVTT to SRT converter](/vtt-to-srt) in the reverse direction.
+
+### Cue numbers
+
+SRT requires every cue to have a sequential number on its own line before the timestamp. WebVTT makes this optional. When you convert WebVTT → SRT, our tool adds the cue numbers. When you convert SRT → WebVTT, we drop them since they were never required.
+
+If you see your converted SRT missing the cue numbers, it was likely produced by a tool that emitted SRT-without-numbers (which technically violates the spec but many players accept). Our tool always emits valid SRT.
+
+### Multi-line cue text
+
+Both formats support multi-line cue text (text spanning two or three lines on screen):
+
+```
+1
+00:00:01,000 --> 00:00:04,000
+First line of caption
+Second line of caption
+```
+
+Both formats use a blank line as the cue terminator. If your cue text has a blank line in the middle, both formats split it into two separate cues. The fix: use only single line breaks within a cue.
+
+### Styling
+
+WebVTT supports inline tags like `<i>italic</i>`, `<b>bold</b>`, `<c.classname>colored</c>`, and CSS-like positioning. When you convert WebVTT → SRT, all of that gets stripped because SRT has no styling. The text content survives but the formatting does not.
+
+### Encoding
+
+Both formats are usually UTF-8. Older subtitle files (1990s and 2000s) sometimes use Windows-1252 or Shift-JIS for non-Latin scripts. Modern subtitle players auto-detect, but our converter assumes UTF-8 throughout. If your subtitles come out with garbled characters, the source file is in a different encoding and needs to be re-saved as UTF-8 first.
+
+## What about ASS and SSA?
+
+Advanced SubStation Alpha (ASS) and SubStation Alpha (SSA) are full styling-aware subtitle formats popular in the anime community. They support multiple font styles per cue, vector-drawn karaoke effects, complex positioning. They are not interchangeable with SRT/WebVTT through simple conversion: you would lose 90% of the styling.
+
+We do not currently convert ASS/SSA. For that workflow, use Aegisub or Subtitle Edit (both free, both desktop apps).
+
+## The one-line takeaway
+
+SRT and WebVTT carry the same data. If you have one and you need the other, [convert between them](/srt-to-vtt) and the file will work in whatever tool was rejecting the original. The mechanics are trivial; the gotcha is just remembering which decimal separator each format uses.

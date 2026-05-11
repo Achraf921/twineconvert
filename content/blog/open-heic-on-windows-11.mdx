@@ -1,0 +1,52 @@
+---
+title: "How to open HEIC files on Windows 11 (and why double-click fails)"
+description: "Windows 11 needs two Microsoft Store extensions to natively view HEIC files. Here is how to install them, what happens if you do not, and what to do if Microsoft's HEVC extension price is the dealbreaker."
+publishDate: "2026-05-13"
+tags: ["heic", "windows", "image-format"]
+relatedTools: ["heic-to-jpg", "heic-to-png"]
+---
+
+You got an iPhone photo, double-clicked it on Windows 11, and got the Photos app saying "We can not open this file." This is a half-installed-feature situation, not a real incompatibility. Windows 11 can open HEIC files; it just needs two extensions Microsoft chose not to ship by default.
+
+## The two extensions you need
+
+Open the Microsoft Store and install both:
+
+1. **HEIF Image Extensions** by Microsoft Corporation. Free. This handles the container format.
+2. **HEVC Video Extensions** by Microsoft Corporation. Costs $0.99. This handles the actual compressed pixel data inside the HEIF container.
+
+That is right, the second one is paid. Microsoft licensed the HEVC codec patents from MPEG-LA and passes the cost to you. The first time most people learn this they assume they are getting scammed; it is genuine.
+
+There is a free version called "HEVC Video Extensions from Device Manufacturer" that some PC makers (Lenovo, Dell, HP) install at the factory. If you bought a prebuilt PC, search the Store for that exact phrase first. If you find it, install it instead of the paid one and skip the $0.99.
+
+## What happens after you install them
+
+Photos app, File Explorer thumbnails, Snipping Tool, Print: all start working with `.heic` files the same way they work with `.jpg` files. No restart needed; the effect is immediate after the install completes.
+
+The only thing that does not start working is most third-party software (Photoshop CC 2018 and earlier, GIMP without the libheif plugin, older versions of IrfanView). Those need their own internal codec support, not just Windows-level support.
+
+## When the extensions are not enough
+
+A few cases where even the extensions installed do not solve the problem:
+
+### You are on Windows 10 with an older build
+
+Windows 10 builds before 1803 (April 2018) do not support HEIC at all. The Store extensions silently fail to install. The fix is updating Windows, which is unrelated to the photo.
+
+### You need to edit the HEIC in older Photoshop
+
+Photoshop CS6, CC 2015, CC 2017: no HEIC support, ever. You need to convert to JPG or PNG first. Our [HEIC to JPG converter](/heic-to-jpg) handles this in your browser without uploading anything. For lossless editing where you do not want to introduce JPG artifacts, use [HEIC to PNG](/heic-to-png) instead.
+
+### You are on a work computer where you can not install Store apps
+
+Many corporate IT policies block Microsoft Store installs entirely. The extensions are dead. Convert the file to JPG once and reuse the JPG everywhere.
+
+### The file is a Live Photo or burst capture
+
+Even with both extensions installed, Windows Photos sometimes opens only the first frame of a Live Photo HEIC and shows it as a still image. The motion data is technically inside the HEIC but Windows ignores it. To preserve the motion, you would need to AirDrop the Live Photo to a Mac (which keeps it animated) or pull the embedded `.mov` file out using third-party tools.
+
+## What I do on my own machine
+
+I have both Store extensions installed because I receive HEIC photos often enough that I prefer not to think about it. The one-time $0.99 buys me back about an hour of conversion friction a year.
+
+If you receive HEIC files maybe once a month or less, do not bother with the Store extensions. Just keep our [HEIC to JPG converter](/heic-to-jpg) bookmarked and use it the few times you need to.

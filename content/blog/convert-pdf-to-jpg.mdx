@@ -1,0 +1,57 @@
+---
+title: "How to convert PDF pages to JPG images without losing quality"
+description: "Three ways to extract images from a PDF: page-by-page, batch, or just the embedded pictures. Plus the DPI choice that actually matters."
+publishDate: "2026-05-14"
+tags: ["pdf", "jpg", "image-extraction"]
+relatedTools: ["pdf-to-jpg", "pdf-to-png", "jpg-to-pdf"]
+---
+
+"Convert PDF to JPG" can mean two different things, and people often want the second when they search for the first.
+
+- **Render each PDF page as a JPG image** (the whole page, including text rendered as pixels)
+- **Extract the embedded JPG images that are inside the PDF** (skipping the text, getting just the photographs)
+
+Both are valid. Different tools. Different outputs. Here is how to know which one you want.
+
+## Rendering pages as JPGs (the usual ask)
+
+If you want to send a PDF to someone who can not open PDFs (a phone without a reader app, an email system that strips PDFs as attachments), or you want the pages as images for a presentation, you want page rendering.
+
+This is what our [PDF to JPG converter](/pdf-to-jpg) does. Each page becomes one JPG. A 10-page PDF gives you 10 JPGs. The text in the PDF gets rasterized into the JPG's pixels: it is no longer searchable or selectable, just a picture of words.
+
+The DPI choice matters here:
+
+- **72 DPI**: matches the PDF's nominal screen resolution. Good for emailing or quick previews. A US Letter page becomes 612x792 pixels.
+- **150 DPI**: standard for online use. A US Letter page becomes 1275x1650 pixels. Reasonable file size, sharp enough for full-screen viewing.
+- **300 DPI**: print quality. A US Letter page becomes 2550x3300 pixels. Files get large quickly (3-5 MB per page). Use only when you intend to actually print.
+
+Our converter renders at 150 DPI by default, which is the right answer for 90% of use cases. If you need 300 for print, the desktop tool **Preview** on Mac (File → Export → Format: JPEG, set quality) and **Photoshop** (open PDF, set resolution dialog to 300) both handle it explicitly.
+
+## Extracting embedded images (the less common but valid ask)
+
+If you have a PDF that is mostly text with a few embedded photographs, and you want just the photos at their original resolution (not the rendered page), the page-rendering tool gives you the wrong output. You get a low-resolution image of the photo on a page of text, not the high-res photo itself.
+
+For that, you want an image-extraction tool. The standard CLI is `pdfimages` from the Xpdf or Poppler tools:
+
+```
+pdfimages -j input.pdf output-prefix
+```
+
+This walks the PDF's image dictionary and pulls out each embedded image as its original format (JPG, PNG, or TIF) at its original resolution. The output ignores everything that is not an embedded image: text, vectors, shapes.
+
+We do not ship a browser-based image-extraction tool yet because the libraries are heavy. If this is your need, install Poppler (Mac: `brew install poppler`, Windows: download from the official site) and use the CLI.
+
+## How to tell which you want, in 30 seconds
+
+Open the PDF and ask yourself:
+
+- "I want to share each page as an image with someone." → Page rendering. Use our converter.
+- "There is a photo on page 3 that I want as a separate file." → Image extraction. Use Poppler.
+- "I want to put PDF pages into a slideshow." → Page rendering at 150 DPI.
+- "I want to OCR the text in a scanned PDF." → Different tool entirely. Use our [PDF to text](/pdf-to-text) converter, which runs Tesseract OCR in the browser.
+
+## The reverse direction
+
+If you have a stack of JPG photos (receipts, screenshots, scanned documents) and you want them as a single PDF instead, our [JPG to PDF converter](/jpg-to-pdf) does the reverse. Each JPG becomes one page; the output is a single multi-page PDF.
+
+This is what most "expense report" workflows actually need: take 8 photos of receipts on your phone, AirDrop them to your laptop, batch them into one PDF, email to accounting. Five-minute workflow that some people pay $20/month for via Adobe Scan or similar apps.

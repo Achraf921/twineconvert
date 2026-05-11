@@ -1,0 +1,88 @@
+---
+title: "Converting BibTeX to CSV for thesis writers (Zotero, Mendeley, Excel)"
+description: "Why a researcher might want their LaTeX bibliography as a spreadsheet, the column layout that survives the conversion, and how to handle the quirks of multi-author entries, accented names, and DOIs."
+publishDate: "2026-05-11"
+tags: ["bibtex", "csv", "citations", "academia"]
+relatedTools: ["bibtex-to-csv", "bibtex-to-csl-json", "bibtex-to-yaml", "csv-to-bibtex"]
+---
+
+If you are writing a thesis or a long paper, your bibliography lives in a `.bib` file: a list of `@article` and `@book` entries used by LaTeX to render the references section. BibTeX is perfect for that.
+
+It is awful for everything else. You can not search it the way you would search a spreadsheet. You can not sort it by year or author. You can not share it with your committee in a format they understand. The moment you want to look at your bibliography as data, you need it in CSV.
+
+This post covers why people do this conversion, what the output looks like, and the edge cases that bite first-time users.
+
+## The actual reasons people convert BibTeX to CSV
+
+A few of the workflows we see most often:
+
+- **Thesis bibliography audit.** You have 400 entries collected over three years. You want to scan for duplicates, missing fields, papers without DOIs, anything older than 2010. A spreadsheet view makes this easy. The `.bib` file makes it nearly impossible.
+
+- **Sharing with non-LaTeX collaborators.** Your advisor uses EndNote, your co-author uses Zotero, you use LaTeX. Everyone reads CSV. It is the lowest common denominator that every reference manager and every spreadsheet app accepts.
+
+- **Migrating between tools.** Moving your collection from JabRef to Zotero, or from BibTeX to a Notion database. CSV is the bridge format that survives the trip.
+
+- **Bibliometric analysis.** If you are doing a systematic review, a meta-analysis, or just counting your citations per year, you want the data in a tool that can group, count, and pivot. Excel and Pandas both want CSV.
+
+- **Grant applications and CVs.** Most templates expect bibliography data in a structured form you can paste into a table.
+
+## What the CSV output actually looks like
+
+Our [BibTeX to CSV converter](/bibtex-to-csv) produces a spreadsheet with one row per entry and one column per BibTeX field. The header row is the union of every field that appeared in your `.bib` file, so an entry with a `doi` and an entry without one both get represented correctly: the missing field is just an empty cell.
+
+A typical output:
+
+```
+id,type,authors,title,year,journal,volume,pages,doi
+smith2024,article,"Smith, John and Doe, Jane",A Sample Paper,2024,Nature,123,45-67,10.1038/sample.2024.001
+brown2023,book,"Brown, Alice",Book on a Topic,2023,,,,978-0-262-04567-8
+```
+
+Note that the `authors` column is one cell with all authors joined by " and " (the BibTeX convention). If you want one author per column, that takes a manual split in your spreadsheet.
+
+## The four edge cases that bite
+
+### Accented and non-Latin characters in author names
+
+BibTeX has its own way of escaping accented characters in TeX command form: `Caf\'e` instead of `Café`, `Sch\"on` instead of `Schön`. Most reference managers produce the escaped form when exporting to `.bib` files.
+
+Our converter decodes these back to their unicode form in the CSV output. So `Sch\"on` in the BibTeX becomes `Schön` in the CSV. This matters because your spreadsheet's sort-by-author column will rank `Sch\"on` and `Schön` differently if you mix decoded and undecoded entries.
+
+If you see escape sequences leaking through in the CSV, it means the BibTeX file used a non-standard escape that our parser did not recognize. Open the source `.bib`, manually replace the escape with the unicode character, re-run.
+
+### Multi-author entries
+
+BibTeX joins authors with the word " and ", which is unambiguous in the academic world but trips up spreadsheet users who assume " and " in a cell means natural English ("Smith and Doe co-wrote") rather than an author separator.
+
+The CSV preserves the " and "-joined form because splitting into separate authors would either (a) require knowing how many author columns to create (varies per entry) or (b) lose the order information that matters for citation styles like AMA where first author is special.
+
+If you need separate author columns in Excel:
+1. Find/Replace " and " with a unique delimiter, say `|`
+2. Use Data → Text to Columns → split on `|`
+3. The result is one author per column, padded with empties for shorter entries
+
+### Cross-references between entries
+
+BibTeX supports `@inproceedings` entries that reference their parent `@proceedings` entry via a `crossref` field. The data is then split across two `.bib` entries. CSV cannot model this directly; every row is independent.
+
+Our converter inlines crossref data into the child entry where possible (the parent's title becomes the child's `booktitle`, etc.). If your `.bib` file has heavy crossref usage and the CSV looks like it is missing fields, check whether the missing data is in a `@proceedings` entry that did not get inlined.
+
+### DOIs that look like numbers in Excel
+
+Excel is aggressive about auto-detecting "10.1038/sample.2024.001" as a number and stripping leading zeros or formatting it weirdly. If your CSV import in Excel mangles DOIs, you have two options:
+
+- Import via Data → From Text/CSV (not double-click) and explicitly set the DOI column to Text type
+- Or open the CSV in Google Sheets first (which is less aggressive about auto-detection), then re-export if needed
+
+This is not a converter bug; it is an Excel feature you can not disable globally.
+
+## What to do after you have the CSV
+
+The most common next steps:
+
+- **Open in Zotero**: File → Import → choose CSV, map columns. Zotero's CSV import is forgiving and recognizes most field names.
+- **Open in Excel/Sheets**: just open. Sort by year, filter by journal, count entries per author.
+- **Import to a database**: most SQL tools have a CSV import wizard. Match columns to your schema.
+- **Round-trip back to BibTeX**: our [CSV to BibTeX converter](/csv-to-bibtex) does the reverse if you need to send edits back to a collaborator who uses LaTeX.
+
+If you are starting a new project and you have the choice, consider [CSL-JSON](/bibtex-to-csl-json) instead of CSV. It is structured (no Excel quirks), every modern reference manager reads it natively, and the conversion from BibTeX is also one drag and drop.

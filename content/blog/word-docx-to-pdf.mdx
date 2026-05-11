@@ -1,0 +1,80 @@
+---
+title: "Converting Word DOCX to PDF: when the formatting breaks and why"
+description: "The four conversion paths (Word, Mac Pages, LibreOffice, browser), the fonts that always cause trouble, and how to fix a PDF that looks different from the Word doc."
+publishDate: "2026-05-16"
+tags: ["docx", "pdf", "office"]
+relatedTools: ["docx-to-pdf", "pdf-to-docx", "html-to-docx"]
+---
+
+"Save as PDF" sounds like a one-click operation. It usually is. When it is not, the failure mode is always the same: the PDF looks different from the Word document. Different fonts, different page breaks, sometimes missing images.
+
+This post is about why that happens and which conversion path produces the closest match.
+
+## Why PDF can look different from the source DOCX
+
+A DOCX file is a description: paragraph with this font, image at this position, table with these column widths. The renderer (Word, Pages, LibreOffice, a browser) interprets the description and lays out the pixels. Different renderers interpret the same description slightly differently:
+
+- Different default fonts when the requested font is not installed
+- Different line-break algorithms (where to wrap a long sentence)
+- Different page-break behavior (when does a paragraph spill to page 2)
+- Different image positioning (DOCX uses "anchors" that are vague)
+
+So "convert DOCX to PDF" depends on which renderer does the work. Four common paths:
+
+## Path 1: Microsoft Word
+
+File → Save As → PDF.
+
+This produces the closest match because Word is the renderer that created the DOCX in the first place. Same fonts, same layout engine, same everything. If your DOCX was made in Word and you have access to Word, use Word.
+
+The only issue: Word has to be installed and licensed. Word 365 is about $7/month for a personal subscription or comes with Microsoft Office Home & Student.
+
+## Path 2: Mac Pages
+
+Open the DOCX in Pages (which auto-imports it), File → Export → PDF.
+
+Pages tries to be Word-compatible but is not 100%. Most simple documents (text + headings + a few images) convert fine. Documents with:
+- Custom Office themes
+- Embedded Excel charts
+- Word-specific advanced formatting (text wrap around floating images, certain table cell merge patterns)
+
+...often look subtly wrong. Margins shift, table widths recalculate, the chart becomes a static image.
+
+For a draft or internal use, Pages is fine. For a final deliverable, render in Word.
+
+## Path 3: LibreOffice
+
+LibreOffice Writer → File → Export As → Export as PDF.
+
+Free, cross-platform, surprisingly faithful for most documents. The same caveats as Pages: simple documents convert well, complex Word-specific features sometimes break.
+
+LibreOffice's CLI mode (`libreoffice --headless --convert-to pdf input.docx`) is the standard server-side conversion path for self-hosted document workflows. Some web services run this under the hood and call it a "DOCX to PDF API."
+
+## Path 4: Browser-based (our tool)
+
+Drop the DOCX into our [DOCX to PDF converter](/docx-to-pdf). It runs in your browser, no upload.
+
+The trade-off: we are limited to what the browser can render. Standard fonts, standard layouts, embedded images all work. Things that often break:
+- Custom fonts referenced but not embedded in the DOCX (the browser substitutes the closest available font)
+- Word equation editor content (renders as plain text)
+- Embedded OLE objects (Excel snippets, Visio diagrams) get replaced with a placeholder
+
+For most general-purpose documents (essays, reports, letters), browser conversion works. For polished deliverables with charts and equations, render in Word.
+
+## The font problem
+
+The number one cause of "the PDF looks different" is fonts. A DOCX says "use Calibri 12pt." If the rendering machine does not have Calibri installed, it substitutes the closest match (often Arial or DejaVu Sans) and the line breaks shift. A 2-page document becomes 3 pages because the substitute font is slightly wider.
+
+The fix: ensure the renderer has the same fonts. Word on Windows always has Calibri. Mac Pages has it because Apple licenses Microsoft fonts. LibreOffice on Linux often does not have Calibri (it has free substitutes that look similar but not identical).
+
+For documents that must look identical everywhere, the best practice is to use fonts that ship with every OS (Times New Roman, Arial, Courier New) or to embed the fonts directly in the DOCX (File → Options → Save → Embed fonts in the file, in Word).
+
+## When the PDF needs to be exactly what someone else made
+
+If a colleague sent you a DOCX and you need to produce a PDF that looks exactly like the one they would produce, the only reliable answer is: ask them to make the PDF. They have the fonts, they have Word, they have the original. Any conversion you do on your machine introduces risk of small layout drift.
+
+For everything else, render with whatever you have and visually scan the PDF for major issues (mismatched fonts, broken tables, lost images) before sending it on.
+
+## What about PDF to DOCX (the other direction)?
+
+That is a harder problem because PDFs do not preserve structural information (paragraphs vs headings, table cells vs visually-aligned text). Our [PDF to DOCX converter](/pdf-to-docx) does it but with the caveat that complex layouts get flattened to text + images. For round-trip editing of a document, always start from the DOCX, never the PDF.

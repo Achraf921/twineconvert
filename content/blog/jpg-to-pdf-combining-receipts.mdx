@@ -1,0 +1,83 @@
+---
+title: "Combining JPG photos into a single PDF (receipts, scans, expense reports)"
+description: "How to take a stack of phone photos and end up with one PDF you can email to accounting in under 30 seconds."
+publishDate: "2026-05-20"
+tags: ["jpg", "pdf", "workflow"]
+relatedTools: ["jpg-to-pdf", "png-to-pdf", "compress-pdf"]
+---
+
+The workflow is universal: take photos of receipts on your phone over a trip, get back to your desk, need to send them as one document. The wrong way to do this is to email 8 separate JPGs. The right way is one PDF with 8 pages.
+
+## The fastest path
+
+1. AirDrop / sync the photos from your phone to your computer
+2. Drop them onto our [JPG to PDF converter](/jpg-to-pdf)
+3. Download the resulting PDF, attach to email
+
+Total time: under 30 seconds for 10-20 photos.
+
+## What the converter actually does
+
+Each JPG becomes one page in the PDF. Page size matches the JPG aspect ratio. The image is embedded at the original resolution (no downsampling), so the PDF is roughly the same total size as the sum of the input JPGs plus a small PDF overhead.
+
+Order is the order you dropped the files in. If you want a specific order, sort the files in Finder/Explorer first, then drag them in that order.
+
+## Why not just zip them?
+
+You can. A zip file of 10 receipts is functionally fine for archiving. But:
+
+- **Email clients sometimes strip zips** as a security measure. PDFs go through.
+- **Accounting software wants PDFs.** Expensify, Concur, QuickBooks, and every receipt-tracking app expects PDF uploads, not zips. They will OCR the PDF for amounts; they will not OCR images inside a zip.
+- **PDFs scroll.** A PDF with 10 pages is one document that reads naturally. A zip is 10 separate files that the recipient has to open one by one.
+
+PDF is the universal "stack of pages" format. Use it when the use case is "send a stack of pages."
+
+## The image size question
+
+If you take photos at 12-megapixel resolution (default iPhone, default Android), each receipt photo is 3-5 MB. Ten of them combined into a PDF is 30-50 MB. Many email systems cap attachments at 25 MB.
+
+Two ways to handle this:
+
+### Option 1: compress the photos before converting
+
+iOS Photos and macOS Preview both have built-in "Reduce Size" options that downsample to a chosen resolution. For receipts (text on a flat background), 1500x2000 pixels is plenty. Reduce, then convert.
+
+### Option 2: compress the PDF after converting
+
+Run the output PDF through our [PDF compressor](/compress-pdf). It downsamples embedded images to 150 DPI and re-encodes them as JPG quality 85. Output is typically 70-90% smaller for receipt-heavy PDFs.
+
+For most receipt workflows, post-conversion compression is faster than pre-conversion image-by-image resizing.
+
+## Common variations
+
+### Some receipts are HEIC, not JPG
+
+iPhone photos are HEIC by default. Our [HEIC to JPG converter](/heic-to-jpg) handles the first step; then combine the JPGs to PDF. Or, switch your iPhone to "Most Compatible" mode (Settings → Camera → Formats → Most Compatible) for future photos.
+
+### You also have a PDF receipt mixed in
+
+Some merchants email PDF receipts; you also have photo receipts. The clean answer is to combine them all into one PDF. We do not currently ship a PDF-merge tool, but Preview on Mac (drag PDFs into the sidebar of an open PDF) and Adobe Acrobat handle this trivially.
+
+### The receipts are at weird angles or upside-down
+
+Photos taken quickly are sometimes rotated. The converter preserves the orientation of each input JPG. If a JPG has wrong EXIF rotation metadata, the resulting PDF page is rotated too.
+
+The fix: rotate the JPG before converting (Preview, Photos, even the basic Windows Photos app all rotate). Or rotate the PDF page after the fact (Preview, Acrobat).
+
+### You want OCR (text extraction from receipts)
+
+A receipt PDF made from photos has the receipt text rendered as pixels, not selectable text. To extract amounts and dates programmatically, you need OCR.
+
+For one-off use, the easiest tool is the macOS Preview app: open the PDF, then in System Preferences turn on Live Text. The text becomes selectable. For batch / programmatic OCR, our [PDF to text](/pdf-to-text) converter runs Tesseract OCR in your browser and gives you the extracted text.
+
+## What I do
+
+For an expense trip:
+
+1. Take receipt photos as I go (auto-saves to iCloud Photos)
+2. When I get home, AirDrop the trip's photos to a folder
+3. Drop the folder contents into our [JPG to PDF converter](/jpg-to-pdf)
+4. Compress the output if it is over 25 MB
+5. Email to expenses@ourcompany or upload to Concur
+
+Total time for a 3-day trip with 15 receipts: about 2 minutes. The old way (one email per receipt, or paper printouts) used to take 30+ minutes per trip.

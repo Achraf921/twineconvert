@@ -1,0 +1,115 @@
+---
+title: "What is a GEDCOM file? (Genealogy data, Ancestry, FamilySearch)"
+description: "The format every family-history program reads and writes, dating to 1985. How it works, the common pitfalls, and how to extract individuals into a spreadsheet."
+publishDate: "2026-05-23"
+tags: ["gedcom", "genealogy", "ancestry"]
+relatedTools: ["gedcom-to-csv", "gedcom-to-json", "gedcom-to-pdf"]
+---
+
+If you have done any family-tree research, you have encountered `.ged` files. GEDCOM (GEnealogical Data COMmunication) is the universal exchange format between genealogy programs. Every major service supports it: Ancestry.com, FamilySearch, MyHeritage, RootsMagic, Family Tree Maker.
+
+## The structural rules
+
+GEDCOM is a hierarchical text format with one record per line, prefixed by a depth level (0, 1, 2, 3...).
+
+```
+0 HEAD
+1 SOUR Ancestry.com
+1 GEDC
+2 VERS 5.5.1
+1 CHAR UTF-8
+0 @I1@ INDI
+1 NAME John /Smith/
+1 SEX M
+1 BIRT
+2 DATE 15 MAY 1980
+2 PLAC Boston, Massachusetts, USA
+0 @I2@ INDI
+1 NAME Jane /Smith/
+1 SEX F
+0 @F1@ FAM
+1 HUSB @I1@
+1 WIFE @I2@
+1 MARR
+2 DATE 12 JUN 2005
+0 TRLR
+```
+
+Reading rules:
+- Level 0 starts a top-level record. The first one is `HEAD` (header), the last is `TRLR` (trailer).
+- Records inside are individuals (`INDI`) and families (`FAM`).
+- Each record has a unique ID in `@...@` notation: `@I1@` for individuals, `@F1@` for families.
+- Level 1 and deeper are properties of the parent record.
+- Names use slash notation: `John /Smith/` means given name John, surname Smith.
+- Cross-references (HUSB, WIFE, FAMS, FAMC) link records together.
+
+## Why it looks ancient
+
+Because it is. GEDCOM was designed in 1985 by the LDS Church for genealogy data exchange between mainframe systems. The format has barely changed since GEDCOM 5.5.1 (1999). GEDCOM 7.0 came out in 2021 but adoption is patchy; most exports are still 5.5.1.
+
+The result is that the format is unusual to modern eyes but extremely well-supported. Every genealogy program written in the last 40 years reads GEDCOM.
+
+## What GEDCOM data looks like in practice
+
+A complete family tree of 5,000 ancestors is typically 2-10 MB. Each individual record has:
+
+- Name(s), including given names, surnames, prefixes, suffixes, married names
+- Sex (M, F, or U for unknown)
+- Birth, death, marriage events with date and place
+- Optional facts: occupation, military service, immigration, residence
+- Sources (citations for each fact)
+- Notes (free-form narrative text)
+- Object references (photos, documents, videos)
+- Cross-references to families (parents and spouses)
+
+It is dense data. A simple ancestor card in your head is 5-10 fields; the GEDCOM record for the same person can have 50+ fields if the researcher was thorough.
+
+## Working with GEDCOM data
+
+### Looking at one specific person
+
+Open the file in any text editor (it is plain UTF-8). Search for the name. The lines that follow up to the next level-0 marker are everything about that person.
+
+For trees with more than a few hundred people, this gets tedious. A genealogy program (RootsMagic, Family Historian, Gramps) gives you a UI to browse one person at a time with all their connections.
+
+### Analyzing the tree as data
+
+If you want to count ancestors by surname, find missing dates, or do statistical analysis, you need the data in a spreadsheet. That is what our [GEDCOM to CSV converter](/gedcom-to-csv) does: one row per individual with columns for name, sex, birth date, birth place, death date, death place, parents.
+
+You can then:
+- Sort by surname to see all your Smith ancestors together
+- Filter for "death date is empty" to find unfinished branches
+- Pivot by birth century to see which generations are best documented
+- Map out a timeline in a spreadsheet
+
+For deeper analysis (parent-child relationships, family lines), our [GEDCOM to JSON converter](/gedcom-to-json) gives you the full structured tree.
+
+### Generating a readable family tree document
+
+Our [GEDCOM to PDF converter](/gedcom-to-pdf) produces a printable family-tree document with individuals organized by family. Useful for sharing with relatives who do not have genealogy software, or for archiving a tree you want to print and store physically.
+
+## The common pitfalls
+
+### Date formats are inconsistent
+
+GEDCOM dates can be `15 MAY 1980`, `MAY 1980`, `1980`, `ABT 1980` (approximately), `BEF 1980` (before), `BET 1975 AND 1980` (range), or `(possibly 1980)` (free text). Programs parse these differently. When exporting to CSV, we preserve the original date string; you can normalize in Excel as needed.
+
+### Place names are not standardized
+
+`Boston, Massachusetts, USA` and `Boston, MA, United States` and `Boston, MA` refer to the same place but sort differently. Some genealogy programs auto-normalize place names; some do not. The CSV export shows what is actually in the GEDCOM.
+
+### Character encoding
+
+GEDCOM 5.5 supports ANSI, ANSEL, and UTF-8 character encodings. The header declares which one. Older programs default to ANSEL, which is rare outside genealogy and causes garbled accented characters when opened in modern tools. If your GEDCOM has weird characters, check the `1 CHAR` line in the header and either re-export as UTF-8 or run it through a transcoder.
+
+### Privacy
+
+GEDCOM files contain birth dates of living people, addresses, sometimes Social Security numbers in the notes field. Treat them as sensitive data. Our converters run in your browser; the file does not upload anywhere. Important for genealogies that include living relatives.
+
+## When to use which converter
+
+- **Reading individual people**: open the GED in a text editor or genealogy program
+- **Spreadsheet analysis**: [GEDCOM to CSV](/gedcom-to-csv)
+- **Programmatic access (Python/R/JS)**: [GEDCOM to JSON](/gedcom-to-json)
+- **Sharing with non-tech relatives**: [GEDCOM to PDF](/gedcom-to-pdf)
+- **Migrating to a different genealogy program**: keep it as GEDCOM; the receiving program imports it natively

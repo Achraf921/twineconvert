@@ -1,0 +1,117 @@
+---
+title: "What is YAML? (For people who keep seeing .yml files in their projects)"
+description: "YAML is the config language behind Docker, Kubernetes, GitHub Actions, and a thousand other devops tools. Here is the structure, the gotchas, and when to pick TOML or JSON instead."
+publishDate: "2026-05-18"
+tags: ["yaml", "config", "devops"]
+relatedTools: ["yaml-to-json", "json-to-yaml", "yaml-to-toml"]
+---
+
+You opened a project and there are `.yml` files everywhere. `docker-compose.yml`, `.github/workflows/*.yml`, `kustomization.yaml`, `serverless.yml`, `tailwind.config.yml`. They all look like indented lists. What are they?
+
+## YAML in one sentence
+
+YAML (originally "Yet Another Markup Language," now retconned to "YAML Ain't Markup Language") is a human-readable data-serialization format. It is JSON with less punctuation: no quotes around keys, no commas between items, indentation defines hierarchy.
+
+The same data in JSON and YAML:
+
+**JSON:**
+```json
+{
+  "name": "Alice",
+  "age": 30,
+  "skills": ["python", "rust"]
+}
+```
+
+**YAML:**
+```yaml
+name: Alice
+age: 30
+skills:
+  - python
+  - rust
+```
+
+Same data, fewer characters, easier to skim.
+
+## Why devops tools chose YAML
+
+A Kubernetes manifest, a GitHub Actions workflow, a Docker Compose file: all describe complex nested configuration. The same configuration in JSON would have curly braces nested four levels deep, quotes around every key, commas everywhere. Hard to read, hard to edit by hand.
+
+YAML's indentation-driven syntax makes nesting visually obvious. You can scan a 300-line GitHub workflow and see at a glance which steps belong to which job.
+
+## The gotchas (there are several)
+
+### Indentation must be spaces, not tabs
+
+YAML uses 2-space (or sometimes 4-space) indentation. Tabs are forbidden by the spec. Set your editor to insert spaces for `.yaml` and `.yml` files.
+
+### Boolean values have many forms
+
+YAML 1.1 (the most common dialect) treats all of these as booleans:
+
+- `true`, `false`
+- `yes`, `no`
+- `on`, `off`
+- `True`, `FALSE`, `On` (case variations)
+
+This bites real projects. The Norway country code is `NO`, which YAML interprets as the boolean `false`. A list of countries in YAML with Norway in it silently becomes a list with `false` in the middle.
+
+The fix: quote string values that look like booleans. `"NO"` is unambiguously the string "NO"; `NO` is the boolean `false`.
+
+### Numbers without quotes can lose precision
+
+Long numeric strings (like Twitter IDs or 64-bit integers) get parsed as numbers, which JavaScript and Python truncate to 53-bit precision. Quote them as strings if you need exact preservation.
+
+### Multi-line strings have several syntaxes
+
+```yaml
+# Block style with newlines preserved
+description: |
+  Line one
+  Line two
+
+# Block style folded into a single line  
+description: >
+  Line one
+  Line two
+```
+
+The `|` form keeps newlines. The `>` form joins lines with spaces. Pick the wrong one and your config text mangles.
+
+## When to pick YAML vs JSON vs TOML
+
+**Pick YAML when:**
+- The target tool requires it (Kubernetes, GitHub Actions, Docker Compose, Ansible)
+- The file will be edited by humans more than machines
+- Comments matter (YAML supports `# comment`; JSON does not)
+
+**Pick JSON when:**
+- The file is generated or consumed by code only
+- You need strict spec compliance (every JSON parser agrees; YAML parsers disagree)
+- You are sending it over an API
+
+**Pick TOML when:**
+- The config is structured but mostly flat
+- You want JSON-like determinism with YAML-like readability
+- Your tool supports it (Cargo, modern Python pyproject, Hugo)
+
+## Converting between them
+
+If you have a YAML file but your tool wants JSON (or vice versa):
+
+- [YAML to JSON](/yaml-to-json): comments are dropped (JSON has no comments)
+- [JSON to YAML](/json-to-yaml): produces idiomatic YAML with sensible defaults
+- [YAML to TOML](/yaml-to-toml): cleanest when the YAML is mostly flat
+- [TOML to YAML](/toml-to-yaml): the reverse
+
+All run in your browser.
+
+## The fastest YAML lesson
+
+Three things to remember:
+1. Indentation matters and must be spaces (never tabs)
+2. Quote anything that looks like a boolean, a number, or a date
+3. `#` starts a comment
+
+You can read and edit 95% of real-world YAML files.

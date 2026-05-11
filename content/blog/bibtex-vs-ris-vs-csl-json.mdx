@@ -1,0 +1,136 @@
+---
+title: "BibTeX vs RIS vs CSL-JSON: which citation format to use in 2026"
+description: "Three formats, each dominant in a different ecosystem. The honest comparison and the migration paths between them."
+publishDate: "2026-05-26"
+tags: ["bibtex", "ris", "csl-json", "citations", "academia"]
+relatedTools: ["bibtex-to-csl-json", "bibtex-to-ris", "ris-to-bibtex"]
+---
+
+If you do any research writing, you have to pick a bibliography format at some point. The three serious options are BibTeX, RIS, and CSL-JSON. They all carry the same kind of data; they all have a specific cultural home.
+
+## BibTeX
+
+**Created**: 1985 by Oren Patashnik for LaTeX.
+
+**Owned by**: the LaTeX/academic-writing ecosystem.
+
+**Looks like**:
+```
+@article{smith2024,
+  author = {Smith, John and Doe, Jane},
+  title  = {A Sample Paper},
+  journal = {Nature},
+  year   = {2024},
+  volume = {123},
+  pages  = {45-67},
+  doi    = {10.1038/sample.2024.001},
+}
+```
+
+**Use when**:
+- You write papers in LaTeX
+- Your bibliography manager is JabRef, Zotero (with the Better BibTeX plugin), or any LaTeX-aware tool
+- You collaborate with mathematicians, physicists, computer scientists (who mostly use LaTeX)
+
+**Avoid when**:
+- You collaborate with humanities researchers (who mostly use Word + Zotero + CSL styles)
+- Your target tool is a modern web-based reference manager (CSL-JSON works better there)
+
+## RIS
+
+**Created**: 1980s by Research Information Systems (the company that became ProCite, then bought by ResearchSoft, then by Thomson Reuters).
+
+**Owned by**: the legacy reference-manager ecosystem (EndNote, ProCite, Reference Manager).
+
+**Looks like**:
+```
+TY  - JOUR
+AU  - Smith, John
+AU  - Doe, Jane
+TI  - A Sample Paper
+JO  - Nature
+PY  - 2024
+VL  - 123
+SP  - 45
+EP  - 67
+DO  - 10.1038/sample.2024.001
+ER  - 
+```
+
+**Use when**:
+- You use EndNote, ProCite, or Reference Manager
+- You are exporting from PubMed (which exports natively to RIS)
+- You are exchanging citation data with someone in the biomedical or life sciences community (where EndNote remains dominant)
+
+**Avoid when**:
+- You work in LaTeX (BibTeX is the natural home)
+- Your tool offers CSL-JSON as an alternative (it is more modern and structurally cleaner)
+
+## CSL-JSON
+
+**Created**: 2010s by the Citation Style Language project (the same group that makes CSL styles for Zotero/Mendeley/Pandoc).
+
+**Owned by**: the modern web-based ecosystem (Zotero, Pandoc, Mendeley).
+
+**Looks like**:
+```json
+[
+  {
+    "id": "smith2024",
+    "type": "article-journal",
+    "title": "A Sample Paper",
+    "author": [
+      { "family": "Smith", "given": "John" },
+      { "family": "Doe", "given": "Jane" }
+    ],
+    "issued": { "date-parts": [[2024]] },
+    "container-title": "Nature",
+    "volume": "123",
+    "page": "45-67",
+    "DOI": "10.1038/sample.2024.001"
+  }
+]
+```
+
+**Use when**:
+- You use Zotero or Pandoc
+- You want to write bibliographies in Markdown documents (Pandoc accepts CSL-JSON as `--bibliography`)
+- You are building anything programmatic that consumes citation data (CSL-JSON is the cleanest structured form)
+
+**Avoid when**:
+- Your tool does not support it (most LaTeX workflows want BibTeX; most EndNote workflows want RIS)
+- You are sending the file to a colleague who has never heard of CSL-JSON (BibTeX or RIS is more recognizable)
+
+## The honest comparison
+
+| Property | BibTeX | RIS | CSL-JSON |
+|---|---|---|---|
+| Age | 40 years | 40 years | 12 years |
+| Encoding | LaTeX-escaped (\\'e) | Plain text | JSON (UTF-8) |
+| Author format | "Last, First and Last, First" | One author per AU line | Structured {family, given} objects |
+| Date format | Year integer + month string | Year integer | date-parts array |
+| Field richness | ~30 standard fields | ~30 standard tags | 80+ CSL fields |
+| Comments | Yes (with @comment{}) | No standard | No (JSON has none) |
+| Cross-references | Yes (crossref =) | No | No |
+| Best in | LaTeX | EndNote/ProCite | Zotero/Pandoc/web |
+
+## The migration matrix
+
+Where do you go from where?
+
+- **From BibTeX**: [BibTeX → CSL-JSON](/bibtex-to-csl-json) is the easiest path; structured cleanly. [BibTeX → RIS](/bibtex-to-ris) loses a little (no crossref support in RIS) but works.
+- **From RIS**: [RIS → BibTeX](/ris-to-bibtex) for LaTeX users. RIS → CSL-JSON is not yet a direct converter we ship (the workaround is RIS → BibTeX → CSL-JSON, which loses minor RIS-specific fields).
+- **From CSL-JSON**: [CSL-JSON → BibTeX](/csl-json-to-bibtex) preserves the core fields. Going to RIS requires the same two-step pivot.
+
+In every conversion, the core fields (title, authors, year, journal, DOI) survive cleanly. The lossage is in metadata that one format supports and another does not. For most users, that loss is acceptable.
+
+## What I would actually pick if starting fresh
+
+For a thesis, a paper, or any long-form academic writing:
+
+- **If you write in LaTeX**: BibTeX. The whole ecosystem assumes it.
+- **If you write in Word with Zotero**: CSL-JSON internally, export to BibTeX when you need to share with a LaTeX collaborator.
+- **If you write in Markdown with Pandoc**: CSL-JSON natively.
+- **If you write in EndNote**: RIS for exchange, EndNote's native `.enl` library for daily work.
+
+The format you use day-to-day matters less than picking one and being consistent. The conversion tools (ours and others) make migration cheap when you need it; what is expensive is having half your library in one format and half in another, with no clear authoritative source.

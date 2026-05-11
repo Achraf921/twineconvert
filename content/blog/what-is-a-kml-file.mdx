@@ -1,0 +1,80 @@
+---
+title: "What is a KML file? (Google Earth, hiking routes, geographic data)"
+description: "KML is Google Earth's native format for maps and geographic data. Here is what it can hold, how it compares to GPX and GeoJSON, and when each one is the right call."
+publishDate: "2026-05-13"
+tags: ["kml", "gpx", "geojson", "gis", "mapping"]
+relatedTools: ["kml-to-gpx", "kml-to-geojson", "gpx-to-kml"]
+---
+
+KML stands for "Keyhole Markup Language," named after Keyhole, the company Google acquired in 2004 to build what became Google Earth. The format is XML-based and holds geographic features: points (markers), lines (routes), and polygons (areas).
+
+Here is what KML actually contains and when you would use it vs the alternatives.
+
+## What is inside a KML file
+
+The structural elements:
+
+- **Placemarks** with a name, description, and a Point (single coordinate), LineString (a path), or Polygon (an area).
+- **Folders** that group related placemarks (like "Hike day 1" containing waypoints + route)
+- **Styles** that set marker icons, line colors, fill colors per placemark
+- **Network links** that reference external KML/KMZ files (rare in user-generated files)
+
+A simple KML for a single landmark:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <Placemark>
+      <name>Eiffel Tower</name>
+      <Point>
+        <coordinates>2.2945,48.8584,330</coordinates>
+      </Point>
+    </Placemark>
+  </Document>
+</kml>
+```
+
+Coordinates are `longitude,latitude,elevation`. Note the order: longitude first, unlike how humans usually say "latitude/longitude." Every GIS format has this quirk; GeoJSON and KML use lon-lat, GPX uses lat="" lon="" attributes.
+
+## When you would use KML
+
+### You exported from Google Earth or Google My Maps
+
+These tools save as KML natively. If you marked up a trip in Google Earth, the file you download is KML (or KMZ, which is just a zipped KML).
+
+### You are sharing locations with someone
+
+KML is the most-supported format across mapping apps. Google Earth, Google Maps, Apple Maps (via import), every GIS tool worth its name. Email a `.kml` file and the recipient almost certainly has something that opens it.
+
+### You want labels + descriptions, not just geometry
+
+KML can attach rich text (HTML-formatted descriptions) to each placemark. GPX is more spartan; GeoJSON does not natively support rich descriptions. If your map needs popup balloons with formatted text and photos, KML is the format that carries that data.
+
+## When you would NOT use KML
+
+### Your target is a GPS device or fitness app
+
+Garmin devices, Strava, Komoot, Apple Watch fitness apps: all want GPX, not KML. KML is mapping-focused; GPX is fitness/navigation-focused. If you have a hiking route in KML and you want it on your Garmin watch, convert with our [KML to GPX converter](/kml-to-gpx) first.
+
+### You are building a web map with Leaflet or Mapbox
+
+Web mapping libraries strongly prefer GeoJSON. KML works but requires conversion at runtime (Leaflet has a `leaflet-omnivore` plugin, Mapbox needs preprocessing). If you are deploying a website, convert KML to GeoJSON once with our [KML to GeoJSON converter](/kml-to-geojson) and serve that.
+
+### You need to scale to hundreds of thousands of features
+
+KML is XML, which means verbose. A million-point dataset in KML is hundreds of MB. The same data as GeoJSON is half the size; as a binary format like FlatGeobuf or GeoPackage, much smaller still. KML is for human-sized datasets, not bulk geospatial.
+
+## KML vs GPX vs GeoJSON, in one paragraph each
+
+**KML**: Google's format for general-purpose mapping. Rich descriptions and styling per feature. Verbose XML. Best for human-readable maps shared between people.
+
+**GPX**: The GPS exchange format. Just three things: waypoints (points), tracks (recorded paths), routes (planned paths). No styling, no descriptions beyond name. Best for fitness devices and navigation apps. Use our [GPX to KML](/gpx-to-kml) or [GPX to GeoJSON](/gpx-to-geojson) converters to move data to other tools.
+
+**GeoJSON**: The modern web standard. JSON-based, compact, structured. Native format for Leaflet, Mapbox, ArcGIS. No styling (apply CSS-like rules in your map library instead). Best for web maps and programmatic GIS work. Use our [GeoJSON to KML](/geojson-to-kml) converter when you need to share with Google Earth users.
+
+## The KMZ wrinkle
+
+A `.kmz` file is a zipped `.kml` file (sometimes containing image assets too). Most tools that read KML also read KMZ transparently. If you have a `.kmz` and our converter rejects it, unzip the file first (rename to `.zip` on Windows, or use `unzip` on Mac/Linux) and pass the inner `.kml` instead.
+
+We do not currently support direct `.kmz` upload because the unzip step adds complexity for what is usually a one-second user action.

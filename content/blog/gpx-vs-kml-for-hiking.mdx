@@ -1,0 +1,107 @@
+---
+title: "GPX vs KML for hiking and GPS routes: which one to use"
+description: "Garmin wants GPX. Google Earth wants KML. Here is the practical breakdown for hikers, cyclists, and anyone planning routes."
+publishDate: "2026-05-24"
+tags: ["gpx", "kml", "hiking", "gps"]
+relatedTools: ["gpx-to-kml", "kml-to-gpx", "gpx-to-geojson"]
+---
+
+You planned a route in one app and need to use it in another. The format question is real and the answer depends on what the other app is.
+
+## The one-line answer
+
+- Sharing or visualizing in Google Earth, Google My Maps, real estate maps, general mapping: **KML**
+- Loading onto a Garmin / Wahoo / Apple Watch / fitness tracker, or sharing with hiking/cycling apps: **GPX**
+- Building a custom web map with Leaflet/Mapbox: **GeoJSON**
+
+If you have one format and need another, convert. The conversion is structural; geometry survives, style/decoration may not.
+
+## Why the formats split this way
+
+**GPX** (GPS Exchange Format) was designed in 2002 for actual GPS devices. It is spartan: waypoints (single points), tracks (recorded paths), routes (planned paths), elevation per point. That is it. No styling, no folders, no rich descriptions.
+
+That spartanness is why every fitness device in the world reads GPX. The spec is small, the parser is easy, the data is exactly what a GPS unit needs.
+
+**KML** (Keyhole Markup Language) was designed in 2001 for Google Earth. It is verbose XML with styling, folders, embedded HTML descriptions, network links. Better for "make a beautiful interactive map of my trip" than for "navigate me down this trail."
+
+So you can think of it as: GPX is for the GPS hardware, KML is for the human readability layer on top.
+
+## Specific app behaviors
+
+### Garmin devices (eTrex, Edge, Fenix)
+
+Want GPX. KML support varies: newer Edge bike computers via Garmin Connect handle some KML; older devices reject it entirely. Convert KML → GPX before transferring to be safe.
+
+### Wahoo Elemnt, Hammerhead Karoo
+
+GPX only.
+
+### Strava
+
+Imports GPX (planned routes) and FIT files (recorded activities). KML can be uploaded via Strava's web upload but gets converted to GPX internally.
+
+### Komoot
+
+GPX import is the standard. KML works in some cases through their Tour Planner.
+
+### Apple Watch (Workouts, Fitness)
+
+No direct file import. Routes get to the watch via apps like WorkOutDoors or Footpath that read GPX.
+
+### Google Earth, Google Maps, Google My Maps
+
+KML is native. GPX import works on Earth Desktop but loses styling.
+
+### iPhone Hiking apps (Gaia GPS, AllTrails, Komoot)
+
+All read both formats. GPX is more common.
+
+### Web mapping (Leaflet, Mapbox, ArcGIS Online)
+
+Want GeoJSON. KML/GPX usually need conversion first or a plugin (Leaflet's `omnivore` library).
+
+## The conversion shortcuts
+
+Three of the most common workflows:
+
+### "I traced a route in Google My Maps; I want to ride it on my Garmin"
+
+1. In Google My Maps, click the three-dot menu on your map → Export to KML
+2. Drop the KML into our [KML to GPX converter](/kml-to-gpx)
+3. Upload the resulting GPX to Garmin Connect (Activities → New Course → Import)
+4. Send the course to your device via Garmin Connect or USB
+
+Total time: about 90 seconds.
+
+### "I recorded a ride on Strava; I want it on a Google Earth visualization"
+
+1. In Strava, open the activity → Export → GPX
+2. Drop the GPX into our [GPX to KML converter](/gpx-to-kml)
+3. Open the KML in Google Earth (File → Open) or share the file with someone who has Earth installed
+
+### "I have a hiking route in KML; I want to put it on my Leaflet web map"
+
+1. Drop the KML into our [KML to GeoJSON converter](/kml-to-geojson)
+2. In your Leaflet code: `L.geoJSON(geojsonData).addTo(map)`
+3. Deploy
+
+GeoJSON is the format Leaflet/Mapbox actually want; KML works but requires a plugin.
+
+## What survives conversion and what does not
+
+The geometry (latitude, longitude, elevation per point) always survives.
+
+What gets lost depending on direction:
+
+- **KML → GPX**: KML polygons become GPX tracks (GPX has no polygon type). KML styling (icon colors, line widths) is dropped. KML folder hierarchy flattens.
+- **GPX → KML**: gain (kind of): the KML output has no styling because GPX never had any. The visualization in Google Earth uses default styling (yellow dots, white lines). You can customize after import.
+- **KML → GeoJSON**: KML's HTML-formatted descriptions become plain strings in GeoJSON's `properties` bag. Styling drops.
+- **GPX → GeoJSON**: clean. GeoJSON has explicit Point, LineString, Polygon types that map 1:1.
+
+For "do I need to manually clean up after the conversion?" the answer is usually no for geometry, sometimes yes for styling. If you want the Google Earth visualization to look exactly like it did originally, redo the styling in Earth after import.
+
+## The KMZ wrinkle
+
+Sometimes you have a `.kmz` file, not `.kml`. A KMZ is a zipped KML (sometimes with image attachments). Most tools that read KML also read KMZ transparently.
+
+If our converter rejects your KMZ, unzip it first (rename to `.zip`, extract, get the `.kml` inside), then convert. We do not currently auto-handle KMZ because zip-unpacking adds complexity for a one-second user action.

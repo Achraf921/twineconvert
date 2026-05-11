@@ -1,0 +1,114 @@
+---
+title: "Turning a scanned PDF into searchable text with OCR"
+description: "Most scanned PDFs are images of pages. Real text extraction needs OCR. Here is how the process works and where it fails."
+publishDate: "2026-05-25"
+tags: ["pdf", "ocr", "scanning"]
+relatedTools: ["pdf-to-text", "image-to-text", "jpg-to-text"]
+---
+
+You got a scanned PDF (a contract, a research paper, a historical document). You try to Cmd+F search for a word and find nothing. You try to copy a passage and it gives you nothing.
+
+This is because the PDF contains images of pages, not text. The text you see is rendered as pixels. Your computer sees pictures of letters. To get real text you can search and copy, you need OCR.
+
+## What OCR actually does
+
+OCR (Optical Character Recognition) is the process of looking at a picture of text and producing the underlying characters. The output is a text file, or a PDF with an invisible text layer overlaid on the images.
+
+Modern OCR is mostly built on Tesseract (an open-source engine maintained by Google) or commercial alternatives like ABBYY FineReader. The accuracy for clean, printed English text is 95-99% on most scanners; for handwriting, multi-column layouts, or low-quality scans, it can drop to 70-80%.
+
+## Three ways to OCR a PDF
+
+### Browser-based: our PDF to text converter
+
+Drop the PDF into our [PDF to text converter](/pdf-to-text). It runs Tesseract OCR in your browser via WebAssembly, no upload anywhere. Output is a plain `.txt` file with the recognized text.
+
+This works well for:
+- Single-column English documents
+- Clean scans at 200 DPI or higher
+- Documents that fit in browser memory (under 200 MB for most laptops)
+
+It does not work well for:
+- Handwriting (Tesseract is poor at cursive)
+- Multi-column scientific papers (the OCR confuses the column order)
+- Low-quality scans with rotation or skew
+- Non-Latin scripts without the corresponding language pack (we ship English; add others on request)
+
+### Adobe Acrobat Pro
+
+Open the PDF in Acrobat Pro, click Tools → Scan & OCR → Recognize Text. Output is a PDF with an invisible searchable text layer. The visual rendering does not change; you can now search and copy.
+
+This is the highest-quality OCR for most documents because Acrobat's engine is tuned for PDF-specific layouts. Cost: $20/month for Acrobat Pro.
+
+### Tesseract CLI directly
+
+If you are technical, install Tesseract on your machine:
+
+```bash
+# Mac
+brew install tesseract poppler
+
+# Convert PDF pages to images, then OCR each
+pdftoppm -r 300 input.pdf page
+for img in page-*.ppm; do
+  tesseract "$img" "${img%.ppm}" -l eng
+done
+cat page-*.txt > output.txt
+```
+
+This gives you the most control (language packs, quality settings, page-by-page handling) but requires the most setup.
+
+## What kills OCR accuracy
+
+A few patterns to recognize so you do not blame the OCR tool:
+
+### Low scan resolution
+
+200 DPI is the floor for reliable OCR. 150 DPI struggles on small fonts. 100 DPI loses character details entirely. If your scans are coming out poorly, check the scanner setting before blaming the OCR.
+
+### Photos instead of scans
+
+Phone photos of pages are at angles, sometimes with shadows, sometimes with hand-holding blur. OCR engines expect flat, well-lit, square-on images. For phone-photographed pages, run them through a "scanner" app first (Adobe Scan, Microsoft Lens, Apple Notes' built-in scanner) which auto-corrects perspective and contrast.
+
+### Multi-column layouts
+
+A scientific paper with two columns confuses naïve OCR. The engine reads left column line 1, then RIGHT column line 1 (because they are at the same vertical position), instead of reading the entire left column first. The output is unreadable.
+
+Acrobat Pro handles this reasonably well; basic Tesseract does not. For two-column PDFs, you may need to either:
+- Pre-split each page into two single-column images
+- Use a more sophisticated OCR pipeline (we ship single-column; multi-column is harder)
+- Accept manual reordering of the output
+
+### Handwriting
+
+Tesseract is bad at handwriting. ABBYY FineReader is better but still inconsistent. Google's online OCR (via Google Drive: open PDF, right-click, "Open with Google Docs") is currently the best free option for handwriting. For research-grade handwriting (historical documents, manuscripts), there are specialized services like Transkribus.
+
+### Foreign-language text
+
+Tesseract supports 100+ languages, but you have to install the language pack matching the document's language. Our browser converter ships with English; for other languages, the desktop Tesseract CLI is your best bet.
+
+## What the output looks like
+
+For a typical 10-page printed document, the OCR output is a `.txt` file of 20-50 KB. Each page's text is appended; sometimes there are form-feed characters between pages but often not. Headers and footers (page numbers, running titles) come out interleaved with body text.
+
+Post-processing usually involves:
+- Stripping headers/footers
+- Joining hyphenated words split across line breaks
+- Fixing the few characters OCR got wrong
+
+For long documents, expect to do some cleanup. For "I just need to find one quote," the raw OCR output is usually enough to Cmd+F your way to it.
+
+## When OCR is not the right tool
+
+A few cases where it is not:
+
+### The PDF is born-digital
+
+If the PDF was created from a Word doc or generated by a program, it already has real text. You do not need OCR. Try Cmd+F first; if it works, the text is there. The "search returns nothing" usually means scanned, but sometimes means a strange font that breaks search.
+
+For born-digital PDFs that resist search, the fix is usually re-saving with Acrobat or a font-replacement tool, not OCR.
+
+### You need the layout, not the text
+
+If you want to preserve the original layout (positions, fonts, etc.), OCR is the wrong tool. You want the searchable-PDF output (text layer overlaid on images), not raw text extraction.
+
+Our [PDF to text](/pdf-to-text) converter outputs raw text. Acrobat Pro outputs searchable PDFs. Different tools for different downstream uses.

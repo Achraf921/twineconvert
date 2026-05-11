@@ -1,0 +1,135 @@
+---
+title: "HL7 v2 messages for non-developers (reading an ADT message)"
+description: "If you work in healthcare IT or data analysis and you keep seeing pipe-delimited messages you can not decode, here is the structure in plain English."
+publishDate: "2026-05-16"
+tags: ["hl7", "healthcare", "interoperability"]
+relatedTools: ["hl7-to-csv", "hl7-to-json", "fhir-bundle-to-csv"]
+---
+
+If you work in healthcare and you have ever opened an interface log, you have seen messages like this:
+
+```
+MSH|^~\&|EPIC|REGIONAL|LAB|REGIONAL|20240101120000||ADT^A01|MSG001|P|2.5
+EVN|A01|20240101120000
+PID|1||10001234^^^MRN||DOE^JOHN^A||19800515|M|||123 MAIN ST^^BOSTON^MA^02101
+PV1|1|I|2W^208^A
+```
+
+This is HL7 v2: the messaging format every major US hospital system uses for moving patient data between applications. Here is how to read it without needing a developer.
+
+## The structural rules
+
+Each line is a **segment**. Each segment starts with a 3-character type code (MSH, EVN, PID, PV1, OBX, etc.). The rest of the line is fields separated by `|` (pipes).
+
+Inside a field, components are separated by `^` (carets). Inside a component, subcomponents use `&` (ampersands). Repetitions of the same field use `~` (tildes).
+
+So `DOE^JOHN^A` is one field with three components: last name DOE, first name JOHN, middle initial A.
+
+## The segments you actually see
+
+### MSH (Message Header)
+
+The first line of every message. Contains routing metadata: sender, receiver, timestamp, message type, message ID. You read it like a letter's envelope.
+
+In the example above:
+- Sender app: `EPIC`
+- Sender facility: `REGIONAL`
+- Timestamp: `20240101120000` (Jan 1, 2024, noon)
+- Message type: `ADT^A01` (admission notification)
+- Message ID: `MSG001`
+- Version: `2.5`
+
+### PID (Patient Identification)
+
+Patient demographics. The field positions are stable: PID-3 is the MRN, PID-5 is the patient name, PID-7 is the date of birth, PID-8 is gender.
+
+In the example: MRN 10001234, name DOE JOHN A, DOB 1980-05-15, gender M.
+
+### PV1 (Patient Visit)
+
+Where the patient is during this visit. Bed assignment, attending provider, admission type. PV1-3 is the patient location (`2W^208^A` = floor 2W, room 208, bed A).
+
+### EVN (Event Type)
+
+What triggered this message. ADT messages have an EVN segment that names the event (A01 = admission, A03 = discharge, A04 = registration, A08 = update).
+
+### DG1 (Diagnosis)
+
+The patient's diagnoses for this visit. DG1-3 is the diagnosis code (ICD-10, SNOMED, etc.) and description.
+
+### OBX (Observation/Result)
+
+Lab results, vital signs, any clinical observation. OBX-3 is the test code (LOINC), OBX-5 is the result value.
+
+## The common ADT trigger events
+
+Most operational hospital traffic is ADT (Admit/Discharge/Transfer). The trigger events:
+
+- **A01**: Admission to inpatient
+- **A02**: Transfer between locations
+- **A03**: Discharge from inpatient
+- **A04**: Registration (ED, outpatient)
+- **A05**: Pre-admission
+- **A08**: Update patient information
+- **A11**: Cancel admission
+
+A typical Epic shop produces 10K-100K ADT messages per day across all events.
+
+## Why HL7 v2 is hard to read
+
+Three reasons:
+
+1. **Field positions are numbered, not named.** You have to memorize that PID-5 is the name and PID-7 is the DOB. The spec is 300+ pages.
+2. **Optional fields make alignment hard.** If a message omits PID-6, the next pipe still appears, so visually counting position is error-prone.
+3. **Hierarchical separators are easy to mix up.** `|` `^` `~` `&` are all in play within a single field.
+
+This is why our [HL7 to CSV converter](/hl7-to-csv) is genuinely useful for ops teams: it pivots every segment into one row with named columns (PID.5, PID.7, etc.), then you can open the whole message log in Excel and filter.
+
+## When to use HL7 v2 vs FHIR
+
+HL7 v2 is the legacy messaging standard, dating to 1989. FHIR (Fast Healthcare Interoperability Resources) is the modern successor, JSON-based, REST-API-driven.
+
+In practice in 2026:
+- **HL7 v2 is still the operational backbone.** Every major EHR (Epic, Cerner, Meditech, Allscripts) speaks v2 internally for ADT, ORM (orders), ORU (results), DFT (billing).
+- **FHIR is the integration layer.** When an external app needs to read patient data, it uses FHIR. The hospital's internal interface engine often translates v2 → FHIR at the API boundary.
+
+Most healthcare IT shops have to read both. We have converters for [FHIR Bundle to CSV](/fhir-bundle-to-csv) for the FHIR side, [HL7 to CSV](/hl7-to-csv) for v2.
+
+## A complete example, annotated
+
+```
+MSH|^~\&|EPIC|REGIONAL|LAB|REGIONAL|20240101120000||ADT^A01|MSG001|P|2.5
+```
+
+Header: Epic sent this to LAB on Jan 1 2024 at noon, it is an A01 admission, message ID MSG001, processing in production (P) HL7 version 2.5.
+
+```
+EVN|A01|20240101120000
+```
+
+Event: A01 admission, occurred at the same timestamp as MSH (so the message was generated immediately).
+
+```
+PID|1||10001234^^^MRN||DOE^JOHN^A||19800515|M|||123 MAIN ST^^BOSTON^MA^02101
+```
+
+Patient: MRN 10001234, name John A Doe, DOB May 15 1980, male, address 123 Main St Boston MA 02101.
+
+```
+PV1|1|I|2W^208^A
+```
+
+Visit: patient class I (inpatient), location floor 2W room 208 bed A.
+
+Total: a complete admission notification in 4 lines. Other ADT events would add an AL1 (allergy) segment, IN1 (insurance) segments, or DG1 diagnosis segments.
+
+## What to do with this knowledge
+
+If you are debugging an interface, the workflow is:
+
+1. Pull the message from the interface engine log
+2. Identify the MSH (sender, receiver, message type)
+3. Walk the segments in order
+4. For each segment, look up the fields you care about
+
+For doing this at scale, our converter helps: drop a whole log file into [HL7 to CSV](/hl7-to-csv), get a spreadsheet with every segment as a row. Filter by segment type, sort by timestamp, find the specific MRN that did not transfer correctly. Three-minute audit instead of three-hour manual scan.

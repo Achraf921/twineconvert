@@ -1,0 +1,67 @@
+---
+title: "What is a HEIC file, and why does my iPhone make them?"
+description: "iPhones save photos as HEIC instead of JPG. Here is what HEIC actually is, when Apple started using it, why Windows refuses to open them, and the three options you have for working with them."
+publishDate: "2026-05-11"
+tags: ["heic", "image-format", "iphone"]
+relatedTools: ["heic-to-jpg", "heic-to-png", "heic-to-webp", "heic-to-pdf"]
+---
+
+If you have an iPhone and you have ever tried to email a photo to a Windows colleague, you have probably seen this exact moment. You attach the picture, hit send, and the other side replies with some version of "I can not open this." The file ends in `.heic`, which their computer treats like a foreign language.
+
+This post explains what HEIC actually is, why Apple chose it, why other systems struggle with it, and the three practical ways to deal with it.
+
+## What HEIC is, in one sentence
+
+HEIC is a container for a high-efficiency compressed image, stored using the HEVC (H.265) video codec applied to a single frame. The file extension is `.heic` or sometimes `.heif`.
+
+It is not a new image type the way JPG and PNG are different from each other. It is the same idea as JPG (lossy compression of a photograph) but using a much newer compression algorithm. The result is a file that looks identical to a JPG of the same scene at about half the size.
+
+## When Apple started using it
+
+Apple switched the default iPhone camera output to HEIC in **iOS 11, released in September 2017**, starting with the iPhone 7. Every iPhone since takes HEIC photos by default. Macs running macOS High Sierra (also 2017) and later have native support.
+
+The reason was storage. A typical iPhone 7-era JPG photo was about 3-4 MB. The HEIC equivalent is 1.5-2 MB at the same visual quality. Across a 256 GB phone with 30,000 photos, that is the difference between needing to delete things and not.
+
+## Why Windows and older Macs refuse to open them
+
+Apple chose HEIC, but the rest of the world had not adopted it yet. Windows added native HEIC support in **Windows 10 build 1803 (April 2018)** but only with two paid extensions from the Microsoft Store: the HEIF Image Extensions (free) and the HEVC Video Extensions (about $1).
+
+If you have a Windows machine that does not have those extensions installed, double-clicking a `.heic` file shows you nothing useful. Linux is similar: most distros need `libheif` installed, and most photo viewers do not bundle it by default. Older Mac users on macOS Sierra or earlier never got HEIC support.
+
+The result is that an iPhone photo that opens fine for you can be unreadable to half the people you send it to.
+
+## Your three real options
+
+### Option 1: Stop the iPhone from making HEIC files in the first place
+
+If most of the photos you take get sent to non-iPhone people, the simplest fix is to switch your iPhone back to JPG output.
+
+Open Settings, scroll to Camera, tap Formats, and select **Most Compatible**. From that moment forward, every new photo you take is a JPG. Photos you have already taken stay HEIC; only new ones change.
+
+The cost: about 2x the storage per photo. If you are on a 64 GB phone with iCloud Photos off, you will notice. On a 256 GB or 512 GB phone with iCloud, you will not.
+
+### Option 2: Convert when you need to
+
+Keep taking HEIC photos for the storage savings, and convert only when you need to share with someone who cannot open them.
+
+This is what our [HEIC to JPG converter](/heic-to-jpg) does. Drag the file in, get a JPG back. The conversion runs in your browser, your photo never uploads to anyone's server. Same idea works for [HEIC to PNG](/heic-to-png) if you need lossless output for editing, or [HEIC to PDF](/heic-to-pdf) if you are sending a single image as a document.
+
+### Option 3: AirDrop or share in a way that auto-converts
+
+If you are sending the photo through Apple's own sharing menu (Mail, Messages, AirDrop to a Mac, iCloud Photo Sharing), Apple often auto-converts to JPG behind the scenes if the destination cannot handle HEIC. The conversion happens silently and you never see the HEIC file at all.
+
+This breaks down with: third-party email apps, file transfers through cloud storage, USB exports from the phone, and AirDrop to PCs (which does not exist anyway). For those, you are back to Option 1 or 2.
+
+## What about HEIF? Is that different?
+
+HEIF is the underlying format spec (High Efficiency Image Format, defined by the MPEG group in 2015). HEIC is Apple's name for HEIF files compressed with HEVC. The terms are used interchangeably in casual use, and a `.heif` file will work anywhere a `.heic` file works.
+
+The only practical difference: some Android phones (Samsung, mostly) use the `.heif` extension instead of `.heic` for the same kind of file. Treat them as identical.
+
+## What I would actually do
+
+If you are sharing photos with non-iPhone users more than a few times a week, switch your camera to Most Compatible mode now (Option 1) and call it done. The 2x storage cost is real but small compared to the time you spend converting individual files.
+
+If you are sending mostly to other Apple users and only occasionally to PCs, leave HEIC on and convert when needed. Our converter handles the modern HEIC profiles that older online converters reject, including iPhone Live Photos and edited photos that some tools choke on.
+
+Either way, you no longer have to apologize for sending a file the other person cannot open.

@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { listToolIds } from "@/lib/engine/registry-meta";
 import { listFormatKeys } from "@/lib/formats";
+import { getAllPosts } from "@/lib/blog/posts";
 
 /**
  * Programmatic sitemap. One entry per converter route plus the homepage.
@@ -42,5 +43,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [homepage, ...staticPages, ...tools, ...formats];
+  // Blog index + every published post. getAllPosts() already filters
+  // out scheduled-future posts, so the sitemap only advertises content
+  // that's actually live; new posts appear automatically on the day
+  // their publishDate arrives + the daily cron rebuild fires.
+  const blogIndex = {
+    url: `${baseUrl}/blog`,
+    lastModified,
+    changeFrequency: "daily" as const,
+    priority: 0.7,
+  };
+  const blogPosts = getAllPosts().map((post) => ({
+    url: `${baseUrl}/blog/${post.slug}`,
+    lastModified: new Date(`${post.frontmatter.publishDate}T00:00:00.000Z`),
+    changeFrequency: "yearly" as const,
+    priority: 0.6,
+  }));
+
+  return [homepage, ...staticPages, ...tools, ...formats, blogIndex, ...blogPosts];
 }

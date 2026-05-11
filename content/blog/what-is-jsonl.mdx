@@ -1,0 +1,104 @@
+---
+title: "What is JSONL? (NDJSON, line-delimited JSON, and why every data pipeline uses it)"
+description: "JSONL is JSON with one record per line. Here is why streaming pipelines, BigQuery, OpenAI fine-tuning, and LangChain all converged on it."
+publishDate: "2026-05-22"
+tags: ["jsonl", "ndjson", "data-pipelines"]
+relatedTools: ["jsonl-to-json", "json-to-jsonl", "jsonl-to-csv"]
+---
+
+If you have worked with data pipelines or ML training, you have probably seen `.jsonl` files. JSONL stands for "JSON Lines" (sometimes called NDJSON, "Newline-Delimited JSON"). The format is exactly what the name says: one JSON value per line.
+
+## The format, in 5 lines
+
+```
+{"id": 1, "name": "Alice", "city": "Paris"}
+{"id": 2, "name": "Bob", "city": "London"}
+{"id": 3, "name": "Carol", "city": "Tokyo"}
+{"id": 4, "name": "Dave", "city": "Berlin"}
+{"id": 5, "name": "Eve", "city": "Madrid"}
+```
+
+That is JSONL. No enclosing `[` `]` array brackets, no commas between records, no trailing characters. Just JSON objects (or any JSON values), one per line.
+
+## Why this is useful
+
+The killer property is **streamability**.
+
+A regular JSON file of 10 million records is one giant JSON object. To parse it, your tool has to read the entire file into memory and then parse the whole thing as one document. For a 10 GB file, that means 10+ GB of RAM and a several-minute parse step before you can do anything.
+
+A JSONL file of 10 million records is 10 million independent JSON objects. To parse it, your tool reads one line, parses one object, processes it, frees the memory, reads the next line. Constant memory regardless of file size. You can start processing the first record after milliseconds.
+
+This matters for:
+
+- **BigQuery, Snowflake, Redshift**: all import streaming data as JSONL because it streams.
+- **fluentd, Vector, Logstash**: log shippers emit JSONL because they write one log line at a time.
+- **OpenAI fine-tuning**: the training-data format is JSONL because the trainer streams examples.
+- **LangChain RAG pipelines**: vector-store import is JSONL.
+- **Postgres `COPY ... FROM`** with `FORMAT json`: line-by-line ingestion.
+
+If a tool says "supports JSON lines" or "NDJSON," it means the streaming-friendly property.
+
+## The trade-off
+
+JSONL gives up something to gain streamability: **it is no longer a single document.**
+
+You can not `JSON.parse(file_contents)` on a JSONL file because the file as a whole is not valid JSON. You have to split on newlines and parse each line individually. Most languages have a one-liner for this:
+
+```python
+# Python
+import json
+records = [json.loads(line) for line in open("data.jsonl")]
+```
+
+```javascript
+// JavaScript
+const records = fs.readFileSync("data.jsonl", "utf-8")
+  .split("\n")
+  .filter(Boolean)
+  .map(JSON.parse);
+```
+
+Or use `jq` from the command line: `jq -c .` treats each line as a separate document.
+
+## When you would convert JSONL to something else
+
+### JSONL → JSON
+
+If your downstream tool expects a single JSON document (a strict JSON Schema validator, a REST API request body, a tool that does not stream), you need to wrap the JSONL records in a top-level array.
+
+That is what our [JSONL to JSON converter](/jsonl-to-json) does: reads the lines, wraps the values into one array, pretty-prints the output.
+
+### JSONL → CSV
+
+For triaging the data in a spreadsheet, CSV is more accessible. Our [JSONL to CSV converter](/jsonl-to-csv) flattens each record to a row, using the union of all keys as the column headers. Sparse fields become empty cells.
+
+This loses the nested-object/array structure: a record with `"address": {"city": "Paris", "country": "France"}` becomes a single CSV cell with a JSON-encoded string. Acceptable for analyst triage; not great for further programmatic use.
+
+### CSV → JSONL
+
+The reverse. Useful for migrating CSV data into a streaming pipeline (a Kafka topic, a streaming Postgres ingest, a fine-tuning dataset). Our [CSV to JSONL converter](/csv-to-jsonl) handles type coercion (`"30"` → `30` if the column is consistently numeric).
+
+## A trap to know about
+
+A common bug: code that opens a JSONL file with `JSON.parse` and gets "Unexpected token" errors. That code thinks the file is JSON; it is not. Fix is to split on newlines first.
+
+Another common bug: writing JSONL with `JSON.stringify(arr)` followed by `.replace('],[', ']\n[')`. Do not do this. Use a proper writer that emits one object per line: `arr.map(JSON.stringify).join("\n")`.
+
+## The naming confusion
+
+You will see all of these and they all mean the same format:
+
+- JSON Lines
+- JSONL
+- LDJSON (Line-Delimited JSON)
+- NDJSON (Newline-Delimited JSON)
+- Newline-delimited JSON
+- JSON stream
+
+The community has not converged on one name. The format spec at <https://jsonlines.org/> uses "JSON Lines." Most tools accept any of the above as input.
+
+## When to skip JSONL
+
+If your data is small (<100 MB) and your tool reads JSON natively, JSON is simpler. No newline-splitting, no per-line parsing, no edge cases with trailing newlines or BOM markers.
+
+Use JSONL specifically when you need streaming or you are integrating with a tool that requires it. For "I have some data, where do I put it," regular JSON or CSV is usually the right answer.

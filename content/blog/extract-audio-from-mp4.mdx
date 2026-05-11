@@ -1,0 +1,77 @@
+---
+title: "How to extract MP3 audio from any MP4 video"
+description: "Three reasons people pull the audio out of a video, what changes about the file when you do, and how to get a clean MP3 in your browser without uploading anything."
+publishDate: "2026-05-11"
+tags: ["mp4", "mp3", "audio", "video"]
+relatedTools: ["mp4-to-mp3", "mov-to-mp4", "wav-to-mp3", "m4a-to-mp3"]
+---
+
+You have a video. You want the sound, not the picture. Maybe it is a song you ripped from a YouTube download, a voice memo recorded as a video by accident, or an interview where the video file is huge and the audio is what actually matters.
+
+The conversion is called "MP4 to MP3" and the result is a much smaller file that plays in every audio app on every device. Here is the actual mechanics of what is happening, and the three ways the job can go sideways.
+
+## What is actually happening
+
+An MP4 file is a container. It can hold a video stream (the picture, encoded with H.264 or H.265), an audio stream (the sound, encoded with AAC or sometimes MP3), and metadata (title, artist, chapter markers).
+
+When you "convert MP4 to MP3," you are not actually re-encoding the video. You are throwing the video stream away and either:
+
+- **Stream-copying the audio** if it is already MP3 (rare in MP4 files, but possible), which means zero quality loss and takes about half a second
+- **Re-encoding the audio from AAC to MP3** if the source uses AAC, which is what 99% of MP4 files actually use
+
+The re-encoding is generation-loss work: AAC and MP3 are both lossy formats, so going from one to the other loses a small amount of quality you would not hear unless you were listening on studio monitors with critical attention. At normal listening volumes on normal speakers, the result is indistinguishable from the original.
+
+## Three reasons people do this
+
+### A podcast or audiobook you want to play on something simple
+
+If you have an old MP3 player, a basic Bluetooth speaker, or a car stereo from before 2015, MP3 is the format that always works. AAC inside an MP4 sometimes works on those devices and sometimes does not. MP3 is the universal default.
+
+### A song from a video download
+
+YouTube downloaders give you an MP4 with an embedded audio stream. If all you want is the song, the video portion is dead weight: half a gigabyte of pixels you will never look at. MP4 to MP3 cuts the file size by 90% and gives you something you can drop into a music app.
+
+### Audio for transcription or editing
+
+Whisper, Otter, Descript, and most transcription tools accept MP3 natively and process it faster than MP4 (because they do not have to skip the video stream first). Same for audio editors: Audacity, GarageBand, Reaper all open MP3 with one click.
+
+## How to actually do it
+
+Drop your MP4 into our [MP4 to MP3 converter](/mp4-to-mp3). The conversion runs in your browser using FFmpeg compiled to WebAssembly: nothing uploads to a server, the file never leaves your computer. For a 30-minute video, the conversion typically takes 5-15 seconds depending on your machine.
+
+The output is a 128 kbps MP3, which is the standard "good enough for almost everything" bitrate. If you need higher quality (256 kbps or 320 kbps for music archival), most professional audio tools can re-encode after the fact, or you can use FFmpeg directly with `-b:a 320k`.
+
+## The three ways this can go wrong
+
+### The MP4 has no audio stream
+
+Some "videos" are just animation tracks with no sound. Time-lapse exports from Lightroom, drone footage from DJI with the audio disabled, silent reels. The converter will produce an MP3 with zero audio data and a duration of zero seconds. If your output is suspiciously small (under 5 KB), that is probably what happened.
+
+To check: open the source MP4 in QuickTime or VLC, watch the audio level meter. If it does not move, the file has no sound to extract.
+
+### The audio is encrypted DRM-protected
+
+iTunes Store purchases from before 2009 had FairPlay DRM. Some streaming-service exports do too. The audio is in there but encrypted, and our converter sees the container as having no decodable audio stream. There is no legitimate way around this; the DRM is the whole point.
+
+### The MP4 uses a codec the browser can not decode
+
+Most MP4s use H.264 for video and AAC for audio: both universally supported. A small number use exotic codecs (Apple's ProRes, AV1, Opus inside MP4) that browser FFmpeg builds do not include for size reasons. The conversion fails with a codec error in those cases.
+
+If you hit this, the workaround is to re-encode the MP4 first with a standard tool that has all codecs (the desktop FFmpeg CLI, HandBrake, or VLC's convert function), then convert the result to MP3 with our tool.
+
+## What about MP3 quality?
+
+We default to 128 kbps because that is the audible-floor bitrate for most music and well above that for spoken-word content (podcasts, audiobooks, interviews). At 128 kbps, an hour of audio is about 60 MB.
+
+If you have a video with very-high-quality audio (a studio recording, a music video, a concert film), the source might be 256 kbps AAC. Going to 128 kbps MP3 is a measurable quality drop, though again, audible mostly to people training their ears specifically for this.
+
+For now, our converter does not expose a bitrate option in the UI; it picks 128 kbps automatically. That covers the 95% case. Power users who need different bitrates have FFmpeg.
+
+## Other audio-extraction tools you might also want
+
+- [MOV to MP4](/mov-to-mp4) if your source is an iPhone-recorded `.mov` and you want to extract audio after re-containerizing
+- [WAV to MP3](/wav-to-mp3) for studio recordings that come out as uncompressed WAV
+- [M4A to MP3](/m4a-to-mp3) for audio-only Apple Music or QuickTime exports
+- [FLAC to MP3](/flac-to-mp3) for lossless music libraries you want to share with non-audiophile devices
+
+All run in your browser, none upload your audio anywhere.

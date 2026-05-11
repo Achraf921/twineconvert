@@ -1,0 +1,75 @@
+---
+title: "HEIC vs JPG: which should you actually use?"
+description: "An honest comparison: file size, quality, compatibility, editability. When HEIC wins, when JPG wins, and the conversion strategies that actually work for both."
+publishDate: "2026-05-15"
+tags: ["heic", "jpg", "image-format", "comparison"]
+relatedTools: ["heic-to-jpg", "jpg-to-png"]
+---
+
+If you have ever switched your iPhone camera to "Most Compatible" and immediately watched your storage usage tick up, you have run the HEIC-vs-JPG tradeoff directly. Here is the honest version of when each format is the right call.
+
+## The compression difference, in real numbers
+
+A typical iPhone 14 photo of a scene with normal complexity (mixed shadows, faces, sky):
+
+- **HEIC**: about 1.5-2 MB
+- **JPG at quality 90**: about 3-4 MB
+
+For the exact same visual quality. HEIC achieves this with the HEVC video codec applied to a single frame, which is a more sophisticated compressor than the 1992-era DCT used by JPG. For 30,000 photos, that is the difference between 50 GB and 100 GB.
+
+## When HEIC wins
+
+### You take a lot of photos and pay for storage
+
+iCloud Photos at 200 GB costs about $36/year. If your library would fit in 100 GB as HEIC but spills to 200 GB as JPG, HEIC pays for itself.
+
+### You shoot in low light
+
+HEIC supports 10-bit color (1024 levels per channel) vs JPG's 8-bit (256 levels). For dim scenes with subtle gradients (sunsets, candlelit interiors, night sky), 10-bit HEIC shows less posterization. You will not see the difference on Instagram, but in a 16x20 print or a calibrated monitor edit, it is real.
+
+### You will only share with other iPhone users
+
+If your social circle and your work crowd are all Apple, HEIC just works. AirDrop, iMessage, iCloud Photo Sharing all preserve HEIC end-to-end with no quality loss.
+
+## When JPG wins
+
+### You share a lot with non-Apple users
+
+Every Windows machine without paid extensions, every Linux distro without manual codec setup, every web service that has not added HEIC support, every email recipient on a corporate network with strict file-type policies: they all open JPG and reject HEIC. If half your photos go to non-iPhone recipients, the storage savings are not worth the conversion friction.
+
+### You edit in legacy Photoshop or any tool from before 2018
+
+Photoshop added native HEIC support in CC 2019. CS6, CC 2015, CC 2017: no. GIMP needs a plugin. Lightroom 6 (the perpetual-license version): no. If your editing toolchain is older, JPG just works.
+
+### You are uploading to a service that rejects HEIC
+
+Many old-school upload paths quietly reject HEIC: insurance claim portals, government document submissions, university application systems, smaller print-on-demand services. They were built before 2017 and never updated.
+
+### You print frequently
+
+Almost every print kiosk (Walgreens, CVS, Costco), every print-on-demand service that has not updated their backend, and every print shop's drag-and-drop uploader expects JPG. HEIC fails or gets silently rejected at the upload step.
+
+## What I would actually recommend
+
+Three setups, pick the one that matches your life:
+
+### Setup 1: Mostly Apple users, modern toolchain
+
+Leave HEIC on. Take advantage of the storage savings. Convert to JPG only when you specifically need to send something to a Windows user. Use our [HEIC to JPG converter](/heic-to-jpg) for those one-offs.
+
+### Setup 2: Mixed Apple + Windows social circle
+
+Switch the iPhone camera to "Most Compatible" mode (Settings → Camera → Formats). All future photos are JPG. You give up about 2x storage but stop worrying about compatibility entirely. The few existing HEIC photos can stay HEIC; only new ones change.
+
+### Setup 3: Photo professional
+
+Shoot HEIC for the 10-bit color and storage, then batch-convert the keepers to JPG (or DNG for editing) only when you select your portfolio. Use HEIC as a working format and JPG as a delivery format.
+
+## The conversion question
+
+If you do need to convert, the choice is between:
+
+- **Convert all of them in one batch** with a desktop tool like Apple's Preview (open all photos, File → Export, choose JPEG, set quality)
+- **Convert on demand** with our [browser converter](/heic-to-jpg) when you need a specific photo as JPG
+
+The browser approach has one big advantage worth naming: your photos never upload to anyone's server. For sensitive personal photos (kids, medical, ID documents), this matters. Server-based converters can be fine for most use cases, but they are a trust decision; doing it in the browser removes the trust question entirely.

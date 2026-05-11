@@ -1,0 +1,55 @@
+---
+title: "Importing BibTeX into Zotero, Mendeley, and EndNote"
+description: "Each reference manager has its own import quirks. Here is the exact menu path, the encoding gotcha, and the one field that gets lost in each."
+publishDate: "2026-05-12"
+tags: ["bibtex", "zotero", "mendeley", "endnote", "citations"]
+relatedTools: ["bibtex-to-csl-json", "bibtex-to-ris", "ris-to-bibtex"]
+---
+
+You have a `.bib` file (from a LaTeX project, a co-author, or an old export) and you need to get it into your reference manager. Each manager handles BibTeX a little differently. Here are the exact paths for the three most-used.
+
+## Zotero
+
+File → Import → File... → pick the `.bib` file → Next.
+
+Zotero's BibTeX import has been mature since version 5 (2017) and handles every common entry type plus the major BibLaTeX extensions (`@online`, `@thesis`, `@report`). Field mapping is comprehensive: title, author, year, journal, volume, pages, doi, url, abstract all land in the right places.
+
+**The one field that gets lost**: BibTeX `crossref` references between entries. If you have an `@inproceedings` that points to an `@proceedings` parent for the booktitle, Zotero imports both but does not preserve the link. You will see the booktitle inlined into the child entry (which is what you usually want), but if you edit the parent later, the child will not auto-update.
+
+**Encoding gotcha**: if your `.bib` has TeX-escaped accents (`Caf\'e` instead of `Café`), Zotero decodes them on import. If you see escape sequences leak through, it means the file was saved as something other than UTF-8 (often Latin-1 from older LaTeX installs). Open the file in a text editor, save as UTF-8, re-import.
+
+## Mendeley
+
+File → Import → BibTeX (.bib) → pick the file.
+
+Mendeley's importer is older and less thorough. It handles the standard fields well but drops a few things:
+
+- The `keywords` field comes in but does not auto-tag the entry. The keywords sit as a comma-separated string in the entry's Tags field with no individual tag granularity.
+- Custom field names (anything not in the BibTeX standard) silently disappear. If your `.bib` had `mendeley-tags = {...}` from a previous Mendeley export, those get preserved on round-trip but anything else custom does not.
+- Entry types Mendeley does not know about (like `@artwork` or `@audio` from BibLaTeX) get coerced to "Generic" and you lose the type-specific fields.
+
+**The Mendeley quirk**: it builds its own internal database from the import and de-duplicates by title + first-author + year. If you import the same `.bib` twice, you get the entries once. Sometimes this is what you want, sometimes you lose two distinct papers that happen to share metadata.
+
+## EndNote
+
+File → Import → File... → in the dropdown, choose **BibTeX Import**. If that filter is not in the list, you need to download it from the EndNote filter library first (Help → Web Style Finder → search "BibTeX").
+
+EndNote's BibTeX support is the weakest of the three because EndNote came from a non-LaTeX academic culture and treats BibTeX as a foreign format. Expect:
+
+- Author lists with more than 4 authors get truncated to the first 3 plus "et al." in some fields.
+- DOIs are imported but sometimes placed in the Notes field rather than the proper DOI field. You may have to manually move them.
+- Math expressions in titles (`$E = mc^2$`) come in literally as `$E = mc^2$` instead of being rendered. EndNote does not understand LaTeX math.
+
+**The EndNote workaround**: if BibTeX import gives you trouble, go through RIS instead. Convert BibTeX to RIS with our [BibTeX to RIS converter](/bibtex-to-ris), then File → Import → RIS in EndNote. RIS is EndNote's native exchange format and the mapping is much cleaner.
+
+## What about cross-tool migrations?
+
+The pattern I see most often: someone is migrating FROM one manager TO another, and they want the data to survive. The honest answer is no migration path is perfect, but the relative quality looks like:
+
+- **Zotero ↔ Zotero**: BibTeX round-trip is good, CSL-JSON round-trip is better. Use [BibTeX to CSL-JSON](/bibtex-to-csl-json) for the cleanest exchange.
+- **Anything ↔ Zotero**: works well in both directions via BibTeX.
+- **Mendeley → Zotero**: works but loses tags fidelity. Export from Mendeley as BibTeX with explicit "Include all fields", import to Zotero.
+- **EndNote → Zotero**: go through RIS, never BibTeX. EndNote's BibTeX export is buggy.
+- **Zotero → EndNote**: go through RIS, never BibTeX. EndNote's BibTeX import is buggy.
+
+The pattern is "use RIS when EndNote is on either side, use BibTeX or CSL-JSON otherwise."

@@ -1,0 +1,70 @@
+---
+title: "How to stop your iPhone from saving photos as HEIC"
+description: "The exact two taps in Settings, what changes after the switch, and the storage cost you should expect."
+publishDate: "2026-05-21"
+tags: ["heic", "iphone", "ios"]
+relatedTools: ["heic-to-jpg", "heic-to-png"]
+---
+
+If you are tired of converting iPhone photos every time you send one to a Windows colleague or upload to a service that does not handle HEIC, the permanent fix is to make the iPhone stop creating HEIC in the first place.
+
+## The exact path
+
+1. Open the **Settings** app on your iPhone
+2. Scroll to **Camera**
+3. Tap **Formats**
+4. Choose **Most Compatible** (the other option is **High Efficiency**, which is the HEIC default)
+
+That is it. Every photo you take from this moment forward is a JPG instead of a HEIC. Existing photos in your library stay as HEIC; only new ones are affected.
+
+## What changes after the switch
+
+### Storage usage goes up
+
+About 1.8x to 2x per photo. A 2 MB HEIC becomes a 3.5-4 MB JPG of the same scene. On a 256 GB iPhone with 30,000 photos, that is roughly an extra 60 GB.
+
+If you have iCloud Photos enabled with the "Optimize iPhone Storage" option turned on, this matters less because full-resolution photos live in iCloud and only thumbnails sit on the phone. If you have iCloud off and store full resolution locally, the storage cost is real.
+
+### Video format also changes
+
+The same setting affects video. Most Compatible saves videos as H.264 inside MP4 (universal). High Efficiency uses H.265 (HEVC) inside MOV, which is smaller but has the same compatibility issues HEIC has.
+
+If you want JPG photos but small H.265 videos, you can not get that with this single setting. Either everything is "compatible" or everything is "efficient."
+
+### Live Photos keep working
+
+Live Photos still record the short motion clip alongside the still image. The still is now a JPG instead of HEIC, but the motion behavior in the Photos app is identical. AirDrop to other Apple devices still preserves the live motion.
+
+### Edits behave the same
+
+The Edit screen in Photos, the markup tools, the cropping tools, the filters: all work identically. The only difference is the underlying file format.
+
+## When you might want to switch back
+
+You may want to switch back to High Efficiency (HEIC) if:
+
+- You start running out of storage and can not delete photos
+- You upgrade to a phone with a smaller storage tier
+- Your audience is all-Apple and you stop sharing with Windows users
+- You are taking a lot of low-light photos and want the 10-bit color range HEIC supports
+
+The switch is bidirectional. You can flip back and forth any time. Old photos keep their original format; only new ones reflect the current setting.
+
+## What about photos already on your phone?
+
+Photos taken before the switch stay as HEIC. iOS does not retroactively convert them. If you have 20,000 HEIC photos and you want them all as JPG, the options are:
+
+1. **AirDrop to a Mac** with the Photos app. Photos.app auto-converts HEIC to JPG on export. Slow for 20,000 photos.
+2. **Image Capture on macOS** (Applications → Image Capture, plug iPhone via USB). Set the format dropdown to "JPEG" and export the whole library. Faster, but the conversion happens at export time, not stored on the phone.
+3. **Re-take the photos**. Nobody does this for 20,000 photos but it is technically an option.
+4. **Convert as needed** with our [HEIC to JPG converter](/heic-to-jpg) for individual photos that you need to share.
+
+There is no in-place "convert all HEIC to JPG on this iPhone" toggle. Apple chose not to expose one.
+
+## The compromise nobody mentions
+
+If you are technically inclined, you can keep High Efficiency on (small files on the phone) and rely on iOS's auto-conversion at share time. When you AirDrop a HEIC photo to a Windows machine, iOS often (not always) auto-converts to JPG behind the scenes. When you email or message a HEIC, same thing happens. When you upload to a website via Safari, the upload usually sends JPG.
+
+The auto-conversion is not 100% reliable; it depends on the destination app and how it handles the share extension. But it covers maybe 60-70% of the share cases automatically, which means you only need to do manual conversion for the remaining 30-40%.
+
+Personally, I leave it on High Efficiency and use [our converter](/heic-to-jpg) for the occasional manual cases. Storage savings outweigh the friction. But if you share with Windows or Linux users multiple times a week, just switch to Most Compatible and never think about it again.
