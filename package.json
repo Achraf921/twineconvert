@@ -26,6 +26,7 @@
     "@types/three": "^0.184.1",
     "@vercel/analytics": "^2.0.1",
     "chess.js": "^1.4.0",
+    "culori": "^4.0.2",
     "docx": "^9.6.1",
     "dompurify": "^3.4.2",
     "epubjs": "^0.3.93",
@@ -64,6 +65,7 @@
   "devDependencies": {
     "@ffmpeg/core": "^0.12.10",
     "@tailwindcss/postcss": "^4",
+    "@types/culori": "^4.0.1",
     "@types/iarna__toml": "^2.0.5",
     "@types/ini": "^4.1.1",
     "@types/js-yaml": "^4.0.9",

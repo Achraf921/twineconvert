@@ -1099,3 +1099,111 @@ describe("round-trip: Unix ↔ ISO 8601", () => {
     expect(text).toContain("2025-01-01T00:00:00.000Z");
   });
 });
+
+// ============================================================================
+// Modern color spaces — OKLCH/LAB are perceptually uniform but rounding-bound.
+// ============================================================================
+describe("round-trip: HEX ↔ OKLCH (lossy via gamut + rounding)", () => {
+  it("HEX → OKLCH → HEX preserves pure black and white exactly", async () => {
+    const original = fileFromText("colors.txt", "#000000\n#FFFFFF\n");
+    const oklch = await chain("hex-to-oklch", original);
+    const back = await chain("oklch-to-hex", oklch);
+    const text = await back.text();
+    expect(text).toContain("#000000");
+    expect(text).toContain("#FFFFFF");
+  });
+});
+
+describe("round-trip: HEX ↔ LAB (lossy via rounding)", () => {
+  it("HEX → LAB → HEX preserves pure black and white", async () => {
+    const original = fileFromText("colors.txt", "#000000\n#FFFFFF\n");
+    const lab = await chain("hex-to-lab", original);
+    const back = await chain("lab-to-hex", lab);
+    const text = await back.text();
+    expect(text).toContain("#000000");
+    expect(text).toContain("#FFFFFF");
+  });
+});
+
+// ============================================================================
+// TSV cross-conversions — bijective with CSV through SheetJS workbook model.
+// ============================================================================
+describe("round-trip: TSV ↔ JSON", () => {
+  it("TSV → JSON → TSV preserves all rows and columns", async () => {
+    const original = fileFromText("test.tsv", FIXTURES.tsv, "text/tab-separated-values");
+    const json = await chain("tsv-to-json", original);
+    const back = await chain("json-to-tsv", json);
+    const text = await back.text();
+    expect(text).toContain("Alice");
+    expect(text).toContain("Bob");
+    expect(text).toContain("Carol");
+    expect(text).toContain("Paris");
+    expect(text).toMatch(/\t/);
+  });
+});
+
+describe("round-trip: TSV ↔ XLSX", () => {
+  it("TSV → XLSX → TSV preserves the workbook contents", async () => {
+    const original = fileFromText("test.tsv", FIXTURES.tsv, "text/tab-separated-values");
+    const xlsx = await chain("tsv-to-xlsx", original);
+    const back = await chain("xlsx-to-tsv", xlsx);
+    const text = await back.text();
+    expect(text).toContain("Alice");
+    expect(text).toContain("Bob");
+    expect(text).toContain("Tokyo");
+    expect(text).toMatch(/\t/);
+  });
+});
+
+describe("round-trip: CSV ↔ YAML", () => {
+  it("CSV → YAML → CSV preserves all records", async () => {
+    const original = fileFromText("test.csv", FIXTURES.genericCsv, "text/csv");
+    const yamlOut = await chain("csv-to-yaml", original);
+    const back = await chain("yaml-to-csv", yamlOut);
+    const text = await back.text();
+    expect(text).toContain("Alice");
+    expect(text).toContain("Bob");
+    expect(text).toContain("Carol");
+    expect(text).toContain("Paris");
+  });
+});
+
+describe("round-trip: PEM ↔ DER", () => {
+  it("PEM → DER → PEM preserves the underlying certificate bytes", async () => {
+    const original = fileFromText("cert.pem", FIXTURES.pemSample, "application/x-pem-file");
+    const der = await chain("pem-to-der", original);
+    const back = await chain("der-to-pem", der);
+    const text = await back.text();
+    expect(text).toContain("-----BEGIN CERTIFICATE-----");
+    expect(text).toContain("-----END CERTIFICATE-----");
+    const stripped = (s: string) =>
+      s.replace(/-----BEGIN [^-]+-----|-----END [^-]+-----|\s/g, "");
+    expect(stripped(text)).toBe(stripped(FIXTURES.pemSample));
+  });
+});
+
+describe("JWT → JSON decoder", () => {
+  it("decodes the header, payload, and signature", async () => {
+    const original = fileFromText("token.jwt", FIXTURES.jwtSample, "application/jwt");
+    const json = await chain("jwt-to-json", original);
+    const text = await json.text();
+    const parsed = JSON.parse(text) as {
+      header: { alg: string; typ: string };
+      payload: { sub: string; name: string; iat: number };
+      signature: string | null;
+    };
+    expect(parsed.header.alg).toBe("HS256");
+    expect(parsed.header.typ).toBe("JWT");
+    expect(parsed.payload.sub).toBe("1234567890");
+    expect(parsed.payload.name).toBe("Alice Ngyen");
+    expect(parsed.payload.iat).toBe(1717977600);
+    expect(parsed.signature).toBe("bogus-signature-not-verified");
+  });
+
+  it("strips Bearer prefix when present", async () => {
+    const original = fileFromText("token.jwt", `Bearer ${FIXTURES.jwtSample}`, "application/jwt");
+    const json = await chain("jwt-to-json", original);
+    const parsed = JSON.parse(await json.text()) as { payload: { sub: string } };
+    expect(parsed.payload.sub).toBe("1234567890");
+  });
+});

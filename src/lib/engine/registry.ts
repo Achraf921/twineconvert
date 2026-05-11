@@ -686,6 +686,44 @@ export const registry: Record<string, ConverterLoader> = {
     import("./converters/iso-to-unix").then((m) => m.default),
   "timestamp-to-readable": () =>
     import("./converters/timestamp-to-readable").then((m) => m.default),
+
+  // Modern color spaces (CSS Color Module Level 4) via culori.
+  "hex-to-oklch": () =>
+    import("./converters/hex-to-oklch").then((m) => m.default),
+  "oklch-to-hex": () =>
+    import("./converters/oklch-to-hex").then((m) => m.default),
+  "rgb-to-oklch": () =>
+    import("./converters/rgb-to-oklch").then((m) => m.default),
+  "oklch-to-rgb": () =>
+    import("./converters/oklch-to-rgb").then((m) => m.default),
+  "hex-to-lab": () =>
+    import("./converters/hex-to-lab").then((m) => m.default),
+  "lab-to-hex": () =>
+    import("./converters/lab-to-hex").then((m) => m.default),
+
+  // TSV cross-conversions (gap fill: data interchange matrix completeness).
+  "tsv-to-json": () =>
+    import("./converters/tsv-to-json").then((m) => m.default),
+  "json-to-tsv": () =>
+    import("./converters/json-to-tsv").then((m) => m.default),
+  "tsv-to-xlsx": () =>
+    import("./converters/tsv-to-xlsx").then((m) => m.default),
+  "xlsx-to-tsv": () =>
+    import("./converters/xlsx-to-tsv").then((m) => m.default),
+
+  // CSV ↔ YAML direct (was only available via JSON pivot before).
+  "csv-to-yaml": () =>
+    import("./converters/csv-to-yaml").then((m) => m.default),
+  "yaml-to-csv": () =>
+    import("./converters/yaml-to-csv").then((m) => m.default),
+
+  // Crypto / dev-tool: JWT decode, PEM ↔ DER cert format conversion.
+  "jwt-to-json": () =>
+    import("./converters/jwt-to-json").then((m) => m.default),
+  "pem-to-der": () =>
+    import("./converters/pem-to-der").then((m) => m.default),
+  "der-to-pem": () =>
+    import("./converters/der-to-pem").then((m) => m.default),
 };
 
 /** All converter IDs, useful for sitemap generation later. */

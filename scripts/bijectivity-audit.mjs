@@ -187,6 +187,13 @@ const FORMATS = {
   iso: { kind: "data", lossless: true, family: "datetime" },
   timestamp: { kind: "data", lossless: true, family: "datetime" },
   readable: { kind: "data", lossless: false, family: "datetime" }, // human-readable, may lose ms
+  // ==== Modern color spaces (CSS Color Module Level 4) ====
+  oklch: { kind: "color", lossless: false, family: "color" }, // perceptual but rounding-bound
+  lab: { kind: "color", lossless: false, family: "color" },
+  // ==== Crypto / dev formats ====
+  jwt: { kind: "data", lossless: true, family: "crypto" }, // decode-only
+  pem: { kind: "data", lossless: true, family: "crypto" }, // text-armored binary
+  der: { kind: "data", lossless: true, family: "crypto" }, // raw ASN.1 bytes
 };
 
 // --------------------------------------------------------------------
@@ -244,6 +251,8 @@ const SINGLE_ACTION = new Set([
   "timestamp-to-readable",
   // HCL is one-way (no JSON → HCL converter shipped)
   "hcl-to-json",
+  // JWT is decode-only (no JSON → JWT converter, that requires signing)
+  "jwt-to-json",
 ]);
 
 // --------------------------------------------------------------------

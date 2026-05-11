@@ -463,6 +463,39 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "unix-to-iso":           { provider: () => text("timestamps.txt", F.unixTimestamps, "text/plain"), env: "node" },
   "iso-to-unix":           { provider: () => text("dates.txt", F.isoDates, "text/plain"), env: "node" },
   "timestamp-to-readable": { provider: () => text("timestamps.txt", F.unixTimestamps, "text/plain"), env: "node" },
+
+  // ===== Modern color spaces (CSS Color Level 4) =====
+  "hex-to-oklch":  { provider: () => text("colors.txt", F.hexList, "text/plain"), env: "node" },
+  "oklch-to-hex":  { provider: () => text("colors.txt", F.oklchList, "text/plain"), env: "node" },
+  "rgb-to-oklch":  { provider: () => text("colors.txt", F.rgbList, "text/plain"), env: "node" },
+  "oklch-to-rgb":  { provider: () => text("colors.txt", F.oklchList, "text/plain"), env: "node" },
+  "hex-to-lab":    { provider: () => text("colors.txt", F.hexList, "text/plain"), env: "node" },
+  "lab-to-hex":    { provider: () => text("colors.txt", F.labList, "text/plain"), env: "node" },
+
+  // ===== TSV cross-conversions =====
+  "tsv-to-json":   { provider: () => text("test.tsv", F.tsv, "text/tab-separated-values"), env: "node" },
+  "json-to-tsv":   { provider: () => text("test.json", F.jsonArray, "application/json"), env: "node" },
+  "tsv-to-xlsx":   { provider: () => text("test.tsv", F.tsv, "text/tab-separated-values"), env: "node" },
+  "xlsx-to-tsv":   { provider: async () => fileFromBytes("test.xlsx", await makeTinyXlsx(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"), env: "node" },
+
+  // ===== CSV ↔ YAML direct =====
+  "csv-to-yaml":   { provider: () => text("test.csv", F.genericCsv, "text/csv"), env: "node" },
+  "yaml-to-csv":   { provider: () => text("test.yaml", `- name: Alice\n  age: 30\n- name: Bob\n  age: 25\n`, "application/x-yaml"), env: "node" },
+
+  // ===== Crypto / dev =====
+  "jwt-to-json":   { provider: () => text("token.jwt", F.jwtSample, "application/jwt"), env: "node" },
+  "pem-to-der":    { provider: () => text("cert.pem", F.pemSample, "application/x-pem-file"), env: "node" },
+  "der-to-pem":    { provider: async () => {
+    // Round-trip our own PEM fixture through pem-to-der to get a real DER blob
+    const pem = F.pemSample;
+    const match = pem.match(/-----BEGIN [^-]+-----([\s\S]+?)-----END [^-]+-----/);
+    if (!match) throw new Error("test fixture is not valid PEM");
+    const b64 = match[1].replace(/\s+/g, "");
+    const binary = atob(b64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    return fileFromBytes("cert.der", bytes, "application/pkix-cert");
+  }, env: "node" },
 };
 
 /** True if we have any fixture for this id (even if it requires browser). */

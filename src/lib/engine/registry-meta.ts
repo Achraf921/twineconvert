@@ -3284,6 +3284,193 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     ],
     "toMime": "text/plain",
     "maxFileSizeBytes": 5242880
+  },
+  "hex-to-oklch": {
+    "label": "HEX → OKLCH",
+    "accept": [
+      ".txt",
+      ".hex"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 2097152
+  },
+  "oklch-to-hex": {
+    "label": "OKLCH → HEX",
+    "accept": [
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 2097152
+  },
+  "rgb-to-oklch": {
+    "label": "RGB → OKLCH",
+    "accept": [
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 2097152
+  },
+  "oklch-to-rgb": {
+    "label": "OKLCH → RGB",
+    "accept": [
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 2097152
+  },
+  "hex-to-lab": {
+    "label": "HEX → LAB",
+    "accept": [
+      ".txt",
+      ".hex"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 2097152
+  },
+  "lab-to-hex": {
+    "label": "LAB → HEX",
+    "accept": [
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 2097152
+  },
+  "tsv-to-json": {
+    "label": "TSV → JSON",
+    "accept": [
+      ".tsv"
+    ],
+    "fromMime": [
+      "text/tab-separated-values",
+      "text/plain"
+    ],
+    "toMime": "application/json",
+    "maxFileSizeBytes": 52428800
+  },
+  "json-to-tsv": {
+    "label": "JSON → TSV",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "text/tab-separated-values",
+    "maxFileSizeBytes": 52428800
+  },
+  "tsv-to-xlsx": {
+    "label": "TSV → XLSX",
+    "accept": [
+      ".tsv"
+    ],
+    "fromMime": [
+      "text/tab-separated-values",
+      "text/plain"
+    ],
+    "toMime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "maxFileSizeBytes": 52428800
+  },
+  "xlsx-to-tsv": {
+    "label": "XLSX → TSV",
+    "accept": [
+      ".xlsx",
+      ".xls"
+    ],
+    "fromMime": [
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "application/vnd.ms-excel"
+    ],
+    "toMime": "text/tab-separated-values",
+    "maxFileSizeBytes": 52428800
+  },
+  "csv-to-yaml": {
+    "label": "CSV → YAML",
+    "accept": [
+      ".csv"
+    ],
+    "fromMime": [
+      "text/csv",
+      "application/csv",
+      "text/plain"
+    ],
+    "toMime": "application/x-yaml",
+    "maxFileSizeBytes": 20971520
+  },
+  "yaml-to-csv": {
+    "label": "YAML → CSV",
+    "accept": [
+      ".yaml",
+      ".yml"
+    ],
+    "fromMime": [
+      "application/x-yaml",
+      "text/yaml",
+      "text/plain"
+    ],
+    "toMime": "text/csv",
+    "maxFileSizeBytes": 20971520
+  },
+  "jwt-to-json": {
+    "label": "JWT → JSON",
+    "accept": [
+      ".jwt",
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/jwt"
+    ],
+    "toMime": "application/json",
+    "maxFileSizeBytes": 1048576
+  },
+  "pem-to-der": {
+    "label": "PEM → DER",
+    "accept": [
+      ".pem",
+      ".crt",
+      ".cer",
+      ".key"
+    ],
+    "fromMime": [
+      "application/x-pem-file",
+      "text/plain"
+    ],
+    "toMime": "application/pkix-cert",
+    "maxFileSizeBytes": 5242880
+  },
+  "der-to-pem": {
+    "label": "DER → PEM",
+    "accept": [
+      ".der",
+      ".cer",
+      ".crt"
+    ],
+    "fromMime": [
+      "application/pkix-cert",
+      "application/x-x509-ca-cert",
+      "application/octet-stream"
+    ],
+    "toMime": "application/x-pem-file",
+    "maxFileSizeBytes": 5242880
   }
 };
 

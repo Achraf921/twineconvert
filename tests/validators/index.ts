@@ -660,6 +660,26 @@ export const validateGeoJson: Validator = async ({ blob, minSize = 20 }) => {
   }
 };
 
+export const validateDer: Validator = async ({ blob, minSize = 4 }) => {
+  // ASN.1 DER always starts with a SEQUENCE tag (0x30) followed by a length.
+  // A DER cert / key / CSR is a SEQUENCE at the top level.
+  assertMinSize(blob, minSize, "DER");
+  const head = await readBytes(blob, 1);
+  if (head[0] !== 0x30) {
+    throw new Error(
+      `DER missing top-level SEQUENCE tag (expected 0x30, got 0x${head[0]?.toString(16) ?? "00"})`,
+    );
+  }
+};
+
+export const validatePem: Validator = async ({ blob, minSize = 30 }) => {
+  assertMinSize(blob, minSize, "PEM");
+  const text = await readText(blob);
+  if (!/-----BEGIN [^-]+-----/.test(text) || !/-----END [^-]+-----/.test(text)) {
+    throw new Error("PEM missing -----BEGIN ...----- / -----END ...----- delimiters");
+  }
+};
+
 export const validateSql: Validator = async ({ blob, minSize = 20 }) => {
   assertMinSize(blob, minSize, "SQL");
   const text = await readText(blob);
@@ -870,6 +890,10 @@ const BY_MIME: Record<string, Validator> = {
   "application/json5": validateJson,
   "application/sql": validateSql,
   "text/x-java-properties": validateProperties,
+  "application/jwt": validateJson,
+  "application/x-pem-file": validatePem,
+  "application/pkix-cert": validateDer,
+  "application/x-x509-ca-cert": validateDer,
 
   "application/vnd.oasis.opendocument.spreadsheet": validateOds,
   "application/vnd.oasis.opendocument.spreadsheet-template": validateOds,
@@ -920,6 +944,10 @@ const BY_EXT: Record<string, Validator> = {
   woff: validateWoff,
   sql: validateSql,
   properties: validateProperties,
+  jwt: validateJson,
+  pem: validatePem,
+  der: validateDer,
+  cer: validateDer,
 };
 
 /**

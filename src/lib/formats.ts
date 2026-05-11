@@ -898,6 +898,399 @@ const PROFILES: Record<string, FormatProfile> = {
     primaryUse: "Bulk-importing highlights into Readwise.",
     binary: false,
   },
+
+  // ===== Color formats =====
+  rgb: {
+    name: "RGB",
+    fullName: "Red Green Blue color tuple",
+    description:
+      "RGB describes a color by the intensity of red, green, and blue light needed to produce it on a screen — each channel 0 to 255. It's the native model of every display device since CRT monitors, and the underlying representation behind hex codes (#FF6347 is just rgb(255, 99, 71) in hexadecimal). Used directly in CSS, web design, every image format, and digital photography pipelines. Doesn't represent print colors well, that's CMYK's job.",
+    howToOpen:
+      "RGB values appear as text in CSS files, design tool color pickers, and web inspector tools. Pasting `rgb(255, 99, 71)` into Chrome DevTools' color input gives you a swatch. Designers most often deal with RGB through HEX codes (the same data, different encoding).",
+    primaryUse: "Specifying screen colors in code and design tools.",
+    binary: false,
+  },
+  hsl: {
+    name: "HSL",
+    fullName: "Hue Saturation Lightness color model",
+    description:
+      "HSL describes a color by hue (0-360° around the color wheel), saturation (0-100% gray to vivid), and lightness (0-100% black to white). Designers prefer it over RGB because shifting one dimension keeps the others intact — drop saturation and you get a desaturated version of the same color, no manual rebalancing. CSS supports HSL natively (`hsl(207, 87%, 56%)`) and most modern color systems (Tailwind, Material) generate palettes by varying HSL axes.",
+    howToOpen:
+      "HSL values appear in CSS files, design system tokens, and color-picker tools. Chrome DevTools, Figma, and every modern design app accept `hsl()` notation directly.",
+    primaryUse: "Designer-friendly color specification where you want to vary one dimension.",
+    binary: false,
+  },
+  cmyk: {
+    name: "CMYK",
+    fullName: "Cyan Magenta Yellow Key color model",
+    description:
+      "CMYK describes how much cyan, magenta, yellow, and black ink to lay down to produce a color on paper — each channel 0 to 100%. It's the print industry's color model because printers add ink (subtractive color) instead of emitting light (additive RGB). The same color almost always renders slightly differently on-screen vs in print because the gamut differs. Required by every commercial print shop and built into Photoshop's print prep workflow.",
+    howToOpen:
+      "Adobe Photoshop, Illustrator, InDesign all natively work in CMYK mode (Image → Mode → CMYK Color). Affinity Photo, GIMP via plugins. Print-shop submission portals accept CMYK PDFs directly.",
+    primaryUse: "Print-shop color specifications and prepress workflows.",
+    binary: false,
+  },
+  "color-name": {
+    name: "CSS color name",
+    fullName: "CSS named color (CSS Color Module Level 4)",
+    description:
+      "CSS defines 147 standard color names (red, tomato, rebeccapurple, midnightblue, etc.) that browsers translate to specific hex values. Originated from the X11 color list and standardized through CSS1, CSS3, and Color Level 4. Names like 'gray' and 'grey' are intentional aliases, both legal. Useful in code reviews and design discussions where 'tomato' is more memorable than '#FF6347'.",
+    howToOpen:
+      "Type the name directly in any CSS property accepting a color: `color: tomato;`. Browser DevTools, Figma, and most design tools accept CSS color names in their color inputs.",
+    primaryUse: "Memorable CSS color shorthand in code.",
+    binary: false,
+  },
+
+  // ===== Encoding formats =====
+  base64: {
+    name: "Base64",
+    fullName: "Base64 binary-to-text encoding (RFC 4648)",
+    description:
+      "Base64 encodes any byte sequence as ASCII text using 64 printable characters (A-Z, a-z, 0-9, +, /, with = padding). Output is ~33% larger than input but survives every text channel that strips or mangles binary: email attachments (MIME), JSON fields, URLs (URL-safe variant), data: URIs, JWT payloads. The format dates to RFC 989 (1987) and was standardized in RFC 4648.",
+    howToOpen:
+      "Any text editor displays base64. To decode back to bytes: `base64 -d` on Mac/Linux, `certutil -decode` on Windows, or paste into any base64 web decoder. Used heavily in dev tools, API debugging, and security workflows.",
+    primaryUse: "Embedding binary data in text-only channels (email, JSON, URLs).",
+    binary: false,
+  },
+  "url-encoded": {
+    name: "URL-encoded text",
+    fullName: "Percent-encoding (RFC 3986)",
+    description:
+      "URL encoding (also called percent-encoding) replaces characters that have special meaning in URLs (`?`, `&`, `=`, space, `#`) with their `%XX` hex escape. Multi-byte UTF-8 characters expand to multiple `%XX` sequences. Required for query strings, form bodies, and any URL component that contains user input. The standard is RFC 3986; JavaScript's `encodeURIComponent` is the most common implementation.",
+    howToOpen:
+      "Any text editor displays URL-encoded strings. Browser DevTools shows decoded forms in the Network tab's request inspector. Online decoders abound; most languages have a native function (`urllib.parse.unquote` in Python, `decodeURIComponent` in JS).",
+    primaryUse: "Safely passing arbitrary text through URL query strings and form bodies.",
+    binary: false,
+  },
+
+  // ===== Hash formats =====
+  md5: {
+    name: "MD5 checksum",
+    fullName: "Message Digest 5 (RFC 1321)",
+    description:
+      "MD5 produces a 128-bit (32 hex character) fingerprint of any input. Designed by Ron Rivest in 1991, it's been cryptographically broken since 2004 (collisions can be manufactured) — still widely used for non-security checks like file integrity verification on package mirrors, CDN caches, and data deduplication where collision attacks aren't a concern. Output format matches the standard `md5sum` CLI: `<hex>  <filename>`.",
+    howToOpen:
+      "Any text editor opens the .md5 checksum file. Verify with `md5sum -c file.md5` on Linux/Mac (Windows: `certutil -hashfile`). Most package managers and CDNs publish .md5 alongside downloads to detect transfer corruption.",
+    primaryUse: "File-integrity verification on package mirrors and CDN downloads.",
+    binary: false,
+  },
+  sha1: {
+    name: "SHA-1 checksum",
+    fullName: "Secure Hash Algorithm 1 (FIPS 180-4)",
+    description:
+      "SHA-1 produces a 160-bit (40 hex character) fingerprint. Standardized by NIST in 1995 and deprecated for cryptographic use since the SHAttered collision attack (2017). Still used widely in non-security contexts: Git uses SHA-1 to identify every commit, blob, and tree. Output matches the `shasum` CLI format.",
+    howToOpen:
+      "Any text editor. Verify with `shasum -c file.sha1` (`-a 1` for explicit algorithm). Git's plumbing commands (`git cat-file -p <sha1>`) all reference SHA-1 hashes.",
+    primaryUse: "Git's content-addressable storage and legacy file integrity.",
+    binary: false,
+  },
+  sha256: {
+    name: "SHA-256 checksum",
+    fullName: "Secure Hash Algorithm 256 (FIPS 180-4)",
+    description:
+      "SHA-256 produces a 256-bit (64 hex character) fingerprint. Part of the SHA-2 family, currently the default cryptographic hash for security-sensitive integrity checks: TLS certificates, Bitcoin block hashes, signed package distributions (Debian, npm, PyPI), code-signing manifests. No known practical collision attacks. Output matches `shasum -a 256` CLI format.",
+    howToOpen:
+      "Verify with `shasum -a 256 -c file.sha256` (`sha256sum` on Linux, `Get-FileHash` on PowerShell). Required for download verification by every reputable open-source distribution channel.",
+    primaryUse: "Cryptographic file integrity for security-sensitive downloads.",
+    binary: false,
+  },
+  sha512: {
+    name: "SHA-512 checksum",
+    fullName: "Secure Hash Algorithm 512 (FIPS 180-4)",
+    description:
+      "SHA-512 produces a 512-bit (128 hex character) fingerprint. Larger output than SHA-256 with no practical security difference for typical use, but standard for high-assurance contexts (government, military, enterprise compliance). Frequently faster than SHA-256 on 64-bit hardware because it processes 1024-bit blocks. Used in many BLAKE-family algorithms as a primitive.",
+    howToOpen:
+      "Verify with `shasum -a 512 -c file.sha512`. The longer hex string is awkward to compare visually but copy-paste verification works the same as SHA-256.",
+    primaryUse: "High-assurance file integrity (government, enterprise compliance).",
+    binary: false,
+  },
+  file: {
+    name: "Any file",
+    fullName: "Any binary or text file",
+    description:
+      "Hash converters accept any file as input — they read the raw bytes and produce a fixed-length fingerprint that uniquely identifies the contents. Two files with even one byte different produce wildly different hashes; identical files produce identical hashes. This is the property that makes hashes useful for integrity checking and content-addressable storage.",
+    howToOpen:
+      "Drop any file: PDF, image, video, archive, executable, plain text. The converter reads its bytes and computes the digest. Output is a small text file containing the hex hash and the original filename.",
+    primaryUse: "Generating file fingerprints for integrity verification.",
+    binary: true,
+  },
+
+  // ===== Config formats =====
+  ini: {
+    name: "INI",
+    fullName: "INI configuration file",
+    description:
+      "INI is a simple `key = value` config format with optional `[section]` headers, originally from MS-DOS and Windows 3.x. Still widely used because of its readability — Git, MySQL, PHP, Python's configparser, and countless tools use INI for their configs. No standard spec, so dialects vary: some allow `:` as separator, some support `;` or `#` comments, some allow nested sections with dots in keys.",
+    howToOpen:
+      "Any text editor. Most operating systems associate `.ini` with Notepad/TextEdit by default. Tools that consume INI files load them directly without manual parsing.",
+    primaryUse: "Human-editable application configuration.",
+    binary: false,
+  },
+  env: {
+    name: ".env",
+    fullName: "Environment variable file (dotenv)",
+    description:
+      "A `.env` file lists shell-style `KEY=value` lines that get loaded as environment variables by tools that support dotenv (Node's dotenv package, Docker Compose, Laravel, Rails, Vercel). Originated as a Twelve-Factor App convention (2011) and now ubiquitous in web app deployment. Lines starting with `#` are comments. Values with spaces or special chars need quoting.",
+    howToOpen:
+      "Any text editor. macOS Finder hides files starting with `.` by default — Cmd+Shift+. to toggle visibility. Most IDEs and code editors syntax-highlight .env files.",
+    primaryUse: "Storing app config and secrets outside the codebase.",
+    binary: false,
+  },
+  properties: {
+    name: ".properties",
+    fullName: "Java properties file",
+    description:
+      "A Java `.properties` file is a `key=value` (or `key:value`) text format used by every Java/Kotlin/Spring/Gradle/Log4j project for configuration. Keys traditionally use dot-separated namespaces (`server.port`, `spring.datasource.url`). Supports backslash escapes (`\\n`, `\\t`, `\\uXXXX`) and `#`/`!` comments. Standardized by `java.util.Properties` since JDK 1.0.",
+    howToOpen:
+      "Any text editor. IntelliJ IDEA, Eclipse, and VS Code with Java extensions provide auto-completion and validation against the surrounding Java/Spring code.",
+    primaryUse: "Java/Spring application configuration.",
+    binary: false,
+  },
+  toml: {
+    name: "TOML",
+    fullName: "Tom's Obvious Minimal Language",
+    description:
+      "TOML is a config format designed by GitHub co-founder Tom Preston-Werner in 2013 as a more readable alternative to YAML and INI. Its appeal is unambiguous syntax — TOML files always parse the same way regardless of indentation. Used by Cargo (Rust), pyproject.toml (Python packaging), pnpm-workspace, Hugo, Netlify, and many others. v1.0.0 spec finalized in 2021.",
+    howToOpen:
+      "Any text editor. Most modern IDEs ship TOML syntax highlighting; VS Code's Even Better TOML extension adds validation.",
+    primaryUse: "Application/package config in Rust, modern Python, and static site generators.",
+    binary: false,
+  },
+  yaml: {
+    name: "YAML",
+    fullName: "YAML Ain't Markup Language",
+    description:
+      "YAML is a human-readable config format that's a strict superset of JSON. Used by Docker Compose, Kubernetes manifests, GitHub Actions workflows, Ansible playbooks, OpenAPI/Swagger specs, and CircleCI configs. Indentation matters, which trips up users accustomed to brace-based configs. Spec versions: 1.1 (2005, Ruby/Python ecosystems) and 1.2 (2009, current). Most tools default to a 1.1/1.2 hybrid.",
+    howToOpen:
+      "Any text editor. VS Code, IntelliJ, and most modern IDEs ship YAML syntax highlighting and validation. The `yamllint` CLI catches indentation bugs before they reach CI.",
+    primaryUse: "DevOps configuration (Kubernetes, Docker Compose, CI workflows).",
+    binary: false,
+  },
+  hcl: {
+    name: "HCL",
+    fullName: "HashiCorp Configuration Language",
+    description:
+      "HCL is the config language behind Terraform, Packer, Vault, Consul, and Nomad — all HashiCorp tools. Designed to be more concise than JSON and more human-friendly than YAML. Blocks describe resources (`resource \"aws_s3_bucket\" \"example\" { ... }`), attributes use `=`. HCL2 (current) supports expressions, conditionals, and string interpolation.",
+    howToOpen:
+      "Terraform Language Server (in VS Code, IntelliJ, Vim) provides syntax highlighting + validation. `terraform fmt` reformats. Files use `.tf`, `.hcl`, or `.tfvars` extensions.",
+    primaryUse: "Infrastructure-as-code config for Terraform and HashiCorp tools.",
+    binary: false,
+  },
+  json5: {
+    name: "JSON5",
+    fullName: "JSON5 (relaxed JSON)",
+    description:
+      "JSON5 is JSON plus the things every developer wishes JSON had: `// line comments` and `/* block comments */`, trailing commas, unquoted keys, single-quoted strings, multi-line strings, hex literals. Released in 2012, it's the format behind tsconfig.json, Babel configs, and many other dev tooling configs. Strict JSON parsers reject these extensions; JSON5 parsers accept both.",
+    howToOpen:
+      "Any text editor with JSON5 syntax mode (VS Code has built-in support via `.json5` extension). To run with strict-JSON tools, convert to JSON first.",
+    primaryUse: "Developer-friendly configs (tsconfig, Babel, build tooling).",
+    binary: false,
+  },
+  jsonl: {
+    name: "JSONL",
+    fullName: "JSON Lines (newline-delimited JSON)",
+    description:
+      "JSONL is one JSON value per line, no enclosing array brackets. Each line stands alone — readable and writable in streaming fashion without buffering the whole file. Used by BigQuery, ClickHouse, fluentd, OpenAI fine-tuning, LangChain training data, and most modern data pipelines. Also called NDJSON. The line break IS the record separator.",
+    howToOpen:
+      "Any text editor displays JSONL as plain text. `jq` processes it line-by-line: `cat data.jsonl | jq .name`. Convert to JSON for tools that expect a single document.",
+    primaryUse: "Streaming data pipelines and ML training datasets.",
+    binary: false,
+  },
+
+  // ===== Tabular subformats =====
+  tsv: {
+    name: "TSV",
+    fullName: "Tab-separated values",
+    description:
+      "TSV is CSV's tab-separated cousin: columns delimited by tab characters instead of commas. Preferred when cell values themselves contain commas (so you don't have to quote everything). Excel reads TSV directly without import wizard prompts. Used by Bioinformatics tools (BLAST, BED format), data export from Postgres (`COPY ... FORMAT csv DELIMITER E'\\t'`), and many scientific datasets.",
+    howToOpen:
+      "Excel, Google Sheets, Numbers, and LibreOffice Calc all open TSV directly. Pandas reads with `pd.read_csv(..., sep='\\t')`. Less ambiguity than CSV because tabs almost never appear inside data values.",
+    primaryUse: "Tab-delimited data exchange where comma-quoting is annoying.",
+    binary: false,
+  },
+  xml: {
+    name: "XML",
+    fullName: "Extensible Markup Language",
+    description:
+      "XML is a hierarchical text format with opening + closing tags, originated at W3C in 1998 as a structured alternative to HTML. Still the lingua franca for legacy enterprise data exchange (SOAP web services, Office Open XML/.docx, RSS feeds, Java Spring configs, SVG, financial reporting like XBRL). JSON has displaced it in modern web APIs; XML lives on in compliance, document formats, and B2B integrations.",
+    howToOpen:
+      "Any text editor with XML syntax highlighting. Browsers render most XML files with collapsible tree views. Validators against XSD schemas come with most IDEs.",
+    primaryUse: "Hierarchical data interchange (legacy APIs, document formats, B2B).",
+    binary: false,
+  },
+  "markdown-table": {
+    name: "Markdown table",
+    fullName: "GitHub-flavored Markdown table",
+    description:
+      "A Markdown table uses pipes (`|`) for column separators and a dash row for the header divider. Renders to HTML on GitHub, GitLab, every Markdown-aware static site generator, and dev tooling like MkDocs. Particularly useful when documentation lives next to code — paste data into a README.md and it renders as a real table.",
+    howToOpen:
+      "Any text editor (Markdown is plain text). VS Code, Obsidian, Typora, and most Markdown editors live-preview tables. GitHub renders them automatically in commits, issues, PR descriptions.",
+    primaryUse: "Embedding tabular data in Markdown docs and READMEs.",
+    binary: false,
+  },
+  "html-table": {
+    name: "HTML table",
+    fullName: "HTML <table> element",
+    description:
+      "An HTML table uses `<table>`, `<thead>`, `<tbody>`, `<tr>`, `<th>`, `<td>` elements to render tabular data in a browser. Predates CSS layouts and remains the right tool for actual tabular data (with appropriate ARIA for accessibility). Email clients still depend heavily on tables for layout because CSS support varies.",
+    howToOpen:
+      "Open in any browser to render. View Source to see the markup. Email-template tools render HTML tables to email-client-safe layouts.",
+    primaryUse: "Rendering tabular data in web pages and HTML emails.",
+    binary: false,
+  },
+
+  // ===== Geographic formats =====
+  gpx: {
+    name: "GPX",
+    fullName: "GPS Exchange Format",
+    description:
+      "GPX is the de-facto interchange format for GPS data — waypoints (single locations), tracks (recorded routes you walked/biked/drove), and routes (planned paths). XML-based, version 1.1 (2004) is current. Every GPS device, fitness app (Strava, Garmin Connect, Komoot), and mapping tool reads/writes GPX. Cyclists, hikers, and pilots use it to share routes and analyze trips.",
+    howToOpen:
+      "Garmin BaseCamp, Strava (drag-drop upload), Komoot, Google Earth, Gaia GPS, every GPS unit's companion software. Online viewers like gpx.studio render tracks on a map without download.",
+    primaryUse: "GPS track and waypoint exchange between devices and apps.",
+    binary: false,
+  },
+  geojson: {
+    name: "GeoJSON",
+    fullName: "Geographic JSON (RFC 7946)",
+    description:
+      "GeoJSON encodes geographic features (points, lines, polygons) as JSON objects following RFC 7946 (2016). Coordinates are always [longitude, latitude] in WGS84. Supported natively by Leaflet, Mapbox GL, OpenLayers, ArcGIS, QGIS, and PostGIS — the default exchange format for web mapping. Lighter and easier to inspect than KML or shapefile (.shp).",
+    howToOpen:
+      "GitHub renders GeoJSON files inline as interactive maps. geojson.io provides an in-browser editor + validator. QGIS opens .geojson directly. Leaflet/Mapbox apps consume it programmatically.",
+    primaryUse: "Web mapping data exchange (Leaflet, Mapbox, ArcGIS).",
+    binary: false,
+  },
+
+  // ===== Subtitle formats =====
+  srt: {
+    name: "SRT",
+    fullName: "SubRip Subtitle",
+    description:
+      "SRT is the simplest subtitle format: a numbered list of cues, each with a `HH:MM:SS,mmm --> HH:MM:SS,mmm` timestamp and one or more lines of caption text. Originated in 2001 from the SubRip ripping tool and became the universal default — every video player (VLC, MPV, mpv, every web video framework), every subtitle editor, and every video platform reads SRT.",
+    howToOpen:
+      "Any text editor (it's just text). VLC autoloads `<videoname>.srt` if it's next to the video file. Subtitle editors like Subtitle Edit, Aegisub, and EditSubs provide visual timing tools.",
+    primaryUse: "Universal subtitle format for video players and editors.",
+    binary: false,
+  },
+  vtt: {
+    name: "WebVTT",
+    fullName: "Web Video Text Tracks",
+    description:
+      "WebVTT is the W3C standard subtitle format for HTML5 video, used by every browser when you set `<track src=\"captions.vtt\">` on a `<video>` element. Differs from SRT mainly in syntax (`.` decimal in timestamps, `WEBVTT` header, no cue numbers required) plus optional cue settings for position and style. YouTube, Vimeo, and modern OTT platforms all accept WebVTT.",
+    howToOpen:
+      "Any text editor. Browsers render WebVTT inline when attached to a video element. Subtitle Edit and other tools convert between WebVTT and SRT.",
+    primaryUse: "HTML5 video captions and accessibility tracks.",
+    binary: false,
+  },
+  sbv: {
+    name: "SBV",
+    fullName: "SubViewer (YouTube subtitle format)",
+    description:
+      "SBV is YouTube's legacy subtitle download format — `H:MM:SS.mmm,H:MM:SS.mmm` start/end timestamps separated by a comma, then caption text on the next lines. YouTube Studio still exports captions as SBV when you click 'Download captions' in the video editor. Single-digit hours, period decimal, no header.",
+    howToOpen:
+      "Any text editor. Most subtitle editors (Subtitle Edit, Aegisub) auto-detect SBV from the timestamp shape. Convert to SRT/WebVTT for use outside YouTube.",
+    primaryUse: "Downloading and editing YouTube auto-generated captions.",
+    binary: false,
+  },
+
+  // ===== Spreadsheet =====
+  ods: {
+    name: "ODS",
+    fullName: "OpenDocument Spreadsheet",
+    description:
+      "ODS is the OpenDocument format spreadsheet, used by LibreOffice Calc, Apache OpenOffice Calc, and Collabora Online. ZIP-packaged XML structure standardized by ISO/IEC 26300. The free/open-source counterpart to Microsoft's XLSX. Excel reads ODS but with feature loss on complex formulas; LibreOffice reads XLSX with similar caveats.",
+    howToOpen:
+      "LibreOffice Calc (free, every desktop OS) is the native editor. Microsoft Excel opens ODS but pins it as 'OpenDocument' with a downgraded ribbon. Google Sheets imports ODS via File → Import.",
+    primaryUse: "Spreadsheet exchange in the LibreOffice/OpenOffice ecosystem.",
+    binary: true,
+  },
+
+  // ===== Web fonts =====
+  ttf: {
+    name: "TTF",
+    fullName: "TrueType Font",
+    description:
+      "TTF is the font container format developed by Apple in the late 1980s and adopted by Microsoft in Windows 3.1. Stores quadratic Bézier glyph outlines, hinting data, and font metadata (kerning, OS/2 flags, naming). Every operating system reads TTF natively. Mostly superseded for web use by WOFF/WOFF2 (smaller compressed wrappers around the same SFNT data) but TTF remains the source format and the universal install target.",
+    howToOpen:
+      "Double-click on any OS to preview + install. Font management tools (FontBook on macOS, Windows Fonts, Linux fc-cache) handle batch installs. To use on the web, convert to WOFF2 first.",
+    primaryUse: "Desktop font installation and the source format for web fonts.",
+    binary: true,
+  },
+  otf: {
+    name: "OTF",
+    fullName: "OpenType Font",
+    description:
+      "OTF is the modern font container format (Microsoft + Adobe, late 1990s) that supersedes TTF. Same SFNT wrapper but supports CFF (PostScript) glyph outlines in addition to TrueType outlines, plus advanced typographic features like ligatures, alternate glyphs, small caps, and contextual substitutions. Every modern OS reads OTF as natively as TTF; many designer fonts ship as OTF for the typographic features.",
+    howToOpen:
+      "Same as TTF: double-click to install on Windows, macOS, Linux. Use in CSS via `@font-face` (or convert to WOFF2 first for web delivery).",
+    primaryUse: "Designer typography with advanced OpenType features.",
+    binary: true,
+  },
+  woff: {
+    name: "WOFF",
+    fullName: "Web Open Font Format (W3C)",
+    description:
+      "WOFF wraps a TTF or OTF in a compressed container (zlib) optimized for web download. Standardized by the W3C in 2012. Smaller than the source font but larger than WOFF2 (which uses Brotli). Supported by every browser since IE9. Many sites ship WOFF as a fallback for older browsers that don't support WOFF2.",
+    howToOpen:
+      "Browsers consume WOFF via CSS `@font-face` declarations. Desktop systems don't install WOFF directly — convert to TTF first. Font editing tools (FontForge, Glyphs, FontLab) read WOFF for editing.",
+    primaryUse: "Web font delivery with fallback compatibility.",
+    binary: true,
+  },
+
+  // ===== SQL =====
+  sql: {
+    name: "SQL",
+    fullName: "SQL dump (CREATE TABLE + INSERT INTO)",
+    description:
+      "A SQL dump file contains the SQL statements needed to recreate a database: CREATE TABLE for schema, INSERT INTO for rows, optionally indexes, constraints, and triggers. The portable subset (single-quoted strings, ANSI types) runs unmodified on Postgres, MySQL, SQLite, and SQL Server. The output of `pg_dump`, `mysqldump`, and SQLite's `.dump` command — the standard backup/seed format for relational databases.",
+    howToOpen:
+      "Any text editor. To execute: `psql < dump.sql`, `mysql < dump.sql`, `sqlite3 db < dump.sql`. Database GUIs (DBeaver, TablePlus, DataGrip, pgAdmin) all import SQL dump files via their migration wizards.",
+    primaryUse: "Database backups and data seeding.",
+    binary: false,
+  },
+
+  // ===== Date/time formats =====
+  unix: {
+    name: "Unix timestamp",
+    fullName: "Unix epoch seconds",
+    description:
+      "A Unix timestamp is the number of seconds (or milliseconds) since 1970-01-01T00:00:00 UTC, the moment the original Unix systems counted from. Compact, language-neutral, and never affected by timezone or DST changes. Logged by every server log line, returned by every API time field, stored in every analytics warehouse. Auto-detection is straightforward: 10-digit values are seconds, 13-digit are milliseconds.",
+    howToOpen:
+      "Any tool that handles numbers. To make readable: every programming language has a function (`Date.now()` in JS, `time.time()` in Python, `date -d @<ts>` on Linux/Mac).",
+    primaryUse: "Compact, timezone-neutral timestamp storage in logs and APIs.",
+    binary: false,
+  },
+  iso: {
+    name: "ISO 8601",
+    fullName: "ISO 8601 date/time string",
+    description:
+      "ISO 8601 is the international standard for representing dates and times as strings: `2024-06-10T14:30:00Z` (UTC) or with explicit offset (`2024-06-10T14:30:00+02:00`). Unambiguous, sortable lexicographically, and the format every modern API uses (REST, GraphQL, JSON Schema). Standardized in 1988; the JavaScript `Date.toISOString()` and Python `datetime.isoformat()` both emit it.",
+    howToOpen:
+      "Any text editor or programming language. To parse: every language ships a function (`new Date(iso)` in JS, `datetime.fromisoformat(iso)` in Python 3.11+).",
+    primaryUse: "Timezone-explicit timestamp exchange in APIs and data files.",
+    binary: false,
+  },
+  timestamp: {
+    name: "Timestamp",
+    fullName: "Unix timestamp or ISO 8601 input",
+    description:
+      "Generic timestamp input — accepts both Unix epoch numbers (10-digit seconds, 13-digit milliseconds) and ISO 8601 date strings. Useful when you have a column of mixed-format dates from heterogeneous sources (different APIs, log shippers, exports) and need to normalize them.",
+    howToOpen:
+      "Plain text. Any text editor or scripting language can read the input column.",
+    primaryUse: "Normalizing mixed timestamp formats from different sources.",
+    binary: false,
+  },
+  readable: {
+    name: "Readable date",
+    fullName: "Human-readable UTC date string",
+    description:
+      "Human-readable date format like `Mon, 15 Jan 2024 14:30:00 UTC` — based on RFC 1123 with `UTC` substituted for `GMT` for clarity. Always UTC and locale-independent so cross-region teams see identical strings, the whole point of normalization. Useful for audit logs, status pages, and any context where humans need to verify timestamps quickly.",
+    howToOpen:
+      "Any text editor. The format is structured enough to parse mechanically (`Date.parse` accepts it) but readable enough to scan visually.",
+    primaryUse: "Human verification of timestamps in audit logs and reports.",
+    binary: false,
+  },
+
 };
 
 /** Look up by extension or by name (case-insensitive). */
