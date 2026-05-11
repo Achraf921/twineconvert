@@ -736,6 +736,100 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "text/plain",
     "maxFileSizeBytes": 10485760
   },
+  "csv-to-tsv": {
+    "label": "CSV → TSV",
+    "accept": [
+      ".csv"
+    ],
+    "fromMime": [
+      "text/csv",
+      "application/csv",
+      "text/plain"
+    ],
+    "toMime": "text/tab-separated-values",
+    "maxFileSizeBytes": 52428800
+  },
+  "tsv-to-csv": {
+    "label": "TSV → CSV",
+    "accept": [
+      ".tsv",
+      ".tab"
+    ],
+    "fromMime": [
+      "text/tab-separated-values",
+      "text/plain"
+    ],
+    "toMime": "text/csv",
+    "maxFileSizeBytes": 52428800
+  },
+  "xml-to-json": {
+    "label": "XML → JSON",
+    "accept": [
+      ".xml"
+    ],
+    "fromMime": [
+      "application/xml",
+      "text/xml",
+      "text/plain"
+    ],
+    "toMime": "application/json",
+    "maxFileSizeBytes": 20971520
+  },
+  "json-to-xml": {
+    "label": "JSON → XML",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "application/xml",
+    "maxFileSizeBytes": 20971520
+  },
+  "markdown-to-html": {
+    "label": "Markdown → HTML",
+    "accept": [
+      ".md",
+      ".markdown"
+    ],
+    "fromMime": [
+      "text/markdown",
+      "text/x-markdown",
+      "text/plain"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 10485760
+  },
+  "html-to-markdown": {
+    "label": "HTML → Markdown",
+    "accept": [
+      ".html",
+      ".htm",
+      ".xhtml"
+    ],
+    "fromMime": [
+      "text/html",
+      "application/xhtml+xml",
+      "text/plain"
+    ],
+    "toMime": "text/markdown",
+    "maxFileSizeBytes": 10485760
+  },
+  "markdown-to-pdf": {
+    "label": "Markdown → PDF",
+    "accept": [
+      ".md",
+      ".markdown"
+    ],
+    "fromMime": [
+      "text/markdown",
+      "text/x-markdown",
+      "text/plain"
+    ],
+    "toMime": "application/pdf",
+    "maxFileSizeBytes": 10485760
+  },
   "epub-to-text": {
     "label": "EPUB → Text",
     "accept": [

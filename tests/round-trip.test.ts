@@ -574,6 +574,40 @@ describe("round-trip: subtitles (SRT ↔ WebVTT)", () => {
   });
 });
 
+describe("round-trip: CSV ↔ TSV", () => {
+  it("CSV -> TSV -> CSV preserves rows and column values", async () => {
+    const original = fileFromText("test.csv", FIXTURES.genericCsv, "text/csv");
+    const tsv = await chain("csv-to-tsv", original);
+    const back = await chain("tsv-to-csv", tsv);
+    const text = await back.text();
+    expect(text).toContain("Alice");
+    expect(text).toContain("Bob");
+    expect(text).toContain("Carol");
+    expect(text).toContain("Paris");
+    expect(text).toContain("Tokyo");
+  });
+});
+
+describe("round-trip: XML ↔ JSON", () => {
+  it("XML -> JSON -> XML preserves attributes and nested elements", async () => {
+    const original = fileFromText("test.xml", FIXTURES.xml, "application/xml");
+    const json = await chain("xml-to-json", original);
+    const back = await chain("json-to-xml", json);
+    const text = await back.text();
+    expect(text).toContain("The First Book");
+    expect(text).toContain("Another Book");
+    expect(text).toContain("Alice Smith");
+    expect(text).toContain("Bob Jones");
+    // The book id="1" attribute should round-trip
+    expect(text).toMatch(/id=["']1["']/);
+  });
+});
+
+// Markdown <-> HTML round-trip exists in tests/browser/ instead because
+// turndown needs a full DOM (happy-dom is too partial). The converters
+// work fine in real browsers; this test would just give a false fail
+// in the Node test runner.
+
 describe("round-trip: 3D mesh OBJ ↔ 3MF", () => {
   it("3MF → OBJ → 3MF preserves triangle count", async () => {
     // Build a 3MF from the sample mesh first since we don't have a

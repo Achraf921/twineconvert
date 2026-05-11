@@ -4,6 +4,48 @@
  */
 
 export const FIXTURES = {
+  // Tab-separated values
+  tsv: `name\tage\tcity
+Alice\t30\tParis
+Bob\t25\tLondon
+Carol\t35\tTokyo
+`,
+
+  // Generic XML with attributes and nested elements
+  xml: `<?xml version="1.0" encoding="UTF-8"?>
+<library>
+  <book id="1">
+    <title>The First Book</title>
+    <author>Alice Smith</author>
+    <year>2020</year>
+  </book>
+  <book id="2">
+    <title>Another Book</title>
+    <author>Bob Jones</author>
+    <year>2022</year>
+  </book>
+</library>
+`,
+
+  // Markdown with headings, list, code block, link, emphasis
+  markdown: `# Sample Document
+
+This is a **markdown** document with *emphasis*.
+
+## Features
+
+- First item
+- Second item
+- Third item
+
+\`\`\`javascript
+const x = 42;
+console.log(x);
+\`\`\`
+
+Visit [example.com](https://example.com) for more.
+`,
+
   // YAML 1.2 with nested objects and arrays
   yaml: `name: Alice
 age: 30

@@ -206,6 +206,18 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   // Subtitle pair
   "srt-to-vtt":    { provider: () => text("test.srt", F.srt, "application/x-subrip"), env: "node" },
   "vtt-to-srt":    { provider: () => text("test.vtt", F.vtt, "text/vtt"), env: "node" },
+
+  // CSV ↔ TSV, XML ↔ JSON, Markdown chain
+  "csv-to-tsv":      { provider: () => text("test.csv", F.genericCsv, "text/csv"), env: "node" },
+  "tsv-to-csv":      { provider: () => text("test.tsv", F.tsv, "text/tab-separated-values"), env: "node" },
+  "xml-to-json":     { provider: () => text("test.xml", F.xml, "application/xml"), env: "node" },
+  "json-to-xml":     { provider: () => text("test.json", `{"library":{"book":{"@id":"1","title":"Foo","author":"Bar"}}}`, "application/json"), env: "node" },
+  // marked + turndown both need real browser DOM (happy-dom in node tests
+  // doesn't carry the full DOMParser surface turndown walks). Marking
+  // as browser env so they run via tests/browser/* instead.
+  "markdown-to-html":{ provider: () => text("test.md", F.markdown, "text/markdown"), env: "browser" },
+  "html-to-markdown":{ provider: () => text("test.html", "<h1>Hello</h1><p>World <strong>test</strong></p>", "text/html"), env: "browser" },
+  "markdown-to-pdf": { provider: () => text("test.md", F.markdown, "text/markdown"), env: "browser" },
   "json-to-gedcom":{ provider: () => text("test.json", `{"individuals":[{"id":"I1","name":"John /Smith/","sex":"M","familyAsSpouse":[]}]}`, "application/json"), env: "node" },
   "xlsx-to-csv":   { provider: async () => fileFromBytes("test.xlsx", await makeTinyXlsx(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"), env: "node" },
   "xlsx-to-json":  { provider: async () => fileFromBytes("test.xlsx", await makeTinyXlsx(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"), env: "node" },

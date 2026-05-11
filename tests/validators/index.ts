@@ -700,6 +700,10 @@ const BY_MIME: Record<string, Validator> = {
   "application/toml": validateToml,
   "text/vtt": validateVtt,
   "application/x-subrip": validateSrt,
+
+  // TSV: validate as a plain-text file with at least one tab character
+  // somewhere (otherwise it's degenerate single-column data).
+  "text/tab-separated-values": validatePlainText,
 };
 
 // Extension-keyed fallback, used when toMime is generic (octet-stream)

@@ -176,6 +176,27 @@ export const registry: Record<string, ConverterLoader> = {
   "vtt-to-srt": () =>
     import("./converters/vtt-to-srt").then((m) => m.default),
 
+  // CSV ↔ TSV (delimiter swap, both lossless tabular)
+  "csv-to-tsv": () =>
+    import("./converters/csv-to-tsv").then((m) => m.default),
+  "tsv-to-csv": () =>
+    import("./converters/tsv-to-csv").then((m) => m.default),
+
+  // XML ↔ JSON via fast-xml-parser, opinionated `@`-prefix attribute
+  // convention for round-trip
+  "xml-to-json": () =>
+    import("./converters/xml-to-json").then((m) => m.default),
+  "json-to-xml": () =>
+    import("./converters/json-to-xml").then((m) => m.default),
+
+  // Markdown ↔ HTML and Markdown → PDF, the writing/blogging chain
+  "markdown-to-html": () =>
+    import("./converters/markdown-to-html").then((m) => m.default),
+  "html-to-markdown": () =>
+    import("./converters/html-to-markdown").then((m) => m.default),
+  "markdown-to-pdf": () =>
+    import("./converters/markdown-to-pdf").then((m) => m.default),
+
   // EPUB, JSZip + DOMParser (lighter than epubjs for headless extraction)
   "epub-to-text": () =>
     import("./converters/epub-to-text").then((m) => m.default),

@@ -61,6 +61,13 @@ const FORMATS = {
   // ==== Subtitles ====
   srt: { kind: "data", lossless: true, family: "subtitle" },
   vtt: { kind: "data", lossless: true, family: "subtitle" },
+  // ==== TSV (sibling of CSV) ====
+  tsv: { kind: "data", lossless: true, family: "data" },
+  // ==== Generic XML (when used as a data interchange) ====
+  xml: { kind: "data", lossless: true, family: "data" },
+  // ==== Markdown ====
+  markdown: { kind: "doc", lossless: false, family: "doc" },
+  md: { kind: "doc", lossless: false, family: "doc" },
   // ==== Audio ====
   mp3: { kind: "audio", lossless: false, family: "audio" },
   m4a: { kind: "audio", lossless: false, family: "audio" }, // AAC = lossy

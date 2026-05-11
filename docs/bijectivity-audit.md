@@ -6,11 +6,11 @@ Generated 2026-05-11 from src/lib/engine/converters/.
 
 | Classification | Count |
 |---|---:|
-| Total converters | 202 |
-| **Bijective candidates** (lossless, same-kind, both directions exist) | 90 |
+| Total converters | 209 |
+| **Bijective candidates** (lossless, same-kind, both directions exist) | 94 |
 | **Bijective candidates missing reverse converter** | 3 |
 | **Bijective candidates missing round-trip test** | 18 |
-| Lossy encoding (same kind, but lossy format) | 49 |
+| Lossy encoding (same kind, but lossy format) | 52 |
 | Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 18 |
 | Single-action (no reverse possible) | 42 |
 | Unknown formats (need to add to FORMATS table) | 0 |
@@ -92,6 +92,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `csv-to-qfx` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-qif` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-ris` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `csv-to-tsv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-xlsx` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `cube-to-3dl` | bijective-candidate | ✓ | ✓ | both lossless lut formats; should round-trip cleanly |
 | `cube-to-csp` | bijective-candidate | ✓ | ✓ | both lossless lut formats; should round-trip cleanly |
@@ -137,6 +138,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `hex-to-ase` | bijective-candidate | ✓ | ✓ | both lossless palette formats; should round-trip cleanly |
 | `hex-to-gpl` | bijective-candidate | ✓ | ✓ | both lossless palette formats; should round-trip cleanly |
 | `html-to-docx` | lossy-encoding | ✓ | n/a | html or docx uses lossy encoding |
+| `html-to-markdown` | lossy-encoding | ✓ | n/a | html or markdown uses lossy encoding |
 | `ico-to-jpg` | lossy-encoding | ✓ | n/a | ico or jpg uses lossy encoding |
 | `ico-to-png` | bijective-candidate | ✓ | ✗ MISSING | both lossless raster formats; should round-trip cleanly |
 | `ifc-to-csv` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
@@ -159,6 +161,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `json-to-gedcom` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `json-to-toml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `json-to-xlsx` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `json-to-xml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `json-to-yaml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `keynote-to-pdf` | lossy-encoding | (`pdf-to-keynote` missing) | n/a | keynote or pdf uses lossy encoding |
 | `kindle-clippings-to-csv` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
@@ -168,6 +171,8 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `kindle-clippings-to-obsidian-md` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
 | `kindle-clippings-to-readwise-csv` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
 | `m4a-to-mp3` | lossy-encoding | ✓ | n/a | m4a or mp3 uses lossy encoding |
+| `markdown-to-html` | lossy-encoding | ✓ | n/a | markdown or html uses lossy encoding |
+| `markdown-to-pdf` | lossy-encoding | (`pdf-to-markdown` missing) | n/a | markdown or pdf uses lossy encoding |
 | `mbox-to-eml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `mbox-to-pdf` | cross-kind | (`pdf-to-mbox` missing) | n/a | data -> doc: cross-domain, inherently lossy |
 | `midi-to-musicxml` | lossy-encoding | ✓ | n/a | midi or musicxml uses lossy encoding |
@@ -233,6 +238,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `tiff-to-pdf` | cross-kind | (`pdf-to-tiff` missing) | n/a | raster -> doc: cross-domain, inherently lossy |
 | `tiff-to-png` | bijective-candidate | (`png-to-tiff` missing) | n/a | both lossless raster formats; should round-trip cleanly |
 | `toml-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `tsv-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `twitter-archive-to-csv` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
 | `twitter-archive-to-html` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
 | `txt-to-docx` | lossy-encoding | ✓ | n/a | txt or docx uses lossy encoding |
@@ -249,4 +255,5 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `whatsapp-chat-to-pdf` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
 | `xlsx-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `xlsx-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `xml-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `yaml-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
