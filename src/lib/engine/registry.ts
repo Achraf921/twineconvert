@@ -646,6 +646,46 @@ export const registry: Record<string, ConverterLoader> = {
     import("./converters/woff-to-ttf").then((m) => m.default),
   "otf-to-ttf": () =>
     import("./converters/otf-to-ttf").then((m) => m.default),
+
+  // Tabular table conversions (CSV ↔ Markdown table ↔ HTML table).
+  "csv-to-markdown-table": () =>
+    import("./converters/csv-to-markdown-table").then((m) => m.default),
+  "markdown-table-to-csv": () =>
+    import("./converters/markdown-table-to-csv").then((m) => m.default),
+  "csv-to-html-table": () =>
+    import("./converters/csv-to-html-table").then((m) => m.default),
+  "html-table-to-csv": () =>
+    import("./converters/html-table-to-csv").then((m) => m.default),
+
+  // SQL dump round-trip (CREATE TABLE + INSERT INTO).
+  "csv-to-sql": () =>
+    import("./converters/csv-to-sql").then((m) => m.default),
+  "sql-to-csv": () =>
+    import("./converters/sql-to-csv").then((m) => m.default),
+  "json-to-sql": () =>
+    import("./converters/json-to-sql").then((m) => m.default),
+
+  // Java .properties + HCL (Terraform) configs.
+  "properties-to-json": () =>
+    import("./converters/properties-to-json").then((m) => m.default),
+  "json-to-properties": () =>
+    import("./converters/json-to-properties").then((m) => m.default),
+  "hcl-to-json": () =>
+    import("./converters/hcl-to-json").then((m) => m.default),
+
+  // CSS named colors (147-color spec).
+  "color-name-to-hex": () =>
+    import("./converters/color-name-to-hex").then((m) => m.default),
+  "hex-to-color-name": () =>
+    import("./converters/hex-to-color-name").then((m) => m.default),
+
+  // Date/time normalization (Unix ↔ ISO 8601 ↔ readable).
+  "unix-to-iso": () =>
+    import("./converters/unix-to-iso").then((m) => m.default),
+  "iso-to-unix": () =>
+    import("./converters/iso-to-unix").then((m) => m.default),
+  "timestamp-to-readable": () =>
+    import("./converters/timestamp-to-readable").then((m) => m.default),
 };
 
 /** All converter IDs, useful for sitemap generation later. */

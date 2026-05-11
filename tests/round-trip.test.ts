@@ -955,3 +955,147 @@ describe("round-trip: ODS ↔ XLSX", () => {
     expect(allValues).toContain("Paris");
   });
 });
+
+// ============================================================================
+// Tabular: CSV ↔ Markdown table ↔ HTML table
+// ============================================================================
+describe("round-trip: CSV ↔ Markdown table", () => {
+  it("CSV → Markdown table → CSV preserves header + every row", async () => {
+    const original = fileFromText("test.csv", FIXTURES.genericCsv, "text/csv");
+    const md = await chain("csv-to-markdown-table", original);
+    const back = await chain("markdown-table-to-csv", md);
+    const text = await back.text();
+    expect(text).toContain("name");
+    expect(text).toContain("age");
+    expect(text).toContain("city");
+    expect(text).toContain("Alice");
+    expect(text).toContain("Bob");
+    expect(text).toContain("Carol");
+    expect(text).toContain("Paris");
+    expect(text).toContain("London");
+    expect(text).toContain("Tokyo");
+  });
+});
+
+describe("round-trip: CSV ↔ HTML table", () => {
+  it("CSV → HTML table → CSV preserves header + every row", async () => {
+    const original = fileFromText("test.csv", FIXTURES.genericCsv, "text/csv");
+    const html = await chain("csv-to-html-table", original);
+    const back = await chain("html-table-to-csv", html);
+    const text = await back.text();
+    expect(text).toContain("name,age,city");
+    expect(text).toContain("Alice");
+    expect(text).toContain("Bob");
+    expect(text).toContain("Carol");
+    expect(text).toContain("Paris");
+    expect(text).toContain("Tokyo");
+  });
+});
+
+// ============================================================================
+// SQL ↔ CSV — DB dump round-trip
+// ============================================================================
+describe("round-trip: CSV ↔ SQL", () => {
+  it("CSV → SQL → CSV preserves rows and column values", async () => {
+    const original = fileFromText("users.csv", FIXTURES.genericCsv, "text/csv");
+    const sql = await chain("csv-to-sql", original);
+    const back = await chain("sql-to-csv", sql);
+    const text = await back.text();
+    expect(text).toContain("Alice");
+    expect(text).toContain("Bob");
+    expect(text).toContain("Carol");
+    expect(text).toContain("Paris");
+    expect(text).toContain("London");
+    expect(text).toContain("Tokyo");
+  });
+
+  it("SQL → CSV → SQL keeps the data round-tripping through the table model", async () => {
+    const original = fileFromText("dump.sql", FIXTURES.sqlDump, "application/sql");
+    const csv = await chain("sql-to-csv", original);
+    const back = await chain("csv-to-sql", csv);
+    const text = await back.text();
+    expect(text).toContain("'Alice'");
+    expect(text).toContain("'Paris'");
+    expect(text).toContain("INSERT INTO");
+  });
+});
+
+// ============================================================================
+// .properties ↔ JSON
+// ============================================================================
+describe("round-trip: .properties ↔ JSON", () => {
+  it(".properties → JSON → .properties preserves keys with dots", async () => {
+    const original = fileFromText("app.properties", FIXTURES.javaProperties);
+    const json = await chain("properties-to-json", original);
+    const back = await chain("json-to-properties", json);
+    const text = await back.text();
+    expect(text).toContain("server.port");
+    expect(text).toContain("8080");
+    expect(text).toContain("spring.datasource.url");
+    expect(text).toContain("logging.level.root");
+  });
+});
+
+// ============================================================================
+// HCL → JSON (one-way)
+// ============================================================================
+describe("HCL → JSON (Terraform configs)", () => {
+  it("parses Terraform syntax into a valid JSON object tree", async () => {
+    const original = fileFromText("main.tf", FIXTURES.hclTerraform, "text/x-hcl");
+    const json = await chain("hcl-to-json", original);
+    const text = await json.text();
+    const parsed = JSON.parse(text);
+    // hcl2-parser wraps everything in an outer array; normalize that
+    const root = Array.isArray(parsed) ? parsed[0] : parsed;
+    expect(root).toBeTruthy();
+    // Should at minimum mention the bucket name we put in the fixture
+    expect(text).toContain("my-log-bucket");
+    expect(text).toContain("production");
+  });
+});
+
+// ============================================================================
+// Color names ↔ HEX
+// ============================================================================
+describe("round-trip: color name ↔ HEX (lossy via nearest-neighbor)", () => {
+  it("Name → HEX → Name returns the same name for all 147 named colors", async () => {
+    const original = fileFromText("colors.txt", FIXTURES.colorNames);
+    const hex = await chain("color-name-to-hex", original);
+    const back = await chain("hex-to-color-name", hex);
+    const text = await back.text();
+    // Each fixture name has an exact hex match, so the nearest-neighbor
+    // lookup will return the same name back.
+    expect(text).toContain("tomato");
+    expect(text).toContain("royalblue");
+    expect(text).toContain("forestgreen");
+    expect(text).toContain("gold");
+    expect(text).toContain("crimson");
+  });
+});
+
+// ============================================================================
+// Date / time
+// ============================================================================
+describe("round-trip: Unix ↔ ISO 8601", () => {
+  it("Unix → ISO → Unix preserves second-precision timestamps", async () => {
+    const original = fileFromText("timestamps.txt", FIXTURES.unixTimestamps);
+    const iso = await chain("unix-to-iso", original);
+    const back = await chain("iso-to-unix", iso);
+    const text = await back.text();
+    // Original fixture: 1704067200, 1717977600, 1735689600
+    expect(text).toContain("1704067200");
+    expect(text).toContain("1717977600");
+    expect(text).toContain("1735689600");
+  });
+
+  it("ISO → Unix → ISO preserves the date component", async () => {
+    const original = fileFromText("dates.txt", FIXTURES.isoDates);
+    const unix = await chain("iso-to-unix", original);
+    const back = await chain("unix-to-iso", unix);
+    const text = await back.text();
+    // Each ISO date in the fixture is at midnight UTC; round-trips exactly
+    expect(text).toContain("2024-01-01T00:00:00.000Z");
+    expect(text).toContain("2024-06-10T00:00:00.000Z");
+    expect(text).toContain("2025-01-01T00:00:00.000Z");
+  });
+});

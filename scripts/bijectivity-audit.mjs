@@ -169,6 +169,24 @@ const FORMATS = {
   ttf: { kind: "font", lossless: true, family: "font" },
   otf: { kind: "font", lossless: true, family: "font" },
   woff: { kind: "font", lossless: true, family: "font" },
+  // ==== Tabular variants ====
+  // markdown-table / html-table are sub-formats of markdown / html
+  // when used as a tabular container. Treat them as "data" so the
+  // CSV ↔ MD-table ↔ HTML-table classifier sees compatible kinds.
+  "markdown-table": { kind: "data", lossless: true, family: "data" },
+  "html-table": { kind: "data", lossless: true, family: "data" },
+  sql: { kind: "data", lossless: true, family: "data" }, // INSERT-row dump
+  properties: { kind: "data", lossless: true, family: "config" }, // Java
+  hcl: { kind: "data", lossless: true, family: "config" }, // Terraform
+  // ==== Color names ====
+  // Lossless on the name → hex side (147 named colors are exact);
+  // lossy on hex → name (nearest-neighbor approximation).
+  "color-name": { kind: "color", lossless: false, family: "color" },
+  // ==== Date / time formats ====
+  unix: { kind: "data", lossless: true, family: "datetime" },
+  iso: { kind: "data", lossless: true, family: "datetime" },
+  timestamp: { kind: "data", lossless: true, family: "datetime" },
+  readable: { kind: "data", lossless: false, family: "datetime" }, // human-readable, may lose ms
 };
 
 // --------------------------------------------------------------------
@@ -222,6 +240,10 @@ const SINGLE_ACTION = new Set([
   "file-to-sha1",
   "file-to-sha256",
   "file-to-sha512",
+  // Date format conversions: not a paired round-trip family
+  "timestamp-to-readable",
+  // HCL is one-way (no JSON → HCL converter shipped)
+  "hcl-to-json",
 ]);
 
 // --------------------------------------------------------------------

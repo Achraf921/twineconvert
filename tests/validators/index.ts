@@ -256,8 +256,14 @@ export const validateMarkdown: Validator = async ({ blob, minSize = 1 }) => {
 export const validateHtml: Validator = async ({ blob, minSize = 20 }) => {
   assertMinSize(blob, minSize, "HTML");
   const text = await readText(blob);
-  if (!/<html[\s>]/i.test(text) && !/<body[\s>]/i.test(text)) {
-    throw new Error("HTML output missing <html> or <body> root");
+  // Full doc OR a structural fragment (table is the common one — our CSV/MD
+  // → HTML converters emit table snippets so users can paste into other docs).
+  if (
+    !/<html[\s>]/i.test(text) &&
+    !/<body[\s>]/i.test(text) &&
+    !/<table[\s>]/i.test(text)
+  ) {
+    throw new Error("HTML output missing <html>, <body>, or <table> root");
   }
 };
 
@@ -654,6 +660,24 @@ export const validateGeoJson: Validator = async ({ blob, minSize = 20 }) => {
   }
 };
 
+export const validateSql: Validator = async ({ blob, minSize = 20 }) => {
+  assertMinSize(blob, minSize, "SQL");
+  const text = await readText(blob);
+  // Must have at least one INSERT or CREATE TABLE statement
+  if (!/\b(INSERT\s+INTO|CREATE\s+TABLE)\b/i.test(text)) {
+    throw new Error("SQL has no INSERT INTO or CREATE TABLE statements");
+  }
+};
+
+export const validateProperties: Validator = async ({ blob, minSize = 3 }) => {
+  assertMinSize(blob, minSize, ".properties");
+  const text = await readText(blob);
+  // At least one key=value or key:value line
+  if (!/^[\w.-]+\s*[=:]\s*/m.test(text)) {
+    throw new Error(".properties has no key=value pairs");
+  }
+};
+
 export const validateJsonl: Validator = async ({ blob, minSize = 1 }) => {
   assertMinSize(blob, minSize, "JSONL");
   const text = await readText(blob);
@@ -844,6 +868,8 @@ const BY_MIME: Record<string, Validator> = {
   "application/x-ndjson": validateJsonl,
   "application/x-ini": validateIni,
   "application/json5": validateJson,
+  "application/sql": validateSql,
+  "text/x-java-properties": validateProperties,
 
   "application/vnd.oasis.opendocument.spreadsheet": validateOds,
   "application/vnd.oasis.opendocument.spreadsheet-template": validateOds,
@@ -892,6 +918,8 @@ const BY_EXT: Record<string, Validator> = {
   ttf: validateTtf,
   otf: validateTtf,
   woff: validateWoff,
+  sql: validateSql,
+  properties: validateProperties,
 };
 
 /**

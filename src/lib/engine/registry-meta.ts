@@ -3101,6 +3101,189 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     ],
     "toMime": "font/ttf",
     "maxFileSizeBytes": 20971520
+  },
+  "csv-to-markdown-table": {
+    "label": "CSV → Markdown table",
+    "accept": [
+      ".csv"
+    ],
+    "fromMime": [
+      "text/csv",
+      "application/csv",
+      "text/plain"
+    ],
+    "toMime": "text/markdown",
+    "maxFileSizeBytes": 20971520
+  },
+  "markdown-table-to-csv": {
+    "label": "Markdown table → CSV",
+    "accept": [
+      ".md",
+      ".markdown"
+    ],
+    "fromMime": [
+      "text/markdown",
+      "text/plain"
+    ],
+    "toMime": "text/csv",
+    "maxFileSizeBytes": 20971520
+  },
+  "csv-to-html-table": {
+    "label": "CSV → HTML table",
+    "accept": [
+      ".csv"
+    ],
+    "fromMime": [
+      "text/csv",
+      "application/csv",
+      "text/plain"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 20971520
+  },
+  "html-table-to-csv": {
+    "label": "HTML table → CSV",
+    "accept": [
+      ".html",
+      ".htm"
+    ],
+    "fromMime": [
+      "text/html"
+    ],
+    "toMime": "text/csv",
+    "maxFileSizeBytes": 20971520
+  },
+  "csv-to-sql": {
+    "label": "CSV → SQL",
+    "accept": [
+      ".csv"
+    ],
+    "fromMime": [
+      "text/csv",
+      "application/csv",
+      "text/plain"
+    ],
+    "toMime": "application/sql",
+    "maxFileSizeBytes": 52428800
+  },
+  "sql-to-csv": {
+    "label": "SQL → CSV",
+    "accept": [
+      ".sql"
+    ],
+    "fromMime": [
+      "application/sql",
+      "text/plain"
+    ],
+    "toMime": "text/csv",
+    "maxFileSizeBytes": 52428800
+  },
+  "json-to-sql": {
+    "label": "JSON → SQL",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "application/sql",
+    "maxFileSizeBytes": 52428800
+  },
+  "properties-to-json": {
+    "label": ".properties → JSON",
+    "accept": [
+      ".properties"
+    ],
+    "fromMime": [
+      "text/plain",
+      "text/x-java-properties"
+    ],
+    "toMime": "application/json",
+    "maxFileSizeBytes": 10485760
+  },
+  "json-to-properties": {
+    "label": "JSON → .properties",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "text/x-java-properties",
+    "maxFileSizeBytes": 10485760
+  },
+  "hcl-to-json": {
+    "label": "HCL → JSON",
+    "accept": [
+      ".hcl",
+      ".tf",
+      ".tfvars"
+    ],
+    "fromMime": [
+      "text/x-hcl",
+      "application/hcl",
+      "text/plain"
+    ],
+    "toMime": "application/json",
+    "maxFileSizeBytes": 10485760
+  },
+  "color-name-to-hex": {
+    "label": "Color name → HEX",
+    "accept": [
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 1048576
+  },
+  "hex-to-color-name": {
+    "label": "HEX → Color name",
+    "accept": [
+      ".txt",
+      ".hex"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 1048576
+  },
+  "unix-to-iso": {
+    "label": "Unix timestamp → ISO 8601",
+    "accept": [
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 5242880
+  },
+  "iso-to-unix": {
+    "label": "ISO 8601 → Unix timestamp",
+    "accept": [
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 5242880
+  },
+  "timestamp-to-readable": {
+    "label": "Timestamp → Readable date",
+    "accept": [
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 5242880
   }
 };
 

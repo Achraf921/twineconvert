@@ -544,6 +544,88 @@ PORT=3000
   },
 }`,
 
+  // ---- Markdown table fixture ----
+  markdownTable: `| name  | age | city   |
+|-------|-----|--------|
+| Alice | 30  | Paris  |
+| Bob   | 25  | London |
+| Carol | 35  | Tokyo  |
+`,
+
+  // ---- HTML table fixture ----
+  htmlTable: `<!DOCTYPE html>
+<html>
+<body>
+<table>
+  <thead>
+    <tr><th>name</th><th>age</th><th>city</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Alice</td><td>30</td><td>Paris</td></tr>
+    <tr><td>Bob</td><td>25</td><td>London</td></tr>
+    <tr><td>Carol</td><td>35</td><td>Tokyo</td></tr>
+  </tbody>
+</table>
+</body>
+</html>
+`,
+
+  // ---- SQL dump fixture ----
+  sqlDump: `DROP TABLE IF EXISTS users;
+CREATE TABLE users (
+  name TEXT,
+  age INTEGER,
+  city TEXT
+);
+
+INSERT INTO users (name, age, city) VALUES ('Alice', 30, 'Paris');
+INSERT INTO users (name, age, city) VALUES ('Bob', 25, 'London');
+INSERT INTO users (name, age, city) VALUES ('Carol', 35, 'Tokyo');
+`,
+
+  // ---- Java .properties fixture ----
+  javaProperties: `# Spring Boot config sample
+server.port=8080
+server.servlet.context-path=/api
+spring.datasource.url=jdbc:postgresql://localhost:5432/mydb
+spring.datasource.username=admin
+logging.level.root=INFO
+`,
+
+  // ---- HCL (Terraform) fixture ----
+  hclTerraform: `terraform {
+  required_version = ">= 1.0"
+}
+
+resource "aws_s3_bucket" "logs" {
+  bucket = "my-log-bucket"
+  acl    = "private"
+
+  tags = {
+    Environment = "production"
+    Owner       = "platform-team"
+  }
+}
+`,
+
+  // ---- Color name list fixture ----
+  colorNames: `tomato
+royalblue
+forestgreen
+gold
+crimson
+`,
+
+  // ---- Date fixtures ----
+  unixTimestamps: `1704067200
+1717977600
+1735689600
+`,
+  isoDates: `2024-01-01T00:00:00Z
+2024-06-10T00:00:00Z
+2025-01-01T00:00:00Z
+`,
+
   // ---- SBV (YouTube subtitle) ----
   sbv: `0:00:01.000,0:00:04.000
 First caption text

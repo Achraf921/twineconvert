@@ -438,6 +438,31 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "ttf-to-woff": { provider: () => Promise.reject(new Error("ttf fixture pending")), env: "browser" },
   "woff-to-ttf": { provider: () => Promise.reject(new Error("woff fixture pending")), env: "browser" },
   "otf-to-ttf":  { provider: () => Promise.reject(new Error("otf fixture pending")), env: "browser" },
+
+  // ===== Tabular table conversions =====
+  "csv-to-markdown-table":  { provider: () => text("test.csv", F.genericCsv, "text/csv"), env: "node" },
+  "markdown-table-to-csv":  { provider: () => text("table.md", F.markdownTable, "text/markdown"), env: "node" },
+  "csv-to-html-table":      { provider: () => text("test.csv", F.genericCsv, "text/csv"), env: "node" },
+  "html-table-to-csv":      { provider: () => text("table.html", F.htmlTable, "text/html"), env: "node" },
+
+  // ===== SQL =====
+  "csv-to-sql":  { provider: () => text("users.csv", F.genericCsv, "text/csv"), env: "node" },
+  "sql-to-csv":  { provider: () => text("dump.sql", F.sqlDump, "application/sql"), env: "node" },
+  "json-to-sql": { provider: () => text("users.json", F.jsonArray, "application/json"), env: "node" },
+
+  // ===== Java .properties + HCL =====
+  "properties-to-json": { provider: () => text("app.properties", F.javaProperties, "text/x-java-properties"), env: "node" },
+  "json-to-properties": { provider: () => text("config.json", `{"server.port":"8080","spring.datasource.url":"jdbc:postgresql://localhost:5432/mydb"}`, "application/json"), env: "node" },
+  "hcl-to-json":        { provider: () => text("main.tf", F.hclTerraform, "text/x-hcl"), env: "node" },
+
+  // ===== CSS named colors =====
+  "color-name-to-hex": { provider: () => text("colors.txt", F.colorNames, "text/plain"), env: "node" },
+  "hex-to-color-name": { provider: () => text("colors.txt", F.hexList, "text/plain"), env: "node" },
+
+  // ===== Date/time =====
+  "unix-to-iso":           { provider: () => text("timestamps.txt", F.unixTimestamps, "text/plain"), env: "node" },
+  "iso-to-unix":           { provider: () => text("dates.txt", F.isoDates, "text/plain"), env: "node" },
+  "timestamp-to-readable": { provider: () => text("timestamps.txt", F.unixTimestamps, "text/plain"), env: "node" },
 };
 
 /** True if we have any fixture for this id (even if it requires browser). */
