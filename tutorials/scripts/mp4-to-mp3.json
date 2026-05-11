@@ -1,0 +1,63 @@
+{
+  "tool": "mp4-to-mp3",
+  "title": "How to extract MP3 audio from any MP4 video (free, in your browser)",
+  "thumbnailHook": "Just Want\nthe Audio?",
+  "thumbnailEmoji": "🎵",
+  "thumbnailBadge": "FREE",
+  "segments": [
+    {
+      "voice": "Got a video. But you just want the audio?",
+      "scene": {
+        "type": "emoji-text",
+        "emoji": "🎵",
+        "headline": "Just the audio?",
+        "sub": "you don't need the video"
+      }
+    },
+    {
+      "voice": "Maybe it's a song from a downloaded video, a voice memo, or audio from an interview.",
+      "scene": {
+        "type": "emoji-text",
+        "emoji": "🎙️",
+        "headline": "Songs, voice memos,\ninterviews",
+        "sub": "video files with audio you want"
+      }
+    },
+    {
+      "voice": "The fix is converting MP4 to MP3. Tiny file, plays everywhere.",
+      "scene": {
+        "type": "emoji-text",
+        "emoji": "✨",
+        "headline": "MP4 to MP3",
+        "sub": "smaller file, plays on every device"
+      }
+    },
+    {
+      "voice": "Free. No signup. Nothing to install.",
+      "scene": {
+        "type": "centered-headline",
+        "headline": "Free. No signup.\nNo install.",
+        "sub": "everything happens in your browser"
+      }
+    },
+    {
+      "voice": "Go to twineconvert dot com slash mp4 to mp3.",
+      "scene": {
+        "type": "url-card",
+        "url": "twineconvert.com/mp4-to-mp3"
+      }
+    },
+    {
+      "voice": "Drop the video. Click convert. Download your MP3. Done.",
+      "scene": { "type": "demo-recording" }
+    },
+    {
+      "voice": "And your file stays on your computer the whole time. Link's in the bio, give it a try!",
+      "scene": {
+        "type": "cta",
+        "url": "Link in bio ↓",
+        "tagline": "Have fun converting!"
+      }
+    }
+  ]
+}

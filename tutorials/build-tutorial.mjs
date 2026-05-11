@@ -41,7 +41,23 @@ const SCRIPT_PATH = resolve(`tutorials/scripts/${tool}.json`);
 const OUT_DIR = resolve("tutorials/output");
 const WORK_DIR = resolve(`tutorials/output/.work-${tool}`);
 const ICONS_DIR = resolve("tutorials/assets/icons");
-const HEIC_FIXTURE = resolve("tests/browser/fixtures/sample.heic");
+/**
+ * Per-tool fixture lookup. The demo segment uploads a real file through
+ * the live conversion UI on twineconvert.com via Playwright, so we need
+ * a sample input file that matches the converter's accept list.
+ *
+ * Add a new entry when shipping a tutorial for a new tool; default
+ * fallback is the HEIC sample which most image converters can handle.
+ */
+const FIXTURE_BY_TOOL = {
+  "heic-to-jpg": "tests/browser/fixtures/sample.heic",
+  "heic-to-png": "tests/browser/fixtures/sample.heic",
+  "heic-to-webp": "tests/browser/fixtures/sample.heic",
+  "heic-to-pdf": "tests/browser/fixtures/sample.heic",
+  "mp4-to-mp3": "tests/browser/fixtures/sample.mp4",
+  "mp4-to-gif": "tests/browser/fixtures/sample.mp4",
+};
+const DEMO_FIXTURE = resolve(FIXTURE_BY_TOOL[tool] ?? "tests/browser/fixtures/sample.heic");
 
 if (!existsSync(SCRIPT_PATH)) {
   console.error(`Script not found: ${SCRIPT_PATH}`);
@@ -301,7 +317,7 @@ if (hasDemoSegment) {
   await page.waitForTimeout(800);
   const fileInput = await page.$('input[type="file"]');
   if (!fileInput) throw new Error("no file input on tool page");
-  await fileInput.setInputFiles(HEIC_FIXTURE);
+  await fileInput.setInputFiles(DEMO_FIXTURE);
   await page.waitForTimeout(1200);
   const convertBtn = page.locator('button:has-text("Convert")').first();
   if (await convertBtn.isVisible()) await convertBtn.click();

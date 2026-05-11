@@ -15,9 +15,22 @@
  */
 
 import { useCallback, useRef, useState } from "react";
+import { track } from "@vercel/analytics";
 import { run } from "@/lib/engine/runner";
 
 type Phase = "idle" | "ready" | "running" | "done" | "error";
+
+/**
+ * Bucket a byte size into a coarse class so analytics events don't carry
+ * raw file sizes (privacy + cheaper to aggregate). The visit-to-download
+ * funnel only needs to know if the file is tiny/small/medium/large.
+ */
+function sizeBucket(bytes: number): "tiny" | "small" | "medium" | "large" {
+  if (bytes < 1024 * 1024) return "tiny";              // <1MB
+  if (bytes < 10 * 1024 * 1024) return "small";        // 1-10MB
+  if (bytes < 100 * 1024 * 1024) return "medium";      // 10-100MB
+  return "large";                                       // >100MB
+}
 
 interface Props {
   /** Converter id from the registry, e.g. "heic-to-jpg". */
@@ -37,15 +50,26 @@ export function Dropzone({ toolId, toolLabel, accept }: Props) {
   const [isDragging, setIsDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const onFiles = useCallback((files: FileList | File[]) => {
-    const f = Array.from(files)[0];
-    if (!f) return;
-    setFile(f);
-    setOutput(null);
-    setError(null);
-    setProgress(0);
-    setPhase("ready");
-  }, []);
+  const onFiles = useCallback(
+    (files: FileList | File[]) => {
+      const f = Array.from(files)[0];
+      if (!f) return;
+      // Funnel step 2 (pageview is auto-tracked). Logs which tool the user
+      // is actually using vs just browsing. Comparing this against pageview
+      // count gives us pageview-to-upload conversion rate.
+      track("file_selected", {
+        tool: toolId,
+        size: sizeBucket(f.size),
+        mime: f.type || "unknown",
+      });
+      setFile(f);
+      setOutput(null);
+      setError(null);
+      setProgress(0);
+      setPhase("ready");
+    },
+    [toolId],
+  );
 
   const onDrop = useCallback(
     (e: React.DragEvent<HTMLDivElement>) => {
@@ -58,21 +82,48 @@ export function Dropzone({ toolId, toolLabel, accept }: Props) {
 
   const startConversion = useCallback(async () => {
     if (!file) return;
+    // Funnel step 3: user committed to converting (vs just exploring).
+    track("convert_clicked", {
+      tool: toolId,
+      size: sizeBucket(file.size),
+    });
     setPhase("running");
     setProgress(0);
     setError(null);
+    const startedAt = performance.now();
     try {
       const result = await run(toolId, file, { onProgress: setProgress });
       setOutput(result);
       setPhase("done");
+      // Funnel step 4: conversion actually finished. Duration buckets help
+      // us spot which tools are slow enough to hurt completion rates.
+      track("convert_success", {
+        tool: toolId,
+        size: sizeBucket(file.size),
+        duration_ms: Math.round(performance.now() - startedAt),
+      });
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
       setPhase("error");
+      // Capture error class (not the raw message) so we can spot patterns
+      // without leaking file content into the analytics stream.
+      track("convert_error", {
+        tool: toolId,
+        size: sizeBucket(file.size),
+        error_class: e instanceof Error ? e.constructor.name : "Unknown",
+      });
     }
   }, [file, toolId]);
 
   const downloadOutput = useCallback(() => {
     if (!output) return;
+    // Funnel step 5 (terminal): user actually downloaded. This is the
+    // metric that proves they got value from the tool, not just that the
+    // conversion technically succeeded.
+    track("download_clicked", {
+      tool: toolId,
+      size: sizeBucket(output.blob.size),
+    });
     const url = URL.createObjectURL(output.blob);
     const a = document.createElement("a");
     a.href = url;
@@ -81,7 +132,7 @@ export function Dropzone({ toolId, toolLabel, accept }: Props) {
     a.click();
     document.body.removeChild(a);
     setTimeout(() => URL.revokeObjectURL(url), 1000);
-  }, [output]);
+  }, [output, toolId]);
 
   const reset = useCallback(() => {
     setPhase("idle");
