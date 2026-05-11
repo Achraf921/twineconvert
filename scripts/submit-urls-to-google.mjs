@@ -19,17 +19,48 @@
 import { google } from "googleapis";
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
+import { resolve as resolveHome } from "node:path";
+import { homedir } from "node:os";
 
 const SCOPE = "https://www.googleapis.com/auth/indexing";
 const ENDPOINT = "https://indexing.googleapis.com/v3/urlNotifications:publish";
 const STATE_FILE = resolve(".indexing-state.json");
-const DAILY_QUOTA = 200; // Google's hard cap per service account
+const DAILY_QUOTA = 200; // Google's hard cap per project
 const PAUSE_MS = 200;    // gentle rate-limit between requests
 
-// Auth via the service-account JSON pointed at by
-// GOOGLE_APPLICATION_CREDENTIALS (set in the environment).
-const auth = new google.auth.GoogleAuth({ scopes: [SCOPE] });
-const client = await auth.getClient();
+// Auth: two paths.
+//   --oauth: user-credential flow. Reads the OAuth client config + the
+//     refresh token saved by scripts/oauth-auth-google.mjs and
+//     authenticates as a real human Owner of the GSC property. This is
+//     the path that actually works in 2026 because Google blocks
+//     service-account ownership of URL Prefix properties.
+//   default: service-account flow via GOOGLE_APPLICATION_CREDENTIALS.
+//     Kept for backward compatibility; will hit "permission denied"
+//     unless the service account is somehow a verified Owner.
+const USE_OAUTH = process.argv.includes("--oauth");
+
+let client;
+if (USE_OAUTH) {
+  const clientCfgPath = resolveHome(homedir(), ".config/twineconvert-oauth-client.json");
+  const tokenPath = resolveHome(homedir(), ".config/twineconvert-oauth-token.json");
+  if (!existsSync(clientCfgPath) || !existsSync(tokenPath)) {
+    console.error(
+      "OAuth mode: missing client config or refresh token.\n" +
+      `Expected:\n  ${clientCfgPath}\n  ${tokenPath}\n` +
+      "Run `node scripts/oauth-auth-google.mjs` first.",
+    );
+    process.exit(1);
+  }
+  const cfg = JSON.parse(readFileSync(clientCfgPath, "utf8"));
+  const installed = cfg.installed ?? cfg.web ?? cfg;
+  const tok = JSON.parse(readFileSync(tokenPath, "utf8"));
+  const oauth = new google.auth.OAuth2(installed.client_id, installed.client_secret);
+  oauth.setCredentials({ refresh_token: tok.refresh_token });
+  client = oauth;
+} else {
+  const auth = new google.auth.GoogleAuth({ scopes: [SCOPE] });
+  client = await auth.getClient();
+}
 
 // Pull the URL list from the live sitemap so we never drift.
 async function fetchSitemapUrls() {
@@ -66,6 +97,11 @@ async function notifyOne(url) {
   return res.status;
 }
 
+// `--probe` flag: submit ONE URL and exit. Lets us verify the URL format
+// + auth + property registration before burning the whole daily quota on
+// a misconfiguration (which is exactly what happened on day 1).
+const PROBE_MODE = process.argv.includes("--probe");
+
 const allUrls = await fetchSitemapUrls();
 const state = loadState();
 const submittedSet = new Set(state.submitted);
@@ -73,8 +109,13 @@ const pending = allUrls.filter((u) => !submittedSet.has(u));
 
 console.log(`sitemap: ${allUrls.length} total | already submitted: ${state.submitted.length} | pending: ${pending.length}`);
 
-const todayBatch = pending.slice(0, DAILY_QUOTA);
-console.log(`today's batch: ${todayBatch.length} URLs (max ${DAILY_QUOTA}/day per service account)`);
+const batchSize = PROBE_MODE ? 1 : DAILY_QUOTA;
+const todayBatch = pending.slice(0, batchSize);
+if (PROBE_MODE) {
+  console.log(`PROBE MODE: submitting 1 URL only to verify the pipeline works`);
+} else {
+  console.log(`today's batch: ${todayBatch.length} URLs (max ${DAILY_QUOTA}/day per service account)`);
+}
 
 let ok = 0;
 let failed = 0;
