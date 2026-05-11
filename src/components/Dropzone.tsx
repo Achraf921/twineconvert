@@ -15,7 +15,7 @@
  */
 
 import { useCallback, useRef, useState } from "react";
-import { track } from "@vercel/analytics";
+import posthog from "posthog-js";
 import { run } from "@/lib/engine/runner";
 
 type Phase = "idle" | "ready" | "running" | "done" | "error";
@@ -57,7 +57,7 @@ export function Dropzone({ toolId, toolLabel, accept }: Props) {
       // Funnel step 2 (pageview is auto-tracked). Logs which tool the user
       // is actually using vs just browsing. Comparing this against pageview
       // count gives us pageview-to-upload conversion rate.
-      track("file_selected", {
+      posthog.capture("file_selected", {
         tool: toolId,
         size: sizeBucket(f.size),
         mime: f.type || "unknown",
@@ -83,7 +83,7 @@ export function Dropzone({ toolId, toolLabel, accept }: Props) {
   const startConversion = useCallback(async () => {
     if (!file) return;
     // Funnel step 3: user committed to converting (vs just exploring).
-    track("convert_clicked", {
+    posthog.capture("convert_clicked", {
       tool: toolId,
       size: sizeBucket(file.size),
     });
@@ -97,7 +97,7 @@ export function Dropzone({ toolId, toolLabel, accept }: Props) {
       setPhase("done");
       // Funnel step 4: conversion actually finished. Duration buckets help
       // us spot which tools are slow enough to hurt completion rates.
-      track("convert_success", {
+      posthog.capture("convert_success", {
         tool: toolId,
         size: sizeBucket(file.size),
         duration_ms: Math.round(performance.now() - startedAt),
@@ -107,7 +107,7 @@ export function Dropzone({ toolId, toolLabel, accept }: Props) {
       setPhase("error");
       // Capture error class (not the raw message) so we can spot patterns
       // without leaking file content into the analytics stream.
-      track("convert_error", {
+      posthog.capture("convert_error", {
         tool: toolId,
         size: sizeBucket(file.size),
         error_class: e instanceof Error ? e.constructor.name : "Unknown",
@@ -120,7 +120,7 @@ export function Dropzone({ toolId, toolLabel, accept }: Props) {
     // Funnel step 5 (terminal): user actually downloaded. This is the
     // metric that proves they got value from the tool, not just that the
     // conversion technically succeeded.
-    track("download_clicked", {
+    posthog.capture("download_clicked", {
       tool: toolId,
       size: sizeBucket(output.blob.size),
     });
