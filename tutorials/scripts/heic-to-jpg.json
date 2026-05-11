@@ -2,6 +2,8 @@
   "tool": "heic-to-jpg",
   "title": "How to convert iPhone HEIC photos to JPG (free, in your browser)",
   "thumbnailHook": "iPhone Photo\nWon't Open?",
+  "thumbnailEmoji": "🤔",
+  "thumbnailBadge": "FIX IT FREE",
   "segments": [
     {
       "voice": "Got an iPhone photo that won't open on your Windows PC or Mac?",
@@ -50,11 +52,11 @@
       "scene": { "type": "demo-recording" }
     },
     {
-      "voice": "Your photo stays on your computer the whole time. Try it.",
+      "voice": "And your photo stays on your computer the whole time. Link's in the bio, give it a try!",
       "scene": {
         "type": "cta",
-        "url": "twineconvert.com/heic-to-jpg",
-        "tagline": "Free. Easy. Private."
+        "url": "Link in bio ↓",
+        "tagline": "Have fun converting!"
       }
     }
   ]

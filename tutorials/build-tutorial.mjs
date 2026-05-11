@@ -531,7 +531,7 @@ if (MUSIC_PATH && existsSync(MUSIC_PATH)) {
     "-i",
     MUSIC_PATH,
     "-filter_complex",
-    "[1:a]volume=0.10,aloop=loop=-1:size=2e9[bg];[0:a][bg]amix=inputs=2:duration=first:dropout_transition=0[a]",
+    "[1:a]volume=0.06,aloop=loop=-1:size=2e9[bg];[0:a][bg]amix=inputs=2:duration=first:dropout_transition=0[a]",
     "-map",
     "0:v",
     "-map",
@@ -557,30 +557,57 @@ if (MUSIC_PATH && existsSync(MUSIC_PATH)) {
 console.log("\n[7/7] generating thumbnail...");
 const thumbPath = join(OUT_DIR, `${tool}-thumb.png`);
 const hookText = script.thumbnailHook || script.title;
+const thumbEmoji = script.thumbnailEmoji || "✨";
+const thumbBadge = script.thumbnailBadge || "FREE & EASY";
 const thumbBrowser = await chromium.launch();
 const thumbPage = await thumbBrowser.newPage({ viewport: { width: 1280, height: 720 } });
 const iconB64Twine = iconB64("twineconvert.png");
 const thumbHtml = `<!DOCTYPE html><html><head><style>
   ${COMMON_STYLES}
-  body { width: 1280px; height: 720px; }
-  .thumb-stage { position:relative; z-index:2; text-align:center; }
-  .hook {
-    background: linear-gradient(180deg, #E0297B 0%, #B01368 100%);
-    color: white; font-weight: 900; font-size: 128px; letter-spacing: -0.04em;
-    line-height: 0.95; padding: 36px 60px; border-radius: 20px;
-    box-shadow: 0 30px 80px -10px rgba(224, 41, 123, 0.7);
-    text-align: center; text-shadow: 0 4px 24px rgba(0,0,0,0.4);
-    transform: rotate(-2deg); white-space: pre-line;
+  body { width: 1280px; height: 720px; padding: 0; flex-direction: row;
+         justify-content: space-between; align-items: center; }
+  .left { flex: 0 0 480px; display: flex; align-items: center; justify-content: center;
+          padding: 40px; position: relative; z-index: 2; }
+  .left .emoji {
+    font-size: 360px; line-height: 1;
+    font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
+    filter: drop-shadow(0 30px 60px rgba(224, 41, 123, 0.4));
+  }
+  .right { flex: 1; padding-right: 50px; position: relative; z-index: 2; text-align: left; }
+  .right .hook {
+    font-weight: 900; font-size: 110px; letter-spacing: -0.04em; line-height: 0.96;
+    color: white; white-space: pre-line; margin-bottom: 28px;
+    text-shadow: 0 4px 24px rgba(0,0,0,0.5);
+  }
+  .right .hook .accent { color: #E0297B; }
+  .right .badge {
     display: inline-block;
+    background: linear-gradient(180deg, #E0297B 0%, #B01368 100%); color: white;
+    font-weight: 900; font-size: 38px; letter-spacing: 0.04em;
+    padding: 16px 32px; border-radius: 12px;
+    box-shadow: 0 18px 50px -8px rgba(224, 41, 123, 0.65);
+    transform: rotate(-2deg);
   }
-  .brand { position:absolute; top:30px; right:30px; display:flex; align-items:center; gap:12px;
-    background: rgba(255,255,255,0.08); padding: 12px 20px; border-radius: 12px; backdrop-filter: blur(8px);
-    font-weight: 800; font-size: 22px;
+  .brand {
+    position: absolute; top: 24px; right: 24px; z-index: 3;
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(255,255,255,0.10); padding: 10px 18px;
+    border-radius: 10px; backdrop-filter: blur(8px);
+    font-weight: 800; font-size: 20px; letter-spacing: -0.01em;
+    border: 1px solid rgba(255,255,255,0.10);
   }
-  .brand img { width: 32px; height: 32px; }
+  .brand img { width: 26px; height: 26px; border-radius: 6px; }
 </style></head><body>
   <div class="brand"><img src="data:image/png;base64,${iconB64Twine}">twineconvert</div>
-  <div class="thumb-stage"><div class="hook">${hookText.replace(/</g, "&lt;")}</div></div>
+  <div class="left"><div class="emoji">${thumbEmoji}</div></div>
+  <div class="right">
+    <div class="hook">${hookText
+      .replace(/</g, "&lt;")
+      .split("\n")
+      .map((line, idx) => idx === 1 ? `<span class="accent">${line}</span>` : line)
+      .join("<br>")}</div>
+    <div class="badge">${thumbBadge}</div>
+  </div>
 </body></html>`;
 await thumbPage.setContent(thumbHtml);
 await thumbPage.waitForTimeout(800);
