@@ -622,3 +622,195 @@ describe("round-trip: 3D mesh OBJ ↔ 3MF", () => {
     expect(back.size).toBeGreaterThan(200);
   });
 });
+
+// ============================================================================
+// Color converters
+// ============================================================================
+//
+// HEX ↔ RGB is the only truly lossless 24-bit-precision pair.
+// Anything involving HSL/CMYK loses precision through rounding (HSL has
+// only 360 × 101 × 101 ≈ 3.7M discrete values vs HEX's 16.7M; CMYK is
+// 100^4 with K constraints ≈ 1M useful values). For lossy pairs we test
+// CONTENT preservation — pure black/white/red/green/blue should survive
+// any combination because they sit at corners of the color space where
+// rounding error doesn't accumulate.
+describe("round-trip: HEX ↔ RGB (truly bijective)", () => {
+  it("HEX → RGB → HEX preserves every value byte-for-byte", async () => {
+    const original = fileFromText("colors.txt", FIXTURES.hexList);
+    const rgb = await chain("hex-to-rgb", original);
+    const back = await chain("rgb-to-hex", rgb);
+    const text = await back.text();
+    // hexList has #FF0000 #00FF00 #0000FF #FFFFFF #000000
+    expect(text).toContain("#FF0000");
+    expect(text).toContain("#00FF00");
+    expect(text).toContain("#0000FF");
+    expect(text).toContain("#FFFFFF");
+    expect(text).toContain("#000000");
+  });
+
+  it("RGB → HEX → RGB preserves every value", async () => {
+    const original = fileFromText("colors.txt", FIXTURES.rgbList);
+    const hex = await chain("rgb-to-hex", original);
+    const back = await chain("hex-to-rgb", hex);
+    const text = await back.text();
+    expect(text).toContain("rgb(255, 0, 0)");
+    expect(text).toContain("rgb(0, 255, 0)");
+    expect(text).toContain("rgb(0, 0, 255)");
+    expect(text).toContain("rgb(255, 255, 255)");
+    expect(text).toContain("rgb(0, 0, 0)");
+  });
+});
+
+describe("round-trip: HEX ↔ HSL (lossy via rounding, corner colors survive)", () => {
+  it("HEX → HSL → HEX preserves pure red/green/blue/black/white", async () => {
+    const original = fileFromText("colors.txt", FIXTURES.hexList);
+    const hsl = await chain("hex-to-hsl", original);
+    const back = await chain("hsl-to-hex", hsl);
+    const text = await back.text();
+    // Corner colors round-trip exactly because they sit at HSL extremes
+    expect(text).toContain("#FF0000");
+    expect(text).toContain("#00FF00");
+    expect(text).toContain("#0000FF");
+    expect(text).toContain("#FFFFFF");
+    expect(text).toContain("#000000");
+  });
+});
+
+describe("round-trip: HEX ↔ CMYK (lossy, corner colors survive)", () => {
+  it("HEX → CMYK → HEX preserves pure RGB primaries + black + white", async () => {
+    const original = fileFromText("colors.txt", FIXTURES.hexList);
+    const cmyk = await chain("hex-to-cmyk", original);
+    const back = await chain("cmyk-to-hex", cmyk);
+    const text = await back.text();
+    expect(text).toContain("#FF0000");
+    expect(text).toContain("#00FF00");
+    expect(text).toContain("#0000FF");
+    expect(text).toContain("#FFFFFF");
+    expect(text).toContain("#000000");
+  });
+});
+
+describe("round-trip: RGB ↔ HSL ↔ RGB", () => {
+  it("RGB → HSL → RGB preserves corner values", async () => {
+    const original = fileFromText("colors.txt", FIXTURES.rgbList);
+    const hsl = await chain("rgb-to-hsl", original);
+    const back = await chain("hsl-to-rgb", hsl);
+    const text = await back.text();
+    expect(text).toContain("rgb(255, 0, 0)");
+    expect(text).toContain("rgb(0, 255, 0)");
+    expect(text).toContain("rgb(0, 0, 255)");
+  });
+});
+
+describe("round-trip: RGB ↔ CMYK ↔ RGB", () => {
+  it("RGB → CMYK → RGB preserves corner values", async () => {
+    const original = fileFromText("colors.txt", FIXTURES.rgbList);
+    const cmyk = await chain("rgb-to-cmyk", original);
+    const back = await chain("cmyk-to-rgb", cmyk);
+    const text = await back.text();
+    expect(text).toContain("rgb(255, 0, 0)");
+    expect(text).toContain("rgb(0, 255, 0)");
+    expect(text).toContain("rgb(0, 0, 255)");
+  });
+});
+
+// ============================================================================
+// Encoding/decoding — bijective for any byte sequence
+// ============================================================================
+describe("round-trip: text ↔ Base64 (truly bijective)", () => {
+  it("Text → Base64 → Text preserves UTF-8 content including emoji", async () => {
+    const original = fileFromText("input.txt", FIXTURES.encodingPlain);
+    const b64 = await chain("text-to-base64", original);
+    const back = await chain("base64-to-text", b64);
+    expect(await back.text()).toBe(FIXTURES.encodingPlain);
+  });
+
+  it("Base64 → Text → Base64 preserves the original encoded form", async () => {
+    const original = fileFromText("input.txt", FIXTURES.base64Sample);
+    const text = await chain("base64-to-text", original);
+    const back = await chain("text-to-base64", text);
+    // Should match exactly since both directions are deterministic
+    expect((await back.text()).trim()).toBe(FIXTURES.base64Sample.trim());
+  });
+});
+
+describe("round-trip: text ↔ URL-encoded", () => {
+  it("Text → URL-encoded → Text preserves UTF-8 content", async () => {
+    const original = fileFromText("input.txt", FIXTURES.encodingPlain);
+    const enc = await chain("text-to-url-encoded", original);
+    const back = await chain("url-encoded-to-text", enc);
+    expect(await back.text()).toBe(FIXTURES.encodingPlain);
+  });
+});
+
+describe("round-trip: text ↔ hex (bijective for any UTF-8 string)", () => {
+  it("Text → Hex → Text preserves content byte-for-byte", async () => {
+    const original = fileFromText("input.txt", FIXTURES.encodingPlain);
+    const hex = await chain("text-to-hex", original);
+    const back = await chain("hex-to-text", hex);
+    expect(await back.text()).toBe(FIXTURES.encodingPlain);
+  });
+
+  it("Hex → Text → Hex preserves the lowercase canonical hex form", async () => {
+    const original = fileFromText("input.txt", FIXTURES.hexSample);
+    const text = await chain("hex-to-text", original);
+    const back = await chain("text-to-hex", text);
+    expect((await back.text()).toLowerCase()).toBe(FIXTURES.hexSample.toLowerCase());
+  });
+});
+
+// ============================================================================
+// Geographic — content-preserving, not byte-bijective. Different formats
+// have different feature kinds (KML has polygons, GPX doesn't) and
+// different XML quirks (namespaces, attribute ordering).
+// ============================================================================
+describe("round-trip: KML ↔ GeoJSON", () => {
+  it("KML → GeoJSON → KML preserves point coordinates and names", async () => {
+    const original = fileFromText("test.kml", FIXTURES.kml, "application/vnd.google-earth.kml+xml");
+    const geo = await chain("kml-to-geojson", original);
+    const back = await chain("geojson-to-kml", geo);
+    const text = await back.text();
+    expect(text).toContain("Eiffel Tower");
+    expect(text).toContain("2.2945");
+    expect(text).toContain("48.8584");
+    expect(text).toContain("<kml");
+    expect(text).toContain("Sample track");
+  });
+
+  it("GeoJSON → KML → GeoJSON round-trips a FeatureCollection", async () => {
+    const original = fileFromText("test.geojson", FIXTURES.geojson, "application/geo+json");
+    const kml = await chain("geojson-to-kml", original);
+    const back = await chain("kml-to-geojson", kml);
+    const text = await back.text();
+    expect(text).toContain("FeatureCollection");
+    expect(text).toContain("Eiffel Tower");
+    expect(text).toContain("Sample track");
+  });
+});
+
+describe("round-trip: GPX ↔ GeoJSON", () => {
+  it("GPX → GeoJSON → GPX preserves waypoint and track", async () => {
+    const original = fileFromText("test.gpx", FIXTURES.gpx, "application/gpx+xml");
+    const geo = await chain("gpx-to-geojson", original);
+    const back = await chain("geojson-to-gpx", geo);
+    const text = await back.text();
+    expect(text).toContain("<gpx");
+    expect(text).toContain("Eiffel Tower");
+    expect(text).toContain("48.8584");
+    expect(text).toContain("Sample track");
+  });
+});
+
+describe("round-trip: KML ↔ GPX (lossy on polygons)", () => {
+  it("KML → GPX → KML preserves point + line; polygon becomes track", async () => {
+    const original = fileFromText("test.kml", FIXTURES.kml, "application/vnd.google-earth.kml+xml");
+    const gpx = await chain("kml-to-gpx", original);
+    const back = await chain("gpx-to-kml", gpx);
+    const text = await back.text();
+    // Eiffel Tower point survives via wpt
+    expect(text).toContain("Eiffel Tower");
+    expect(text).toContain("2.2945");
+    // The Sample track LineString survives via trk → LineString
+    expect(text).toContain("Sample track");
+  });
+});

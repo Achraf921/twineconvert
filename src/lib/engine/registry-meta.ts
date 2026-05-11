@@ -2536,6 +2536,315 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     ],
     "toMime": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     "maxFileSizeBytes": 52428800
+  },
+  "hex-to-rgb": {
+    "label": "HEX → RGB",
+    "accept": [
+      ".txt",
+      ".hex"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 2097152
+  },
+  "rgb-to-hex": {
+    "label": "RGB → HEX",
+    "accept": [
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 2097152
+  },
+  "hex-to-hsl": {
+    "label": "HEX → HSL",
+    "accept": [
+      ".txt",
+      ".hex"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 2097152
+  },
+  "hsl-to-hex": {
+    "label": "HSL → HEX",
+    "accept": [
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 2097152
+  },
+  "rgb-to-hsl": {
+    "label": "RGB → HSL",
+    "accept": [
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 2097152
+  },
+  "hsl-to-rgb": {
+    "label": "HSL → RGB",
+    "accept": [
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 2097152
+  },
+  "rgb-to-cmyk": {
+    "label": "RGB → CMYK",
+    "accept": [
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 2097152
+  },
+  "cmyk-to-rgb": {
+    "label": "CMYK → RGB",
+    "accept": [
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 2097152
+  },
+  "hex-to-cmyk": {
+    "label": "HEX → CMYK",
+    "accept": [
+      ".txt",
+      ".hex"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 2097152
+  },
+  "cmyk-to-hex": {
+    "label": "CMYK → HEX",
+    "accept": [
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 2097152
+  },
+  "text-to-base64": {
+    "label": "Text → Base64",
+    "accept": [
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 10485760
+  },
+  "base64-to-text": {
+    "label": "Base64 → Text",
+    "accept": [
+      ".txt",
+      ".b64"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 14680064
+  },
+  "text-to-url-encoded": {
+    "label": "Text → URL-encoded",
+    "accept": [
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 5242880
+  },
+  "url-encoded-to-text": {
+    "label": "URL-encoded → Text",
+    "accept": [
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 10485760
+  },
+  "text-to-hex": {
+    "label": "Text → Hex",
+    "accept": [
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 5242880
+  },
+  "hex-to-text": {
+    "label": "Hex → Text",
+    "accept": [
+      ".txt",
+      ".hex"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 10485760
+  },
+  "file-to-md5": {
+    "label": "File → MD5 checksum",
+    "accept": [
+      "*"
+    ],
+    "fromMime": [
+      "application/octet-stream",
+      "*/*"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 209715200
+  },
+  "file-to-sha1": {
+    "label": "File → SHA-1 checksum",
+    "accept": [
+      "*"
+    ],
+    "fromMime": [
+      "application/octet-stream",
+      "*/*"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 209715200
+  },
+  "file-to-sha256": {
+    "label": "File → SHA-256 checksum",
+    "accept": [
+      "*"
+    ],
+    "fromMime": [
+      "application/octet-stream",
+      "*/*"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 209715200
+  },
+  "file-to-sha512": {
+    "label": "File → SHA-512 checksum",
+    "accept": [
+      "*"
+    ],
+    "fromMime": [
+      "application/octet-stream",
+      "*/*"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 209715200
+  },
+  "kml-to-gpx": {
+    "label": "KML → GPX",
+    "accept": [
+      ".kml"
+    ],
+    "fromMime": [
+      "application/vnd.google-earth.kml+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "application/gpx+xml",
+    "maxFileSizeBytes": 20971520
+  },
+  "gpx-to-kml": {
+    "label": "GPX → KML",
+    "accept": [
+      ".gpx"
+    ],
+    "fromMime": [
+      "application/gpx+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "application/vnd.google-earth.kml+xml",
+    "maxFileSizeBytes": 20971520
+  },
+  "kml-to-geojson": {
+    "label": "KML → GeoJSON",
+    "accept": [
+      ".kml"
+    ],
+    "fromMime": [
+      "application/vnd.google-earth.kml+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "application/geo+json",
+    "maxFileSizeBytes": 20971520
+  },
+  "geojson-to-kml": {
+    "label": "GeoJSON → KML",
+    "accept": [
+      ".geojson",
+      ".json"
+    ],
+    "fromMime": [
+      "application/geo+json",
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "application/vnd.google-earth.kml+xml",
+    "maxFileSizeBytes": 20971520
+  },
+  "gpx-to-geojson": {
+    "label": "GPX → GeoJSON",
+    "accept": [
+      ".gpx"
+    ],
+    "fromMime": [
+      "application/gpx+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "application/geo+json",
+    "maxFileSizeBytes": 20971520
+  },
+  "geojson-to-gpx": {
+    "label": "GeoJSON → GPX",
+    "accept": [
+      ".geojson",
+      ".json"
+    ],
+    "fromMime": [
+      "application/geo+json",
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "application/gpx+xml",
+    "maxFileSizeBytes": 20971520
   }
 };
 

@@ -370,6 +370,40 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
 
   "edi-to-csv":     { provider: () => text("test.edi", F.ediX12, "application/edi-x12"), env: "node" },
   "edifact-to-csv": { provider: () => text("test.edi", F.edifact, "application/edifact"), env: "node" },
+
+  // ===== Color converters (pure text in/out, no deps) =====
+  "hex-to-rgb":  { provider: () => text("colors.txt", F.hexList), env: "node" },
+  "rgb-to-hex":  { provider: () => text("colors.txt", F.rgbList), env: "node" },
+  "hex-to-hsl":  { provider: () => text("colors.txt", F.hexList), env: "node" },
+  "hsl-to-hex":  { provider: () => text("colors.txt", F.hslList), env: "node" },
+  "rgb-to-hsl":  { provider: () => text("colors.txt", F.rgbList), env: "node" },
+  "hsl-to-rgb":  { provider: () => text("colors.txt", F.hslList), env: "node" },
+  "rgb-to-cmyk": { provider: () => text("colors.txt", F.rgbList), env: "node" },
+  "cmyk-to-rgb": { provider: () => text("colors.txt", F.cmykList), env: "node" },
+  "hex-to-cmyk": { provider: () => text("colors.txt", F.hexList), env: "node" },
+  "cmyk-to-hex": { provider: () => text("colors.txt", F.cmykList), env: "node" },
+
+  // ===== Encoding/decoding (browser-native btoa/atob + TextEncoder) =====
+  "text-to-base64":      { provider: () => text("input.txt", F.encodingPlain), env: "node" },
+  "base64-to-text":      { provider: () => text("input.txt", F.base64Sample), env: "node" },
+  "text-to-url-encoded": { provider: () => text("input.txt", F.encodingPlain), env: "node" },
+  "url-encoded-to-text": { provider: () => text("input.txt", F.urlEncodedSample), env: "node" },
+  "text-to-hex":         { provider: () => text("input.txt", F.encodingPlain), env: "node" },
+  "hex-to-text":         { provider: () => text("input.txt", F.hexSample), env: "node" },
+
+  // ===== File checksums (any binary works; reuse PNG fixture) =====
+  "file-to-md5":    { provider: makePngFixture, env: "node" },
+  "file-to-sha1":   { provider: makePngFixture, env: "node" },
+  "file-to-sha256": { provider: makePngFixture, env: "node" },
+  "file-to-sha512": { provider: makePngFixture, env: "node" },
+
+  // ===== Geographic (KML/GPX/GeoJSON, fast-xml-parser based) =====
+  "kml-to-gpx":     { provider: () => text("test.kml", F.kml, "application/vnd.google-earth.kml+xml"), env: "node" },
+  "gpx-to-kml":     { provider: () => text("test.gpx", F.gpx, "application/gpx+xml"), env: "node" },
+  "kml-to-geojson": { provider: () => text("test.kml", F.kml, "application/vnd.google-earth.kml+xml"), env: "node" },
+  "geojson-to-kml": { provider: () => text("test.geojson", F.geojson, "application/geo+json"), env: "node" },
+  "gpx-to-geojson": { provider: () => text("test.gpx", F.gpx, "application/gpx+xml"), env: "node" },
+  "geojson-to-gpx": { provider: () => text("test.geojson", F.geojson, "application/geo+json"), env: "node" },
 };
 
 /** True if we have any fixture for this id (even if it requires browser). */

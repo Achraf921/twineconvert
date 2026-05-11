@@ -618,6 +618,60 @@ export const validateVtt: Validator = async ({ blob, minSize = 20 }) => {
 };
 
 // ============================================================================
+// Geographic + integrity validators
+// ============================================================================
+
+export const validateKml: Validator = async ({ blob, minSize = 30 }) => {
+  assertMinSize(blob, minSize, "KML");
+  const text = await readText(blob);
+  if (!/<kml[\s>]/i.test(text)) throw new Error("KML missing <kml> root element");
+  if (!/<\/kml>/i.test(text)) throw new Error("KML missing closing </kml> tag");
+};
+
+export const validateGpx: Validator = async ({ blob, minSize = 30 }) => {
+  assertMinSize(blob, minSize, "GPX");
+  const text = await readText(blob);
+  if (!/<gpx[\s>]/i.test(text)) throw new Error("GPX missing <gpx> root element");
+  if (!/<\/gpx>/i.test(text)) throw new Error("GPX missing closing </gpx> tag");
+  // A useful GPX should have at least a wpt, trk, or rte child
+  if (!/<(wpt|trk|rte)\b/i.test(text)) {
+    throw new Error("GPX has no waypoint, track, or route");
+  }
+};
+
+export const validateGeoJson: Validator = async ({ blob, minSize = 20 }) => {
+  assertMinSize(blob, minSize, "GeoJSON");
+  const text = await readText(blob);
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(text);
+  } catch (e) {
+    throw new Error(`GeoJSON failed to parse: ${e instanceof Error ? e.message : String(e)}`);
+  }
+  const type = (parsed as { type?: string })?.type;
+  if (!["FeatureCollection", "Feature", "Point", "LineString", "Polygon"].includes(type ?? "")) {
+    throw new Error(`GeoJSON has invalid root type: ${type ?? "(missing)"}`);
+  }
+};
+
+/**
+ * Validate `md5sum`/`shasum` checksum line format: `<hex>  <filename>\n`.
+ * Hex length determines algorithm — 32=md5, 40=sha1, 64=sha256, 128=sha512.
+ */
+export const validateChecksum: Validator = async ({ blob, minSize = 35 }) => {
+  assertMinSize(blob, minSize, "Checksum");
+  const text = await readText(blob);
+  const m = text.match(/^([0-9a-f]+)\s\s\S/);
+  if (!m) {
+    throw new Error("Checksum output doesn't match `<hex>  <filename>` format");
+  }
+  const validLengths = [32, 40, 64, 128];
+  if (!validLengths.includes(m[1].length)) {
+    throw new Error(`Checksum hex length ${m[1].length} doesn't match md5/sha1/sha256/sha512`);
+  }
+};
+
+// ============================================================================
 // Validator dispatch, pick by output MIME or by filename extension fallback
 // ============================================================================
 
@@ -691,7 +745,9 @@ const BY_MIME: Record<string, Validator> = {
   "application/x-qif": validateQif,
   "application/x-adif": validateAdif,
   "application/mbox": validateMbox,
-  "application/vnd.google-earth.kml+xml": validateXml,
+  "application/vnd.google-earth.kml+xml": validateKml,
+  "application/gpx+xml": validateGpx,
+  "application/geo+json": validateGeoJson,
   "message/rfc822": validateEml,
 
   // YAML / TOML / Subtitle (defined above this map)
@@ -722,6 +778,13 @@ const BY_EXT: Record<string, Validator> = {
   cbr: validateCabrillo,
   cabrillo: validateCabrillo,
   ico: validateIco,
+  md5: validateChecksum,
+  sha1: validateChecksum,
+  sha256: validateChecksum,
+  sha512: validateChecksum,
+  kml: validateKml,
+  gpx: validateGpx,
+  geojson: validateGeoJson,
 };
 
 /**

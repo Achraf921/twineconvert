@@ -40,11 +40,12 @@ describe("registry integrity", () => {
     expect(typeof converter.convert).toBe("function");
   });
 
-  it("every accept extension starts with a dot", async () => {
+  it("every accept extension starts with a dot or is the wildcard '*'", async () => {
     for (const id of ids) {
       const converter = await loadConverter(id);
       for (const ext of converter.accept) {
-        expect(ext.startsWith("."), `${id} accept extension '${ext}' missing leading dot`).toBe(true);
+        const isValid = ext === "*" || ext.startsWith(".");
+        expect(isValid, `${id} accept entry '${ext}' must be '.ext' or '*'`).toBe(true);
       }
     }
   });

@@ -401,6 +401,106 @@ Best,
 Alice
 `,
 
+  // ---- Color converter fixtures (one value per line) ----
+  rgbList: `rgb(255, 0, 0)
+rgb(0, 255, 0)
+rgb(0, 0, 255)
+rgb(255, 255, 255)
+rgb(0, 0, 0)
+`,
+  hslList: `hsl(0, 100%, 50%)
+hsl(120, 100%, 50%)
+hsl(240, 100%, 50%)
+hsl(0, 0%, 100%)
+hsl(0, 0%, 0%)
+`,
+  cmykList: `cmyk(0%, 100%, 100%, 0%)
+cmyk(100%, 0%, 100%, 0%)
+cmyk(100%, 100%, 0%, 0%)
+cmyk(0%, 0%, 0%, 0%)
+cmyk(0%, 0%, 0%, 100%)
+`,
+
+  // ---- Encoding fixtures ----
+  // Plain UTF-8 with a non-ASCII char so we exercise the TextEncoder path
+  encodingPlain: "Hello, world! Café 🎵\n",
+  // Base64 of `Hello, world! Café 🎵\n` (UTF-8 encoded)
+  base64Sample: "SGVsbG8sIHdvcmxkISBDYWbDqSDwn461Cg==",
+  // URL-encoded form of `Hello, world! Café 🎵`
+  urlEncodedSample: "Hello%2C%20world!%20Caf%C3%A9%20%F0%9F%8E%B5%0A",
+  // Hex of "ABC" → 414243
+  hexSample: "48656c6c6f",
+
+  // ---- Geographic fixtures ----
+  // Minimal but real KML 2.2: one Placemark each of Point, LineString, Polygon
+  kml: `<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <Placemark>
+      <name>Eiffel Tower</name>
+      <description>Paris landmark</description>
+      <Point>
+        <coordinates>2.2945,48.8584,330</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Sample track</name>
+      <LineString>
+        <coordinates>2.2945,48.8584,0 2.3000,48.8600,0 2.3050,48.8620,0</coordinates>
+      </LineString>
+    </Placemark>
+    <Placemark>
+      <name>Triangle</name>
+      <Polygon>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>0,0 1,0 0,1 0,0</coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+  </Document>
+</kml>
+`,
+  // GPX 1.1: one waypoint, one track with a 3-point segment
+  gpx: `<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="test" xmlns="http://www.topografix.com/GPX/1/1">
+  <wpt lat="48.8584" lon="2.2945">
+    <ele>330</ele>
+    <name>Eiffel Tower</name>
+    <desc>Paris landmark</desc>
+  </wpt>
+  <trk>
+    <name>Sample track</name>
+    <trkseg>
+      <trkpt lat="48.8584" lon="2.2945"><ele>0</ele></trkpt>
+      <trkpt lat="48.8600" lon="2.3000"><ele>0</ele></trkpt>
+      <trkpt lat="48.8620" lon="2.3050"><ele>0</ele></trkpt>
+    </trkseg>
+  </trk>
+</gpx>
+`,
+  // GeoJSON FeatureCollection
+  geojson: `{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [2.2945, 48.8584, 330] },
+      "properties": { "name": "Eiffel Tower", "description": "Paris landmark" }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [[2.2945, 48.8584, 0], [2.3000, 48.8600, 0], [2.3050, 48.8620, 0]]
+      },
+      "properties": { "name": "Sample track" }
+    }
+  ]
+}
+`,
+
   // Minimal MusicXML (one note)
   musicXml: `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 3.1 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">

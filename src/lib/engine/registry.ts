@@ -534,6 +534,68 @@ export const registry: Record<string, ConverterLoader> = {
     import("./converters/html-to-docx").then((m) => m.default),
   "txt-to-docx": () =>
     import("./converters/txt-to-docx").then((m) => m.default),
+
+  // Color space conversions (pure math, no deps). Designers + devs.
+  "hex-to-rgb": () =>
+    import("./converters/hex-to-rgb").then((m) => m.default),
+  "rgb-to-hex": () =>
+    import("./converters/rgb-to-hex").then((m) => m.default),
+  "hex-to-hsl": () =>
+    import("./converters/hex-to-hsl").then((m) => m.default),
+  "hsl-to-hex": () =>
+    import("./converters/hsl-to-hex").then((m) => m.default),
+  "rgb-to-hsl": () =>
+    import("./converters/rgb-to-hsl").then((m) => m.default),
+  "hsl-to-rgb": () =>
+    import("./converters/hsl-to-rgb").then((m) => m.default),
+  "rgb-to-cmyk": () =>
+    import("./converters/rgb-to-cmyk").then((m) => m.default),
+  "cmyk-to-rgb": () =>
+    import("./converters/cmyk-to-rgb").then((m) => m.default),
+  "hex-to-cmyk": () =>
+    import("./converters/hex-to-cmyk").then((m) => m.default),
+  "cmyk-to-hex": () =>
+    import("./converters/cmyk-to-hex").then((m) => m.default),
+
+  // Encoding/decoding (TextEncoder + native btoa/atob). Devs + security pros.
+  "text-to-base64": () =>
+    import("./converters/text-to-base64").then((m) => m.default),
+  "base64-to-text": () =>
+    import("./converters/base64-to-text").then((m) => m.default),
+  "text-to-url-encoded": () =>
+    import("./converters/text-to-url-encoded").then((m) => m.default),
+  "url-encoded-to-text": () =>
+    import("./converters/url-encoded-to-text").then((m) => m.default),
+  "text-to-hex": () =>
+    import("./converters/text-to-hex").then((m) => m.default),
+  "hex-to-text": () =>
+    import("./converters/hex-to-text").then((m) => m.default),
+
+  // File checksums (crypto.subtle for SHA-*, spark-md5 for legacy MD5).
+  // Single-action: integrity verification, not bidirectional.
+  "file-to-md5": () =>
+    import("./converters/file-to-md5").then((m) => m.default),
+  "file-to-sha1": () =>
+    import("./converters/file-to-sha1").then((m) => m.default),
+  "file-to-sha256": () =>
+    import("./converters/file-to-sha256").then((m) => m.default),
+  "file-to-sha512": () =>
+    import("./converters/file-to-sha512").then((m) => m.default),
+
+  // Geographic/GIS formats (parser+emitter built on fast-xml-parser).
+  // Lossy on style/extension data, content-preserving on geometry.
+  "kml-to-gpx": () =>
+    import("./converters/kml-to-gpx").then((m) => m.default),
+  "gpx-to-kml": () =>
+    import("./converters/gpx-to-kml").then((m) => m.default),
+  "kml-to-geojson": () =>
+    import("./converters/kml-to-geojson").then((m) => m.default),
+  "geojson-to-kml": () =>
+    import("./converters/geojson-to-kml").then((m) => m.default),
+  "gpx-to-geojson": () =>
+    import("./converters/gpx-to-geojson").then((m) => m.default),
+  "geojson-to-gpx": () =>
+    import("./converters/geojson-to-gpx").then((m) => m.default),
 };
 
 /** All converter IDs, useful for sitemap generation later. */

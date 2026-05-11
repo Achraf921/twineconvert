@@ -135,6 +135,28 @@ const FORMATS = {
   sarif: { kind: "data", lossless: true, family: "security" },
   edi: { kind: "data", lossless: true, family: "b2b" },
   edifact: { kind: "data", lossless: true, family: "b2b" },
+  // ==== Color spaces (text formats, one value per line) ====
+  // HEX→RGB is the only truly bijective pair (8-bit precision both ways).
+  // HSL/CMYK round-trips lose precision at the corners → marked lossless
+  // false to keep the audit honest. Family is "color" so they don't collide
+  // with palette files (.ase/.gpl) which share an "image" family.
+  rgb: { kind: "color", lossless: true, family: "color" },
+  hsl: { kind: "color", lossless: false, family: "color" },
+  cmyk: { kind: "color", lossless: false, family: "color" },
+  // ==== Text encodings (bijective for any byte sequence) ====
+  text: { kind: "encoding", lossless: true, family: "encoding" },
+  base64: { kind: "encoding", lossless: true, family: "encoding" },
+  "url-encoded": { kind: "encoding", lossless: true, family: "encoding" },
+  // ==== Geographic ====
+  gpx: { kind: "data", lossless: true, family: "geo" },
+  geojson: { kind: "data", lossless: true, family: "geo" },
+  // ==== Checksums (single-action; declared so audit doesn't flag them) ====
+  md5: { kind: "checksum", lossless: false, family: "integrity" },
+  sha1: { kind: "checksum", lossless: false, family: "integrity" },
+  sha256: { kind: "checksum", lossless: false, family: "integrity" },
+  sha512: { kind: "checksum", lossless: false, family: "integrity" },
+  // `file` is the synthetic "any input" used by file-to-<hash>
+  file: { kind: "any", lossless: false, family: "any" },
 };
 
 // --------------------------------------------------------------------
@@ -183,6 +205,11 @@ const SINGLE_ACTION = new Set([
   "pgn-to-csv",
   "pgn-to-fen",
   "pgn-to-json",
+  // Cryptographic hashes are inherently one-way (file → digest)
+  "file-to-md5",
+  "file-to-sha1",
+  "file-to-sha256",
+  "file-to-sha512",
 ]);
 
 // --------------------------------------------------------------------

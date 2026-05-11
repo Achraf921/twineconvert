@@ -43,12 +43,17 @@ export async function run(
   // Validate input matches what the converter accepts. Check extension first
   // (cheap), then MIME type (browsers don't always populate type accurately
   // for HEIC etc., so extension is the primary signal).
+  // The literal "*" / "*/*" entries act as wildcards for converters like
+  // file-to-md5 that intentionally accept any input (hashes don't care
+  // about file format).
   const lowerName = input.name.toLowerCase();
-  const matchesExt = converter.accept.some((ext) =>
-    lowerName.endsWith(ext.toLowerCase()),
+  const matchesExt = converter.accept.some(
+    (ext) => ext === "*" || lowerName.endsWith(ext.toLowerCase()),
   );
   const matchesMime =
-    !input.type || converter.fromMime.includes(input.type.toLowerCase());
+    !input.type ||
+    converter.fromMime.includes("*/*") ||
+    converter.fromMime.includes(input.type.toLowerCase());
 
   if (!matchesExt && !matchesMime) {
     throw new UnsupportedInputError(
