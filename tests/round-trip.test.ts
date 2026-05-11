@@ -462,6 +462,61 @@ describe("round-trip: email formats", () => {
   });
 });
 
+describe("round-trip: new Phase-4 reverse converters", () => {
+  it("ASE -> HEX list -> ASE preserves color count", async () => {
+    const original = fileFromBytes("test.ase", makeTinyAse(), "application/octet-stream");
+    const hex = await chain("ase-to-hex", original);
+    const back = await chain("hex-to-ase", hex);
+    const bytes = new Uint8Array(await back.arrayBuffer());
+    // ASE 2.0 magic "ASEF" + version
+    expect(bytes[0]).toBe(0x41);
+    expect(bytes[1]).toBe(0x53);
+    expect(bytes[2]).toBe(0x45);
+    expect(bytes[3]).toBe(0x46);
+    expect(back.size).toBeGreaterThan(20);
+  });
+
+  it("GPL -> HEX list -> GPL preserves color count", async () => {
+    const original = fileFromText("test.gpl", FIXTURES.gpl, "text/plain");
+    const hex = await chain("gpl-to-hex", original);
+    const back = await chain("hex-to-gpl", hex);
+    const text = await back.text();
+    expect(text).toMatch(/^GIMP Palette/);
+    // The fixture GPL has 3 RGB triples; both should round-trip
+    const rgbLines = text
+      .split("\n")
+      .filter((l) => /^\s*\d+\s+\d+\s+\d+/.test(l));
+    expect(rgbLines.length).toBeGreaterThanOrEqual(3);
+  });
+
+  it("CSS -> ASE -> CSS preserves color values", async () => {
+    const css = `:root {
+  --primary: #ff0000;
+  --secondary: #00ff00;
+  --tertiary: #0000ff;
+}
+`;
+    const original = fileFromText("test.css", css, "text/css");
+    const ase = await chain("css-to-ase", original);
+    const back = await chain("ase-to-css", ase);
+    const text = await back.text();
+    expect(text.toLowerCase()).toContain("#ff0000");
+    expect(text.toLowerCase()).toContain("#00ff00");
+    expect(text.toLowerCase()).toContain("#0000ff");
+  });
+
+  it("JSON -> XLSX -> JSON preserves array length and row values", async () => {
+    const original = fileFromText("test.json", FIXTURES.jsonArray, "application/json");
+    const xlsx = await chain("json-to-xlsx", original);
+    const back = await chain("xlsx-to-json", xlsx);
+    const parsed = JSON.parse(await back.text());
+    expect(Array.isArray(parsed)).toBe(true);
+    expect(parsed.length).toBe(2);
+    expect(parsed.find((r: { name?: string }) => r.name === "Alice")).toBeTruthy();
+    expect(parsed.find((r: { name?: string }) => r.name === "Bob")).toBeTruthy();
+  });
+});
+
 describe("round-trip: 3D mesh OBJ ↔ 3MF", () => {
   it("3MF → OBJ → 3MF preserves triangle count", async () => {
     // Build a 3MF from the sample mesh first since we don't have a

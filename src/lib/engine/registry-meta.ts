@@ -650,6 +650,18 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "text/csv",
     "maxFileSizeBytes": 52428800
   },
+  "json-to-xlsx": {
+    "label": "JSON → XLSX",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "maxFileSizeBytes": 52428800
+  },
   "epub-to-text": {
     "label": "EPUB → Text",
     "accept": [
@@ -1651,6 +1663,40 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "text/plain"
     ],
     "toMime": "text/plain",
+    "maxFileSizeBytes": 5242880
+  },
+  "ase-to-hex": {
+    "label": "ASE → HEX list",
+    "accept": [
+      ".ase"
+    ],
+    "fromMime": [
+      "application/octet-stream"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 5242880
+  },
+  "gpl-to-hex": {
+    "label": "GPL → HEX list",
+    "accept": [
+      ".gpl"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 5242880
+  },
+  "css-to-ase": {
+    "label": "CSS → ASE",
+    "accept": [
+      ".css"
+    ],
+    "fromMime": [
+      "text/css",
+      "text/plain"
+    ],
+    "toMime": "application/octet-stream",
     "maxFileSizeBytes": 5242880
   },
   "stl-to-3mf": {

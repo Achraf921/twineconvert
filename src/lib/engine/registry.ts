@@ -154,6 +154,8 @@ export const registry: Record<string, ConverterLoader> = {
     import("./converters/csv-to-json").then((m) => m.default),
   "json-to-csv": () =>
     import("./converters/json-to-csv").then((m) => m.default),
+  "json-to-xlsx": () =>
+    import("./converters/json-to-xlsx").then((m) => m.default),
 
   // EPUB, JSZip + DOMParser (lighter than epubjs for headless extraction)
   "epub-to-text": () =>
@@ -354,6 +356,12 @@ export const registry: Record<string, ConverterLoader> = {
     import("./converters/hex-to-ase").then((m) => m.default),
   "hex-to-gpl": () =>
     import("./converters/hex-to-gpl").then((m) => m.default),
+  "ase-to-hex": () =>
+    import("./converters/ase-to-hex").then((m) => m.default),
+  "gpl-to-hex": () =>
+    import("./converters/gpl-to-hex").then((m) => m.default),
+  "css-to-ase": () =>
+    import("./converters/css-to-ase").then((m) => m.default),
 
   // 3D printing, STL/OBJ ↔ 3MF (the modern Bambu/Prusa container)
   "stl-to-3mf": () =>

@@ -313,7 +313,74 @@ export function buildAco(palette: Palette): ArrayBuffer {
   return buf;
 }
 
-// ---- CSS variables (output only) --------------------------------------
+// ---- HEX list output (reverse of parseHexList) -----------------------
+
+/**
+ * Serialize a palette as a flat list of hex codes, one per line.
+ * Color names are preserved as inline `; <name>` comments so a round
+ * trip through ASE/GPL doesn't strip them.
+ */
+export function buildHexList(palette: Palette): string {
+  const lines: string[] = [];
+  for (const c of palette.colors) {
+    const hex = toHex(c);
+    lines.push(c.name ? `${hex} ; ${c.name}` : hex);
+  }
+  return lines.join("\n") + "\n";
+}
+
+// ---- CSS variables ----------------------------------------------------
+
+/**
+ * Parse colors out of a CSS file. Recognizes:
+ *   - CSS custom properties:  --primary: #ff0000;
+ *   - Inline color values:    color: #ff0000;
+ *   - rgb()/rgba() functional notation
+ *
+ * Any stylesheet that declares colors is fair game; we extract every
+ * hex/rgb value and treat them as a flat palette. Names come from
+ * the surrounding custom-property declaration when available.
+ */
+export function parseCss(text: string): Palette {
+  const colors: Color[] = [];
+  const seen = new Set<string>();
+  let unnamedIdx = 1;
+
+  for (const rawLine of text.split(/\r?\n/)) {
+    const line = rawLine.trim();
+    if (!line || line.startsWith("/*")) continue;
+
+    const customPropMatch = line.match(/^--([\w-]+)\s*:\s*/);
+    const baseName = customPropMatch ? customPropMatch[1] : null;
+
+    // Hex codes (3 or 6 digit)
+    const hexMatches = line.matchAll(/#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})\b/g);
+    for (const m of hexMatches) {
+      let hex = m[1];
+      if (hex.length === 3) hex = hex.split("").map((c) => c + c).join("");
+      const r = parseInt(hex.slice(0, 2), 16);
+      const g = parseInt(hex.slice(2, 4), 16);
+      const b = parseInt(hex.slice(4, 6), 16);
+      const key = `${r},${g},${b}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      colors.push({ r, g, b, name: baseName ?? `color-${unnamedIdx++}` });
+    }
+
+    // rgb()/rgba() functional notation
+    const rgbMatches = line.matchAll(/rgba?\(\s*(\d+)\s*[, ]\s*(\d+)\s*[, ]\s*(\d+)/g);
+    for (const m of rgbMatches) {
+      const r = parseInt(m[1], 10);
+      const g = parseInt(m[2], 10);
+      const b = parseInt(m[3], 10);
+      const key = `${r},${g},${b}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      colors.push({ r, g, b, name: baseName ?? `color-${unnamedIdx++}` });
+    }
+  }
+  return { colors };
+}
 
 export function buildPaletteCss(palette: Palette): string {
   const lines = [":root {"];

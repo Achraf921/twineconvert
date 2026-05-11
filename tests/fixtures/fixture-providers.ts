@@ -195,6 +195,7 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "csv-to-gedcom": { provider: () => text("test.csv", F.genericCsv, "text/csv"), env: "node" },
   "csv-to-adif":   { provider: () => text("test.csv", F.bankCsv, "text/csv"), env: "node" },
   "json-to-csv":   { provider: () => text("test.json", F.jsonArray, "application/json"), env: "node" },
+  "json-to-xlsx":  { provider: () => text("test.json", F.jsonArray, "application/json"), env: "node" },
   "json-to-gedcom":{ provider: () => text("test.json", `{"individuals":[{"id":"I1","name":"John /Smith/","sex":"M","familyAsSpouse":[]}]}`, "application/json"), env: "node" },
   "xlsx-to-csv":   { provider: async () => fileFromBytes("test.xlsx", await makeTinyXlsx(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"), env: "node" },
   "xlsx-to-json":  { provider: async () => fileFromBytes("test.xlsx", await makeTinyXlsx(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"), env: "node" },
@@ -300,6 +301,9 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "gpl-to-aco":  { provider: () => text("test.gpl", F.gpl), env: "node" },
   "hex-to-ase":  { provider: () => text("test.txt", F.hexList), env: "node" },
   "hex-to-gpl":  { provider: () => text("test.txt", F.hexList), env: "node" },
+  "ase-to-hex":  { provider: makeAseFixture, env: "node" },
+  "gpl-to-hex":  { provider: () => text("test.gpl", F.gpl), env: "node" },
+  "css-to-ase":  { provider: () => text("test.css", ":root {\n  --primary: #ff0000;\n  --secondary: #00ff00;\n  --tertiary: #0000ff;\n}\n", "text/css"), env: "node" },
 
   "cube-to-3dl": { provider: () => text("test.cube", F.cubeLut), env: "node" },
   "cube-to-csp": { provider: () => text("test.cube", F.cubeLut), env: "node" },
