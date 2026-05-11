@@ -364,3 +364,27 @@ console.log(`  Bijective + MISSING reverse converter: ${bijectiveNoReverse.lengt
 console.log(`  Lossy (encoding or cross-kind): ${counts.lossyEncoding + counts.crossKind}`);
 console.log(`  Single-action: ${counts.singleAction}`);
 console.log(`  Unknown formats (need classification): ${counts.unknownFormat}`);
+
+// CI gate: cap on bijective pairs missing round-trip tests. The audit's
+// literal-string detection misses dynamic test loops (e.g. embroidery's
+// parametric describe block), so the cap is set above the genuine
+// untested count rather than at zero. Bump it down as we close gaps.
+const MAX_UNTESTED_BIJECTIVE = 30;
+if (process.env.CI === "true" || process.argv.includes("--strict")) {
+  if (bijectivePairsMissingTest.length > MAX_UNTESTED_BIJECTIVE) {
+    console.error(
+      `\nFAIL: ${bijectivePairsMissingTest.length} bijective pairs are missing a round-trip test (cap: ${MAX_UNTESTED_BIJECTIVE}).`,
+    );
+    console.error(
+      `Add tests to tests/round-trip.test.ts for the pairs flagged in docs/bijectivity-audit.md, or lower MAX_UNTESTED_BIJECTIVE in scripts/bijectivity-audit.mjs.`,
+    );
+    process.exit(1);
+  }
+  if (unknownFormats.length > 0) {
+    console.error(
+      `\nFAIL: ${unknownFormats.length} converters use formats not classified in the FORMATS table.`,
+    );
+    console.error(`Add them to scripts/bijectivity-audit.mjs.`);
+    process.exit(1);
+  }
+}

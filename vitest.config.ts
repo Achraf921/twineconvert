@@ -34,6 +34,18 @@ export default defineConfig({
       reporter: ["text", "html", "json-summary"],
       include: ["src/lib/engine/**"],
       exclude: ["src/lib/engine/types.ts"],
+      // Coverage floor enforced in CI. Set just below current numbers
+      // so the build breaks on regressions but isn't fragile on noise.
+      // Function coverage is high because we exercise every converter
+      // via the comprehensive test loop; branch coverage is lower
+      // because many converters have error paths that need genuinely
+      // broken inputs to hit. Bump these as coverage rises.
+      thresholds: {
+        statements: 65,
+        lines: 65,
+        functions: 75,
+        branches: 45,
+      },
     },
   },
   resolve: {

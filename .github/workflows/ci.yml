@@ -29,9 +29,28 @@ jobs:
       - name: TypeScript --noEmit
         run: npx tsc --noEmit
 
-  # Unit + round-trip + fuzz tests, covers ~190 converters across 4 layers
+  # Bijectivity gate. Re-runs the audit and fails the build if the count
+  # of bijective pairs missing a round-trip test exceeds the cap baked
+  # into scripts/bijectivity-audit.mjs. Cheap (no test execution, just a
+  # static scan), runs in parallel with the heavier test job.
+  audit:
+    name: Bijectivity audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "npm"
+      - run: npm ci
+      - name: Run bijectivity audit (strict)
+        run: node scripts/bijectivity-audit.mjs --strict
+
+  # Unit + round-trip + fuzz tests, covers ~196 converters across 5 layers
   # of validation (registry integrity, real-file conversion, structural
-  # output validation, round-trip equivalence, adversarial fuzz).
+  # output validation, round-trip equivalence, content preservation,
+  # adversarial fuzz).
   test:
     name: Unit + round-trip + fuzz tests
     runs-on: ubuntu-latest
