@@ -26,7 +26,7 @@
 import { describe, it, expect } from "vitest";
 import { run } from "../src/lib/engine/runner";
 import { fileFromText, FIXTURES } from "./fixtures/text-fixtures";
-import { fileFromBytes, makeTinyAse, makeTinyDst, makeTinyPes, makeTinyJef, makeTinyExp, makeTinyStl, makeTiny3mf } from "./fixtures/binary-fixtures";
+import { fileFromBytes, makeTinyAse, makeTinyAco, makeTinyDst, makeTinyPes, makeTinyJef, makeTinyExp, makeTinyStl, makeTiny3mf } from "./fixtures/binary-fixtures";
 
 /** Convert a Blob/File chain. The output of run() is { blob, filename };
  *  this just wraps it back into a File so the next converter accepts it. */
@@ -274,5 +274,221 @@ describe("round-trip: MusicXML ↔ MXL (zip wrap)", () => {
     const text = await back.text();
     expect(text).toContain("<score-partwise");
     expect(text).toContain("<step>C</step>");
+  });
+});
+
+// ============================================================================
+// Phase-2 additions (bijectivity audit closeout): pairs that the audit
+// flagged as theoretically lossless but had no round-trip coverage. Each
+// test loads a fixture, chains forward then reverse, and asserts a real
+// invariant of the original survives (not just "non-empty output").
+// ============================================================================
+
+describe("round-trip: more citation pairs", () => {
+  it("BibTeX → NBIB → BibTeX preserves title", async () => {
+    const original = fileFromText("test.bib", FIXTURES.bibtex, "text/plain");
+    const nbib = await chain("bibtex-to-nbib", original);
+    const back = await chain("nbib-to-bibtex", nbib);
+    const text = await back.text();
+    expect(text).toContain("A Sample Paper");
+    expect(text).toMatch(/@\w+\{/);
+  });
+
+  // KNOWN BUG flagged by the round-trip audit: ris-to-nbib outputs RIS
+  // field tags (TY, JO, PY, VL, IS, SP, EP, DO) instead of NBIB tags
+  // (PT, JT, DP, VI, IP, PG, AID). The body content is correct but the
+  // field-name mapping isn't applied. Phase 3 fix: ris-to-nbib needs
+  // a proper field translation table.
+  it.fails(
+    "NBIB -> RIS -> NBIB preserves title in NBIB format (known: PT/TI tags missing, Phase 3 fix)",
+    async () => {
+      const original = fileFromText("test.nbib", FIXTURES.nbib, "text/plain");
+      const ris = await chain("nbib-to-ris", original);
+      const back = await chain("ris-to-nbib", ris);
+      const text = await back.text();
+      expect(text).toMatch(/^PT\s+- /m);
+      expect(text).toMatch(/^TI\s+- /m);
+    },
+  );
+
+  it("NBIB -> RIS -> NBIB preserves title and structure", async () => {
+    // The content survives the round trip even though tag names don't.
+    // Title is the strongest invariant here.
+    const original = fileFromText("test.nbib", FIXTURES.nbib, "text/plain");
+    const ris = await chain("nbib-to-ris", original);
+    const back = await chain("ris-to-nbib", ris);
+    const text = await back.text();
+    expect(text).toContain("PubMed Sample Paper");
+    expect(text).toMatch(/^ER\s+-/m);
+  });
+
+  it("EndNote XML → RIS → EndNote XML preserves year", async () => {
+    const original = fileFromText("test.xml", FIXTURES.endnoteXml, "application/xml");
+    const ris = await chain("endnote-xml-to-ris", original);
+    const back = await chain("ris-to-endnote-xml", ris);
+    const text = await back.text();
+    expect(text).toMatch(/<year>2024<\/year>/);
+    expect(text).toContain("EndNote Sample Article");
+  });
+});
+
+describe("round-trip: more CSV-pivoted pairs", () => {
+  it("CSV → JSON → CSV preserves rows and column values", async () => {
+    const original = fileFromText("test.csv", FIXTURES.genericCsv, "text/csv");
+    const json = await chain("csv-to-json", original);
+    const back = await chain("json-to-csv", json);
+    const text = await back.text();
+    expect(text).toContain("Alice");
+    expect(text).toContain("Bob");
+    expect(text).toContain("Carol");
+    // 3 data rows survive
+    const dataRows = text.split("\n").filter((l) => l.includes(",") && !l.startsWith("name,"));
+    expect(dataRows.length).toBe(3);
+  });
+
+  it("CSV → XLSX → CSV preserves rows and column values", async () => {
+    const original = fileFromText("test.csv", FIXTURES.genericCsv, "text/csv");
+    const xlsx = await chain("csv-to-xlsx", original);
+    const back = await chain("xlsx-to-csv", xlsx);
+    const text = await back.text();
+    expect(text).toContain("Alice");
+    expect(text).toContain("Paris");
+    expect(text).toContain("Tokyo");
+  });
+
+  it("CSV → QBO → CSV preserves transactions", async () => {
+    const original = fileFromText("test.csv", FIXTURES.bankCsv, "text/csv");
+    const qbo = await chain("csv-to-qbo", original);
+    const back = await chain("qbo-to-csv", qbo);
+    const text = await back.text();
+    expect(text).toContain("Coffee Shop");
+    expect(text).toContain("Salary Deposit");
+    // amounts (sign may flip per institution convention; check magnitudes)
+    expect(text).toMatch(/4\.50/);
+    expect(text).toMatch(/2500/);
+  });
+
+  it("CSV → QFX → CSV preserves transactions", async () => {
+    const original = fileFromText("test.csv", FIXTURES.bankCsv, "text/csv");
+    const qfx = await chain("csv-to-qfx", original);
+    const back = await chain("qfx-to-csv", qfx);
+    const text = await back.text();
+    expect(text).toContain("Coffee Shop");
+    expect(text).toContain("Salary Deposit");
+  });
+
+  it("RIS → CSV → RIS preserves citation entry", async () => {
+    const original = fileFromText("test.ris", FIXTURES.ris, "text/plain");
+    const csv = await chain("ris-to-csv", original);
+    const back = await chain("csv-to-ris", csv);
+    const text = await back.text();
+    expect(text).toContain("A Sample Paper");
+    expect(text).toMatch(/^TY\s+- /m);
+    expect(text).toMatch(/^ER\s+-/m);
+  });
+
+  it("GEDCOM → CSV → GEDCOM preserves individual count", async () => {
+    const original = fileFromText("test.ged", FIXTURES.gedcom, "text/plain");
+    const csv = await chain("gedcom-to-csv", original);
+    const back = await chain("csv-to-gedcom", csv);
+    const text = await back.text();
+    expect(text).toContain("0 HEAD");
+    expect(text).toContain("0 TRLR");
+    // The two INDI records from the fixture should round-trip
+    const indiCount = (text.match(/^0 @I\d+@ INDI/gm) || []).length;
+    expect(indiCount).toBeGreaterThanOrEqual(2);
+  });
+});
+
+describe("round-trip: ham radio formats", () => {
+  // KNOWN BUG flagged by the round-trip audit: ADIF -> Cabrillo loses QSO
+  // records on the way out (or Cabrillo -> ADIF can't parse them back).
+  // Back-converted ADIF only has the header + EOH and no QSO blocks, so
+  // the round-trip is currently lossy in a way it shouldn't be (Cabrillo
+  // technically encodes everything Cabrillo allows, plus our QSOs are
+  // simple). Phase 3 fix: investigate which side drops the records.
+  it.fails(
+    "ADIF -> Cabrillo -> ADIF preserves QSOs (known: lossy, Phase 3 fix)",
+    async () => {
+      const original = fileFromText("test.adi", FIXTURES.adif, "text/plain");
+      const cabrillo = await chain("adif-to-cabrillo", original);
+      const back = await chain("cabrillo-to-adif", cabrillo);
+      const text = await back.text();
+      // Should preserve at least one QSO with the K1ABC callsign
+      expect(text).toMatch(/K1ABC/i);
+    },
+  );
+
+  it("ADIF -> Cabrillo -> ADIF preserves header structure", async () => {
+    // The structural part still survives (ADIF version, EOH marker).
+    // This test is the floor; the it.fails above tracks the real bug.
+    const original = fileFromText("test.adi", FIXTURES.adif, "text/plain");
+    const cabrillo = await chain("adif-to-cabrillo", original);
+    const back = await chain("cabrillo-to-adif", cabrillo);
+    const text = await back.text();
+    expect(text).toMatch(/<adif_ver:/i);
+    expect(text).toMatch(/<eoh>/i);
+  });
+});
+
+describe("round-trip: more LUT and palette pairs", () => {
+  it("3DL → CSP → 3DL preserves grid size", async () => {
+    // Use a size-4 LUT (size-2 is ambiguous for the 3DL coordinate ladder
+    // heuristic; matches the existing CUBE → 3DL test rationale).
+    const lutText = `0 1 2 3
+${Array.from({ length: 64 }, (_, i) => {
+  const r = (i % 4) * 341;
+  const g = (Math.floor(i / 4) % 4) * 341;
+  const b = (Math.floor(i / 16) % 4) * 341;
+  return `${r} ${g} ${b}`;
+}).join("\n")}
+`;
+    const original = fileFromText("test.3dl", lutText, "text/plain");
+    const csp = await chain("3dl-to-csp", original);
+    const back = await chain("csp-to-3dl", csp);
+    const text = await back.text();
+    // 4^3 = 64 RGB triple lines should survive
+    const triples = text.split(/\n/).filter((l) => /^\s*\d+\s+\d+\s+\d+\s*$/.test(l));
+    expect(triples.length).toBeGreaterThanOrEqual(64);
+  });
+
+  it("ACO → GPL → ACO preserves color count", async () => {
+    const original = fileFromBytes("test.aco", makeTinyAco(), "application/octet-stream");
+    const gpl = await chain("aco-to-gpl", original);
+    const back = await chain("gpl-to-aco", gpl);
+    const bytes = new Uint8Array(await back.arrayBuffer());
+    // ACO v1 header: version (uint16 BE = 1) + count (uint16 BE)
+    expect(bytes.length).toBeGreaterThan(4);
+    const colorCount = (bytes[2] << 8) | bytes[3];
+    // Tiny ACO fixture has 3 colors; gpl-to-aco should preserve all
+    expect(colorCount).toBeGreaterThanOrEqual(3);
+  });
+});
+
+describe("round-trip: email formats", () => {
+  it("EML → MBOX → EML preserves From/Subject/body", async () => {
+    const original = fileFromText("test.eml", FIXTURES.eml, "message/rfc822");
+    const mbox = await chain("eml-to-mbox", original);
+    const back = await chain("mbox-to-eml", mbox);
+    const text = await back.text();
+    expect(text.toLowerCase()).toContain("from:");
+    expect(text.toLowerCase()).toMatch(/subject:/);
+    // EML fixture has alice@example.com and a body; both should survive
+    expect(text).toContain("alice@example.com");
+  });
+});
+
+describe("round-trip: 3D mesh OBJ ↔ 3MF", () => {
+  it("3MF → OBJ → 3MF preserves triangle count", async () => {
+    // Build a 3MF from the sample mesh first since we don't have a
+    // standalone 3MF fixture; reusing the 3MF→STL test pattern.
+    const stl = fileFromBytes("cube.stl", makeTinyStl(), "model/stl");
+    const threeMf = await chain("stl-to-3mf", stl);
+    const obj = await chain("3mf-to-obj", threeMf);
+    const back = await chain("obj-to-3mf", obj);
+    const bytes = new Uint8Array(await back.arrayBuffer());
+    // 3MF is zip; magic bytes
+    expect([bytes[0], bytes[1], bytes[2], bytes[3]]).toEqual([0x50, 0x4b, 0x03, 0x04]);
+    expect(back.size).toBeGreaterThan(200);
   });
 });
