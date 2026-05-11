@@ -1,86 +1,60 @@
 {
   "tool": "heic-to-jpg",
-  "title": "Convert HEIC to JPG without uploading anything",
-  "thumbnailHook": "HEIC PHOTOS\nARE A TRAP",
+  "title": "How to convert iPhone HEIC photos to JPG (free, in your browser)",
+  "thumbnailHook": "iPhone Photo\nWon't Open?",
   "segments": [
     {
-      "voice": "Your iPhone takes photos in HEIC.",
+      "voice": "Got an iPhone photo that won't open on your Windows PC or Mac?",
       "scene": {
-        "type": "logo-text",
-        "logos": [{ "src": "iphone.png", "label": "iPhone" }],
-        "headline": "HEIC",
-        "sub": "the default photo format since iOS 11"
+        "type": "emoji-text",
+        "emoji": "🤔",
+        "headline": "Won't open?",
+        "sub": "iPhone photo on Windows or Mac"
       }
     },
     {
-      "voice": "It's smaller than JPG. It's also broken everywhere outside Apple.",
+      "voice": "It's because iPhones save photos in a special format called HEIC.",
       "scene": {
-        "type": "fail-list",
-        "headline": "Where HEIC breaks",
-        "items": [
-          "Email attachments",
-          "Job applications",
-          "Sharing with non-iPhone family"
-        ]
+        "type": "emoji-text",
+        "emoji": "📱",
+        "headline": "It's HEIC.",
+        "sub": "Apple's photo format since 2017"
       }
     },
     {
-      "voice": "The fix? Convert to JPG.",
+      "voice": "The fix is converting them to JPG. Then they open anywhere.",
+      "scene": {
+        "type": "emoji-text",
+        "emoji": "✨",
+        "headline": "Convert to JPG",
+        "sub": "works on every device"
+      }
+    },
+    {
+      "voice": "Here's the easiest way. Free. No signup. Nothing to install.",
       "scene": {
         "type": "centered-headline",
-        "headline": "Convert to JPG",
-        "sub": "universally readable. zero compatibility issues."
+        "headline": "Free. No signup.\nNo install.",
+        "sub": "everything happens in your browser"
       }
     },
     {
-      "voice": "Smallpdf. CloudConvert. iLovePDF. They all want to upload your photos to their servers first.",
+      "voice": "Go to twineconvert dot com slash heic to jpg.",
       "scene": {
-        "type": "logo-row",
-        "logos": [
-          { "src": "smallpdf.png", "label": "Smallpdf" },
-          { "src": "cloudconvert.png", "label": "CloudConvert" },
-          { "src": "ilovepdf.png", "label": "iLovePDF" }
-        ],
-        "headline": "All upload your file."
+        "type": "url-card",
+        "url": "twineconvert.com/heic-to-jpg"
       }
     },
     {
-      "voice": "Your face. Your kids. Sitting on someone else's hard drive.",
-      "scene": {
-        "type": "warning",
-        "headline": "On someone\nelse's server."
-      }
+      "voice": "Drop your photo. Click convert. Download your JPG. Done.",
+      "scene": { "type": "demo-recording" }
     },
     {
-      "voice": "We built twineconvert.",
-      "scene": {
-        "type": "logo-text",
-        "logos": [{ "src": "twineconvert.png", "label": "twineconvert" }],
-        "headline": "Built different.",
-        "sub": "drop, convert, done"
-      }
-    },
-    {
-      "voice": "Drop the file. Hit convert. Watch this.",
-      "scene": {
-        "type": "demo-recording"
-      }
-    },
-    {
-      "voice": "All in your browser. Powered by WebAssembly. Your photo never touches a server.",
-      "scene": {
-        "type": "logo-text",
-        "logos": [{ "src": "webassembly.png", "label": "WebAssembly" }],
-        "headline": "100% in your browser.",
-        "sub": "no upload. no server. no leak."
-      }
-    },
-    {
-      "voice": "twineconvert dot com slash heic to jpg. Stop uploading your photos.",
+      "voice": "Your photo stays on your computer the whole time. Try it.",
       "scene": {
         "type": "cta",
         "url": "twineconvert.com/heic-to-jpg",
-        "tagline": "Stop uploading your photos."
+        "tagline": "Free. Easy. Private."
       }
     }
   ]

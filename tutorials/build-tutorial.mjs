@@ -200,8 +200,33 @@ function renderScene(scene) {
   if (t === "centered-headline") {
     return `
       <div class="stage">
-        <div class="h1 accent">${scene.headline}</div>
+        <div class="h1 accent" style="white-space:pre-line">${scene.headline}</div>
         ${scene.sub ? `<div class="sub">${scene.sub}</div>` : ""}
+      </div>
+    `;
+  }
+
+  if (t === "emoji-text") {
+    return `
+      <div class="stage">
+        <div style="font-size:340px;line-height:1;margin-bottom:30px;
+                    font-family:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif">
+          ${scene.emoji}
+        </div>
+        <div class="h1 accent" style="white-space:pre-line">${scene.headline}</div>
+        ${scene.sub ? `<div class="sub">${scene.sub}</div>` : ""}
+      </div>
+    `;
+  }
+
+  if (t === "url-card") {
+    return `
+      <div class="stage">
+        <div style="font-size:80px;font-weight:700;color:rgba(255,255,255,0.4);
+                    margin-bottom:30px;letter-spacing:-0.02em">Visit:</div>
+        <div class="pill" style="font-size:72px;padding:36px 80px;border-radius:24px">
+          ${scene.url}
+        </div>
       </div>
     `;
   }
