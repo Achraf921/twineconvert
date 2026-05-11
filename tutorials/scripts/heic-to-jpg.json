@@ -1,0 +1,37 @@
+{
+  "tool": "heic-to-jpg",
+  "title": "Convert HEIC to JPG without uploading anything",
+  "thumbnailHook": "HEIC PHOTOS\nARE A TRAP",
+  "segments": [
+    {
+      "voice": "Your iPhone takes photos in HEIC. Apple thought this was great. Email recipients disagree.",
+      "overlay": "HEIC. Why?",
+      "screenshot": "homepage"
+    },
+    {
+      "voice": "HEIC files are smaller than JPG, but barely anything outside Apple's ecosystem can open them. Try uploading one to a job application form.",
+      "overlay": "Outside Apple = broken",
+      "screenshot": "homepage"
+    },
+    {
+      "voice": "The fix is converting to JPG. The popular tools, Smallpdf, CloudConvert, iLovePDF, all want to upload your photos to their servers first. Your face. Your kids. Sitting on someone else's hard drive.",
+      "overlay": "Upload? No thanks.",
+      "screenshot": "homepage"
+    },
+    {
+      "voice": "So we built twineconvert. Drop your HEIC here. Hit convert. Done. The whole thing runs in your browser via WebAssembly.",
+      "overlay": "100% in your browser",
+      "screenshot": "tool-idle"
+    },
+    {
+      "voice": "No upload. No signup. No file size limit. Your photo never leaves your device.",
+      "overlay": "Nothing uploaded",
+      "screenshot": "tool-converting"
+    },
+    {
+      "voice": "Try it now at twineconvert dot com slash heic to jpg.",
+      "overlay": "twineconvert.com/heic-to-jpg",
+      "screenshot": "tool-done"
+    }
+  ]
+}

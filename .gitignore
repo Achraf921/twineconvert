@@ -48,3 +48,5 @@ next-env.d.ts
 
 # Resume state for the bulk-indexing scripts
 /.indexing-state.json
+# Tutorial build artifacts (large + contains generated output)
+/tutorials/output/
