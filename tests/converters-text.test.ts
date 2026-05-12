@@ -389,14 +389,21 @@ describe("text-format converter smoke tests", () => {
     const result = await run("aco-to-gpl", input);
     const text = await result.blob.text();
     expect(text.startsWith("GIMP Palette")).toBe(true);
-    // Three swatches were declared; all should have produced an RGB row,
-    // not be silently dropped as they were before the fix.
     const colorRowCount = text.split(/\r?\n/).filter((l) => /^\s*\d+\s+\d+\s+\d+\s+/.test(l)).length;
     expect(colorRowCount).toBe(3);
-    // Names from the v2 section should survive.
-    expect(text).toContain("Pure Cyan");
-    expect(text).toContain("Pure Magenta");
-    expect(text).toContain("Pure Yellow");
+
+    // Spec-derived expected RGB values, not just "any non-zero row" (which
+    // would let an upside-down conversion slip through).
+    //
+    // Per Adobe spec, ACO CMYK channels are inverted (0 = 100% ink). Our
+    // fixture encodes pure cyan as (c=0, m=max, y=max, k=max=K means no
+    // black ink). The naive uncalibrated CMYK->RGB formula then yields:
+    //   Pure Cyan  (C=1, M=0, Y=0, K=0) -> R=0   G=255 B=255
+    //   Pure Magenta (C=0, M=1, Y=0, K=0) -> R=255 G=0   B=255
+    //   Pure Yellow  (C=0, M=0, Y=1, K=0) -> R=255 G=255 B=0
+    expect(text).toMatch(/^\s*0\s+255\s+255\s+Pure Cyan/m);
+    expect(text).toMatch(/^\s*255\s+0\s+255\s+Pure Magenta/m);
+    expect(text).toMatch(/^\s*255\s+255\s+0\s+Pure Yellow/m);
   });
 
   it("aco-to-gpl handles HSB swatches by converting to RGB", async () => {
