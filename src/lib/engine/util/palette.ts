@@ -200,65 +200,206 @@ export function buildAse(palette: Palette): ArrayBuffer {
 
 // ---- ACO (Adobe Color), binary, big-endian ---------------------------
 
-export function parseAco(buf: ArrayBuffer): Palette {
-  const view = new DataView(buf);
-  // Try v2 first (it includes names); fall back to v1 if signature is off.
-  const v1ColorCount = view.getUint16(2, false);
-  const v1BodySize = 4 + v1ColorCount * 10;
+// Color space constants per Photoshop ACO spec. Many spot-color systems
+// (Pantone, Focoltone, Trumatch, Toyo, HKS) encode their swatches as RGB
+// with a name field, so they fall through to ACO_RGB handling cleanly.
+const ACO_RGB = 0;
+const ACO_HSB = 1;
+const ACO_CMYK = 2;
+const ACO_LAB = 7;
+const ACO_GRAYSCALE = 8;
+const ACO_WIDE_CMYK = 9;
 
-  // v2 starts immediately after v1 if both versions are present.
-  let off = v1BodySize;
-  let useV2 = false;
-  if (off + 4 <= buf.byteLength && view.getUint16(off, false) === 0x0002) {
-    useV2 = true;
-    off += 2;
-  } else {
-    off = 0;
-    if (view.getUint16(0, false) === 0x0002) {
+function hsbToRgb(h: number, s: number, b: number): { r: number; g: number; b: number } {
+  const c = b * s;
+  const hp = (h % 360) / 60;
+  const x = c * (1 - Math.abs((hp % 2) - 1));
+  let rr = 0, gg = 0, bb = 0;
+  if (hp < 1) { rr = c; gg = x; }
+  else if (hp < 2) { rr = x; gg = c; }
+  else if (hp < 3) { gg = c; bb = x; }
+  else if (hp < 4) { gg = x; bb = c; }
+  else if (hp < 5) { rr = x; bb = c; }
+  else { rr = c; bb = x; }
+  const m = b - c;
+  return {
+    r: Math.round((rr + m) * 255),
+    g: Math.round((gg + m) * 255),
+    b: Math.round((bb + m) * 255),
+  };
+}
+
+function cmykToRgb(c: number, m: number, y: number, k: number): { r: number; g: number; b: number } {
+  // Naive CMYK to RGB conversion. Not color-managed (ignores ICC profiles),
+  // but accurate enough for palette display. Each input is 0-1 ink coverage.
+  return {
+    r: Math.round(255 * (1 - c) * (1 - k)),
+    g: Math.round(255 * (1 - m) * (1 - k)),
+    b: Math.round(255 * (1 - y) * (1 - k)),
+  };
+}
+
+function labToRgb(L: number, a: number, b: number): { r: number; g: number; b: number } {
+  // Lab (D50 reference white, Photoshop convention) -> XYZ -> sRGB.
+  // For a palette display, color-management accuracy isn't critical;
+  // we just need each Lab triple to land at a plausible sRGB triple.
+  const fy = (L + 16) / 116;
+  const fx = fy + a / 500;
+  const fz = fy - b / 200;
+  const eps = 0.008856;
+  const kappa = 903.3;
+  const xR = fx ** 3 > eps ? fx ** 3 : (116 * fx - 16) / kappa;
+  const yR = L > kappa * eps ? fy ** 3 : L / kappa;
+  const zR = fz ** 3 > eps ? fz ** 3 : (116 * fz - 16) / kappa;
+  const X = xR * 0.96422;
+  const Y = yR * 1.0;
+  const Z = zR * 0.82521;
+  let r = X * 3.1338561 + Y * -1.6168667 + Z * -0.4906146;
+  let g = X * -0.9787684 + Y * 1.9161415 + Z * 0.0334540;
+  let bl = X * 0.0719453 + Y * -0.2289914 + Z * 1.4052427;
+  const toSrgb = (v: number) =>
+    v <= 0.0031308 ? 12.92 * v : 1.055 * Math.pow(Math.max(v, 0), 1 / 2.4) - 0.055;
+  r = Math.max(0, Math.min(1, toSrgb(r)));
+  g = Math.max(0, Math.min(1, toSrgb(g)));
+  bl = Math.max(0, Math.min(1, toSrgb(bl)));
+  return { r: Math.round(r * 255), g: Math.round(g * 255), b: Math.round(bl * 255) };
+}
+
+/**
+ * Parse a Photoshop ACO file into a Palette. Handles v1-only, v2-only,
+ * and v1+v2 (the common Photoshop output) layouts and the five color
+ * spaces real-world files actually use (RGB, HSB, CMYK, Lab, Grayscale).
+ *
+ * Unsupported / unguarded reads were the bug here: the previous parser
+ * only handled RGB and Grayscale, so a CMYK palette would parse to zero
+ * colors and emit an empty GPL (one user-side flavor of "broken"). It
+ * also had unguarded `getUint16` reads that could throw on truncated or
+ * unusual files (the other flavor: hard convert_error).
+ */
+export function parseAco(buf: ArrayBuffer): Palette {
+  if (buf.byteLength < 4) {
+    throw new Error("ACO file is too short to contain a header");
+  }
+  const view = new DataView(buf);
+
+  // Identify layout by the version byte at offset 0. Photoshop typically
+  // writes a v1 header followed immediately by a v2 header; older tools
+  // emit v1-only and a few emit v2-only.
+  const firstWord = view.getUint16(0, false);
+  let useV2: boolean;
+  let off: number;
+  if (firstWord === 0x0001) {
+    const v1Count = view.getUint16(2, false);
+    const v1End = 4 + v1Count * 10;
+    if (v1End + 4 <= buf.byteLength && view.getUint16(v1End, false) === 0x0002) {
       useV2 = true;
-      off = 2;
+      off = v1End + 2; // skip the v2 version marker, land on its color count
     } else {
-      off = 0;
+      useV2 = false;
+      off = 2; // skip v1 version marker, land on the v1 color count
     }
+  } else if (firstWord === 0x0002) {
+    useV2 = true;
+    off = 2;
+  } else {
+    throw new Error(`Unsupported ACO version: 0x${firstWord.toString(16)}`);
+  }
+
+  if (off + 2 > buf.byteLength) {
+    throw new Error("Truncated ACO header (missing color count)");
   }
   const colorCount = view.getUint16(off, false);
   off += 2;
 
   const colors: Color[] = [];
+  let skipped = 0;
   for (let i = 0; i < colorCount; i++) {
+    if (off + 10 > buf.byteLength) break; // truncated; emit what we have
     const space = view.getUint16(off, false);
     const w = view.getUint16(off + 2, false);
     const x = view.getUint16(off + 4, false);
     const y = view.getUint16(off + 6, false);
-    // const z = view.getUint16(off + 8, false); // 4th channel; only used for CMYK
+    const z = view.getUint16(off + 8, false);
     off += 10;
 
     let color: { r: number; g: number; b: number } | null = null;
-    if (space === 0) {
-      // RGB: stored as 16-bit values, each = (component * 256). Divide by 256.
-      color = { r: Math.round(w / 256), g: Math.round(x / 256), b: Math.round(y / 256) };
-    } else if (space === 8) {
-      // Grayscale: w is 0-10000
-      const v = Math.round((w / 10000) * 255);
-      color = { r: v, g: v, b: v };
+    switch (space) {
+      case ACO_RGB:
+        // 16-bit channel = (component * 256). Top byte is the 0-255 value.
+        color = { r: w >> 8, g: x >> 8, b: y >> 8 };
+        break;
+      case ACO_HSB: {
+        // H, S, B are each 0-65535. H maps to 0-360, S/B to 0-1.
+        const h = (w / 65535) * 360;
+        const s = x / 65535;
+        const br = y / 65535;
+        color = hsbToRgb(h, s, br);
+        break;
+      }
+      case ACO_CMYK:
+      case ACO_WIDE_CMYK: {
+        // Photoshop CMYK is INVERTED in ACO: 0 = full ink, 65535 = no ink.
+        const c = 1 - w / 65535;
+        const m = 1 - x / 65535;
+        const ye = 1 - y / 65535;
+        const k = 1 - z / 65535;
+        color = cmykToRgb(c, m, ye, k);
+        break;
+      }
+      case ACO_LAB: {
+        // L is 0-10000 (= 0-100); a and b are signed 16-bit (-12800..12700
+        // = -128..127). Photoshop ACO stores all four as uint16 in the file,
+        // so we have to interpret the two's-complement manually for a/b.
+        const L = w / 100;
+        const aSigned = x >= 32768 ? x - 65536 : x;
+        const bSigned = y >= 32768 ? y - 65536 : y;
+        color = labToRgb(L, aSigned / 100, bSigned / 100);
+        break;
+      }
+      case ACO_GRAYSCALE: {
+        const v = Math.round((w / 10000) * 255);
+        color = { r: v, g: v, b: v };
+        break;
+      }
+      default:
+        // Pantone/Focoltone/Trumatch/Toyo/HKS spot colors and any future
+        // additions: skip the data bytes but still consume the v2 name
+        // block so we don't desync the offset.
+        skipped++;
     }
 
     let name: string | undefined;
-    if (useV2 && off + 4 <= buf.byteLength) {
-      off += 2; // skip 2-byte zero pad
-      const len = view.getUint16(off, false); // includes null terminator
+    if (useV2) {
+      if (off + 4 > buf.byteLength) break; // truncated name section
+      off += 2; // 2-byte zero pad
+      const nameLen = view.getUint16(off, false); // includes the null terminator
       off += 2;
-      let n = "";
-      for (let j = 0; j < len - 1; j++) {
-        n += String.fromCharCode(view.getUint16(off, false));
-        off += 2;
+      if (nameLen > 0) {
+        const charsToRead = nameLen - 1;
+        if (off + charsToRead * 2 + 2 > buf.byteLength) break;
+        let n = "";
+        for (let j = 0; j < charsToRead; j++) {
+          const code = view.getUint16(off, false);
+          off += 2;
+          if (code !== 0) n += String.fromCharCode(code);
+        }
+        off += 2; // null terminator
+        name = n.trim() || undefined;
       }
-      off += 2; // null terminator
-      name = n.trim() || undefined;
     }
 
     if (color) colors.push({ ...color, name });
   }
+
+  if (colors.length === 0) {
+    if (skipped > 0) {
+      throw new Error(
+        `ACO file has ${skipped} swatch(es) in an unrecognized color space; none could be converted`,
+      );
+    }
+    throw new Error("ACO file contains no swatches");
+  }
+
   return { colors };
 }
 

@@ -59,6 +59,149 @@ export function makeTinyAco(): Uint8Array {
   return new Uint8Array(buildAco(SAMPLE_PALETTE));
 }
 
+/**
+ * A v1-only ACO file (no trailing v2 section). Older Photoshop versions
+ * and some palette-export tools emit this format. The current writer
+ * always produces v1+v2; this builder is for parser regression tests.
+ */
+export function makeAcoV1Only(): Uint8Array {
+  const colors = SAMPLE_PALETTE.colors;
+  const total = 4 + colors.length * 10;
+  const buf = new ArrayBuffer(total);
+  const view = new DataView(buf);
+  view.setUint16(0, 0x0001, false);
+  view.setUint16(2, colors.length, false);
+  let off = 4;
+  for (const c of colors) {
+    view.setUint16(off, 0, false); // RGB space
+    view.setUint16(off + 2, c.r * 256, false);
+    view.setUint16(off + 4, c.g * 256, false);
+    view.setUint16(off + 6, c.b * 256, false);
+    view.setUint16(off + 8, 0, false);
+    off += 10;
+  }
+  return new Uint8Array(buf);
+}
+
+/**
+ * A v1+v2 ACO file where every swatch is encoded in CMYK (color space 2).
+ * Real Photoshop documents in CMYK mode produce this; the previous parser
+ * silently dropped all CMYK swatches and emitted an empty GPL.
+ *
+ * CMYK is stored as four uint16 channels, INVERTED: 0 = full ink, 65535 =
+ * no ink.  We use that convention to encode pure cyan, magenta, yellow.
+ */
+export function makeAcoCmyk(): Uint8Array {
+  // Three pure-process colors in inverted CMYK encoding.
+  const swatches = [
+    { c: 0, m: 65535, y: 65535, k: 65535, name: "Pure Cyan" },
+    { c: 65535, m: 0, y: 65535, k: 65535, name: "Pure Magenta" },
+    { c: 65535, m: 65535, y: 0, k: 65535, name: "Pure Yellow" },
+  ];
+  let nameBytes = 0;
+  for (const s of swatches) nameBytes += 4 + (s.name.length + 1) * 2;
+  const v1Size = 4 + swatches.length * 10;
+  const v2Size = 4 + swatches.length * 10 + nameBytes;
+  const buf = new ArrayBuffer(v1Size + v2Size);
+  const view = new DataView(buf);
+
+  const writeColors = (startOff: number) => {
+    let off = startOff;
+    for (const s of swatches) {
+      view.setUint16(off, 2, false); // CMYK space
+      view.setUint16(off + 2, s.c, false);
+      view.setUint16(off + 4, s.m, false);
+      view.setUint16(off + 6, s.y, false);
+      view.setUint16(off + 8, s.k, false);
+      off += 10;
+    }
+    return off;
+  };
+
+  view.setUint16(0, 0x0001, false);
+  view.setUint16(2, swatches.length, false);
+  writeColors(4);
+
+  let off = v1Size;
+  view.setUint16(off, 0x0002, false);
+  view.setUint16(off + 2, swatches.length, false);
+  off += 4;
+  for (const s of swatches) {
+    view.setUint16(off, 2, false);
+    view.setUint16(off + 2, s.c, false);
+    view.setUint16(off + 4, s.m, false);
+    view.setUint16(off + 6, s.y, false);
+    view.setUint16(off + 8, s.k, false);
+    off += 10;
+    view.setUint16(off, 0, false); // pad
+    off += 2;
+    view.setUint16(off, s.name.length + 1, false);
+    off += 2;
+    for (let j = 0; j < s.name.length; j++) {
+      view.setUint16(off, s.name.charCodeAt(j), false);
+      off += 2;
+    }
+    view.setUint16(off, 0, false);
+    off += 2;
+  }
+  return new Uint8Array(buf);
+}
+
+/**
+ * A v1+v2 ACO file where every swatch is encoded in HSB (color space 1).
+ * HSB stores hue in 0-65535 (= 0-360°), saturation and brightness in
+ * 0-65535 (= 0-1). The previous parser silently dropped HSB swatches.
+ */
+export function makeAcoHsb(): Uint8Array {
+  // Pure red (H=0), pure green (H=120), pure blue (H=240). S=1, B=1.
+  const swatches = [
+    { h: 0, s: 65535, b: 65535, name: "HSB Red" },
+    { h: Math.round((120 / 360) * 65535), s: 65535, b: 65535, name: "HSB Green" },
+    { h: Math.round((240 / 360) * 65535), s: 65535, b: 65535, name: "HSB Blue" },
+  ];
+  let nameBytes = 0;
+  for (const s of swatches) nameBytes += 4 + (s.name.length + 1) * 2;
+  const v1Size = 4 + swatches.length * 10;
+  const v2Size = 4 + swatches.length * 10 + nameBytes;
+  const buf = new ArrayBuffer(v1Size + v2Size);
+  const view = new DataView(buf);
+
+  view.setUint16(0, 0x0001, false);
+  view.setUint16(2, swatches.length, false);
+  let off = 4;
+  for (const s of swatches) {
+    view.setUint16(off, 1, false); // HSB space
+    view.setUint16(off + 2, s.h, false);
+    view.setUint16(off + 4, s.s, false);
+    view.setUint16(off + 6, s.b, false);
+    view.setUint16(off + 8, 0, false);
+    off += 10;
+  }
+
+  view.setUint16(off, 0x0002, false);
+  view.setUint16(off + 2, swatches.length, false);
+  off += 4;
+  for (const s of swatches) {
+    view.setUint16(off, 1, false);
+    view.setUint16(off + 2, s.h, false);
+    view.setUint16(off + 4, s.s, false);
+    view.setUint16(off + 6, s.b, false);
+    view.setUint16(off + 8, 0, false);
+    off += 10;
+    view.setUint16(off, 0, false);
+    off += 2;
+    view.setUint16(off, s.name.length + 1, false);
+    off += 2;
+    for (let j = 0; j < s.name.length; j++) {
+      view.setUint16(off, s.name.charCodeAt(j), false);
+      off += 2;
+    }
+    view.setUint16(off, 0, false);
+    off += 2;
+  }
+  return new Uint8Array(buf);
+}
+
 /** A unit cube as a Mesh, useful for STL/OBJ/3MF round-trips. */
 export const SAMPLE_CUBE_MESH: Mesh = {
   vertices: new Float32Array([

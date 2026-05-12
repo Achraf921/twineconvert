@@ -16,7 +16,7 @@
 import { describe, it, expect } from "vitest";
 import { run } from "../src/lib/engine/runner";
 import { FIXTURES, fileFromText } from "./fixtures/text-fixtures";
-import { fileFromBytes, makeTinyAse, makeTinyAco, makeTinyZip, makeTinyDst, makeTinyPes, makeTinyJef, makeTinyStl } from "./fixtures/binary-fixtures";
+import { fileFromBytes, makeTinyAse, makeTinyAco, makeAcoV1Only, makeAcoCmyk, makeAcoHsb, makeTinyZip, makeTinyDst, makeTinyPes, makeTinyJef, makeTinyStl } from "./fixtures/binary-fixtures";
 
 /** Read a Blob's bytes once and assert the first N bytes match. */
 async function expectMagicBytes(blob: Blob, magic: number[]) {
@@ -354,6 +354,62 @@ describe("text-format converter smoke tests", () => {
     const input = fileFromBytes("palette.aco", acoBytes);
     const result = await run("aco-to-ase", input);
     await expectMagicBytes(result.blob, [0x41, 0x53, 0x45, 0x46]);
+  });
+
+  // Regression for a production failure caught via PostHog convert_error
+  // on /aco-to-gpl (2026-05-11). The old parseAco only handled RGB and
+  // Grayscale color spaces, so real Photoshop ACOs in CMYK / HSB / Lab
+  // mode produced zero colors and either empty output or unguarded
+  // DataView overruns. These three tests cover the cases I saw in the
+  // wild plus the v1-only layout older tools emit.
+  it("aco-to-gpl handles v1+v2 RGB swatches (baseline)", async () => {
+    const input = fileFromBytes("palette.aco", makeTinyAco());
+    const result = await run("aco-to-gpl", input);
+    const text = await result.blob.text();
+    expect(text.startsWith("GIMP Palette")).toBe(true);
+    // SAMPLE_PALETTE is pure red, green, blue.
+    expect(text).toMatch(/255\s+0\s+0/);
+    expect(text).toMatch(/0\s+255\s+0/);
+    expect(text).toMatch(/0\s+0\s+255/);
+  });
+
+  it("aco-to-gpl handles v1-only files (no trailing v2 section)", async () => {
+    const input = fileFromBytes("v1only.aco", makeAcoV1Only());
+    const result = await run("aco-to-gpl", input);
+    const text = await result.blob.text();
+    expect(text.startsWith("GIMP Palette")).toBe(true);
+    // Three RGB swatches survive; names are not present in v1.
+    expect(text).toMatch(/255\s+0\s+0/);
+    expect(text).toMatch(/0\s+255\s+0/);
+    expect(text).toMatch(/0\s+0\s+255/);
+  });
+
+  it("aco-to-gpl handles CMYK swatches by converting to RGB", async () => {
+    const input = fileFromBytes("cmyk.aco", makeAcoCmyk());
+    const result = await run("aco-to-gpl", input);
+    const text = await result.blob.text();
+    expect(text.startsWith("GIMP Palette")).toBe(true);
+    // Three swatches were declared; all should have produced an RGB row,
+    // not be silently dropped as they were before the fix.
+    const colorRowCount = text.split(/\r?\n/).filter((l) => /^\s*\d+\s+\d+\s+\d+\s+/.test(l)).length;
+    expect(colorRowCount).toBe(3);
+    // Names from the v2 section should survive.
+    expect(text).toContain("Pure Cyan");
+    expect(text).toContain("Pure Magenta");
+    expect(text).toContain("Pure Yellow");
+  });
+
+  it("aco-to-gpl handles HSB swatches by converting to RGB", async () => {
+    const input = fileFromBytes("hsb.aco", makeAcoHsb());
+    const result = await run("aco-to-gpl", input);
+    const text = await result.blob.text();
+    expect(text.startsWith("GIMP Palette")).toBe(true);
+    const colorRowCount = text.split(/\r?\n/).filter((l) => /^\s*\d+\s+\d+\s+\d+\s+/.test(l)).length;
+    expect(colorRowCount).toBe(3);
+    // H=0, S=1, B=1 is pure red; H=120 is pure green; H=240 is pure blue.
+    expect(text).toMatch(/255\s+0\s+0\s+HSB Red/);
+    expect(text).toMatch(/0\s+255\s+0\s+HSB Green/);
+    expect(text).toMatch(/0\s+0\s+255\s+HSB Blue/);
   });
 
   // ===== LUT =====
