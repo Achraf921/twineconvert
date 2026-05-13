@@ -431,6 +431,16 @@ export const validatePo: Validator = async ({ blob, minSize = 10 }) => {
   if (!/^msgstr(\[\d+\])?\s+"/m.test(text)) throw new Error("PO missing msgstr line");
 };
 
+export const validateAss: Validator = async ({ blob, minSize = 20 }) => {
+  assertMinSize(blob, minSize, "ASS");
+  const text = await readText(blob);
+  // A valid ASS has [Script Info] + [Events] sections and at least one
+  // Dialogue line. Comments alone don't count.
+  if (!/\[Script Info\]/i.test(text)) throw new Error("ASS missing [Script Info] section");
+  if (!/\[Events\]/i.test(text)) throw new Error("ASS missing [Events] section");
+  if (!/^Dialogue:/im.test(text)) throw new Error("ASS has no Dialogue lines");
+};
+
 export const validateRis: Validator = async ({ blob, minSize = 10 }) => {
   assertMinSize(blob, minSize, "RIS/NBIB");
   const text = await readText(blob);
@@ -952,6 +962,7 @@ const BY_MIME: Record<string, Validator> = {
   "text/sbv": validateSbv,
   "text/x-gettext-translation": validatePo,
   "application/x-gettext": validatePo,
+  "text/x-ssa": validateAss,
 
   "application/jsonl": validateJsonl,
   "application/x-ndjson": validateJsonl,

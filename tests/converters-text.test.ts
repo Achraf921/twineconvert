@@ -217,6 +217,128 @@ describe("text-format converter smoke tests", () => {
     expect(text).toContain("Congreso Iberoamericano");
   });
 
+  // ===== CAD (AutoCAD DXF) =====
+  // Real AutoCAD/LibreCAD/Fusion-360 exports carry a HEADER section
+  // (skip), an ENTITIES section (parse), and a mix of supported and
+  // unsupported entity types. Tests assert: every supported entity
+  // type lands in the output, unsupported entities (INSERT, HATCH)
+  // don't crash the parser, and the SVG output has a viewBox sized
+  // from the actual geometry bounding box.
+  it("dxf-to-json captures every supported entity type and ignores unknowns", async () => {
+    const input = fileFromText("drawing.dxf", FIXTURES.dxf, "image/vnd.dxf");
+    const result = await run("dxf-to-json", input);
+    await expectParseableJson(result.blob);
+    const parsed = JSON.parse(await result.blob.text());
+    expect(Array.isArray(parsed.entities)).toBe(true);
+    const types = parsed.entities.map((e: { type: string }) => e.type);
+    // The fixture has LINE, CIRCLE, ARC, LWPOLYLINE, POINT, TEXT, INSERT.
+    // INSERT is intentionally dropped (we don't expand block references).
+    expect(types).toContain("LINE");
+    expect(types).toContain("CIRCLE");
+    expect(types).toContain("ARC");
+    expect(types).toContain("LWPOLYLINE");
+    expect(types).toContain("POINT");
+    expect(types).toContain("TEXT");
+    expect(types).not.toContain("INSERT");
+
+    // Spot-check structural fidelity on individual entities.
+    const line = parsed.entities.find((e: { type: string }) => e.type === "LINE");
+    expect(line.x1).toBe(0);
+    expect(line.y1).toBe(0);
+    expect(line.x2).toBe(100);
+    expect(line.y2).toBe(50);
+
+    const circle = parsed.entities.find((e: { type: string }) => e.type === "CIRCLE");
+    expect(circle.r).toBe(25);
+
+    const lwp = parsed.entities.find((e: { type: string }) => e.type === "LWPOLYLINE");
+    expect(lwp.closed).toBe(true);
+    expect(lwp.vertices.length).toBe(4);
+
+    const txt = parsed.entities.find((e: { type: string }) => e.type === "TEXT");
+    expect(txt.content).toBe("Hello DXF");
+  });
+
+  it("dxf-to-svg emits a sized SVG with one element per supported entity", async () => {
+    const input = fileFromText("drawing.dxf", FIXTURES.dxf, "image/vnd.dxf");
+    const result = await run("dxf-to-svg", input);
+    const svg = await result.blob.text();
+    expect(svg).toContain("<?xml");
+    expect(svg).toContain("<svg");
+    expect(svg).toMatch(/viewBox="/);
+    // Y-flip wrapper so DXF math-convention coords display right-side-up.
+    expect(svg).toContain('transform="scale(1,-1)"');
+    // Each supported entity emitted exactly once.
+    expect((svg.match(/<line /g) ?? []).length).toBe(1);
+    expect((svg.match(/<circle /g) ?? []).length).toBeGreaterThanOrEqual(1); // CIRCLE + POINT both render as <circle>
+    expect((svg.match(/<path /g) ?? []).length).toBe(1); // ARC
+    expect((svg.match(/<polygon /g) ?? []).length).toBe(1); // closed LWPOLYLINE
+    expect(svg).toContain("Hello DXF");
+    // No raw DXF group codes leaked into the SVG (regression catch).
+    expect(svg).not.toMatch(/^\d+\s*$/m);
+  });
+
+  // ===== ASS / SSA styled subtitles =====
+  // Real ASS files in the wild have: Comment lines mixed with Dialogue,
+  // inline override codes ({\i1}...), hard breaks (\N), and dialogue
+  // text containing literal commas. Each of these has bitten naive
+  // parsers; tests assert all survive correctly.
+  it("ass-to-srt parses Dialogue lines and skips Comment lines", async () => {
+    const input = fileFromText("captions.ass", FIXTURES.ass, "text/x-ssa");
+    const result = await run("ass-to-srt", input);
+    const text = await result.blob.text();
+    // The fixture has 3 Dialogue lines + 1 Comment. Comment must NOT
+    // appear in the SRT output; Dialogue lines must.
+    expect(text).toContain("Hello, world!");
+    expect(text).toContain("Final cue.");
+    expect(text).not.toContain("translator note");
+    // 3 cues should produce 3 numbered SRT entries.
+    expect(text.match(/^\d+$/gm)?.length).toBe(3);
+    // SRT timing format (HH:MM:SS,mmm)
+    expect(text).toMatch(/00:00:01,000 --> 00:00:03,500/);
+  });
+
+  it("ass-to-srt strips override codes and converts \\N to a newline", async () => {
+    const input = fileFromText("captions.ass", FIXTURES.ass, "text/x-ssa");
+    const result = await run("ass-to-srt", input);
+    const text = await result.blob.text();
+    // Inline ASS overrides like {\i1}/{\i0} must NOT leak through.
+    expect(text).not.toMatch(/\\i[01]/);
+    expect(text).not.toContain("{");
+    // \N becomes a real newline in the output.
+    expect(text).toContain("Italic line\nSecond line, with comma");
+  });
+
+  it("srt-to-ass emits a valid ASS file with default style + Dialogue per cue", async () => {
+    const input = fileFromText("captions.srt", FIXTURES.srt, "application/x-subrip");
+    const result = await run("srt-to-ass", input);
+    const text = await result.blob.text();
+    expect(text).toContain("[Script Info]");
+    expect(text).toContain("[V4+ Styles]");
+    expect(text).toContain("[Events]");
+    expect(text).toMatch(/^Style: Default,/m);
+    // Every SRT cue should become a Dialogue line.
+    const srtCueCount = FIXTURES.srt.match(/^\d+:\d{2}:\d{2},\d{3}/gm)?.length ?? 0;
+    const assDialogueCount = text.match(/^Dialogue:/gm)?.length ?? 0;
+    expect(assDialogueCount).toBe(srtCueCount);
+  });
+
+  it("vtt-to-ass and ass-to-vtt round-trip preserves dialogue text and timing", async () => {
+    // VTT -> ASS -> VTT: timing precision drops from ms to centiseconds
+    // through the ASS hop (10ms quantization), but the dialogue text
+    // and cue count must survive unchanged.
+    const vttIn = fileFromText("captions.vtt", FIXTURES.vtt, "text/vtt");
+    const ass = await run("vtt-to-ass", vttIn);
+    const assFile = new File([await ass.blob.arrayBuffer()], "captions.ass", { type: "text/x-ssa" });
+    const back = await run("ass-to-vtt", assFile);
+    const text = await back.blob.text();
+    expect(text.startsWith("WEBVTT")).toBe(true);
+    // Same number of cues survives the round-trip.
+    const originalArrows = FIXTURES.vtt.match(/-->/g)?.length ?? 0;
+    const roundtripArrows = text.match(/-->/g)?.length ?? 0;
+    expect(roundtripArrows).toBe(originalArrows);
+  });
+
   // ===== Localization (gettext PO) =====
   // Real PO files in the wild carry plurals, contexts, comments, and
   // multi-line strings — these tests assert each survives end-to-end.

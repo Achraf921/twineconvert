@@ -629,6 +629,22 @@ export const registry: Record<string, ConverterLoader> = {
   "sbv-to-srt": () =>
     import("./converters/sbv-to-srt").then((m) => m.default),
 
+  // ASS / SSA subtitles (Aegisub, anime fansubs, libass-rendered overlays).
+  // ASS dominates anywhere subtitles need styling beyond what SRT/VTT
+  // express: positioning, fonts, colors, karaoke timing.
+  "srt-to-ass": () => import("./converters/srt-to-ass").then((m) => m.default),
+  "ass-to-srt": () => import("./converters/ass-to-srt").then((m) => m.default),
+  "vtt-to-ass": () => import("./converters/vtt-to-ass").then((m) => m.default),
+  "ass-to-vtt": () => import("./converters/ass-to-vtt").then((m) => m.default),
+
+  // CAD: AutoCAD ASCII DXF. Universal 2D-CAD interchange format read by
+  // AutoCAD, LibreCAD, QCAD, BricsCAD, FreeCAD, OnShape, Fusion 360,
+  // TinkerCAD, KiCad, EAGLE, laser-cutter control software, etc.
+  // dxf-to-svg renders for the browser/web; dxf-to-json gives a
+  // structured entity list for programmatic CAD analysis.
+  "dxf-to-svg": () => import("./converters/dxf-to-svg").then((m) => m.default),
+  "dxf-to-json": () => import("./converters/dxf-to-json").then((m) => m.default),
+
   // OpenDocument spreadsheets (LibreOffice / OpenOffice / Numbers fallback).
   "ods-to-csv": () =>
     import("./converters/ods-to-csv").then((m) => m.default),

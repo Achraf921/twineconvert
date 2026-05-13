@@ -685,6 +685,163 @@ spring.datasource.username=admin
 logging.level.root=INFO
 `,
 
+  // ---- DXF (AutoCAD Drawing Exchange Format) fixture ----
+  //
+  // Hand-crafted minimal ASCII DXF exercising every entity type the
+  // SVG renderer must handle: LINE, CIRCLE, ARC, LWPOLYLINE (closed),
+  // POINT, TEXT. Also includes the HEADER section (must be skipped)
+  // and an unrecognized INSERT entity (must be dropped, not crash).
+  //
+  // Real CAD exports from AutoCAD/LibreCAD/QCAD/Fusion 360 follow this
+  // exact wire format: group code on its own line, value on next.
+  dxf: `0
+SECTION
+2
+HEADER
+9
+$ACADVER
+1
+AC1015
+0
+ENDSEC
+0
+SECTION
+2
+ENTITIES
+0
+LINE
+8
+Layer1
+10
+0.0
+20
+0.0
+30
+0.0
+11
+100.0
+21
+50.0
+31
+0.0
+0
+CIRCLE
+8
+Layer1
+10
+50.0
+20
+50.0
+30
+0.0
+40
+25.0
+0
+ARC
+8
+Layer1
+10
+150.0
+20
+50.0
+30
+0.0
+40
+20.0
+50
+0.0
+51
+180.0
+0
+LWPOLYLINE
+8
+Layer1
+90
+4
+70
+1
+10
+0.0
+20
+200.0
+10
+50.0
+20
+200.0
+10
+50.0
+20
+250.0
+10
+0.0
+20
+250.0
+0
+POINT
+8
+Layer1
+10
+75.0
+20
+75.0
+30
+0.0
+0
+TEXT
+8
+Layer1
+10
+10.0
+20
+300.0
+30
+0.0
+40
+12.0
+1
+Hello DXF
+0
+INSERT
+8
+Layer1
+2
+SomeBlock
+10
+0.0
+20
+0.0
+30
+0.0
+0
+ENDSEC
+0
+EOF
+`,
+
+  // ---- ASS (Advanced SubStation Alpha) fixture ----
+  //
+  // Covers the real-world quirks: a full [Script Info] header, a styled
+  // [V4+ Styles] section, mixed Dialogue + Comment lines (Comment must
+  // be ignored), inline override codes ({\i1}...{\i0}), hard line
+  // breaks (\N), embedded commas in dialogue text (must not break the
+  // field split), and ASS-style centisecond timestamps.
+  ass: `[Script Info]
+Title: Sample ASS subtitle
+ScriptType: v4.00+
+WrapStyle: 0
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Default,Arial,20,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,2,2,2,10,10,10,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:01.00,0:00:03.50,Default,,0,0,0,,Hello, world!
+Comment: 0,0:00:03.50,0:00:04.00,Default,,0,0,0,,(translator note: dropped)
+Dialogue: 0,0:00:04.00,0:00:07.25,Default,,0,0,0,,{\\i1}Italic line{\\i0}\\NSecond line, with comma
+Dialogue: 0,0:00:08.00,0:00:11.00,Default,,0,0,0,,Final cue.
+`,
+
   // ---- Gettext PO fixture ----
   //
   // Designed to exercise every real-world feature parseBibtex-style

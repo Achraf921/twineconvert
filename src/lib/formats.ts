@@ -1056,6 +1056,26 @@ const PROFILES: Record<string, FormatProfile> = {
     primaryUse: "Software localization (UI strings, error messages, in-app text in every language).",
     binary: false,
   },
+  ass: {
+    name: "ASS",
+    fullName: "Advanced SubStation Alpha",
+    description:
+      "ASS (Advanced SubStation Alpha, sometimes spelled .ssa for its predecessor SubStation Alpha) is the styled-subtitle format used by Aegisub, fansubbed anime, and nearly every video player that supports advanced typesetting (VLC, MPV, mpv-style, IINA, PotPlayer). It's a section-based INI: `[Script Info]` for metadata, `[V4+ Styles]` for fonts/colors/positioning, `[Events]` for the actual `Dialogue:` lines. Captions can specify per-line styling, hard breaks (`\\N`), inline override codes (`{\\b1}bold{\\b0}`, `{\\i1}italic{\\i0}`, `{\\fnArial}font`), karaoke effects, and absolute screen positioning — none of which SRT or WebVTT express. Created in 2003; libass is the de-facto rendering engine across mpv, ffmpeg, and most modern players.",
+    howToOpen:
+      "Aegisub is the canonical editor (free, all platforms). VLC, MPV, IINA, and PotPlayer render ASS overlays natively. ffmpeg can burn ASS into a video track or pass through as a soft subtitle stream. Any text editor opens .ass as plain UTF-8.",
+    primaryUse: "Styled subtitles for video — anime fansubs, professional video typesetting, karaoke timings.",
+    binary: false,
+  },
+  dxf: {
+    name: "DXF",
+    fullName: "AutoCAD Drawing Exchange Format",
+    description:
+      "DXF (Drawing Exchange Format) is AutoCAD's interchange format and the closest thing 2D CAD has to a universal lingua franca. Every meaningful CAD tool reads it: AutoCAD, LibreCAD, QCAD, BricsCAD, FreeCAD, OnShape (export), Fusion 360 (export), TinkerCAD, KiCad, EAGLE, plus laser-cutter and CNC-control software. Wire format is pair-based ASCII (a group code followed by a value, one per line), organized into sections — HEADER, TABLES, BLOCKS, and the ENTITIES section that carries the actual geometry: LINE, CIRCLE, ARC, POLYLINE, LWPOLYLINE, POINT, TEXT, INSERT, HATCH, DIMENSION, and several dozen others. Spec dates to AutoCAD 1.0 (1982) and is still emitted by current AutoCAD 2025; binary DXF exists but is rare. We render the ENTITIES section's drawable entities (LINE, CIRCLE, ARC, polylines, points, text) to SVG or structured JSON.",
+    howToOpen:
+      "AutoCAD opens DXF natively. LibreCAD and QCAD are free desktop alternatives (Linux/macOS/Windows). FreeCAD imports DXF via its Draft module. ShareCAD.org views them in-browser. Any text editor opens ASCII DXF as plain text (the format is human-readable, group code then value pairs).",
+    primaryUse: "2D CAD interchange — sharing drawings between AutoCAD and other CAD/CAM tools, importing into laser-cutter and CNC software, embedding into web pages as SVG.",
+    binary: false,
+  },
   toml: {
     name: "TOML",
     fullName: "Tom's Obvious Minimal Language",

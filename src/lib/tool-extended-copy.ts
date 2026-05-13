@@ -627,6 +627,177 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       },
     ],
   },
+
+  // ===== Gettext PO (localization) =====
+  "po-to-csv": {
+    whyConvert:
+      "PO is the universal localization format but every tool reads it in a slightly different dialect — and getting translations into and out of Google Sheets, Excel, or a Notion database means flattening PO entries into rows. CSV is the lingua franca translators send to PMs, freelancers, and reviewers when Poedit isn't an option. Round-tripping back through csv-to-po preserves every field (msgctxt, plurals, comments, references, flags) so handoffs don't drop data.",
+    example:
+      "Your French translator wants to review 800 strings in a Google Sheet instead of installing Poedit. You drop `messages.po` here, get a CSV with the canonical columns (msgctxt, msgid, msgid_plural, msgstr, msgstr_plurals, comments, references, flags), share the sheet, and convert back to PO via csv-to-po when they're done. No data lost.",
+    troubleshooting: [
+      {
+        problem: "Plural forms aren't showing up properly in the spreadsheet.",
+        solution:
+          "Plurals ride in the `msgstr_plurals` column as a JSON-encoded array, e.g. `[\"%d apple\",\"%d apples\"]`. Spreadsheets show this as text — that's intentional, because the number of plural forms varies per language (English/Spanish: 2, Russian: 3, Arabic: 6). When you convert back via csv-to-po, the JSON gets parsed and emitted as proper `msgstr[0]`, `msgstr[1]`, etc.",
+      },
+      {
+        problem: "The disambiguation `msgctxt` got merged into one row.",
+        solution:
+          "Don't sort the CSV in a way that hides the `msgctxt` column. Two entries with the same msgid but different msgctxt (e.g., noun vs verb \"Order\") MUST stay on separate rows for csv-to-po to reconstruct them correctly. If a colleague flattened them in Excel, you'll have to re-create the rows by hand.",
+      },
+    ],
+  },
+  "csv-to-po": {
+    whyConvert:
+      "After translators edit your strings in a spreadsheet, you need to push them back into the codebase as a proper PO file that gettext, react-i18next, Django, or Poedit can consume. csv-to-po reads the same column layout po-to-csv emits, rebuilds plural arrays from the JSON-encoded column, and reattaches contexts, comments, references, and flags so the resulting PO drops in cleanly without breaking your build.",
+    example:
+      "Your translation team sends back `messages.fr.csv` with reviewed `msgstr` cells. You drop the CSV here, get `messages.fr.po`, commit it to `locales/fr/LC_MESSAGES/`, run `msgfmt` (or your tool's equivalent), and the French build picks it up.",
+    troubleshooting: [
+      {
+        problem: '"Row N is missing a value in the msgid column" error.',
+        solution:
+          "Empty rows or rows that lost their msgid (often from a stray Excel sort) crash the build because PO entries are keyed by msgid + msgctxt. Open the CSV in any text editor, find the empty row (or one with only a comma), and either fill in the msgid or delete the row entirely. The header entry (msgid \"\" with PO file metadata) is allowed and only valid on row 2.",
+      },
+      {
+        problem: "I converted a translator's CSV but the plurals came out as a single string.",
+        solution:
+          "Make sure the `msgstr_plurals` column contains a JSON array (`[\"form1\",\"form2\"]`) and not a single line. If your translator delivered each plural form in a separate column (`msgstr_0`, `msgstr_1`), our parser won't pick them up — you'll need to combine them into one JSON-encoded cell first.",
+      },
+    ],
+  },
+  "po-to-json": {
+    whyConvert:
+      "Modern frontend i18n stacks (react-i18next, vue-i18n, next-intl, formatjs) consume JSON, not PO. po-to-json bridges the gap: structured array of entries with msgctxt, msgid, msgid_plural, msgstr (string or array), comments, references, and flags all preserved. Drop the JSON straight into your locales folder or feed it through your translation pipeline.",
+    example:
+      "You inherited a legacy gettext-based backend but the new React frontend uses react-i18next. Drop your existing `messages.po` here, get a JSON array, and write a 10-line script that flattens it into the `{ \"key\": \"translation\" }` shape react-i18next wants (or use it as-is in libraries that consume PO-style JSON).",
+    troubleshooting: [
+      {
+        problem: "I want a flat key:value JSON, not an array.",
+        solution:
+          "Our output is the lossless representation (array of entry objects) so plurals and contexts survive. Most frontend libs (react-i18next, vue-i18n) actually want flat key:value. After conversion, run `JSON.parse(out).reduce((acc, e) => (acc[e.msgid] = Array.isArray(e.msgstr) ? e.msgstr[0] : e.msgstr, acc), {})` to flatten — but you'll lose plural variants. Trade-off you have to make consciously.",
+      },
+    ],
+  },
+  "json-to-po": {
+    whyConvert:
+      "Your i18n source-of-truth lives in JSON but your translation team uses Poedit/Lokalise/Crowdin which all want PO. json-to-po lets you keep code-side JSON and ship PO to translators without writing a custom converter. Lossless inverse of po-to-json so you can round-trip through translator review without losing plurals, contexts, or developer comments.",
+    example:
+      "Your `en.json` is the source-of-truth; translators want a PO file to work in Poedit. Run json-to-po, hand off `en.po` to the translator (who saves as `es.po` with Spanish in each `msgstr`), then run po-to-json on `es.po` to integrate into your build.",
+    troubleshooting: [
+      {
+        problem: "The output PO file is missing my plural entries.",
+        solution:
+          "For an entry to emit as plural in PO, the JSON object must have both `msgid_plural` AND `msgstr` as an array. If you only have a single English string, plurals haven't been authored yet — that's a content problem, not a conversion bug. Add `\"msgid_plural\": \"%d items\"` and `\"msgstr\": [\"%d item\", \"%d items\"]` to the JSON entry and re-run.",
+      },
+    ],
+  },
+
+  // ===== ASS / SSA styled subtitles =====
+  "srt-to-ass": {
+    whyConvert:
+      "SRT is the lowest-common-denominator subtitle format — plain timing + plain text, no styling. ASS is what serious video work uses: positioning, fonts, colors, karaoke timing, libass-rendered overlays in mpv/VLC/ffmpeg. Converting SRT to ASS upgrades plain captions to a styled subtitle track that your editor (Aegisub) can layer effects onto without re-typing every line.",
+    example:
+      "You're typesetting an anime episode and the rough English subtitles came in as `episode.srt`. You convert to `episode.ass`, open in Aegisub, restyle the Default style to match the fansub group's font conventions, then add per-line karaoke timing for the OP/ED — all without losing the original timing the translator nailed.",
+    troubleshooting: [
+      {
+        problem: "Italics from my SRT (`<i>...</i>`) aren't styled in the ASS output.",
+        solution:
+          "We drop SRT HTML-style tags in this version because ASS uses a different override syntax (`{\\i1}...{\\i0}`). After conversion, find/replace `<i>` → `{\\i1}` and `</i>` → `{\\i0}` in the dialogue text. Aegisub also has a one-click \"Apply tags from selected lines\" feature.",
+      },
+      {
+        problem: "All my dialogue lines use the Default style — I want per-character styles.",
+        solution:
+          "ASS supports multiple Style entries in [V4+ Styles] but a one-shot conversion can't infer which speaker is which from SRT. After conversion, open in Aegisub, add Style entries (Subtitle → Styles Manager → New), then either select-and-restyle individual Dialogue rows or use Aegisub's Karaoke Templater / styling-by-actor workflow.",
+      },
+    ],
+  },
+  "ass-to-srt": {
+    whyConvert:
+      "Most consumer video players (YouTube uploads, browser HTML5 video, hardware TVs, mobile players, basic Plex setups) only understand SRT. Converting ASS to SRT strips styling/positioning/karaoke effects but keeps the timing + dialogue text the audience actually reads — so your stylized fansub still plays on the recipient's device when ASS isn't supported.",
+    example:
+      "You finished an Aegisub typesetting pass on `episode.ass`, but the friend who's watching has a smart TV that only does SRT subtitles via USB. Convert to `episode.srt`, drop on the USB stick, the TV picks it up.",
+    troubleshooting: [
+      {
+        problem: "I'm missing some lines that were in the ASS file.",
+        solution:
+          "ASS distinguishes `Dialogue:` lines (rendered captions) from `Comment:` lines (translator notes / karaoke source / disabled lines). Only Dialogue lines go into SRT — that's correct behavior. If important lines were marked as Comment by mistake, edit the .ass file in Aegisub and switch the row's class from Comment to Dialogue before re-converting.",
+      },
+      {
+        problem: "Override codes like `{\\fad(200,200)}` appeared as literal text.",
+        solution:
+          "Our converter strips standard inline overrides ({\\i1}, {\\b1}, {\\fnArial}, etc.) but very long or malformed override blocks can sneak through. Open the resulting SRT and find/replace `{...}` blocks manually if any remain.",
+      },
+    ],
+  },
+  "vtt-to-ass": {
+    whyConvert:
+      "WebVTT is the browser-native subtitle format (`<track kind=\"subtitles\">`); ASS is the format Aegisub and mpv prefer for advanced typesetting. Converting VTT to ASS lets you upgrade auto-generated YouTube captions (which export as VTT) into a stylable working file for proper typesetting.",
+    example:
+      "You exported YouTube's auto-captions as `lecture.vtt`. You convert to `lecture.ass`, open in Aegisub, fix the speech-recognition errors line-by-line, and restyle the Default fontsize to match the slide aesthetic — much faster than retyping every line from scratch.",
+    troubleshooting: [
+      {
+        problem: "VTT positioning cues (line:80%, align:center) didn't carry over.",
+        solution:
+          "WebVTT positioning maps imperfectly to ASS positioning (which uses a different model: alignment 1-9 grid plus \\pos overrides). We drop VTT positioning in this version and emit alignment 2 (bottom center). Re-add per-line positioning in Aegisub if it matters for your typesetting.",
+      },
+    ],
+  },
+  "ass-to-vtt": {
+    whyConvert:
+      "Browser-native HTML5 video only loads subtitles via `<track src=\"...\" kind=\"subtitles\">` with a WebVTT file. ASS doesn't work directly. Converting ASS to VTT preserves timing and dialogue text so a styled fansub can stream on the web (YouTube, Vimeo, custom video pages) when ASS isn't an option.",
+    example:
+      "Your `episode.ass` is built with full styling, but you need to embed the episode on a Next.js page with the HTML5 `<video>` element. Convert to `episode.vtt`, host alongside the .mp4, and reference via `<track>`. The browser plays it; styling won't carry over but the captions will be correct + timed.",
+    troubleshooting: [
+      {
+        problem: "Multi-line ASS dialogue (`\\N` line breaks) shows as one long line in the browser.",
+        solution:
+          "We convert `\\N` to real newlines in the VTT output. Most browsers render newlines inside a cue correctly, but some (notably older Safari versions) collapse them. If yours does, manually edit the VTT to use `<br>` between lines — WebVTT supports a subset of HTML inside cues.",
+      },
+    ],
+  },
+
+  // ===== CAD (AutoCAD DXF) =====
+  "dxf-to-svg": {
+    whyConvert:
+      "DXF is the universal 2D-CAD exchange format but every browser-based tool, every static-site setup, every embeddable diagram framework speaks SVG. Converting DXF to SVG lets you embed CAD drawings on a webpage, in documentation, in a Notion page, or in a slide — without forcing the viewer to install AutoCAD or LibreCAD. Geometry stays vector-precise (LINE, CIRCLE, ARC, POLYLINE all map to native SVG primitives), so the result scales cleanly at any zoom level.",
+    example:
+      "You have a `floorplan.dxf` from your architect and you want to embed it on the project's status page so stakeholders can view the layout in any browser. Drop it here, get `floorplan.svg`, drop it into your CMS. The result renders crisp at any size, no plugins needed.",
+    troubleshooting: [
+      {
+        problem: "Some entities are missing from the SVG (the drawing looks incomplete).",
+        solution:
+          "We render the most common geometry types — LINE, CIRCLE, ARC, LWPOLYLINE, POLYLINE, POINT, TEXT, MTEXT — directly. INSERT (block references), HATCH (fills), DIMENSION (dimension lines), 3DFACE, and SOLID are not yet expanded and get dropped. If your drawing relies heavily on blocks, explode them in your CAD tool before exporting (AutoCAD: EXPLODE command; LibreCAD: Modify → Explode) so each component is a flat entity.",
+      },
+      {
+        problem: "The drawing is upside-down or text is mirrored.",
+        solution:
+          "DXF uses math-convention Y-axis (up); SVG uses screen-convention Y-axis (down). We apply a `scale(1,-1)` transform on the outer group to flip everything upright, and a counter-flip on each text element so glyphs stay readable. If something STILL looks mirrored, the CAD export probably specified a `$EXTNAMES` or coordinate-system override we don't handle yet — flatten the coordinate system in your CAD tool before exporting.",
+      },
+      {
+        problem: "Binary DXF doesn't work.",
+        solution:
+          "Binary DXF (a compact non-text variant) is rare but exists. We only parse ASCII DXF. Re-export from your CAD tool with the \"DXF Format\" option set to ASCII — every CAD tool defaults to ASCII these days so this should be the default behavior.",
+      },
+    ],
+  },
+  "dxf-to-json": {
+    whyConvert:
+      "Working programmatically with CAD geometry is brutal in DXF's pair-based ASCII wire format (group code on one line, value on the next, repeated for every property of every entity). Converting to JSON gives you a clean structured entity array your code can map, filter, transform, and serialize. Useful when building CAD pipelines, generating reports from drawings, or feeding geometry into a custom renderer.",
+    example:
+      "You're scripting a quantity takeoff from a set of `*.dxf` site plans. Each entity has a layer name encoding its category (Walls, Doors, Windows). Convert each DXF to JSON, filter `entities` by `layer`, sum LINE lengths or count CIRCLE entities by layer — far easier than parsing the raw DXF in your language of choice.",
+    troubleshooting: [
+      {
+        problem: "I want geometry from a BLOCK (a reusable component referenced by INSERT).",
+        solution:
+          "INSERT entities are currently dropped on output. To get the geometry, EXPLODE the INSERT in your CAD tool first (AutoCAD: EXPLODE; LibreCAD: Modify → Explode), then re-export the DXF. The exploded entities will appear as LINE/CIRCLE/ARC/etc. in the resulting JSON.",
+      },
+      {
+        problem: "Polyline vertices look out of order.",
+        solution:
+          "DXF LWPOLYLINE stores vertices as repeated (10, 20) group code pairs in the original drawing order. We preserve that order verbatim. If they look wrong, it's the CAD export — open the DXF in a text editor and confirm the 10/20 pairs appear in the same order you expect.",
+      },
+    ],
+  },
 };
 
 export function getExtendedCopy(toolId: string): ExtendedCopy | undefined {

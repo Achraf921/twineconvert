@@ -463,6 +463,16 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "csv-to-po":  { provider: () => text("messages.csv", `msgctxt,msgid,msgid_plural,msgstr,msgstr_plurals,comments,extracted,references,flags\n,Hello,,Bonjour,,,,,\nnoun,Order,,Pedido,,,,,\nverb,Order,,Ordenar,,,,,\n`, "text/csv"), env: "node" },
   "json-to-po": { provider: () => text("messages.json", `[{"msgid":"Hello","msgstr":"Bonjour"},{"msgid":"%d apple","msgid_plural":"%d apples","msgstr":["%d pomme","%d pommes"]}]`, "application/json"), env: "node" },
 
+  // ===== ASS / SSA styled subtitles =====
+  "srt-to-ass": { provider: () => text("captions.srt", F.srt, "application/x-subrip"), env: "node" },
+  "vtt-to-ass": { provider: () => text("captions.vtt", F.vtt, "text/vtt"), env: "node" },
+  "ass-to-srt": { provider: () => text("captions.ass", F.ass, "text/x-ssa"), env: "node" },
+  "ass-to-vtt": { provider: () => text("captions.ass", F.ass, "text/x-ssa"), env: "node" },
+
+  // ===== CAD (DXF) =====
+  "dxf-to-svg":  { provider: () => text("drawing.dxf", F.dxf, "image/vnd.dxf"), env: "node" },
+  "dxf-to-json": { provider: () => text("drawing.dxf", F.dxf, "image/vnd.dxf"), env: "node" },
+
   // ===== CSS named colors =====
   "color-name-to-hex": { provider: () => text("colors.txt", F.colorNames, "text/plain"), env: "node" },
   "hex-to-color-name": { provider: () => text("colors.txt", F.hexList, "text/plain"), env: "node" },

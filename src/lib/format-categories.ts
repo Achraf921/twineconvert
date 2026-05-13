@@ -69,6 +69,9 @@ const FORMAT_TO_CATEGORY: Record<string, FormatCategory> = {
   SARIF: "Other", EDI: "Other", EDIFACT: "Other",
   PACER: "Other",
   PO: "Other", POT: "Other",
+  ASS: "Video", SSA: "Video", SRT: "Video", VTT: "Video", SBV: "Video",
+  // CAD (2D drawings)
+  DXF: "Other",
 };
 
 export function categorize(format: string): FormatCategory {
