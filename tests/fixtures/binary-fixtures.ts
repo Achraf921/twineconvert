@@ -11,6 +11,7 @@
 import type JSZipType from "jszip";
 import { buildAse, buildAco, type Palette } from "../../src/lib/engine/util/palette";
 import { buildBinaryStl, type Mesh } from "../../src/lib/engine/util/mesh";
+import { buildGlb } from "../../src/lib/engine/util/gltf";
 import { buildDst, buildPes, buildJef, buildExp, StitchCommand, type EmbroideryDesign } from "../../src/lib/engine/util/embroidery";
 
 /** A 1x1 transparent PNG (smallest valid PNG, hand-crafted). */
@@ -221,6 +222,31 @@ export const SAMPLE_CUBE_MESH: Mesh = {
 /** A binary STL of the unit cube. */
 export function makeTinyStl(): Uint8Array {
   return new Uint8Array(buildBinaryStl(SAMPLE_CUBE_MESH));
+}
+
+/**
+ * A minimal valid glTF 2.0 binary (.glb) of the unit cube. Built by our
+ * own writer so the round-trip test (GLB -> STL -> GLB) doesn't depend
+ * on an external golden file. The 3D primitive count must round-trip
+ * exactly (12 triangles for a cube).
+ */
+export function makeTinyGlb(): Uint8Array {
+  return new Uint8Array(buildGlb(SAMPLE_CUBE_MESH));
+}
+
+/** A minimal OBJ (ASCII) of the unit cube. */
+export function makeTinyObj(): string {
+  const lines: string[] = ["# unit cube"];
+  for (let i = 0; i < SAMPLE_CUBE_MESH.vertices.length; i += 3) {
+    lines.push(`v ${SAMPLE_CUBE_MESH.vertices[i]} ${SAMPLE_CUBE_MESH.vertices[i + 1]} ${SAMPLE_CUBE_MESH.vertices[i + 2]}`);
+  }
+  for (let i = 0; i < SAMPLE_CUBE_MESH.triangles.length; i += 3) {
+    // OBJ indices are 1-based
+    lines.push(
+      `f ${SAMPLE_CUBE_MESH.triangles[i] + 1} ${SAMPLE_CUBE_MESH.triangles[i + 1] + 1} ${SAMPLE_CUBE_MESH.triangles[i + 2] + 1}`,
+    );
+  }
+  return lines.join("\n") + "\n";
 }
 
 /** A minimal embroidery design with a few stitches and an end marker. */

@@ -58,7 +58,7 @@ const FORMAT_TO_CATEGORY: Record<string, FormatCategory> = {
   ASE: "Color", GPL: "Color", ACO: "Color", HEX: "Color",
   CUBE: "Color", "3DL": "Color", CSP: "Color",
   // 3D
-  STL: "3D", "3MF": "3D", OBJ: "3D", GLTF: "3D", IFC: "3D",
+  STL: "3D", "3MF": "3D", OBJ: "3D", GLTF: "3D", GLB: "3D", IFC: "3D",
   // Music
   MIDI: "Music", MID: "Music", MUSICXML: "Music", MXL: "Music",
   // Embroidery

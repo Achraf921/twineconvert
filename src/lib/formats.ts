@@ -1066,6 +1066,16 @@ const PROFILES: Record<string, FormatProfile> = {
     primaryUse: "Styled subtitles for video — anime fansubs, professional video typesetting, karaoke timings.",
     binary: false,
   },
+  glb: {
+    name: "GLB",
+    fullName: "glTF 2.0 Binary",
+    description:
+      "GLB is the binary container for glTF 2.0 — the Khronos Group's web-native 3D format, often called \"the JPEG of 3D.\" A single .glb file packs the model's JSON metadata (scene graph, materials, animations) and binary buffers (vertex positions, normals, UVs, indices, textures) into one self-contained download, ideal for streaming over HTTP. Universal support across the modern 3D stack: Three.js, Babylon.js, model-viewer (Google's `<model-viewer>` web component), Sketchfab, Facebook 3D posts, Microsoft 3D Viewer, Apple QuickLook (via USDZ conversion), Blender (import/export), Unreal Engine, Unity. Every WebXR/AR/VR pipeline reads GLB. Spec finalized in 2017 as glTF 2.0; binary chunk format kept stable since.",
+    howToOpen:
+      "Drag-and-drop into https://gltf-viewer.donmccurdy.com or https://sandbox.babylonjs.com/. Blender opens .glb via File → Import → glTF 2.0. The `<model-viewer>` web component renders them on any webpage with `<model-viewer src=\"model.glb\">`. Microsoft 3D Viewer (Windows) and macOS Preview (with USDZ Tools) handle GLB natively.",
+    primaryUse: "3D model delivery for the web (AR product viewers, WebXR scenes, embedded 3D widgets) and modern game-engine workflows.",
+    binary: true,
+  },
   dxf: {
     name: "DXF",
     fullName: "AutoCAD Drawing Exchange Format",

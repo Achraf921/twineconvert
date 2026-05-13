@@ -645,6 +645,16 @@ export const registry: Record<string, ConverterLoader> = {
   "dxf-to-svg": () => import("./converters/dxf-to-svg").then((m) => m.default),
   "dxf-to-json": () => import("./converters/dxf-to-json").then((m) => m.default),
 
+  // 3D model interchange: glTF 2.0 binary (.glb) ↔ STL/OBJ. GLB is the
+  // web-native format: Three.js, Babylon, model-viewer, Blender, USDZ,
+  // and every AR/VR pipeline reads it. STL is the 3D-printing standard;
+  // OBJ is the legacy DCC interchange. Custom parser/writer keeps the
+  // bundle light (no @gltf-transform or three.js dependency).
+  "stl-to-glb": () => import("./converters/stl-to-glb").then((m) => m.default),
+  "glb-to-stl": () => import("./converters/glb-to-stl").then((m) => m.default),
+  "obj-to-glb": () => import("./converters/obj-to-glb").then((m) => m.default),
+  "glb-to-obj": () => import("./converters/glb-to-obj").then((m) => m.default),
+
   // OpenDocument spreadsheets (LibreOffice / OpenOffice / Numbers fallback).
   "ods-to-csv": () =>
     import("./converters/ods-to-csv").then((m) => m.default),

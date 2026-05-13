@@ -798,6 +798,75 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       },
     ],
   },
+
+  // ===== 3D model interchange (GLB / glTF) =====
+  "stl-to-glb": {
+    whyConvert:
+      "STL is the 3D-printing standard but it's bad for web embedding: no scene graph, no compression, no streaming. GLB (glTF 2.0 binary) is the web-native format that powers Three.js, model-viewer, Sketchfab, Facebook 3D, Apple QuickLook (via USDZ), and every WebXR/AR pipeline. Converting STL to GLB unlocks browser-based 3D viewing, AR product previews, and embeddable 3D widgets on any webpage.",
+    example:
+      "You designed a part in Fusion 360 and exported `part.stl` for the 3D printer. Now you want to embed an interactive 3D preview on your product page. Convert to `part.glb`, drop it next to your HTML, and reference it with `<model-viewer src=\"part.glb\" auto-rotate camera-controls>`. Users can spin the model in any browser, including mobile AR.",
+    troubleshooting: [
+      {
+        problem: "The model loads but appears black / has no surface color in model-viewer.",
+        solution:
+          "Our STL→GLB converter only emits geometry (vertex positions + indices), not material data, because STL has no material concept either. Add `--exposure 1 --shadow-intensity 1` attributes to model-viewer, or add a material via Blender (File → Import .glb → Material tab → Add → File → Export .glb). Adding lighting in model-viewer (`<model-viewer environment-image=\"neutral\">`) usually fixes it.",
+      },
+      {
+        problem: "The browser says the GLB is too large to load.",
+        solution:
+          "STL meshes from CAD exports often have far more triangles than necessary for web display. Open in Blender → Modifiers → Decimate → set ratio to 0.1-0.3 to cut triangle count 70-90% before exporting to STL → re-run this converter. The visual difference at typical model-viewer sizes is imperceptible.",
+      },
+    ],
+  },
+  "glb-to-stl": {
+    whyConvert:
+      "Your 3D printer slicer (Cura, PrusaSlicer, Bambu Studio, Slic3r, Simplify3D) wants STL. The .glb file you downloaded from Sketchfab, Thingiverse's newer GLB section, or extracted from a game asset pack won't import directly. glb-to-stl extracts the mesh geometry and emits a clean binary STL ready for slicing.",
+    example:
+      "You downloaded a `dragon.glb` from a Sketchfab CC-BY-licensed model pack. PrusaSlicer doesn't open GLB. Convert to `dragon.stl` here, open in PrusaSlicer, scale to print bed, slice, print. Total round-trip: 90 seconds.",
+    troubleshooting: [
+      {
+        problem: "The STL came out smaller (fewer triangles) than I expected.",
+        solution:
+          "We currently extract only the first mesh primitive of the first mesh in the GLB's scene graph. Multi-mesh GLBs (e.g., a character with separate body+clothing meshes) only yield the body. To merge meshes, open the GLB in Blender → Object Mode → Select All → Ctrl-J (Join) → File → Export → glTF .glb, then re-run this converter.",
+      },
+      {
+        problem: "The model appears tiny or huge in my slicer.",
+        solution:
+          "GLB convention is meters; STL convention is millimeters in most slicers. If your dragon is 1 unit tall in GLB, it'll be 1 mm tall in PrusaSlicer. Scale the STL up by 1000x in the slicer (right-click → Scale → 1000%) or scale in Blender before exporting.",
+      },
+    ],
+  },
+  "obj-to-glb": {
+    whyConvert:
+      "OBJ is the de-facto legacy DCC interchange (Maya, 3ds Max, Blender, ZBrush all read it) but it's text-based, lacks compression, and has no scene graph. GLB is the modern web/AR/VR replacement. Converting OBJ to GLB shrinks file size, gains binary streaming, and gets you into the modern 3D pipeline (model-viewer, Sketchfab, WebXR, USDZ via gltf2usd).",
+    example:
+      "Your sculptor delivers final asset as `character.obj`. You need it on a Next.js product page rendered via `<model-viewer>`. Convert to `character.glb`, drop in `public/`, reference in the component. 10x smaller than the OBJ source after binary packing, loads in 200ms on a typical connection.",
+    troubleshooting: [
+      {
+        problem: "UVs and texture from my OBJ don't appear in the GLB.",
+        solution:
+          "Our OBJ→GLB converter currently emits only vertex positions and faces. UVs (vt lines), normals (vn), and material references (mtllib + usemtl) are dropped. For textured models, open the .obj in Blender → File → Import → Wavefront .obj (with `Image Search` enabled to find the .mtl + textures) → File → Export → glTF .glb. That round-trip preserves materials.",
+      },
+      {
+        problem: "Faces look inverted (interior of the model is visible).",
+        solution:
+          "OBJ winding-order convention varies between exporters. If your model came out inside-out, open in Blender → Edit Mode → Select All → Mesh → Normals → Recalculate Outside (Shift-N) → re-export to OBJ → re-run.",
+      },
+    ],
+  },
+  "glb-to-obj": {
+    whyConvert:
+      "Some 3D pipelines (older renderers, legacy CAM software, certain academic toolchains) still require OBJ. Converting GLB to OBJ extracts the mesh as plain ASCII text that any DCC tool from the last 30 years can read. Useful when you have a modern GLB but need to feed a legacy workflow.",
+    example:
+      "Your downstream renderer is an ancient academic raytracer that only reads Wavefront OBJ. The mesh you have is `scene.glb` from a recent Blender export. Convert here, get `scene.obj`, pipe into the renderer. Done.",
+    troubleshooting: [
+      {
+        problem: "The OBJ has no texture coordinates (vt lines).",
+        solution:
+          "Same limitation as the reverse direction — we currently emit only positions and faces from the GLB's first primitive. Open in Blender if you need the UVs back: Import GLB → Export OBJ with default settings (which include `vt` and `vn` lines).",
+      },
+    ],
+  },
 };
 
 export function getExtendedCopy(toolId: string): ExtendedCopy | undefined {

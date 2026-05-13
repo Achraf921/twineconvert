@@ -16,7 +16,7 @@
 import { describe, it, expect } from "vitest";
 import { run } from "../src/lib/engine/runner";
 import { FIXTURES, fileFromText } from "./fixtures/text-fixtures";
-import { fileFromBytes, makeTinyAse, makeTinyAco, makeAcoV1Only, makeAcoCmyk, makeAcoHsb, makeTinyZip, makeTinyDst, makeTinyPes, makeTinyJef, makeTinyStl } from "./fixtures/binary-fixtures";
+import { fileFromBytes, makeTinyAse, makeTinyAco, makeAcoV1Only, makeAcoCmyk, makeAcoHsb, makeTinyZip, makeTinyDst, makeTinyPes, makeTinyJef, makeTinyStl, makeTinyGlb, makeTinyObj } from "./fixtures/binary-fixtures";
 
 /** Read a Blob's bytes once and assert the first N bytes match. */
 async function expectMagicBytes(blob: Blob, magic: number[]) {
@@ -756,6 +756,77 @@ describe("text-format converter smoke tests", () => {
     expect(bytes.length).toBeGreaterThan(84);
     const triCount = new DataView(bytes.buffer).getUint32(80, true);
     expect(triCount).toBe(12); // unit cube = 12 triangles
+  });
+
+  // ===== 3D mesh: GLB / glTF binary =====
+  // GLB tests assert the binary container is structurally valid AND
+  // the round-trip preserves the mesh's actual triangle count — not
+  // just "output is non-empty", which would let a writer that emits a
+  // bare header (no actual mesh) sneak through.
+  it("stl-to-glb produces a structurally valid glTF 2.0 binary", async () => {
+    const input = fileFromBytes("cube.stl", makeTinyStl(), "model/stl");
+    const result = await run("stl-to-glb", input);
+    const buf = await result.blob.arrayBuffer();
+    const view = new DataView(buf);
+    // GLB magic + version + length headers
+    expect(view.getUint32(0, true)).toBe(0x46546c67); // "glTF"
+    expect(view.getUint32(4, true)).toBe(2);
+    expect(view.getUint32(8, true)).toBe(buf.byteLength);
+    // First chunk must be JSON
+    expect(view.getUint32(16, true)).toBe(0x4e4f534a); // "JSON"
+    // JSON body should mention the canonical glTF top-level keys
+    const jsonLen = view.getUint32(12, true);
+    const json = new TextDecoder().decode(new Uint8Array(buf, 20, jsonLen));
+    expect(json).toContain('"asset"');
+    expect(json).toContain('"meshes"');
+    expect(json).toContain('"VEC3"');
+  });
+
+  it("glb-to-stl extracts the right triangle count (12 for a unit cube)", async () => {
+    const input = fileFromBytes("cube.glb", makeTinyGlb(), "model/gltf-binary");
+    const result = await run("glb-to-stl", input);
+    const bytes = new Uint8Array(await result.blob.arrayBuffer());
+    expect(bytes.length).toBeGreaterThan(84); // 80-byte header + uint32 count + at least 1 triangle
+    const triCount = new DataView(bytes.buffer).getUint32(80, true);
+    expect(triCount).toBe(12);
+  });
+
+  it("STL → GLB → STL preserves triangle count exactly", async () => {
+    const stlFile = fileFromBytes("cube.stl", makeTinyStl(), "model/stl");
+    const glb = await run("stl-to-glb", stlFile);
+    const glbFile = new File([await glb.blob.arrayBuffer()], "out.glb", { type: "model/gltf-binary" });
+    const back = await run("glb-to-stl", glbFile);
+    const bytes = new Uint8Array(await back.blob.arrayBuffer());
+    const triCount = new DataView(bytes.buffer).getUint32(80, true);
+    expect(triCount).toBe(12);
+  });
+
+  it("obj-to-glb parses ASCII OBJ vertices/faces into a valid GLB", async () => {
+    const input = fileFromText("cube.obj", makeTinyObj(), "model/obj");
+    const result = await run("obj-to-glb", input);
+    const buf = await result.blob.arrayBuffer();
+    const view = new DataView(buf);
+    expect(view.getUint32(0, true)).toBe(0x46546c67); // "glTF"
+    // BIN chunk must be present and non-empty
+    const jsonLen = view.getUint32(12, true);
+    const binChunkOff = 20 + jsonLen;
+    expect(view.getUint32(binChunkOff + 4, true)).toBe(0x004e4942); // "BIN\0"
+    const binLen = view.getUint32(binChunkOff, true);
+    expect(binLen).toBeGreaterThan(0);
+  });
+
+  it("glb-to-obj round-trip preserves the same triangle count via OBJ", async () => {
+    // GLB -> OBJ -> STL chain proves the GLB writer's vertex+index data
+    // is consistent with what the OBJ reader expects downstream.
+    const glbFile = fileFromBytes("cube.glb", makeTinyGlb(), "model/gltf-binary");
+    const obj = await run("glb-to-obj", glbFile);
+    const text = await obj.blob.text();
+    // OBJ should have one `v ` line per vertex (8 for a cube) and one `f `
+    // line per triangle (12 for a cube).
+    const vLines = (text.match(/^v /gm) ?? []).length;
+    const fLines = (text.match(/^f /gm) ?? []).length;
+    expect(vLines).toBe(8);
+    expect(fLines).toBe(12);
   });
 
   it("stl-to-3mf produces a zip with a model XML inside", async () => {

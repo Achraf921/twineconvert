@@ -441,6 +441,7 @@ export const validateAss: Validator = async ({ blob, minSize = 20 }) => {
   if (!/^Dialogue:/im.test(text)) throw new Error("ASS has no Dialogue lines");
 };
 
+
 export const validateRis: Validator = async ({ blob, minSize = 10 }) => {
   assertMinSize(blob, minSize, "RIS/NBIB");
   const text = await readText(blob);

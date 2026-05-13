@@ -26,6 +26,8 @@ import {
   makeTinyJef,
   makeTinyExp,
   makeTinyStl,
+  makeTinyGlb,
+  makeTinyObj,
   makeTinyDocx,
   makeTinyXlsx,
   makeTinyOds,
@@ -472,6 +474,12 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   // ===== CAD (DXF) =====
   "dxf-to-svg":  { provider: () => text("drawing.dxf", F.dxf, "image/vnd.dxf"), env: "node" },
   "dxf-to-json": { provider: () => text("drawing.dxf", F.dxf, "image/vnd.dxf"), env: "node" },
+
+  // ===== 3D model interchange (GLB / glTF binary) =====
+  "stl-to-glb": { provider: () => Promise.resolve(fileFromBytes("cube.stl", makeTinyStl(), "model/stl")), env: "node" },
+  "glb-to-stl": { provider: () => Promise.resolve(fileFromBytes("cube.glb", makeTinyGlb(), "model/gltf-binary")), env: "node" },
+  "obj-to-glb": { provider: () => text("cube.obj", makeTinyObj(), "model/obj"), env: "node" },
+  "glb-to-obj": { provider: () => Promise.resolve(fileFromBytes("cube.glb", makeTinyGlb(), "model/gltf-binary")), env: "node" },
 
   // ===== CSS named colors =====
   "color-name-to-hex": { provider: () => text("colors.txt", F.colorNames, "text/plain"), env: "node" },
