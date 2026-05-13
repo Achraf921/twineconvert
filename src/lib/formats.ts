@@ -1046,6 +1046,16 @@ const PROFILES: Record<string, FormatProfile> = {
     primaryUse: "Java/Spring application configuration.",
     binary: false,
   },
+  po: {
+    name: ".po",
+    fullName: "Gettext Portable Object",
+    description:
+      "A PO file is the interchange format used by every gettext-based software localization toolchain: GNU gettext, Babel (Python), Poedit, Lokalise, Crowdin, Weblate, Transifex, polib, react-i18next, Django, Symfony, WordPress translations, and many more. Each entry pairs a source string (`msgid`) with its translation (`msgstr`), plus optional disambiguation context (`msgctxt`), plural forms (`msgid_plural` / `msgstr[N]`), translator/developer comments, source-file references, and gettext flags. Spec dates to 1995 with the original GNU gettext release; still the de-facto standard 30 years later.",
+    howToOpen:
+      "Poedit (free, all platforms) is the most common editor. Lokalise/Crowdin/Weblate/Transifex import PO directly via web upload. Any text editor opens them as plain text. Linguists prefer Poedit for translation memory and validation; developers usually edit them in their IDE.",
+    primaryUse: "Software localization (UI strings, error messages, in-app text in every language).",
+    binary: false,
+  },
   toml: {
     name: "TOML",
     fullName: "Tom's Obvious Minimal Language",

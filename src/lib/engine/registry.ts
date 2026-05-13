@@ -673,6 +673,16 @@ export const registry: Record<string, ConverterLoader> = {
   "hcl-to-json": () =>
     import("./converters/hcl-to-json").then((m) => m.default),
 
+  // Gettext PO (software localization). Spoken by every translation
+  // toolchain: Poedit, Lokalise, Crowdin, Weblate, Transifex, polib,
+  // react-i18next, Django gettext, etc. Lossless round-trip preserves
+  // msgctxt, msgid_plural, plural msgstr arrays, comments, references,
+  // and flags through both CSV and JSON.
+  "po-to-csv": () => import("./converters/po-to-csv").then((m) => m.default),
+  "csv-to-po": () => import("./converters/csv-to-po").then((m) => m.default),
+  "po-to-json": () => import("./converters/po-to-json").then((m) => m.default),
+  "json-to-po": () => import("./converters/json-to-po").then((m) => m.default),
+
   // CSS named colors (147-color spec).
   "color-name-to-hex": () =>
     import("./converters/color-name-to-hex").then((m) => m.default),

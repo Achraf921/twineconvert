@@ -63,11 +63,12 @@ const FORMAT_TO_CATEGORY: Record<string, FormatCategory> = {
   MIDI: "Music", MID: "Music", MUSICXML: "Music", MXL: "Music",
   // Embroidery
   DST: "Embroidery", PES: "Embroidery", JEF: "Embroidery", EXP: "Embroidery",
-  // Other (ham radio, chess, security, etc.)
+  // Other (ham radio, chess, security, localization, etc.)
   ADIF: "Other", CABRILLO: "Other", KML: "Other",
   PGN: "Other", FEN: "Other",
   SARIF: "Other", EDI: "Other", EDIFACT: "Other",
   PACER: "Other",
+  PO: "Other", POT: "Other",
 };
 
 export function categorize(format: string): FormatCategory {

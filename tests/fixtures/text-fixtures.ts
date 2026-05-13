@@ -685,6 +685,62 @@ spring.datasource.username=admin
 logging.level.root=INFO
 `,
 
+  // ---- Gettext PO fixture ----
+  //
+  // Designed to exercise every real-world feature parseBibtex-style
+  // shallow parsers usually miss:
+  //   - Header entry (msgid "" with metadata)
+  //   - Plural forms (msgid_plural + msgstr[0]/msgstr[1])
+  //   - Disambiguation context (msgctxt)
+  //   - Translator (#), developer (#.), reference (#:), and flag (#,) comments
+  //   - Multi-line strings wrapped across consecutive quoted lines
+  //   - Escape sequences: \n, \t, \"
+  //   - UTF-8 non-ASCII (Spanish accents) for sanity
+  poGettext: `# Spanish translation for sample app
+# Copyright (C) 2026 twineconvert team
+msgid ""
+msgstr ""
+"Project-Id-Version: sample 1.0\\n"
+"Language: es\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\\n"
+
+#. Greeting shown on the home page
+#: src/components/Hero.tsx:18
+msgid "Hello, world!"
+msgstr "¡Hola, mundo!"
+
+# Translator note: keep this short for mobile
+#: src/components/CartButton.tsx:42
+#, fuzzy
+msgid "Add to cart"
+msgstr "Añadir al carrito"
+
+#. Same English word, different meaning depending on context
+msgctxt "noun"
+msgid "Order"
+msgstr "Pedido"
+
+msgctxt "verb"
+msgid "Order"
+msgstr "Ordenar"
+
+#. Pluralized cart-count message
+#: src/components/Cart.tsx:88
+msgid "You have %d item in your cart"
+msgid_plural "You have %d items in your cart"
+msgstr[0] "Tienes %d artículo en tu carrito"
+msgstr[1] "Tienes %d artículos en tu carrito"
+
+#. Multi-line error message wrapped via consecutive quoted lines
+msgid ""
+"Sorry, something went wrong.\\n"
+"Please try again or contact support."
+msgstr ""
+"Lo sentimos, algo salió mal.\\n"
+"Inténtalo de nuevo o contacta con soporte."
+`,
+
   // ---- HCL (Terraform) fixture ----
   hclTerraform: `terraform {
   required_version = ">= 1.0"

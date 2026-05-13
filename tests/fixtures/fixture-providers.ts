@@ -455,6 +455,14 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "json-to-properties": { provider: () => text("config.json", `{"server.port":"8080","spring.datasource.url":"jdbc:postgresql://localhost:5432/mydb"}`, "application/json"), env: "node" },
   "hcl-to-json":        { provider: () => text("main.tf", F.hclTerraform, "text/x-hcl"), env: "node" },
 
+  // ===== Gettext PO (localization) =====
+  // CSV/JSON inputs for csv-to-po and json-to-po use the canonical
+  // columns/keys our writers emit so the round-trip path is exercised.
+  "po-to-csv":  { provider: () => text("messages.po", F.poGettext, "text/x-gettext-translation"), env: "node" },
+  "po-to-json": { provider: () => text("messages.po", F.poGettext, "text/x-gettext-translation"), env: "node" },
+  "csv-to-po":  { provider: () => text("messages.csv", `msgctxt,msgid,msgid_plural,msgstr,msgstr_plurals,comments,extracted,references,flags\n,Hello,,Bonjour,,,,,\nnoun,Order,,Pedido,,,,,\nverb,Order,,Ordenar,,,,,\n`, "text/csv"), env: "node" },
+  "json-to-po": { provider: () => text("messages.json", `[{"msgid":"Hello","msgstr":"Bonjour"},{"msgid":"%d apple","msgid_plural":"%d apples","msgstr":["%d pomme","%d pommes"]}]`, "application/json"), env: "node" },
+
   // ===== CSS named colors =====
   "color-name-to-hex": { provider: () => text("colors.txt", F.colorNames, "text/plain"), env: "node" },
   "hex-to-color-name": { provider: () => text("colors.txt", F.hexList, "text/plain"), env: "node" },

@@ -217,6 +217,82 @@ describe("text-format converter smoke tests", () => {
     expect(text).toContain("Congreso Iberoamericano");
   });
 
+  // ===== Localization (gettext PO) =====
+  // Real PO files in the wild carry plurals, contexts, comments, and
+  // multi-line strings — these tests assert each survives end-to-end.
+  it("po-to-json captures plural arrays and disambiguation contexts", async () => {
+    const input = fileFromText("messages.po", FIXTURES.poGettext, "text/plain");
+    const result = await run("po-to-json", input);
+    await expectParseableJson(result.blob);
+    const entries = JSON.parse(await result.blob.text());
+    expect(Array.isArray(entries)).toBe(true);
+
+    // Plural entry has msgstr as an array of two forms.
+    const pluralEntry = entries.find((e: { msgid_plural?: string }) => e.msgid_plural);
+    expect(pluralEntry).toBeDefined();
+    expect(Array.isArray(pluralEntry.msgstr)).toBe(true);
+    expect(pluralEntry.msgstr.length).toBe(2);
+    expect(pluralEntry.msgstr[0]).toContain("artículo");
+    expect(pluralEntry.msgstr[1]).toContain("artículos");
+
+    // Two distinct entries share msgid \"Order\" but differ by msgctxt.
+    const orders = entries.filter((e: { msgid: string }) => e.msgid === "Order");
+    expect(orders.length).toBe(2);
+    expect(orders.map((e: { msgctxt: string }) => e.msgctxt).sort()).toEqual(["noun", "verb"]);
+  });
+
+  it("json-to-po emits valid PO from a structured array", async () => {
+    // Hand-build a small entries array (not from the fixture) so this
+    // test independently verifies the writer side.
+    const entries = [
+      { msgid: "", msgstr: "Content-Type: text/plain; charset=UTF-8\\n" },
+      { msgid: "Hello", msgstr: "Bonjour" },
+      {
+        msgid: "%d apple",
+        msgid_plural: "%d apples",
+        msgstr: ["%d pomme", "%d pommes"],
+      },
+    ];
+    const input = fileFromText("entries.json", JSON.stringify(entries), "application/json");
+    const result = await run("json-to-po", input);
+    const text = await result.blob.text();
+    expect(text).toContain('msgid "Hello"');
+    expect(text).toContain('msgstr "Bonjour"');
+    expect(text).toContain('msgid_plural "%d apples"');
+    expect(text).toContain('msgstr[0] "%d pomme"');
+    expect(text).toContain('msgstr[1] "%d pommes"');
+  });
+
+  it("po-to-csv produces a CSV with the canonical columns and msgid values", async () => {
+    const input = fileFromText("messages.po", FIXTURES.poGettext, "text/plain");
+    const result = await run("po-to-csv", input);
+    const text = await result.blob.text();
+    const header = text.split(/\r?\n/)[0];
+    for (const col of ["msgctxt", "msgid", "msgid_plural", "msgstr", "msgstr_plurals", "comments", "references", "flags"]) {
+      expect(header).toContain(col);
+    }
+    expect(text).toContain("Hello, world!");
+    expect(text).toContain("Add to cart");
+    // Plurals get JSON-encoded into msgstr_plurals.
+    expect(text).toContain('artículo');
+    expect(text).toContain('artículos');
+  });
+
+  it("csv-to-po rebuilds a valid PO from a po-to-csv export", async () => {
+    // Chain through to make the test independent of any hand-written CSV.
+    const poInput = fileFromText("messages.po", FIXTURES.poGettext, "text/plain");
+    const csv = await run("po-to-csv", poInput);
+    const csvFile = new File([await csv.blob.arrayBuffer()], "out.csv", { type: "text/csv" });
+    const result = await run("csv-to-po", csvFile);
+    const text = await result.blob.text();
+    expect(text).toMatch(/^msgid /m);
+    expect(text).toContain("Hello, world!");
+    expect(text).toContain("¡Hola, mundo!");
+    expect(text).toContain('msgid_plural "You have %d items in your cart"');
+    expect(text).toContain('msgstr[0]');
+    expect(text).toContain('msgstr[1]');
+  });
+
   it("bibtex-to-csv handles the same Spanish file (parseBibtex is shared)", async () => {
     const input = fileFromText(
       "spanish.bib",

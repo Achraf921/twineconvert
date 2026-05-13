@@ -422,6 +422,15 @@ export const validateBibtex: Validator = async ({ blob, minSize = 10 }) => {
   if (!/\}\s*$/m.test(text)) throw new Error("BibTeX has no closing brace");
 };
 
+export const validatePo: Validator = async ({ blob, minSize = 10 }) => {
+  assertMinSize(blob, minSize, "PO");
+  const text = await readText(blob);
+  // A valid PO has at least one msgid + msgstr pair. Singular `msgstr "..."`
+  // or plural `msgstr[0] "..."` both count.
+  if (!/^msgid\s+"/m.test(text)) throw new Error("PO missing msgid line");
+  if (!/^msgstr(\[\d+\])?\s+"/m.test(text)) throw new Error("PO missing msgstr line");
+};
+
 export const validateRis: Validator = async ({ blob, minSize = 10 }) => {
   assertMinSize(blob, minSize, "RIS/NBIB");
   const text = await readText(blob);
@@ -941,6 +950,8 @@ const BY_MIME: Record<string, Validator> = {
   "text/vtt": validateVtt,
   "application/x-subrip": validateSrt,
   "text/sbv": validateSbv,
+  "text/x-gettext-translation": validatePo,
+  "application/x-gettext": validatePo,
 
   "application/jsonl": validateJsonl,
   "application/x-ndjson": validateJsonl,
