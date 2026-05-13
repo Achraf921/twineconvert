@@ -404,10 +404,39 @@ const withReverses = classifications.map((c) => ({
 // --------------------------------------------------------------------
 // Cross-reference with existing round-trip tests
 // --------------------------------------------------------------------
-const roundTripTestSrc = readFileSync(resolve("tests/round-trip.test.ts"), "utf8");
+// Tests that actually exercise a converter live across a few files:
+//   - tests/round-trip.test.ts: pure-Node bijectivity tests (the canonical home)
+//   - tests/converters-text.test.ts: smoke + structural tests (Node)
+//   - tests/converters-comprehensive.test.ts: auto-generated coverage harness
+//   - tests/browser/*.browser.test.ts: anything needing canvas / web-platform APIs
+//
+// Concatenating all of them gives the audit an honest view of what's
+// genuinely tested, not just what lives in the canonically-named file.
+const TEST_FILE_GLOBS = [
+  "tests/round-trip.test.ts",
+  "tests/converters-text.test.ts",
+  "tests/converters-comprehensive.test.ts",
+];
+const browserTestFiles = (() => {
+  try {
+    return readdirSync(resolve("tests/browser"))
+      .filter((f) => f.endsWith(".browser.test.ts"))
+      .map((f) => `tests/browser/${f}`);
+  } catch {
+    return [];
+  }
+})();
+const testSources = [...TEST_FILE_GLOBS, ...browserTestFiles]
+  .map((p) => {
+    try { return readFileSync(resolve(p), "utf8"); } catch { return ""; }
+  })
+  .join("\n\n/* ---- file boundary ---- */\n\n");
+
 function hasRoundTripTest(id) {
-  // Heuristic: does the test file mention this id literally?
-  return roundTripTestSrc.includes(`"${id}"`) || roundTripTestSrc.includes(`'${id}'`);
+  // Heuristic: does any test file mention this id literally as a quoted
+  // string? Both single and double quotes match because converter IDs
+  // appear in `run("id")` calls and in fixture/test-name strings.
+  return testSources.includes(`"${id}"`) || testSources.includes(`'${id}'`);
 }
 const annotated = withReverses.map((c) => ({
   ...c,

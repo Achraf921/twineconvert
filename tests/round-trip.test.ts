@@ -215,35 +215,88 @@ describe("round-trip: color palette formats", () => {
 });
 
 describe("round-trip: embroidery formats", () => {
-  // Each pair: convert source → target → source, then check the round-tripped
-  // file still looks like the original format. We don't byte-compare because
-  // each writer adds its own header timestamps, but the structural validators
-  // tell us the round-trip didn't produce garbage.
+  // Stitch-count + command-sequence preservation across every bijective
+  // embroidery pair. The previous version of these tests used a template
+  // literal loop, which had two problems:
+  //   1. It only asserted `back.size > 0` — passes even when the writer
+  //      drops every real stitch and emits a header-only file.
+  //   2. The converter IDs (`dst-to-pes`, etc.) never appeared as literal
+  //      strings in the source, so the bijectivity audit couldn't credit
+  //      them — they showed as "✗ MISSING" in docs/bijectivity-audit.md.
+  //
+  // Explicit IDs + a parser-based equivalence check fixes both: the audit
+  // sees every pair, and the test fails fast if a writer is silently
+  // losing stitches.
+  //
+  // Importing the embroidery util at the top of this describe so we can
+  // re-parse the back-converted bytes and structurally compare.
+  type EmbParser = (buf: ArrayBuffer) => { stitches: Array<{ x: number; y: number; command: number }> };
+  type EmbCase = { src: string; tgt: string; make: () => Uint8Array; parseSrc: EmbParser };
 
-  for (const [src, tgt, srcMaker] of [
-    ["dst", "pes", makeTinyDst],
-    ["dst", "jef", makeTinyDst],
-    ["dst", "exp", makeTinyDst],
-    ["pes", "dst", makeTinyPes],
-    ["pes", "jef", makeTinyPes],
-    ["pes", "exp", makeTinyPes],
-    ["jef", "dst", makeTinyJef],
-    ["jef", "pes", makeTinyJef],
-    ["jef", "exp", makeTinyJef],
-    ["exp", "dst", makeTinyExp],
-    ["exp", "pes", makeTinyExp],
-    ["exp", "jef", makeTinyExp],
-  ] as const) {
-    it(`${src.toUpperCase()} → ${tgt.toUpperCase()} → ${src.toUpperCase()} round-trip succeeds without error`, async () => {
-      const original = fileFromBytes(`design.${src}`, srcMaker(), "application/octet-stream");
-      const intermediate = await chain(`${src}-to-${tgt}`, original);
-      const back = await chain(`${tgt}-to-${src}`, intermediate);
-      // Just check the back-converted file exists and is non-empty;
-      // structural validation on outputs already happens in the
-      // comprehensive test suite.
-      expect(back.size).toBeGreaterThan(0);
-    });
+  /**
+   * Build an EmbCase by importing parseDst/parsePes/parseJef/parseExp
+   * lazily — top-level dynamic import in a Vitest describe block is
+   * cumbersome; this helper hides the await inside each `it`.
+   */
+  async function assertRoundTrip(forward: string, reverse: string, make: () => Uint8Array) {
+    const { parseDst, parsePes, parseJef, parseExp } = await import("../src/lib/engine/util/embroidery");
+    const parsers: Record<string, EmbParser> = { dst: parseDst, pes: parsePes, jef: parseJef, exp: parseExp };
+    const src = forward.split("-to-")[0];
+    const tgt = forward.split("-to-")[1];
+    const original = fileFromBytes(`design.${src}`, make(), "application/octet-stream");
+    const intermediate = await chain(forward, original);
+    const back = await chain(reverse, intermediate);
+
+    const beforeParsed = parsers[src](await original.arrayBuffer());
+    const afterParsed = parsers[src](await back.arrayBuffer());
+
+    // Filter to NORMAL stitches only (the actual visible stitches the
+    // embroidery machine sews). Different writers add boilerplate JUMPs
+    // (e.g., a leading go-to-origin or trailing END) that are
+    // semantically equivalent and don't affect the final design, so
+    // comparing the raw stitch counts is too brittle. The load-bearing
+    // invariant is that the NORMAL stitches survive in count AND in
+    // approximate position — that's what the machine actually stitches.
+    // StitchCommand.NORMAL = 0 per src/lib/engine/util/embroidery.ts.
+    const onlyNormals = (stitches: typeof beforeParsed.stitches) =>
+      stitches.filter((s) => s.command === 0);
+    const before = onlyNormals(beforeParsed.stitches);
+    const after = onlyNormals(afterParsed.stitches);
+
+    // NORMAL stitch count must be preserved exactly — a writer that
+    // drops or duplicates real stitches fails here.
+    expect(after.length).toBe(before.length);
+
+    // Each NORMAL stitch's coordinates must match within 1 unit
+    // (0.1mm tolerance for embroidery quantization). This catches a
+    // writer that reorders stitches or shifts coordinates silently —
+    // the previous shallow `back.size > 0` check would have missed
+    // both failure modes.
+    for (let i = 0; i < before.length; i++) {
+      expect(Math.abs(after[i].x - before[i].x)).toBeLessThanOrEqual(1);
+      expect(Math.abs(after[i].y - before[i].y)).toBeLessThanOrEqual(1);
+    }
+    void tgt;
   }
+
+  it("DST → PES → DST preserves stitch count and endpoints", async () => {
+    await assertRoundTrip("dst-to-pes", "pes-to-dst", makeTinyDst);
+  });
+  it("DST → JEF → DST preserves stitch count and endpoints", async () => {
+    await assertRoundTrip("dst-to-jef", "jef-to-dst", makeTinyDst);
+  });
+  it("DST → EXP → DST preserves stitch count and endpoints", async () => {
+    await assertRoundTrip("dst-to-exp", "exp-to-dst", makeTinyDst);
+  });
+  it("PES → JEF → PES preserves stitch count and endpoints", async () => {
+    await assertRoundTrip("pes-to-jef", "jef-to-pes", makeTinyPes);
+  });
+  it("PES → EXP → PES preserves stitch count and endpoints", async () => {
+    await assertRoundTrip("pes-to-exp", "exp-to-pes", makeTinyPes);
+  });
+  it("JEF → EXP → JEF preserves stitch count and endpoints", async () => {
+    await assertRoundTrip("jef-to-exp", "exp-to-jef", makeTinyJef);
+  });
 });
 
 describe("round-trip: 3MF mesh wrapping", () => {
