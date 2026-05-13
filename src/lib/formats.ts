@@ -1066,6 +1066,16 @@ const PROFILES: Record<string, FormatProfile> = {
     primaryUse: "Styled subtitles for video — anime fansubs, professional video typesetting, karaoke timings.",
     binary: false,
   },
+  dicom: {
+    name: "DICOM",
+    fullName: "Digital Imaging and Communications in Medicine",
+    description:
+      "DICOM is the universal medical imaging format — every X-ray, CT scan, MRI, ultrasound, mammogram, PET scan, and most pathology slides from every modern PACS (Picture Archiving and Communication System) is DICOM. The format wraps a pixel-data payload (the actual image) with a rich metadata header carrying patient identifiers, study/series/instance UIDs, imaging modality, acquisition parameters, window/level presets, and per-vendor private tags. Spec maintained by NEMA (National Electrical Manufacturers Association); first published in 1985 as ACR-NEMA 1.0, became DICOM 3.0 in 1993, still actively versioned today. Wire format: 128-byte preamble + `DICM` magic + tagged-value stream where each tag is a (group, element) pair indexing into the DICOM Data Dictionary.",
+    howToOpen:
+      "Hospital workstations open DICOM natively. For desktop viewing: RadiAnt, OsiriX (macOS), Horos (macOS, free), MicroDicom (Windows, free), Weasis (cross-platform Java). For programmatic access: dcmtk (CLI), pydicom (Python), dcm4che (Java). The free MyChart-equivalent apps from most hospital systems also surface DICOMs from your own scans.",
+    primaryUse: "Medical imaging interchange — sharing scans between hospitals, second opinions, research datasets, patient downloads from EHR portals.",
+    binary: true,
+  },
   glb: {
     name: "GLB",
     fullName: "glTF 2.0 Binary",

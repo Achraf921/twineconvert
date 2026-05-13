@@ -72,6 +72,8 @@ const FORMAT_TO_CATEGORY: Record<string, FormatCategory> = {
   ASS: "Video", SSA: "Video", SRT: "Video", VTT: "Video", SBV: "Video",
   // CAD (2D drawings)
   DXF: "Other",
+  // Medical imaging
+  DICOM: "Other", DCM: "Other",
 };
 
 export function categorize(format: string): FormatCategory {

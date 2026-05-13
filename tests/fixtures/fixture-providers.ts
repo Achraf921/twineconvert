@@ -28,6 +28,7 @@ import {
   makeTinyStl,
   makeTinyGlb,
   makeTinyObj,
+  makeTinyDicom,
   makeTinyDocx,
   makeTinyXlsx,
   makeTinyOds,
@@ -474,6 +475,12 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   // ===== CAD (DXF) =====
   "dxf-to-svg":  { provider: () => text("drawing.dxf", F.dxf, "image/vnd.dxf"), env: "node" },
   "dxf-to-json": { provider: () => text("drawing.dxf", F.dxf, "image/vnd.dxf"), env: "node" },
+
+  // ===== Medical imaging (DICOM) =====
+  // dicom-to-json runs in Node (no canvas needed); dicom-to-png needs
+  // canvas so it's flagged as browser env.
+  "dicom-to-json": { provider: () => Promise.resolve(fileFromBytes("test.dcm", makeTinyDicom(), "application/dicom")), env: "node" },
+  "dicom-to-png":  { provider: () => Promise.resolve(fileFromBytes("test.dcm", makeTinyDicom(), "application/dicom")), env: "browser" },
 
   // ===== 3D model interchange (GLB / glTF binary) =====
   "stl-to-glb": { provider: () => Promise.resolve(fileFromBytes("cube.stl", makeTinyStl(), "model/stl")), env: "node" },

@@ -234,6 +234,115 @@ export function makeTinyGlb(): Uint8Array {
   return new Uint8Array(buildGlb(SAMPLE_CUBE_MESH));
 }
 
+/**
+ * A minimal valid DICOM file with a 4x4 8-bit grayscale image. Built
+ * with the full File Meta Information group (Transfer Syntax: Explicit
+ * VR Little Endian) + minimal body tags including Patient/Modality so
+ * the metadata extraction tests have something specific to assert.
+ *
+ * Pixel pattern: top-left quadrant white (255), top-right black (0),
+ * bottom-left mid-gray (128), bottom-right gradient. Lets us assert
+ * specific pixel values in the PNG round-trip.
+ */
+export function makeTinyDicom(): Uint8Array {
+  // Helpers
+  const enc = new TextEncoder();
+  const chunks: number[] = [];
+  const pushU8 = (v: number) => chunks.push(v & 0xff);
+  const pushU16 = (v: number) => {
+    chunks.push(v & 0xff);
+    chunks.push((v >> 8) & 0xff);
+  };
+  const pushU32 = (v: number) => {
+    chunks.push(v & 0xff);
+    chunks.push((v >> 8) & 0xff);
+    chunks.push((v >> 16) & 0xff);
+    chunks.push((v >> 24) & 0xff);
+  };
+  const pushBytes = (b: number[] | Uint8Array) => {
+    for (const x of b) chunks.push(x);
+  };
+
+  /**
+   * Write an Explicit VR Little Endian data element.
+   *   - VR ∈ short-form group (US, CS, UI, DS, PN, LO, DA): 16-bit length
+   *   - VR ∈ long-form group (OB, OW, ...): 16-bit reserved + 32-bit length
+   *
+   * Values that come in as strings must be padded to an even length per
+   * the DICOM spec (CS/UI/PN/LO/DS pad with 0x00 or 0x20 depending on
+   * VR; UI pads with NUL, the rest pad with SPACE).
+   */
+  const writeElement = (
+    group: number,
+    element: number,
+    vr: string,
+    value: number[] | Uint8Array | string,
+  ) => {
+    let bytes: number[];
+    if (typeof value === "string") {
+      const pad = vr === "UI" ? 0x00 : 0x20;
+      const v = enc.encode(value);
+      bytes = Array.from(v);
+      if (bytes.length & 1) bytes.push(pad);
+    } else {
+      bytes = Array.from(value);
+      if (bytes.length & 1) bytes.push(0); // pad to even length
+    }
+    pushU16(group);
+    pushU16(element);
+    pushU8(vr.charCodeAt(0));
+    pushU8(vr.charCodeAt(1));
+    const longForm = ["OB", "OW", "OF", "OD", "OL", "SQ", "UN", "UT", "UC", "UR"].includes(vr);
+    if (longForm) {
+      pushU16(0); // reserved
+      pushU32(bytes.length);
+    } else {
+      pushU16(bytes.length);
+    }
+    pushBytes(bytes);
+  };
+
+  // 128-byte preamble (all zeros) + "DICM" magic
+  for (let i = 0; i < 128; i++) chunks.push(0);
+  chunks.push(0x44, 0x49, 0x43, 0x4d); // "DICM"
+
+  // File Meta Information group is always Explicit VR Little Endian.
+  // We emit only the mandatory Transfer Syntax UID tag for the body
+  // encoding (1.2.840.10008.1.2.1 = Explicit VR Little Endian).
+  writeElement(0x0002, 0x0010, "UI", "1.2.840.10008.1.2.1");
+
+  // Patient / Study metadata
+  writeElement(0x0008, 0x0020, "DA", "20260513"); // Study Date
+  writeElement(0x0008, 0x0060, "CS", "CT"); // Modality
+  writeElement(0x0008, 0x0070, "LO", "twineconvert test"); // Manufacturer
+  writeElement(0x0008, 0x1030, "LO", "Test Series"); // Study Description
+  writeElement(0x0010, 0x0010, "PN", "DOE^JOHN"); // Patient Name
+  writeElement(0x0010, 0x0020, "LO", "TEST-001"); // Patient ID
+  writeElement(0x0010, 0x0030, "DA", "19800101"); // Patient Birth Date
+  writeElement(0x0010, 0x0040, "CS", "M"); // Patient Sex
+
+  // Image geometry / pixel attributes
+  writeElement(0x0028, 0x0002, "US", [0x01, 0x00]); // SamplesPerPixel = 1
+  writeElement(0x0028, 0x0004, "CS", "MONOCHROME2"); // Photometric Interpretation
+  writeElement(0x0028, 0x0010, "US", [0x04, 0x00]); // Rows = 4
+  writeElement(0x0028, 0x0011, "US", [0x04, 0x00]); // Columns = 4
+  writeElement(0x0028, 0x0100, "US", [0x08, 0x00]); // BitsAllocated = 8
+  writeElement(0x0028, 0x0101, "US", [0x08, 0x00]); // BitsStored = 8
+  writeElement(0x0028, 0x0102, "US", [0x07, 0x00]); // HighBit = 7
+  writeElement(0x0028, 0x0103, "US", [0x00, 0x00]); // PixelRepresentation = unsigned
+
+  // Pixel Data: 4x4 = 16 bytes. Pattern as described above.
+  const pixels = [
+    255, 255, 0, 0,
+    255, 255, 0, 0,
+    128, 128, 64, 64,
+    128, 128, 192, 192,
+  ];
+  writeElement(0x7fe0, 0x0010, "OB", pixels);
+
+  return new Uint8Array(chunks);
+}
+
 /** A minimal OBJ (ASCII) of the unit cube. */
 export function makeTinyObj(): string {
   const lines: string[] = ["# unit cube"];

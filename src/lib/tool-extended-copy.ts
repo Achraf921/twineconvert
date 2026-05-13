@@ -867,6 +867,49 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       },
     ],
   },
+
+  // ===== DICOM medical imaging =====
+  "dicom-to-png": {
+    whyConvert:
+      "DICOM is the universal format for medical scans — every X-ray, CT, MRI, ultrasound, mammogram, and PET image from every hospital PACS. But sharing a DICOM with anyone who isn't a radiologist (a patient, a referring physician without DICOM software, a researcher embedding figures in a paper) almost always means converting it to a regular image first. PNG is the right target: lossless, opens in every browser/email/document tool, preserves the exact grayscale gradient. Critically, this conversion runs entirely in your browser — patient data never crosses the network, satisfying HIPAA in a way that upload-based DICOM viewers fundamentally cannot.",
+    example:
+      "Your patient downloaded their chest CT from their hospital MyChart portal as a folder of `.dcm` files. They emailed you one (`IM-0001-0042.dcm`) asking what it shows. You drop it in this tool, get a `.png` you can open in any image viewer, drop into a slack message, or insert into your consultation note. No HIPAA paperwork, no \"please install OsiriX\" friction.",
+    troubleshooting: [
+      {
+        problem: "\"Compressed transfer syntax not supported\" error.",
+        solution:
+          "Your DICOM uses JPEG-baseline / JPEG-lossless / JPEG 2000 / JPEG-LS / RLE pixel compression — these require additional WASM decoders we haven't shipped yet. The fix: decompress with dcmtk's `dcmdjpeg` first (`dcmdjpeg input.dcm output.dcm` produces an uncompressed Explicit VR Little Endian file). Then re-run this converter on output.dcm.",
+      },
+      {
+        problem: "The image looks completely black or completely white.",
+        solution:
+          "DICOM's pixel intensities are often outside the 0-255 range (CT scans cover roughly -1000 to 3000 Hounsfield units; many MRIs are 12-bit / 16-bit). We auto-compute the window/level from the data if the file doesn't specify one, but some scans benefit from a specific preset. If you have access to the DICOM workstation, note the recommended window/level for the modality (lung CT is typically WL/WW = -600/1500) and we'll add a windowing UI in a future update.",
+      },
+      {
+        problem: "I want to convert a multi-frame DICOM (cine loop) — only the first frame appears.",
+        solution:
+          "Multi-frame DICOMs (typically ultrasound cines or cardiac MRI series) are not yet supported; we extract only the first frame. For a full cine you'll need a dedicated DICOM viewer with movie-export (OsiriX/Horos: File → Export → QuickTime Movie). If you only need still frames, dcmtk's `dcmj2pnm` can split frames into separate PNGs before you re-run this tool.",
+      },
+    ],
+  },
+  "dicom-to-json": {
+    whyConvert:
+      "Sometimes you don't want the pixels — you want the metadata: patient ID, study date, modality, scanner model, acquisition parameters, window/level presets, study/series/instance UIDs. Researchers building DICOM manifests, hospital IT auditing PACS exports, programmers triaging anomalies in a tag dump — all need the DICOM header as structured data. Convert here, get JSON your code can parse.",
+    example:
+      "You're building a tool that indexes a hospital research archive of 50,000 DICOMs. For each file, you need to extract Modality, StudyDate, and StudyDescription to build a searchable database. Loop over the files, run each through this converter, parse the JSON output, insert into your DB. Patient identifiers never leave the radiologist's workstation.",
+    troubleshooting: [
+      {
+        problem: "I expected to see private vendor tags (Siemens, GE, Philips) in the output.",
+        solution:
+          "We currently extract only the standard DICOM Data Dictionary tags. Private group tags (group numbers ≥ 0x0009 with odd group number patterns) are skipped. If you need vendor-private fields, use pydicom or dcmtk's `dcmdump` for a full hex-level tag dump.",
+      },
+      {
+        problem: "PatientName contains caret characters like \"DOE^JOHN\".",
+        solution:
+          "We strip the carets in the JSON output (\"DOE JOHN\"). DICOM's Person Name (PN) VR uses `^` to separate family name / given name / middle name / prefix / suffix. If you need the original caret-separated form for downstream parsing, the raw bytes are recoverable from the DICOM file directly via dcmtk's `dcmdump`.",
+      },
+    ],
+  },
 };
 
 export function getExtendedCopy(toolId: string): ExtendedCopy | undefined {

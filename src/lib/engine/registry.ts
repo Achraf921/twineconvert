@@ -655,6 +655,14 @@ export const registry: Record<string, ConverterLoader> = {
   "obj-to-glb": () => import("./converters/obj-to-glb").then((m) => m.default),
   "glb-to-obj": () => import("./converters/glb-to-obj").then((m) => m.default),
 
+  // DICOM medical imaging. Every X-ray, CT, MRI, ultrasound, mammogram,
+  // PET scan from every modern PACS is DICOM. Browser-only conversion
+  // is the HIPAA story: patient data never leaves the radiologist's
+  // machine, unlike upload-based DICOM viewers. dicom-to-json extracts
+  // metadata for triage; dicom-to-png renders the first frame.
+  "dicom-to-json": () => import("./converters/dicom-to-json").then((m) => m.default),
+  "dicom-to-png": () => import("./converters/dicom-to-png").then((m) => m.default),
+
   // OpenDocument spreadsheets (LibreOffice / OpenOffice / Numbers fallback).
   "ods-to-csv": () =>
     import("./converters/ods-to-csv").then((m) => m.default),

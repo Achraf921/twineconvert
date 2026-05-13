@@ -16,7 +16,7 @@
 import { describe, it, expect } from "vitest";
 import { run } from "../src/lib/engine/runner";
 import { FIXTURES, fileFromText } from "./fixtures/text-fixtures";
-import { fileFromBytes, makeTinyAse, makeTinyAco, makeAcoV1Only, makeAcoCmyk, makeAcoHsb, makeTinyZip, makeTinyDst, makeTinyPes, makeTinyJef, makeTinyStl, makeTinyGlb, makeTinyObj } from "./fixtures/binary-fixtures";
+import { fileFromBytes, makeTinyAse, makeTinyAco, makeAcoV1Only, makeAcoCmyk, makeAcoHsb, makeTinyZip, makeTinyDst, makeTinyPes, makeTinyJef, makeTinyStl, makeTinyGlb, makeTinyObj, makeTinyDicom } from "./fixtures/binary-fixtures";
 
 /** Read a Blob's bytes once and assert the first N bytes match. */
 async function expectMagicBytes(blob: Blob, magic: number[]) {
@@ -813,6 +813,49 @@ describe("text-format converter smoke tests", () => {
     expect(view.getUint32(binChunkOff + 4, true)).toBe(0x004e4942); // "BIN\0"
     const binLen = view.getUint32(binChunkOff, true);
     expect(binLen).toBeGreaterThan(0);
+  });
+
+  // ===== Medical imaging (DICOM) =====
+  // dicom-to-json runs in Node — pure parser, no canvas. The fixture
+  // is built byte-by-byte from the DICOM PS3.10 spec (preamble + DICM
+  // magic + Explicit VR Little Endian element stream) so the test
+  // asserts our parser handles the real wire format, not a mock.
+  it("dicom-to-json extracts canonical metadata tags", async () => {
+    const input = fileFromBytes("test.dcm", makeTinyDicom(), "application/dicom");
+    const result = await run("dicom-to-json", input);
+    await expectParseableJson(result.blob);
+    const meta = JSON.parse(await result.blob.text());
+
+    // Transfer syntax was Explicit VR Little Endian (the modern default).
+    expect(meta.transferSyntaxUID).toBe("1.2.840.10008.1.2.1");
+
+    // Patient / study fields the test fixture embedded.
+    expect(meta.patientName).toBe("DOE JOHN"); // ^ -> space per DICOM PN spec
+    expect(meta.patientId).toBe("TEST-001");
+    expect(meta.patientBirthDate).toBe("19800101");
+    expect(meta.patientSex).toBe("M");
+    expect(meta.studyDate).toBe("20260513");
+    expect(meta.modality).toBe("CT");
+    expect(meta.manufacturer).toBe("twineconvert test");
+    expect(meta.studyDescription).toBe("Test Series");
+
+    // Image geometry / pixel attributes.
+    expect(meta.rows).toBe(4);
+    expect(meta.columns).toBe(4);
+    expect(meta.bitsAllocated).toBe(8);
+    expect(meta.bitsStored).toBe(8);
+    expect(meta.samplesPerPixel).toBe(1);
+    expect(meta.photometricInterpretation).toBe("MONOCHROME2");
+    expect(meta.pixelRepresentation).toBe(0);
+  });
+
+  it("dicom-to-json rejects non-DICOM files with a clear message", async () => {
+    // First 132 bytes must be 128-byte preamble + "DICM" magic. A
+    // random file should fail at the magic-byte check, not silently.
+    const fakeBytes = new Uint8Array(200);
+    for (let i = 0; i < fakeBytes.length; i++) fakeBytes[i] = 0xff;
+    const input = fileFromBytes("notdicom.dcm", fakeBytes, "application/octet-stream");
+    await expect(run("dicom-to-json", input)).rejects.toThrow(/DICM/);
   });
 
   it("glb-to-obj round-trip preserves the same triangle count via OBJ", async () => {
