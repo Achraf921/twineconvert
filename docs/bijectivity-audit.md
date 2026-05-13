@@ -1,17 +1,17 @@
 # Bijectivity Audit
 
-Generated 2026-05-11 from src/lib/engine/converters/.
+Generated 2026-05-13 from src/lib/engine/converters/.
 
 ## Summary
 
 | Classification | Count |
 |---|---:|
-| Total converters | 301 |
-| **Bijective candidates** (lossless, same-kind, both directions exist) | 150 |
-| **Bijective candidates missing reverse converter** | 8 |
-| **Bijective candidates missing round-trip test** | 20 |
-| Lossy encoding (same kind, but lossy format) | 58 |
-| Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 32 |
+| Total converters | 317 |
+| **Bijective candidates** (lossless, same-kind, both directions exist) | 158 |
+| **Bijective candidates missing reverse converter** | 9 |
+| **Bijective candidates missing round-trip test** | 24 |
+| Lossy encoding (same kind, but lossy format) | 63 |
+| Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 34 |
 | Single-action (no reverse possible) | 53 |
 | Unknown formats (need to add to FORMATS table) | 0 |
 | Compound id (irregular pattern) | 0 |
@@ -25,6 +25,7 @@ These converters are lossless and could round-trip, but the reverse converter is
 | Forward | Missing reverse |
 |---|---|
 | `adif-to-kml` | `kml-to-adif` |
+| `dicom-to-json` | `json-to-dicom` |
 | `eml-to-csv` | `csv-to-eml` |
 | `hl7-to-csv` | `csv-to-hl7` |
 | `json-to-sql` | `sql-to-json` |
@@ -46,6 +47,8 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | exp ↔ jef | `exp-to-jef` | `jef-to-exp` |
 | exp ↔ pes | `exp-to-pes` | `pes-to-exp` |
 | gif ↔ png | `gif-to-png` | `png-to-gif` |
+| glb ↔ obj | `glb-to-obj` | `obj-to-glb` |
+| glb ↔ stl | `glb-to-stl` | `stl-to-glb` |
 | ico ↔ png | `ico-to-png` | `png-to-ico` |
 | jef ↔ pes | `jef-to-pes` | `pes-to-jef` |
 | ttf ↔ woff | `ttf-to-woff` | `woff-to-ttf` |
@@ -74,6 +77,8 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `ase-to-gpl` | bijective-candidate | ✓ | ✓ | both lossless palette formats; should round-trip cleanly |
 | `ase-to-hex` | bijective-candidate | ✓ | ✓ | both lossless palette formats; should round-trip cleanly |
 | `ase-to-json` | cross-kind | (`json-to-ase` missing) | n/a | palette -> data: cross-domain, inherently lossy |
+| `ass-to-srt` | lossy-encoding | ✓ | n/a | ass or srt uses lossy encoding |
+| `ass-to-vtt` | lossy-encoding | ✓ | n/a | ass or vtt uses lossy encoding |
 | `avi-to-mp4` | lossy-encoding | ✓ | n/a | avi or mp4 uses lossy encoding |
 | `avif-to-jpg` | lossy-encoding | ✓ | n/a | avif or jpg uses lossy encoding |
 | `avif-to-png` | lossy-encoding | ✓ | n/a | avif or png uses lossy encoding |
@@ -111,6 +116,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `csv-to-markdown-table` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-ods` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-ofx` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `csv-to-po` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-qbo` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-qfx` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-qif` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
@@ -123,6 +129,8 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `cube-to-csp` | bijective-candidate | ✓ | ✓ | both lossless lut formats; should round-trip cleanly |
 | `dat-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `der-to-pem` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `dicom-to-json` | bijective-candidate | (`json-to-dicom` missing) | n/a | both lossless data formats; should round-trip cleanly |
+| `dicom-to-png` | cross-kind | (`png-to-dicom` missing) | n/a | data -> raster: cross-domain, inherently lossy |
 | `discord-chat-summary-csv` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
 | `discord-chat-to-md` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
 | `discord-chat-to-pdf` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
@@ -132,6 +140,8 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `dst-to-exp` | bijective-candidate | ✓ | ✗ MISSING | both lossless embroidery formats; should round-trip cleanly |
 | `dst-to-jef` | bijective-candidate | ✓ | ✗ MISSING | both lossless embroidery formats; should round-trip cleanly |
 | `dst-to-pes` | bijective-candidate | ✓ | ✗ MISSING | both lossless embroidery formats; should round-trip cleanly |
+| `dxf-to-json` | cross-kind | (`json-to-dxf` missing) | n/a | vector -> data: cross-domain, inherently lossy |
+| `dxf-to-svg` | lossy-encoding | (`svg-to-dxf` missing) | n/a | dxf or svg uses lossy encoding |
 | `edi-to-csv` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
 | `edifact-to-csv` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
 | `eml-to-csv` | bijective-candidate | (`csv-to-eml` missing) | n/a | both lossless data formats; should round-trip cleanly |
@@ -163,6 +173,8 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `gif-to-jpg` | lossy-encoding | ✓ | n/a | gif or jpg uses lossy encoding |
 | `gif-to-mp4` | cross-kind | ✓ | n/a | raster -> video: cross-domain, inherently lossy |
 | `gif-to-png` | bijective-candidate | ✓ | ✗ MISSING | both lossless raster formats; should round-trip cleanly |
+| `glb-to-obj` | bijective-candidate | ✓ | ✗ MISSING | both lossless mesh formats; should round-trip cleanly |
+| `glb-to-stl` | bijective-candidate | ✓ | ✗ MISSING | both lossless mesh formats; should round-trip cleanly |
 | `gpl-to-aco` | bijective-candidate | ✓ | ✓ | both lossless palette formats; should round-trip cleanly |
 | `gpl-to-ase` | bijective-candidate | ✓ | ✓ | both lossless palette formats; should round-trip cleanly |
 | `gpl-to-hex` | bijective-candidate | ✓ | ✓ | both lossless palette formats; should round-trip cleanly |
@@ -215,6 +227,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `json-to-hl7` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `json-to-ini` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `json-to-jsonl` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `json-to-po` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `json-to-properties` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `json-to-sql` | bijective-candidate | (`sql-to-json` missing) | n/a | both lossless data formats; should round-trip cleanly |
 | `json-to-toml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
@@ -261,6 +274,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `nbib-to-ris` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `numbers-to-pdf` | lossy-encoding | (`pdf-to-numbers` missing) | n/a | numbers or pdf uses lossy encoding |
 | `obj-to-3mf` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
+| `obj-to-glb` | bijective-candidate | ✓ | ✗ MISSING | both lossless mesh formats; should round-trip cleanly |
 | `obj-to-stl` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
 | `ods-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `ods-to-xlsx` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
@@ -292,6 +306,8 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `png-to-pdf` | cross-kind | ✓ | n/a | raster -> doc: cross-domain, inherently lossy |
 | `png-to-text` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
 | `png-to-webp` | lossy-encoding | ✓ | n/a | png or webp uses lossy encoding |
+| `po-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `po-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `properties-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `qbo-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `qfx-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
@@ -310,9 +326,11 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `sarif-to-html` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
 | `sbv-to-srt` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `sql-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `srt-to-ass` | lossy-encoding | ✓ | n/a | srt or ass uses lossy encoding |
 | `srt-to-sbv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `srt-to-vtt` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `stl-to-3mf` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
+| `stl-to-glb` | bijective-candidate | ✓ | ✗ MISSING | both lossless mesh formats; should round-trip cleanly |
 | `stl-to-obj` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
 | `svg-to-jpg` | cross-kind | (`jpg-to-svg` missing) | n/a | vector -> raster: cross-domain, inherently lossy |
 | `svg-to-png` | cross-kind | (`png-to-svg` missing) | n/a | vector -> raster: cross-domain, inherently lossy |
@@ -334,6 +352,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `txt-to-docx` | lossy-encoding | ✓ | n/a | txt or docx uses lossy encoding |
 | `unix-to-iso` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `url-encoded-to-text` | bijective-candidate | ✓ | ✓ | both lossless encoding formats; should round-trip cleanly |
+| `vtt-to-ass` | lossy-encoding | ✓ | n/a | vtt or ass uses lossy encoding |
 | `vtt-to-srt` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `wav-to-mp3` | lossy-encoding | ✓ | n/a | wav or mp3 uses lossy encoding |
 | `webm-to-mp4` | lossy-encoding | (`mp4-to-webm` missing) | n/a | webm or mp4 uses lossy encoding |

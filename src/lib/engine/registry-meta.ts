@@ -3013,6 +3013,157 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "application/x-subrip",
     "maxFileSizeBytes": 10485760
   },
+  "srt-to-ass": {
+    "label": "SRT → ASS",
+    "accept": [
+      ".srt"
+    ],
+    "fromMime": [
+      "application/x-subrip",
+      "text/plain"
+    ],
+    "toMime": "text/x-ssa",
+    "maxFileSizeBytes": 10485760
+  },
+  "ass-to-srt": {
+    "label": "ASS → SRT",
+    "accept": [
+      ".ass",
+      ".ssa"
+    ],
+    "fromMime": [
+      "text/x-ssa",
+      "text/plain"
+    ],
+    "toMime": "application/x-subrip",
+    "maxFileSizeBytes": 10485760
+  },
+  "vtt-to-ass": {
+    "label": "VTT → ASS",
+    "accept": [
+      ".vtt"
+    ],
+    "fromMime": [
+      "text/vtt",
+      "text/plain"
+    ],
+    "toMime": "text/x-ssa",
+    "maxFileSizeBytes": 10485760
+  },
+  "ass-to-vtt": {
+    "label": "ASS → VTT",
+    "accept": [
+      ".ass",
+      ".ssa"
+    ],
+    "fromMime": [
+      "text/x-ssa",
+      "text/plain"
+    ],
+    "toMime": "text/vtt",
+    "maxFileSizeBytes": 10485760
+  },
+  "dxf-to-svg": {
+    "label": "DXF → SVG",
+    "accept": [
+      ".dxf"
+    ],
+    "fromMime": [
+      "image/vnd.dxf",
+      "application/dxf",
+      "text/plain"
+    ],
+    "toMime": "image/svg+xml",
+    "maxFileSizeBytes": 26214400
+  },
+  "dxf-to-json": {
+    "label": "DXF → JSON",
+    "accept": [
+      ".dxf"
+    ],
+    "fromMime": [
+      "image/vnd.dxf",
+      "application/dxf",
+      "text/plain"
+    ],
+    "toMime": "application/json",
+    "maxFileSizeBytes": 26214400
+  },
+  "stl-to-glb": {
+    "label": "STL → GLB",
+    "accept": [
+      ".stl"
+    ],
+    "fromMime": [
+      "model/stl",
+      "application/sla",
+      "application/octet-stream"
+    ],
+    "toMime": "model/gltf-binary",
+    "maxFileSizeBytes": 104857600
+  },
+  "glb-to-stl": {
+    "label": "GLB → STL",
+    "accept": [
+      ".glb"
+    ],
+    "fromMime": [
+      "model/gltf-binary",
+      "application/octet-stream"
+    ],
+    "toMime": "model/stl",
+    "maxFileSizeBytes": 104857600
+  },
+  "obj-to-glb": {
+    "label": "OBJ → GLB",
+    "accept": [
+      ".obj"
+    ],
+    "fromMime": [
+      "model/obj",
+      "text/plain"
+    ],
+    "toMime": "model/gltf-binary",
+    "maxFileSizeBytes": 104857600
+  },
+  "glb-to-obj": {
+    "label": "GLB → OBJ",
+    "accept": [
+      ".glb"
+    ],
+    "fromMime": [
+      "model/gltf-binary",
+      "application/octet-stream"
+    ],
+    "toMime": "model/obj",
+    "maxFileSizeBytes": 104857600
+  },
+  "dicom-to-json": {
+    "label": "DICOM → JSON",
+    "accept": [
+      ".dcm",
+      ".dicom"
+    ],
+    "fromMime": [
+      "application/dicom",
+      "application/octet-stream"
+    ],
+    "toMime": "application/json",
+    "maxFileSizeBytes": 104857600
+  },
+  "dicom-to-png": {
+    "label": "DICOM → PNG",
+    "accept": [
+      ".dcm",
+      ".dicom"
+    ],
+    "fromMime": [
+      "application/dicom",
+      "application/octet-stream"
+    ],
+    "toMime": "image/png",
+    "maxFileSizeBytes": 104857600
+  },
   "ods-to-csv": {
     "label": "ODS → CSV",
     "accept": [
@@ -3227,6 +3378,58 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "text/plain"
     ],
     "toMime": "application/json",
+    "maxFileSizeBytes": 10485760
+  },
+  "po-to-csv": {
+    "label": "PO → CSV",
+    "accept": [
+      ".po",
+      ".pot"
+    ],
+    "fromMime": [
+      "text/plain",
+      "text/x-gettext-translation",
+      "application/x-gettext"
+    ],
+    "toMime": "text/csv",
+    "maxFileSizeBytes": 10485760
+  },
+  "csv-to-po": {
+    "label": "CSV → PO",
+    "accept": [
+      ".csv"
+    ],
+    "fromMime": [
+      "text/csv",
+      "text/plain"
+    ],
+    "toMime": "text/x-gettext-translation",
+    "maxFileSizeBytes": 10485760
+  },
+  "po-to-json": {
+    "label": "PO → JSON",
+    "accept": [
+      ".po",
+      ".pot"
+    ],
+    "fromMime": [
+      "text/plain",
+      "text/x-gettext-translation",
+      "application/x-gettext"
+    ],
+    "toMime": "application/json",
+    "maxFileSizeBytes": 10485760
+  },
+  "json-to-po": {
+    "label": "JSON → PO",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "text/x-gettext-translation",
     "maxFileSizeBytes": 10485760
   },
   "color-name-to-hex": {

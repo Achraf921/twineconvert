@@ -208,6 +208,40 @@ const FORMATS = {
   // bibtex/ris/nbib/endnote-xml structurally (some BibTeX-specific
   // fields drop to extra{}, but the core fields survive).
   "csl-json": { kind: "data", lossless: true, family: "citation" },
+  // ==== Gettext PO (software localization) ====
+  // Each msgid/msgstr entry round-trips through the structured PoEntry
+  // model with full preservation of msgctxt, plural forms, comments,
+  // references, and flags. The CSV/JSON converters keep the same data.
+  po: { kind: "data", lossless: true, family: "localization" },
+  // ==== ASS / SSA styled subtitles (anime fansubs, libass overlays) ====
+  // Lossy: ASS carries per-line styling (positioning, fonts, colors,
+  // karaoke timing, override codes like {\b1}{\i1}{\fnArial}) that
+  // SRT/VTT can't express. SRT/VTT → ASS upgrades to a default style
+  // but doesn't author new styling; ASS → SRT/VTT drops the styling
+  // and keeps only timing + plain text.
+  ass: { kind: "data", lossless: false, family: "subtitle" },
+  ssa: { kind: "data", lossless: false, family: "subtitle" },
+  // ==== CAD: AutoCAD ASCII DXF (2D drawings) ====
+  // Lossy outbound: dxf-to-svg drops INSERT/HATCH/DIMENSION and
+  // collapses to drawable primitives. dxf-to-json preserves every
+  // supported entity's structural fields; unrecognized entity types
+  // (INSERT, HATCH, DIMENSION, SOLID) are dropped — same lossy stance.
+  dxf: { kind: "vector", lossless: false, family: "cad" },
+  // ==== 3D: glTF 2.0 binary (.glb) ====
+  // Triangle-mesh interchange. STL ↔ GLB and OBJ ↔ GLB preserve vertex
+  // positions and triangle indices exactly. UVs / normals / materials
+  // are dropped by all three sides (STL has none; OBJ has them but
+  // our minimal writer doesn't emit; GLB writer emits only POSITION
+  // + indices) — so we mark lossless: true with that documented caveat.
+  glb: { kind: "mesh", lossless: true, family: "3d" },
+  // ==== DICOM medical imaging ====
+  // dicom-to-json captures the metadata header (patient, study, image
+  // geometry, modality, manufacturer) losslessly. dicom-to-png renders
+  // the first frame with window/level — pixel intensity quantization
+  // and frame-selection make that direction inherently lossy. We treat
+  // DICOM as binary medical-imaging data; the converter level captures
+  // lossy/lossless per pair.
+  dicom: { kind: "data", lossless: true, family: "medical" },
 };
 
 // --------------------------------------------------------------------
