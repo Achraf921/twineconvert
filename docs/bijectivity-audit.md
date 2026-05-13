@@ -9,7 +9,7 @@ Generated 2026-05-13 from src/lib/engine/converters/.
 | Total converters | 317 |
 | **Bijective candidates** (lossless, same-kind, both directions exist) | 158 |
 | **Bijective candidates missing reverse converter** | 9 |
-| **Bijective candidates missing round-trip test** | 24 |
+| **Bijective candidates missing round-trip test** | 20 |
 | Lossy encoding (same kind, but lossy format) | 63 |
 | Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 34 |
 | Single-action (no reverse possible) | 53 |
@@ -47,8 +47,6 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | exp ↔ jef | `exp-to-jef` | `jef-to-exp` |
 | exp ↔ pes | `exp-to-pes` | `pes-to-exp` |
 | gif ↔ png | `gif-to-png` | `png-to-gif` |
-| glb ↔ obj | `glb-to-obj` | `obj-to-glb` |
-| glb ↔ stl | `glb-to-stl` | `stl-to-glb` |
 | ico ↔ png | `ico-to-png` | `png-to-ico` |
 | jef ↔ pes | `jef-to-pes` | `pes-to-jef` |
 | ttf ↔ woff | `ttf-to-woff` | `woff-to-ttf` |
@@ -173,8 +171,8 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `gif-to-jpg` | lossy-encoding | ✓ | n/a | gif or jpg uses lossy encoding |
 | `gif-to-mp4` | cross-kind | ✓ | n/a | raster -> video: cross-domain, inherently lossy |
 | `gif-to-png` | bijective-candidate | ✓ | ✗ MISSING | both lossless raster formats; should round-trip cleanly |
-| `glb-to-obj` | bijective-candidate | ✓ | ✗ MISSING | both lossless mesh formats; should round-trip cleanly |
-| `glb-to-stl` | bijective-candidate | ✓ | ✗ MISSING | both lossless mesh formats; should round-trip cleanly |
+| `glb-to-obj` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
+| `glb-to-stl` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
 | `gpl-to-aco` | bijective-candidate | ✓ | ✓ | both lossless palette formats; should round-trip cleanly |
 | `gpl-to-ase` | bijective-candidate | ✓ | ✓ | both lossless palette formats; should round-trip cleanly |
 | `gpl-to-hex` | bijective-candidate | ✓ | ✓ | both lossless palette formats; should round-trip cleanly |
@@ -274,7 +272,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `nbib-to-ris` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `numbers-to-pdf` | lossy-encoding | (`pdf-to-numbers` missing) | n/a | numbers or pdf uses lossy encoding |
 | `obj-to-3mf` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
-| `obj-to-glb` | bijective-candidate | ✓ | ✗ MISSING | both lossless mesh formats; should round-trip cleanly |
+| `obj-to-glb` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
 | `obj-to-stl` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
 | `ods-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `ods-to-xlsx` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
@@ -330,7 +328,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `srt-to-sbv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `srt-to-vtt` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `stl-to-3mf` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
-| `stl-to-glb` | bijective-candidate | ✓ | ✗ MISSING | both lossless mesh formats; should round-trip cleanly |
+| `stl-to-glb` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
 | `stl-to-obj` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
 | `svg-to-jpg` | cross-kind | (`jpg-to-svg` missing) | n/a | vector -> raster: cross-domain, inherently lossy |
 | `svg-to-png` | cross-kind | (`png-to-svg` missing) | n/a | vector -> raster: cross-domain, inherently lossy |

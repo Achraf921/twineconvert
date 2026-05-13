@@ -26,7 +26,7 @@
 import { describe, it, expect } from "vitest";
 import { run } from "../src/lib/engine/runner";
 import { fileFromText, FIXTURES } from "./fixtures/text-fixtures";
-import { fileFromBytes, makeTinyAse, makeTinyAco, makeTinyDst, makeTinyPes, makeTinyJef, makeTinyExp, makeTinyStl, makeTiny3mf, makeTinyXlsx } from "./fixtures/binary-fixtures";
+import { fileFromBytes, makeTinyAse, makeTinyAco, makeTinyDst, makeTinyPes, makeTinyJef, makeTinyExp, makeTinyStl, makeTinyGlb, makeTinyObj, makeTiny3mf, makeTinyXlsx } from "./fixtures/binary-fixtures";
 
 /** Convert a Blob/File chain. The output of run() is { blob, filename };
  *  this just wraps it back into a File so the next converter accepts it. */
@@ -161,6 +161,31 @@ describe("round-trip: 3D mesh formats", () => {
     // Should have at least some "v " lines
     expect(text.match(/^v /gm)?.length ?? 0).toBeGreaterThanOrEqual(8);
     expect(text.match(/^f /gm)?.length ?? 0).toBeGreaterThanOrEqual(12);
+  });
+
+  // STL ↔ GLB and OBJ ↔ GLB: lossless triangle-count round-trips on the
+  // unit cube. Our minimal GLB writer emits POSITION + indices only, so
+  // UVs/normals/materials are dropped on both sides equally — bijectivity
+  // holds for the geometric subset that all three formats carry natively.
+  it("STL → GLB → STL preserves triangle count (12 for unit cube)", async () => {
+    const original = fileFromBytes("cube.stl", makeTinyStl(), "model/stl");
+    const glb = await chain("stl-to-glb", original);
+    const back = await chain("glb-to-stl", glb);
+    const bytes = new Uint8Array(await back.arrayBuffer());
+    const triCount = new DataView(bytes.buffer).getUint32(80, true);
+    expect(triCount).toBe(12);
+  });
+
+  it("OBJ → GLB → OBJ preserves vertex and face count (8 v, 12 f)", async () => {
+    const original = fileFromText("cube.obj", makeTinyObj(), "model/obj");
+    const glb = await chain("obj-to-glb", original);
+    const back = await chain("glb-to-obj", glb);
+    const text = await back.text();
+    // The unit-cube fixture has 8 distinct vertices and 12 triangles.
+    // OBJ writers can sometimes inflate vertex count by emitting per-face
+    // duplicates; this assertion fails fast if that ever regresses.
+    expect((text.match(/^v /gm) ?? []).length).toBe(8);
+    expect((text.match(/^f /gm) ?? []).length).toBe(12);
   });
 });
 
