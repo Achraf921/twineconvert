@@ -121,6 +121,35 @@ Carol,35,Tokyo
 }
 `,
 
+  // Real-world BibTeX shapes that broke the original parser:
+  //   - UTF-8 BOM at file start (Windows Notepad)
+  //   - LaTeX accent macros instead of literal UTF-8 (most TeX exports do this)
+  //   - Paren-delimited entry (legacy/JabRef-rare)
+  //   - Last entry has no trailing comma after the key
+  //   - BibTeX case-preservation braces like {NASA}, {DNA}
+  //   - Mix of explicit-accent author names (Pérez, García, Muñoz)
+  bibtexSpanish: "﻿" + `@article{garcia2024neural,
+  author = {Garc{\\'i}a, Mar{\\'i}a and P{\\'e}rez, Juan and Mu{\\~n}oz, Ana},
+  title = {Redes neuronales en el an{\\'a}lisis de im{\\'a}genes m{\\'e}dicas},
+  journal = {Revista Espa{\\~n}ola de Inform{\\'a}tica},
+  year = {2024},
+  volume = {42},
+  pages = {101--118},
+  doi = {10.1234/reim.2024.042},
+  address = {M{\\'e}xico, D.F.},
+}
+
+@inproceedings(lopez2023deep,
+  author = {L{\\'o}pez, Carlos and N{\\'u}{\\~n}ez, Sof{\\'i}a},
+  title  = {Deep learning para detecci{\\'o}n de anomal{\\'i}as},
+  booktitle = {Congreso Iberoamericano de IA},
+  year   = {2023},
+  pages  = {234--245},
+)
+
+@misc{tufte_visual}
+`,
+
   // RIS citation
   ris: `TY  - JOUR
 AU  - Smith, John

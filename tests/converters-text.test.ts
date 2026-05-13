@@ -167,6 +167,73 @@ describe("text-format converter smoke tests", () => {
     await expectCsvShape(result.blob, ["title", "authors", "year"]);
   });
 
+  // Regression for a production failure caught via PostHog convert_error
+  // on /bibtex-to-ris (2026-05-11): a Spanish-speaking user uploaded a
+  // .bib file with LaTeX-escaped accents, got two consecutive errors,
+  // gave up. Root causes: parseBibtex didn't handle BOM, didn't decode
+  // LaTeX accents, didn't accept paren-delimited entries, and required
+  // a trailing comma after the entry key.
+  //
+  // Asserts real-world data survives across both directions of the
+  // converter family. Tests parseBibtex which is shared by all 7
+  // BibTeX-* converters, so a regression here would tank all of them.
+  it("bibtex-to-ris handles Spanish files with LaTeX accents, paren entries, no-comma keys, and BOM", async () => {
+    const input = fileFromText(
+      "spanish.bib",
+      FIXTURES.bibtexSpanish,
+      "application/x-bibtex",
+    );
+    const result = await run("bibtex-to-ris", input);
+    const text = await result.blob.text();
+
+    // All three entries made it through. The brace-style entry, the
+    // paren-style entry, and the comma-less entry (@misc{tufte_visual})
+    // each produce their own TY/ER record.
+    expect(text.match(/^TY\s+- /gm)?.length).toBe(3);
+    expect(text.match(/^ER\s+- ?/gm)?.length).toBe(3);
+
+    // LaTeX accents in author names are decoded to real Unicode, not
+    // left as escape sequences in the output.
+    expect(text).toContain("García");
+    expect(text).toContain("Pérez");
+    expect(text).toContain("Muñoz");
+    expect(text).toContain("López");
+    expect(text).toContain("Núñez");
+    expect(text).toContain("Sofía");
+
+    // Title with multiple accents survives.
+    expect(text).toContain("Redes neuronales en el análisis de imágenes médicas");
+
+    // Address field with accents survives.
+    expect(text).toContain("México");
+
+    // No raw LaTeX escape sequences in the output (the user would call
+    // that "broken" and retry, same as the bug we caught).
+    expect(text).not.toMatch(/\\['`^"~]/);
+
+    // The paren-delimited entry's data is captured (not lost to the
+    // brace-counter scanning to EOF).
+    expect(text).toContain("Deep learning para detección de anomalías");
+    expect(text).toContain("Congreso Iberoamericano");
+  });
+
+  it("bibtex-to-csv handles the same Spanish file (parseBibtex is shared)", async () => {
+    const input = fileFromText(
+      "spanish.bib",
+      FIXTURES.bibtexSpanish,
+      "application/x-bibtex",
+    );
+    const result = await run("bibtex-to-csv", input);
+    const text = await result.blob.text();
+    // 3 entries -> header row + 3 data rows.
+    expect(text.split(/\r?\n/).filter((l) => l.trim()).length).toBe(4);
+    expect(text).toContain("García");
+    expect(text).toContain("Muñoz");
+    // Title field carries decoded accents through to CSV.
+    expect(text).toContain("Redes neuronales en el análisis de imágenes médicas");
+    expect(text).not.toMatch(/\\['`^"~]/);
+  });
+
   it("csv-to-bibtex round-trips back to BibTeX", async () => {
     // First make the CSV from BibTeX so we know it's well-formed.
     const bibtexInput = fileFromText("test.bib", FIXTURES.bibtex, "application/x-bibtex");

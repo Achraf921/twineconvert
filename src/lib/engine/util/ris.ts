@@ -405,6 +405,10 @@ export function buildRis(citations: Citation[]): string {
     for (const a of c.authors ?? []) out.push(`AU  - ${a}`);
     if (c.title) out.push(`TI  - ${c.title}`);
     if (c.journal) out.push(`JO  - ${c.journal}`);
+    // RIS T2 = "Secondary Title" = conference name for inproceedings, or
+    // book title for in-book chapters. Without this, conference papers
+    // converted from BibTeX silently lose their venue.
+    if (c.booktitle) out.push(`T2  - ${c.booktitle}`);
     if (c.year) out.push(`PY  - ${c.year}`);
     if (c.volume) out.push(`VL  - ${c.volume}`);
     if (c.issue) out.push(`IS  - ${c.issue}`);
