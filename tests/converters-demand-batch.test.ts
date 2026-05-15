@@ -15,7 +15,12 @@ import { describe, it, expect } from "vitest";
 import { run } from "../src/lib/engine/runner";
 import { FIXTURES, fileFromText } from "./fixtures/text-fixtures";
 
-async function xlsxRows(blob: Blob): Promise<string[][]> {
+/** Re-open the xlsx and return {header, rows-as-objects} so tests can
+ *  assert column-addressed values and exact record counts (a parser
+ *  dropping a record then fails loudly, not silently). */
+async function xlsxTable(
+  blob: Blob,
+): Promise<{ header: string[]; records: Record<string, string>[] }> {
   const XLSXModule = await import("xlsx");
   const XLSX = XLSXModule.default ?? XLSXModule;
   const buf = new Uint8Array(await blob.arrayBuffer());
@@ -24,43 +29,84 @@ async function xlsxRows(blob: Blob): Promise<string[][]> {
   expect(buf[1]).toBe(0x4b);
   const wb = XLSX.read(buf, { type: "array" });
   const ws = wb.Sheets[wb.SheetNames[0]];
-  return XLSX.utils.sheet_to_json<string[]>(ws, { header: 1, blankrows: false });
+  const aoa = XLSX.utils.sheet_to_json<string[]>(ws, { header: 1, blankrows: false });
+  const [header, ...rows] = aoa;
+  const records = rows.map((r) => {
+    const o: Record<string, string> = {};
+    header.forEach((h, i) => (o[String(h)] = r[i] != null ? String(r[i]) : ""));
+    return o;
+  });
+  return { header: header.map(String), records };
 }
 
 describe("demand-batch: bibliographic/genealogy → XLSX", () => {
-  it("bibtex-to-xlsx writes a real spreadsheet with the reference data", async () => {
-    const input = fileFromText("refs.bib", FIXTURES.bibtex, "application/x-bibtex");
-    const result = await run("bibtex-to-xlsx", input);
+  it("bibtex-to-xlsx: every reference survives, in the right columns", async () => {
+    const { parseBibtex } = await import("../src/lib/engine/util/bibtex");
+    const expected = parseBibtex(FIXTURES.bibtex);
+    expect(expected.length).toBeGreaterThan(0);
+
+    const result = await run(
+      "bibtex-to-xlsx",
+      fileFromText("refs.bib", FIXTURES.bibtex, "application/x-bibtex"),
+    );
     expect(result.blob.type).toContain("spreadsheetml");
-    const rows = await xlsxRows(result.blob);
-    expect(rows.length).toBeGreaterThan(1); // header + >=1 record
-    const flat = rows.flat().join(" ").toLowerCase();
-    expect(flat).toContain("smith");
+    const { header, records } = await xlsxTable(result.blob);
+    // No record silently dropped.
+    expect(records.length).toBe(expected.length);
+    expect(header).toContain("title");
+    expect(header).toContain("authors");
+    // Right value in the right column, not just "somewhere in the sheet".
+    expect(records[0].title).toBe("A Sample Paper");
+    expect(records[0].authors).toContain("Smith, John");
+    expect(records[0].authors).toContain("Doe, Jane");
+    expect(records[0].year).toBe("2024");
   });
 
-  it("ris-to-xlsx writes a real spreadsheet", async () => {
-    const input = fileFromText("refs.ris", FIXTURES.ris, "application/x-research-info-systems");
-    const result = await run("ris-to-xlsx", input);
-    const rows = await xlsxRows(result.blob);
-    const flat = rows.flat().join(" ").toLowerCase();
-    expect(flat).toContain("nature");
+  it("ris-to-xlsx: every reference survives, in the right columns", async () => {
+    const { parseRis } = await import("../src/lib/engine/util/ris");
+    const expected = parseRis(FIXTURES.ris);
+    expect(expected.length).toBeGreaterThan(0);
+
+    const result = await run(
+      "ris-to-xlsx",
+      fileFromText("refs.ris", FIXTURES.ris, "application/x-research-info-systems"),
+    );
+    const { records } = await xlsxTable(result.blob);
+    expect(records.length).toBe(expected.length);
+    expect(records[0].title).toBe(expected[0].title ?? "");
+    expect(records[0].authors).toContain("Smith");
   });
 
-  it("nbib-to-xlsx writes a real spreadsheet from a PubMed export", async () => {
-    const input = fileFromText("pubmed.nbib", FIXTURES.nbib, "application/x-research-info-systems");
-    const result = await run("nbib-to-xlsx", input);
-    const rows = await xlsxRows(result.blob);
-    const flat = rows.flat().join(" ").toLowerCase();
-    expect(flat).toContain("pubmed sample paper");
+  it("nbib-to-xlsx: every PubMed record survives, in the right columns", async () => {
+    const { parseRis } = await import("../src/lib/engine/util/ris");
+    const expected = parseRis(FIXTURES.nbib);
+    expect(expected.length).toBeGreaterThan(0);
+
+    const result = await run(
+      "nbib-to-xlsx",
+      fileFromText("pubmed.nbib", FIXTURES.nbib, "application/x-research-info-systems"),
+    );
+    const { records } = await xlsxTable(result.blob);
+    expect(records.length).toBe(expected.length);
+    expect(records[0].title).toBe("PubMed Sample Paper");
   });
 
-  it("gedcom-to-xlsx writes a real spreadsheet with individuals", async () => {
-    const input = fileFromText("tree.ged", FIXTURES.gedcom, "text/plain");
-    const result = await run("gedcom-to-xlsx", input);
-    const rows = await xlsxRows(result.blob);
-    const flat = rows.flat().join(" ").toLowerCase();
-    expect(flat).toContain("john");
-    expect(flat).toContain("smith");
+  it("gedcom-to-xlsx: every individual survives, in the right columns", async () => {
+    const { parseGedcom } = await import("../src/lib/engine/util/gedcom-parse");
+    const { individuals } = parseGedcom(FIXTURES.gedcom);
+    expect(individuals.length).toBeGreaterThan(0);
+
+    const result = await run(
+      "gedcom-to-xlsx",
+      fileFromText("tree.ged", FIXTURES.gedcom, "text/plain"),
+    );
+    const { header, records } = await xlsxTable(result.blob);
+    expect(records.length).toBe(individuals.length);
+    expect(header).toContain("surname");
+    // The converter splits NAME into given/surname — assert that worked.
+    const john = records.find((r) => r.givenName === "John");
+    expect(john).toBeDefined();
+    expect(john!.surname).toBe("Smith");
   });
 });
 
