@@ -255,6 +255,31 @@ export function Dropzone({ toolId, toolLabel, accept }: Props) {
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }, [batch, toolId]);
 
+  const downloadBatchEach = useCallback(async () => {
+    if (!batch) return;
+    const ok = batch.filter((b) => b.status === "success" && b.output);
+    if (ok.length === 0) return;
+    posthog.capture("download_clicked", {
+      tool: toolId,
+      batch_size: batch.length,
+    });
+    // Trigger one regular download per file. A short gap between clicks
+    // stops Chrome/Safari from silently dropping all-but-the-first; the OS
+    // handles same-name collisions ("file (1).csv").
+    for (const item of ok) {
+      const out = item.output!;
+      const url = URL.createObjectURL(out.blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = out.filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      await new Promise((r) => setTimeout(r, 200));
+    }
+  }, [batch, toolId]);
+
   const reset = useCallback(() => {
     setPhase("idle");
     setFile(null);
@@ -322,7 +347,12 @@ export function Dropzone({ toolId, toolLabel, accept }: Props) {
         )}
         {phase === "running" && batch && <BatchListState batch={batch} />}
         {phase === "done" && batch && (
-          <BatchDoneState batch={batch} onDownload={downloadBatch} onReset={reset} />
+          <BatchDoneState
+            batch={batch}
+            onDownloadEach={downloadBatchEach}
+            onDownloadZip={downloadBatch}
+            onReset={reset}
+          />
         )}
       </div>
       </div>
@@ -597,11 +627,13 @@ function BatchListState({ batch }: { batch: BatchItem[] }) {
 
 function BatchDoneState({
   batch,
-  onDownload,
+  onDownloadEach,
+  onDownloadZip,
   onReset,
 }: {
   batch: BatchItem[];
-  onDownload: () => void;
+  onDownloadEach: () => void;
+  onDownloadZip: () => void;
   onReset: () => void;
 }) {
   const ok = batch.filter((b) => b.status === "success").length;
@@ -616,28 +648,34 @@ function BatchDoneState({
         </p>
         <p className="text-sm text-[var(--color-text-3)] mt-1">
           {ok > 0
-            ? "Download all converted files as a zip."
+            ? "Download your converted files."
             : "No files could be converted."}
         </p>
       </div>
       <BatchScroll batch={batch} />
-      <div className="flex items-center gap-3 mt-2">
-        {ok > 0 && (
+      {ok > 0 && (
+        <div className="flex flex-col items-center gap-2 mt-2">
           <button
-            onClick={onDownload}
+            onClick={onDownloadEach}
             className="bg-[var(--color-pink-600)] text-white font-medium px-6 py-3 rounded-lg shadow-[var(--shadow-pink)] hover:bg-[var(--color-pink-700)] transition-colors inline-flex items-center gap-2"
           >
             <DownloadIcon />
-            Download all ({ok}) as .zip
+            Download all ({ok})
           </button>
-        )}
-        <button
-          onClick={onReset}
-          className="text-sm text-[var(--color-text-2)] hover:text-[var(--color-text)] transition-colors px-4 py-3"
-        >
-          Convert more
-        </button>
-      </div>
+          <button
+            onClick={onDownloadZip}
+            className="text-xs text-[var(--color-text-2)] hover:text-[var(--color-text)] underline underline-offset-2 transition-colors px-3 py-1.5"
+          >
+            or download as a .zip
+          </button>
+        </div>
+      )}
+      <button
+        onClick={onReset}
+        className="text-sm text-[var(--color-text-2)] hover:text-[var(--color-text)] transition-colors px-4 py-3"
+      >
+        Convert more
+      </button>
     </div>
   );
 }
