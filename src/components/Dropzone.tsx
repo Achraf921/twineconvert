@@ -224,7 +224,7 @@ export function Dropzone({ toolId, toolLabel, accept }: Props) {
             posthog.capture("convert_error", {
               tool: toolId,
               size: sizeBucket(result.file.size),
-              error_class: "Error",
+              error_class: result.errorClass ?? "Unknown",
               batch_size: rows.length,
             });
           }

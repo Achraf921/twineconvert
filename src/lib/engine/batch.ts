@@ -17,6 +17,12 @@ export type BatchResult = {
   status: "success" | "error";
   output?: { blob: Blob; filename: string };
   error?: string;
+  /**
+   * Error constructor name (UnsupportedInputError, ConvertFailedError, …).
+   * Mirrors the single-file path so PostHog convert_error events group by
+   * the same class — the batch fix-loop depends on this granularity.
+   */
+  errorClass?: string;
 };
 
 export interface BatchHandlers {
@@ -46,6 +52,7 @@ export async function convertBatch(
         file,
         status: "error",
         error: e instanceof Error ? e.message : String(e),
+        errorClass: e instanceof Error ? e.constructor.name : "Unknown",
       };
       results.push(result);
       handlers.onSettled?.(i, result);

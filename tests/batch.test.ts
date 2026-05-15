@@ -62,6 +62,9 @@ describe("convertBatch", () => {
 
     expect(results.map((r) => r.status)).toEqual(["success", "error", "success"]);
     expect(results[1].error).toBeTruthy();
+    // Real error class must survive so PostHog convert_error groups the same
+    // way the single-file path does (the fix-loop depends on this).
+    expect(results[1].errorClass).toBe("UnsupportedInputError");
     expect(results[0].output).toBeDefined();
     expect(results[2].output).toBeDefined();
   });
