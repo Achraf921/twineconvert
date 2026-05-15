@@ -1,7 +1,7 @@
 import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
-import { findFilesInZip, fixMetaEncoding, loadJsonArrays } from "../util/meta-archive";
+import { findInstagramPosts, fixMetaEncoding, loadJsonArrays } from "../util/meta-archive";
 
 interface InstaPost {
   // Modern shape
@@ -13,14 +13,6 @@ interface InstaPost {
   caption?: string;
 }
 
-const POST_FILE_PATTERNS = [
-  /your_instagram_activity\/content\/posts_\d+\.json$/i,
-  /your_instagram_activity\/posts\/posts_\d+\.json$/i,
-  /content\/posts_\d+\.json$/i,
-  /^posts\/posts_\d+\.json$/i,
-  /^posts\.json$/i,
-];
-
 /**
  * Instagram Data Export → CSV. Pulls the user's posts (the most-asked-for
  * subset of the archive). Stories, reels, comments, follower lists are
@@ -31,6 +23,9 @@ const POST_FILE_PATTERNS = [
  * multiple paginated `posts_1.json`, `posts_2.json` files. We collect
  * all of them. Schema has shifted across Meta's export-format versions;
  * we handle both the modern `media[]` array and the legacy flat shape.
+ * Post-file discovery + the actionable "wrong export / HTML format"
+ * errors live in findInstagramPosts() so this and instagram-data-to-html
+ * stay in sync.
  */
 const instagramDataToCsv: Converter = {
   id: "instagram-data-to-csv",
@@ -44,10 +39,7 @@ const instagramDataToCsv: Converter = {
     opts?.onProgress?.(0.1);
     let csv: string;
     try {
-      const { files } = await findFilesInZip(input, POST_FILE_PATTERNS);
-      if (files.length === 0) {
-        throw new Error("No post files found in the Instagram archive (expected posts_*.json under content/ or posts/)");
-      }
+      const files = await findInstagramPosts(input);
       opts?.onProgress?.(0.4);
       const posts = await loadJsonArrays<InstaPost>(files);
 

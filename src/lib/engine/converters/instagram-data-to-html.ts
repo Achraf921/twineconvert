@@ -1,21 +1,13 @@
 import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
-import { findFilesInZip, fixMetaEncoding, loadJsonArrays } from "../util/meta-archive";
+import { findInstagramPosts, fixMetaEncoding, loadJsonArrays } from "../util/meta-archive";
 
 interface InstaPost {
   media?: Array<{ uri?: string; creation_timestamp?: number; title?: string }>;
   creation_timestamp?: number;
   title?: string;
 }
-
-const POST_FILE_PATTERNS = [
-  /your_instagram_activity\/content\/posts_\d+\.json$/i,
-  /your_instagram_activity\/posts\/posts_\d+\.json$/i,
-  /content\/posts_\d+\.json$/i,
-  /^posts\/posts_\d+\.json$/i,
-  /^posts\.json$/i,
-];
 
 const instagramDataToHtml: Converter = {
   id: "instagram-data-to-html",
@@ -29,10 +21,7 @@ const instagramDataToHtml: Converter = {
     opts?.onProgress?.(0.1);
     let html: string;
     try {
-      const { files } = await findFilesInZip(input, POST_FILE_PATTERNS);
-      if (files.length === 0) {
-        throw new Error("No post files found in the Instagram archive");
-      }
+      const files = await findInstagramPosts(input);
       opts?.onProgress?.(0.5);
       const posts = await loadJsonArrays<InstaPost>(files);
 

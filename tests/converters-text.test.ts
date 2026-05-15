@@ -912,3 +912,128 @@ describe("text-format converter smoke tests", () => {
     expect(parsed[0].name).toBe("Alice");
   });
 });
+
+// ============================================================================
+// Regression suite for the three PostHog convert_error tools (2026-05-15):
+// jsonl-to-csv, csv-to-adif, instagram-data-to-csv (+ its sibling html).
+//
+// Each tool gets BOTH halves of the contract tested on real files:
+//   1. Happy path: a valid input converts AND the output has structural
+//      integrity (not just "non-empty" — we parse the output back and
+//      assert specific values survived).
+//   2. The exact misuse that produced the production error throws the
+//      NEW actionable message — so a regression that reverts to the
+//      cryptic error fails CI.
+// ============================================================================
+describe("regression: PostHog convert_error tools (real-file smoke + integrity)", () => {
+  // ---- jsonl-to-csv ----
+  it("jsonl-to-csv: valid JSONL → CSV with correct columns, rows, and values", async () => {
+    const jsonl =
+      '{"name":"Alice","age":30,"city":"NYC"}\n' +
+      '{"name":"Bob","age":25}\n' + // sparse: no city — header is union
+      '{"name":"Carol","age":41,"city":"LA","vip":true}\n';
+    const input = fileFromText("data.jsonl", jsonl, "application/jsonl");
+    const result = await run("jsonl-to-csv", input);
+    const text = await result.blob.text();
+    const lines = text.trim().split(/\r?\n/);
+    // Header is the union of all keys across records.
+    expect(lines[0].split(",").sort()).toEqual(["age", "city", "name", "vip"]);
+    expect(lines).toHaveLength(4); // header + 3 rows
+    // Integrity: parse the CSV back and confirm specific values survived.
+    const Papa = (await import("papaparse")).default;
+    const reparsed = Papa.parse<Record<string, string>>(text.trim(), { header: true });
+    expect(reparsed.data[0].name).toBe("Alice");
+    expect(reparsed.data[0].city).toBe("NYC");
+    expect(reparsed.data[1].city).toBe(""); // sparse record → empty cell
+    expect(reparsed.data[2].vip).toBe("true");
+  });
+
+  it("jsonl-to-csv: a JSON array saved as .jsonl (the common misuse) → actionable error", async () => {
+    // Real production scenario: user has a .json file, renames it
+    // .jsonl (or a tool exports array-shaped .jsonl). The runner's
+    // extension guard passes; our content detection must catch it.
+    const jsonArray = '[\n  {"name":"Alice"},\n  {"name":"Bob"}\n]';
+    const input = fileFromText("data.jsonl", jsonArray, "application/jsonl");
+    await expect(run("jsonl-to-csv", input)).rejects.toThrow(/JSON array.*not JSONL|json-to-csv/i);
+  });
+
+  it("jsonl-to-csv: a pretty-printed JSON object saved as .jsonl → actionable error", async () => {
+    const prettyObj = '{\n  "name": "Alice",\n  "age": 30\n}';
+    const input = fileFromText("data.jsonl", prettyObj, "application/jsonl");
+    await expect(run("jsonl-to-csv", input)).rejects.toThrow(/pretty-printed|json-to-csv|one .* per .* line/i);
+  });
+
+  // ---- csv-to-adif ----
+  it("csv-to-adif: valid CSV → ADIF with the right QSO fields", async () => {
+    const csv =
+      "CALL,QSO_DATE,TIME_ON,BAND,MODE\n" +
+      "K1ABC,20260514,1200,20m,SSB\n" +
+      "W2XYZ,20260514,1305,40m,CW\n";
+    const input = fileFromText("log.csv", csv, "text/csv");
+    const result = await run("csv-to-adif", input);
+    const adif = await result.blob.text();
+    // ADIF integrity: each record ends with <EOR>, fields use the
+    // <NAME:len>value tag form, and both calls survived.
+    expect((adif.match(/<eor>/gi) ?? []).length).toBe(2);
+    expect(adif).toMatch(/<CALL:5>K1ABC/i);
+    expect(adif).toMatch(/<CALL:5>W2XYZ/i);
+    expect(adif).toMatch(/<QSO_DATE:8>20260514/i);
+    expect(adif).toMatch(/<MODE:3>SSB/i);
+  });
+
+  it("csv-to-adif: JSON uploaded as .csv → actionable error", async () => {
+    const input = fileFromText("log.csv", '[{"call":"K1ABC"}]', "text/csv");
+    await expect(run("csv-to-adif", input)).rejects.toThrow(/looks like JSON|export.*as CSV/i);
+  });
+
+  it("csv-to-adif: an ADI file uploaded as .csv → 'already ADIF' message", async () => {
+    const adi = "<CALL:5>K1ABC<QSO_DATE:8>20260514<EOR>\n";
+    const input = fileFromText("log.csv", adi, "text/csv");
+    await expect(run("csv-to-adif", input)).rejects.toThrow(/already.*ADIF|no conversion needed/i);
+  });
+
+  it("csv-to-adif: header-only CSV with no data rows → actionable error", async () => {
+    const input = fileFromText("log.csv", "CALL,QSO_DATE,BAND\n", "text/csv");
+    await expect(run("csv-to-adif", input)).rejects.toThrow(/No log entries found|at least one data row/i);
+  });
+
+  // ---- instagram-data-to-csv (+ shared findInstagramPosts) ----
+  it("instagram-data-to-csv: valid export zip → CSV with the post captured", async () => {
+    const { makeTinyInstagramZip } = await import("./fixtures/binary-fixtures");
+    const zip = await makeTinyInstagramZip();
+    const input = fileFromBytes("instagram.zip", zip, "application/zip");
+    const result = await run("instagram-data-to-csv", input);
+    const text = await result.blob.text();
+    expect(text).toContain("Test caption"); // the fixture's post title
+    expect(text.toLowerCase()).toContain("date"); // header present
+  });
+
+  it("instagram-data-to-csv: HTML-format export → 're-download as JSON' error", async () => {
+    const { makeInstagramHtmlExportZip } = await import("./fixtures/binary-fixtures");
+    const zip = await makeInstagramHtmlExportZip();
+    const input = fileFromBytes("instagram.zip", zip, "application/zip");
+    await expect(run("instagram-data-to-csv", input)).rejects.toThrow(
+      /HTML-format export|Format to JSON/i,
+    );
+  });
+
+  it("instagram-data-to-csv: wrong-category export → error lists the JSON it DID find", async () => {
+    const { makeInstagramWrongCategoryZip } = await import("./fixtures/binary-fixtures");
+    const zip = await makeInstagramWrongCategoryZip();
+    const input = fileFromBytes("instagram.zip", zip, "application/zip");
+    // Must mention "Posts" guidance AND surface the actual JSON files
+    // present so the user can self-diagnose.
+    await expect(run("instagram-data-to-csv", input)).rejects.toThrow(
+      /No posts data found.*your_topics\.json|personal_information\.json/i,
+    );
+  });
+
+  it("instagram-data-to-html: shares the same hardened post-discovery path", async () => {
+    const { makeInstagramHtmlExportZip } = await import("./fixtures/binary-fixtures");
+    const zip = await makeInstagramHtmlExportZip();
+    const input = fileFromBytes("instagram.zip", zip, "application/zip");
+    await expect(run("instagram-data-to-html", input)).rejects.toThrow(
+      /HTML-format export|Format to JSON/i,
+    );
+  });
+});

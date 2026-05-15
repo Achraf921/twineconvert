@@ -16,6 +16,64 @@ export interface FoundFile {
   load: () => Promise<string>;
 }
 
+/**
+ * Canonical Instagram "Posts" file patterns across every Meta export-
+ * format version we've seen. Single source of truth so both
+ * instagram-data-to-csv and instagram-data-to-html stay in sync.
+ */
+export const INSTAGRAM_POST_PATTERNS: RegExp[] = [
+  /your_instagram_activity\/content\/posts_\d+\.json$/i,
+  /your_instagram_activity\/posts\/posts_\d+\.json$/i,
+  /your_instagram_activity\/media\/posts_\d+\.json$/i,
+  /content\/posts_\d+\.json$/i,
+  /media\/posts_\d+\.json$/i,
+  /^posts\/posts_\d+\.json$/i,
+  /content\/posts(_\d+)?\.json$/i,
+  /^posts\.json$/i,
+  /(^|\/)posts_\d+\.json$/i, // anywhere in the tree, last resort
+];
+
+const INSTAGRAM_HTML_POST_PATTERNS: RegExp[] = [
+  /posts_\d+\.html$/i,
+  /content\/posts.*\.html$/i,
+];
+
+/**
+ * Find the Instagram posts JSON files in a Download-Your-Information
+ * zip, or throw an actionable error explaining exactly why we couldn't
+ * (HTML-format export, wrong category selected, no JSON at all). The
+ * error lists the JSON files the archive DID contain so the user can
+ * self-diagnose. Used by every instagram-data-to-* converter.
+ */
+export async function findInstagramPosts(
+  input: File | Blob,
+): Promise<FoundFile[]> {
+  const { zip, files } = await findFilesInZip(input, INSTAGRAM_POST_PATTERNS);
+  if (files.length > 0) return files;
+
+  const allNames = Object.keys(zip.files).filter((n) => !zip.files[n].dir);
+  if (allNames.some((n) => INSTAGRAM_HTML_POST_PATTERNS.some((p) => p.test(n)))) {
+    throw new Error(
+      "This archive is the HTML-format export — it has no machine-readable JSON. " +
+        "Re-download from Instagram: Settings → Accounts Center → Your information and permissions → " +
+        "Download your information → set Format to JSON (not HTML), include Posts, then convert that zip.",
+    );
+  }
+  const jsonFiles = allNames.filter((n) => /\.json$/i.test(n));
+  const shown = jsonFiles.slice(0, 12);
+  const hint =
+    jsonFiles.length > 0
+      ? ` The archive does contain these JSON files: ${shown.join(", ")}${
+          jsonFiles.length > 12 ? ", ..." : ""
+        }.`
+      : " The archive contains no JSON files at all.";
+  throw new Error(
+    'No posts data found in this Instagram archive. When requesting your data, make sure "Posts" ' +
+      "is selected (Download your information → Some of your information → Posts) and Format is JSON." +
+      hint,
+  );
+}
+
 /** Find all files inside the zip whose path matches any of the patterns. */
 export async function findFilesInZip(
   input: File | Blob,

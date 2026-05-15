@@ -635,6 +635,41 @@ export async function makeTinyInstagramZip(): Promise<Uint8Array> {
   return zip.generateAsync({ type: "uint8array" });
 }
 
+/**
+ * Instagram export in the HTML format (Download Your Information →
+ * Format: HTML). Posts ship as posts_1.html, no JSON anywhere — this
+ * is one real failure mode we now detect with an actionable error.
+ */
+export async function makeInstagramHtmlExportZip(): Promise<Uint8Array> {
+  const JSZip = (await import("jszip")).default;
+  const zip = new JSZip();
+  zip.file(
+    "your_instagram_activity/content/posts_1.html",
+    "<!DOCTYPE html><html><body><h1>Your posts</h1></body></html>",
+  );
+  zip.file("start_here.html", "<html><body>Index</body></html>");
+  return zip.generateAsync({ type: "uint8array" });
+}
+
+/**
+ * Instagram export where the user did NOT include Posts (selected only
+ * "Profile information" and "Topics"). Has JSON but no posts_*.json —
+ * the other real failure mode; error should list what WAS in the zip.
+ */
+export async function makeInstagramWrongCategoryZip(): Promise<Uint8Array> {
+  const JSZip = (await import("jszip")).default;
+  const zip = new JSZip();
+  zip.file(
+    "personal_information/personal_information/personal_information.json",
+    JSON.stringify({ profile_user: [{ string_map_data: {} }] }),
+  );
+  zip.file(
+    "logged_information/your_topics/your_topics.json",
+    JSON.stringify({ topics_your_topics: [] }),
+  );
+  return zip.generateAsync({ type: "uint8array" });
+}
+
 /** Minimal Facebook archive zip with posts. */
 export async function makeTinyFacebookZip(): Promise<Uint8Array> {
   const JSZip = (await import("jszip")).default;

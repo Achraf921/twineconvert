@@ -21,12 +21,32 @@ const jsonlToCsv: Converter = {
     let csv: string;
     try {
       const Papa = (await import("papaparse")).default;
-      const records = parseJsonl(await input.text()).filter(
+      const rawText = await input.text();
+      // Most common misuse caught via PostHog convert_error: a user
+      // uploads a normal pretty-printed .json file (a single array or
+      // object spanning many lines) thinking it's JSONL. parseJsonl is
+      // strict per-line, so it dies on line 1 with a cryptic
+      // "Unexpected end of JSON input". Detect that here and point them
+      // at the right tool instead.
+      const head = rawText.replace(/^﻿/, "").trimStart();
+      if (head.startsWith("[")) {
+        throw new Error(
+          "This looks like a JSON array, not JSONL. JSONL is one complete JSON object per line, with no enclosing [ ]. Use the json-to-csv tool for a regular .json file.",
+        );
+      }
+      if (head.startsWith("{") && /\n\s*"/.test(head.slice(0, 200))) {
+        throw new Error(
+          "This looks like a pretty-printed JSON object spanning multiple lines, not JSONL. JSONL needs one complete JSON value per single line. Use json-to-csv for a regular .json file, or minify each record to one line.",
+        );
+      }
+      const records = parseJsonl(rawText).filter(
         (v): v is Record<string, unknown> =>
           typeof v === "object" && v !== null && !Array.isArray(v),
       );
       if (records.length === 0) {
-        throw new Error("JSONL has no JSON-object records to flatten into CSV");
+        throw new Error(
+          "No JSON-object records found. JSONL must be one JSON object per line (e.g. {\"a\":1} on its own line). Arrays of primitives and bare values can't be flattened into CSV rows.",
+        );
       }
       // Union of keys across all records → stable column order
       const columns = Array.from(
