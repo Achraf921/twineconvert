@@ -11,6 +11,7 @@
  */
 
 import { useCallback, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { setPendingFiles } from "@/lib/pending-files";
 
@@ -133,14 +134,21 @@ export function HomeDropzone({ routes, acceptAll }: Props) {
         </div>
       </div>
 
-      {picker && (
-        <PickerOverlay
-          ext={pickedExt}
-          options={picker}
-          onClose={() => setPicker(null)}
-          onPick={(id) => goToTool(id, heldFiles)}
-        />
-      )}
+      {/* Portaled to <body>: the hero wrappers run a transform animation,
+          which makes them the containing block for position:fixed and
+          would otherwise clip the modal backdrop to the section instead
+          of the viewport. picker is only ever set from a client event,
+          so this never runs during SSR. */}
+      {picker &&
+        createPortal(
+          <PickerOverlay
+            ext={pickedExt}
+            options={picker}
+            onClose={() => setPicker(null)}
+            onPick={(id) => goToTool(id, heldFiles)}
+          />,
+          document.body,
+        )}
     </div>
   );
 }
