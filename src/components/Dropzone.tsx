@@ -17,8 +17,22 @@
 import { useCallback, useRef, useState } from "react";
 import posthog from "posthog-js";
 import { run } from "@/lib/engine/runner";
+import { convertBatch, packageBatchZip } from "@/lib/engine/batch";
 
 type Phase = "idle" | "ready" | "running" | "done" | "error";
+
+/**
+ * Per-file row in a batch run. Single-file conversions never use this; the
+ * 1-file path stays on the original `file`/`output` state so its UI and
+ * analytics are byte-identical to before batch existed.
+ */
+type BatchItem = {
+  file: File;
+  status: "pending" | "running" | "success" | "error";
+  progress: number;
+  output?: { blob: Blob; filename: string };
+  error?: string;
+};
 
 /**
  * Bucket a byte size into a coarse class so analytics events don't carry
@@ -47,25 +61,52 @@ export function Dropzone({ toolId, toolLabel, accept }: Props) {
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [output, setOutput] = useState<{ blob: Blob; filename: string } | null>(null);
+  const [batch, setBatch] = useState<BatchItem[] | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const onFiles = useCallback(
-    (files: FileList | File[]) => {
-      const f = Array.from(files)[0];
-      if (!f) return;
-      // Funnel step 2 (pageview is auto-tracked). Logs which tool the user
-      // is actually using vs just browsing. Comparing this against pageview
-      // count gives us pageview-to-upload conversion rate.
-      posthog.capture("file_selected", {
-        tool: toolId,
-        size: sizeBucket(f.size),
-        mime: f.type || "unknown",
-      });
-      setFile(f);
+    (fileList: FileList | File[]) => {
+      const picked = Array.from(fileList);
+      if (picked.length === 0) return;
+
+      if (picked.length === 1) {
+        // Single-file path: unchanged from before batch. Same state, same
+        // analytics event shape, so the 1-file experience is identical.
+        const f = picked[0];
+        // Funnel step 2 (pageview is auto-tracked). Logs which tool the user
+        // is actually using vs just browsing. Comparing this against pageview
+        // count gives us pageview-to-upload conversion rate.
+        posthog.capture("file_selected", {
+          tool: toolId,
+          size: sizeBucket(f.size),
+          mime: f.type || "unknown",
+        });
+        setBatch(null);
+        setFile(f);
+        setOutput(null);
+        setError(null);
+        setProgress(0);
+        setPhase("ready");
+        return;
+      }
+
+      // Batch path: 2+ files. One file_selected per file keeps the
+      // pageview-to-upload funnel and per-mime stats consistent with the
+      // single-file events; `batch_size` lets us segment batch usage.
+      for (const f of picked) {
+        posthog.capture("file_selected", {
+          tool: toolId,
+          size: sizeBucket(f.size),
+          mime: f.type || "unknown",
+          batch_size: picked.length,
+        });
+      }
+      setFile(null);
       setOutput(null);
       setError(null);
       setProgress(0);
+      setBatch(picked.map((f) => ({ file: f, status: "pending", progress: 0 })));
       setPhase("ready");
     },
     [toolId],
@@ -134,10 +175,91 @@ export function Dropzone({ toolId, toolLabel, accept }: Props) {
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }, [output, toolId]);
 
+  const startBatch = useCallback(async () => {
+    if (!batch || batch.length === 0) return;
+    posthog.capture("convert_clicked", {
+      tool: toolId,
+      batch_size: batch.length,
+    });
+    setPhase("running");
+    // Local mirror of batch state pushed after every change so per-row UI
+    // updates live. convertBatch owns the sequential run loop (tested).
+    let rows: BatchItem[] = batch.map((b) => ({ ...b, status: "pending", progress: 0 }));
+    setBatch(rows);
+    const startedAt: number[] = [];
+    await convertBatch(
+      toolId,
+      rows.map((r) => r.file),
+      {
+        onStart: (i) => {
+          startedAt[i] = performance.now();
+          rows = rows.map((r, idx) => (idx === i ? { ...r, status: "running" } : r));
+          setBatch(rows);
+        },
+        onProgress: (i, p) => {
+          rows = rows.map((r, idx) => (idx === i ? { ...r, progress: p } : r));
+          setBatch(rows);
+        },
+        onSettled: (i, result) => {
+          rows = rows.map((r, idx) =>
+            idx === i
+              ? {
+                  ...r,
+                  status: result.status,
+                  progress: result.status === "success" ? 1 : r.progress,
+                  output: result.output,
+                  error: result.error,
+                }
+              : r,
+          );
+          setBatch(rows);
+          if (result.status === "success") {
+            posthog.capture("convert_success", {
+              tool: toolId,
+              size: sizeBucket(result.file.size),
+              duration_ms: Math.round(performance.now() - (startedAt[i] ?? performance.now())),
+              batch_size: rows.length,
+            });
+          } else {
+            posthog.capture("convert_error", {
+              tool: toolId,
+              size: sizeBucket(result.file.size),
+              error_class: "Error",
+              batch_size: rows.length,
+            });
+          }
+        },
+      },
+    );
+    setPhase("done");
+  }, [batch, toolId]);
+
+  const downloadBatch = useCallback(async () => {
+    if (!batch) return;
+    const ok = batch.filter((b) => b.status === "success" && b.output);
+    if (ok.length === 0) return;
+    posthog.capture("download_clicked", {
+      tool: toolId,
+      batch_size: batch.length,
+    });
+    const blob = await packageBatchZip(
+      ok.map((b) => ({ file: b.file, status: "success" as const, output: b.output })),
+    );
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${toolId}-converted.zip`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }, [batch, toolId]);
+
   const reset = useCallback(() => {
     setPhase("idle");
     setFile(null);
     setOutput(null);
+    setBatch(null);
     setError(null);
     setProgress(0);
     if (inputRef.current) inputRef.current.value = "";
@@ -162,12 +284,16 @@ export function Dropzone({ toolId, toolLabel, accept }: Props) {
         ref={inputRef}
         type="file"
         accept={accept.join(",")}
+        multiple
         className="sr-only"
         onChange={(e) => e.target.files && onFiles(e.target.files)}
       />
 
       <div className="px-6 py-10 sm:py-12 text-center">
         {phase === "idle" && <IdleState onPick={() => inputRef.current?.click()} accept={accept} />}
+
+        {/* Single-file path: unchanged. Only renders when exactly one file
+            was picked (batch is null), so its UI is byte-identical to before. */}
         {phase === "ready" && file && (
           <ReadyState file={file} toolLabel={toolLabel} onConvert={startConversion} onCancel={reset} />
         )}
@@ -182,6 +308,21 @@ export function Dropzone({ toolId, toolLabel, accept }: Props) {
         )}
         {phase === "error" && (
           <ErrorState message={error ?? "Conversion failed."} onReset={reset} />
+        )}
+
+        {/* Batch path: 2+ files. Compact per-file list, sequential convert,
+            one zip download. Mutually exclusive with the single-file path. */}
+        {phase === "ready" && batch && (
+          <BatchReadyState
+            batch={batch}
+            toolLabel={toolLabel}
+            onConvert={startBatch}
+            onCancel={reset}
+          />
+        )}
+        {phase === "running" && batch && <BatchListState batch={batch} />}
+        {phase === "done" && batch && (
+          <BatchDoneState batch={batch} onDownload={downloadBatch} onReset={reset} />
         )}
       </div>
       </div>
@@ -337,6 +478,166 @@ function ErrorState({ message, onReset }: { message: string; onReset: () => void
       >
         Try again
       </button>
+    </div>
+  );
+}
+
+// ===== Batch sub-components =====
+
+function BatchFileRow({ item }: { item: BatchItem }) {
+  return (
+    <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-[var(--color-surface-2)]/60">
+      <span className="shrink-0">
+        {item.status === "success" ? (
+          <span className="inline-flex w-5 h-5 rounded-full bg-[var(--color-pink-100)] items-center justify-center">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+              <path d="M20 6L9 17l-5-5" stroke="#E0297B" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </span>
+        ) : item.status === "error" ? (
+          <span className="inline-flex w-5 h-5 rounded-full bg-red-50 items-center justify-center">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+              <path d="M18 6L6 18M6 6l12 12" stroke="#DC2626" strokeWidth="3" strokeLinecap="round" />
+            </svg>
+          </span>
+        ) : item.status === "running" ? (
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="animate-spin">
+            <path d="M21 12a9 9 0 11-6.219-8.56" stroke="#E0297B" strokeWidth="2.5" strokeLinecap="round" />
+          </svg>
+        ) : (
+          <span className="inline-flex w-5 h-5 text-[var(--color-text-3)]">
+            <FileIcon />
+          </span>
+        )}
+      </span>
+      <span className="min-w-0 flex-1 text-left">
+        <span className="block truncate text-sm text-[var(--color-text)]">{item.file.name}</span>
+        {item.status === "error" ? (
+          <span className="block truncate text-xs text-red-600">{item.error}</span>
+        ) : (
+          <span className="block text-xs text-[var(--color-text-3)]">
+            {item.status === "running"
+              ? `Converting… ${Math.round(item.progress * 100)}%`
+              : item.status === "success"
+                ? "Done"
+                : formatBytes(item.file.size)}
+          </span>
+        )}
+      </span>
+    </div>
+  );
+}
+
+function BatchScroll({ batch }: { batch: BatchItem[] }) {
+  return (
+    <div className="w-full max-w-md mt-1 max-h-64 overflow-y-auto flex flex-col gap-1.5 text-left">
+      {batch.map((item, i) => (
+        <BatchFileRow key={`${item.file.name}-${i}`} item={item} />
+      ))}
+    </div>
+  );
+}
+
+function BatchReadyState({
+  batch,
+  toolLabel,
+  onConvert,
+  onCancel,
+}: {
+  batch: BatchItem[];
+  toolLabel: string;
+  onConvert: () => void;
+  onCancel: () => void;
+}) {
+  return (
+    <div className="flex flex-col items-center gap-4">
+      <FileIconLarge />
+      <div>
+        <p className="font-medium text-[var(--color-text)]">{batch.length} files selected</p>
+        <p className="text-sm text-[var(--color-text-3)] mt-1">
+          ready to convert as {toolLabel}
+        </p>
+      </div>
+      <BatchScroll batch={batch} />
+      <div className="flex items-center gap-3 mt-2">
+        <button
+          onClick={onConvert}
+          className="bg-[var(--color-pink-600)] text-white font-medium px-6 py-3 rounded-lg shadow-[var(--shadow-pink)] hover:bg-[var(--color-pink-700)] transition-colors"
+        >
+          Convert {batch.length} files
+        </button>
+        <button
+          onClick={onCancel}
+          className="text-sm text-[var(--color-text-2)] hover:text-[var(--color-text)] transition-colors px-4 py-3"
+        >
+          Pick different files
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function BatchListState({ batch }: { batch: BatchItem[] }) {
+  const done = batch.filter((b) => b.status === "success" || b.status === "error").length;
+  return (
+    <div className="flex flex-col items-center gap-4">
+      <SpinnerIcon />
+      <div>
+        <p className="font-medium text-[var(--color-text)]">
+          Converting {done} / {batch.length}
+        </p>
+        <p className="text-sm text-[var(--color-text-3)] mt-1">
+          Running in your browser. Nothing leaves your device.
+        </p>
+      </div>
+      <BatchScroll batch={batch} />
+    </div>
+  );
+}
+
+function BatchDoneState({
+  batch,
+  onDownload,
+  onReset,
+}: {
+  batch: BatchItem[];
+  onDownload: () => void;
+  onReset: () => void;
+}) {
+  const ok = batch.filter((b) => b.status === "success").length;
+  const failed = batch.length - ok;
+  return (
+    <div className="flex flex-col items-center gap-4">
+      {ok > 0 ? <CheckIcon /> : <ErrorIcon />}
+      <div>
+        <p className="font-medium text-[var(--color-text)]">
+          {ok} of {batch.length} converted
+          {failed > 0 ? ` · ${failed} failed` : ""}
+        </p>
+        <p className="text-sm text-[var(--color-text-3)] mt-1">
+          {ok > 0
+            ? "Download all converted files as a zip."
+            : "No files could be converted."}
+        </p>
+      </div>
+      <BatchScroll batch={batch} />
+      <div className="flex items-center gap-3 mt-2">
+        {ok > 0 && (
+          <button
+            onClick={onDownload}
+            className="bg-[var(--color-pink-600)] text-white font-medium px-6 py-3 rounded-lg shadow-[var(--shadow-pink)] hover:bg-[var(--color-pink-700)] transition-colors inline-flex items-center gap-2"
+          >
+            <DownloadIcon />
+            Download all ({ok}) as .zip
+          </button>
+        )}
+        <button
+          onClick={onReset}
+          className="text-sm text-[var(--color-text-2)] hover:text-[var(--color-text)] transition-colors px-4 py-3"
+        >
+          Convert more
+        </button>
+      </div>
     </div>
   );
 }
