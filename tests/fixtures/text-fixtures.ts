@@ -1152,6 +1152,32 @@ spanning two lines
     </measure>
   </part>
 </score-partwise>`,
+
+  // FEN: two positions, one per line (start position + a midgame one).
+  // Used by fen-to-pgn / fen-to-png.
+  fen: `rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
+r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 2 3`,
+
+  // MBOX: two RFC822 messages separated by "From " envelope lines.
+  mbox: `From alice@example.com Mon Jan  1 12:00:00 2024
+From: Alice <alice@example.com>
+To: Bob <bob@example.com>
+Subject: First message
+Date: Mon, 1 Jan 2024 12:00:00 +0000
+Message-ID: <msg1@example.com>
+
+Hello Bob, this is the first message body.
+
+From bob@example.com Mon Jan  1 13:30:00 2024
+From: Bob <bob@example.com>
+To: Alice <alice@example.com>
+Cc: carol@example.com
+Subject: Re: First message
+Date: Mon, 1 Jan 2024 13:30:00 +0000
+Message-ID: <msg2@example.com>
+
+Hi Alice, replying back to you.
+`,
 } as const;
 
 /** Helper: wrap a text fixture as a File (which converters expect). */

@@ -1150,6 +1150,19 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "text/csv",
     "maxFileSizeBytes": 52428800
   },
+  "gedcom-to-xlsx": {
+    "label": "GEDCOM → XLSX",
+    "accept": [
+      ".ged",
+      ".gedcom"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-gedcom"
+    ],
+    "toMime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "maxFileSizeBytes": 52428800
+  },
   "gedcom-to-json": {
     "label": "GEDCOM → JSON",
     "accept": [
@@ -1301,6 +1314,44 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "text/csv",
     "maxFileSizeBytes": 10485760
   },
+  "bibtex-to-xlsx": {
+    "label": "BibTeX → XLSX",
+    "accept": [
+      ".bib",
+      ".bibtex"
+    ],
+    "fromMime": [
+      "application/x-bibtex",
+      "text/x-bibtex",
+      "text/plain"
+    ],
+    "toMime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "maxFileSizeBytes": 10485760
+  },
+  "ris-to-xlsx": {
+    "label": "RIS → XLSX",
+    "accept": [
+      ".ris"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "maxFileSizeBytes": 10485760
+  },
+  "nbib-to-xlsx": {
+    "label": "NBIB → XLSX",
+    "accept": [
+      ".nbib"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "maxFileSizeBytes": 10485760
+  },
   "adif-to-csv": {
     "label": "ADIF → CSV",
     "accept": [
@@ -1375,6 +1426,32 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     ],
     "toMime": "text/plain",
     "maxFileSizeBytes": 104857600
+  },
+  "fen-to-pgn": {
+    "label": "FEN → PGN",
+    "accept": [
+      ".fen",
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-fen"
+    ],
+    "toMime": "application/x-chess-pgn",
+    "maxFileSizeBytes": 5242880
+  },
+  "fen-to-png": {
+    "label": "FEN → PNG",
+    "accept": [
+      ".fen",
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-fen"
+    ],
+    "toMime": "image/png",
+    "maxFileSizeBytes": 1048576
   },
   "pgn-to-json": {
     "label": "PGN → JSON",
@@ -1486,6 +1563,18 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "text/plain"
     ],
     "toMime": "message/rfc822",
+    "maxFileSizeBytes": 209715200
+  },
+  "mbox-to-csv": {
+    "label": "MBOX → CSV",
+    "accept": [
+      ".mbox"
+    ],
+    "fromMime": [
+      "application/mbox",
+      "text/plain"
+    ],
+    "toMime": "text/csv",
     "maxFileSizeBytes": 209715200
   },
   "mbox-to-pdf": {

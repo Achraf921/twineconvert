@@ -261,6 +261,8 @@ export const registry: Record<string, ConverterLoader> = {
   // GEDCOM, genealogy interchange (parsed from scratch, text-hierarchical)
   "gedcom-to-csv": () =>
     import("./converters/gedcom-to-csv").then((m) => m.default),
+  "gedcom-to-xlsx": () =>
+    import("./converters/gedcom-to-xlsx").then((m) => m.default),
   "gedcom-to-json": () =>
     import("./converters/gedcom-to-json").then((m) => m.default),
   "gedcom-to-html": () =>
@@ -288,6 +290,12 @@ export const registry: Record<string, ConverterLoader> = {
     import("./converters/bibtex-to-csv").then((m) => m.default),
   "ris-to-csv": () =>
     import("./converters/ris-to-csv").then((m) => m.default),
+  "bibtex-to-xlsx": () =>
+    import("./converters/bibtex-to-xlsx").then((m) => m.default),
+  "ris-to-xlsx": () =>
+    import("./converters/ris-to-xlsx").then((m) => m.default),
+  "nbib-to-xlsx": () =>
+    import("./converters/nbib-to-xlsx").then((m) => m.default),
 
   // ADIF, amateur radio QSO logs
   "adif-to-csv": () =>
@@ -304,6 +312,10 @@ export const registry: Record<string, ConverterLoader> = {
     import("./converters/pgn-to-csv").then((m) => m.default),
   "pgn-to-fen": () =>
     import("./converters/pgn-to-fen").then((m) => m.default),
+  "fen-to-pgn": () =>
+    import("./converters/fen-to-pgn").then((m) => m.default),
+  "fen-to-png": () =>
+    import("./converters/fen-to-png").then((m) => m.default),
   "pgn-to-json": () =>
     import("./converters/pgn-to-json").then((m) => m.default),
 
@@ -326,6 +338,8 @@ export const registry: Record<string, ConverterLoader> = {
     import("./converters/eml-to-csv").then((m) => m.default),
   "mbox-to-eml": () =>
     import("./converters/mbox-to-eml").then((m) => m.default),
+  "mbox-to-csv": () =>
+    import("./converters/mbox-to-csv").then((m) => m.default),
   "mbox-to-pdf": () =>
     import("./converters/mbox-to-pdf").then((m) => m.default),
 

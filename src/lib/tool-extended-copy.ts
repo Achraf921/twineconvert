@@ -2142,6 +2142,134 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       },
     ],
   },
+
+  // ===== Demand batch (added off real Search Console queries) =====
+  "bibtex-to-xlsx": {
+    whyConvert:
+      "CSV opens fine but loses types, mangles long author lists on import, and looks raw. XLSX gives your reference list a real Excel sheet with proper columns, ready to filter and pivot, which is what most people searching \"bibtex to excel\" actually want.",
+    example:
+      "You are doing a systematic review and the screening template your team uses is an Excel workbook. Export the candidate set as .bib from Zotero, convert here, and paste the rows straight into the screening sheet without an import wizard.",
+    troubleshooting: [
+      {
+        problem: "Excel splits one reference across several rows.",
+        solution:
+          "That happens when a title or abstract contains line breaks and the file was opened as CSV. This tool writes a real .xlsx, so each reference stays on one row. If you still see splitting, you opened an older CSV export, reconvert to XLSX.",
+      },
+      {
+        problem: '"No references found".',
+        solution:
+          "The file is probably RIS or EndNote XML renamed to .bib. Open it and confirm it starts with `@article{` or `@book{`. Export specifically as BibTeX from your reference manager.",
+      },
+    ],
+  },
+  "ris-to-xlsx": {
+    whyConvert:
+      "RIS is a tagged text format meant for reference managers, not humans. Converting to XLSX turns it into a sortable sheet with author, title, journal, year, and DOI columns so you can audit a library or hand it to someone who does not use EndNote or Zotero.",
+    example:
+      "A journal sends you 200 submissions as a single RIS export. You need to assign reviewers in a spreadsheet. Convert to XLSX, add an \"assigned to\" column, and you have a working tracker in two minutes.",
+    troubleshooting: [
+      {
+        problem: "Multiple authors are all in one cell.",
+        solution:
+          "That is intentional, authors are joined into one field so each reference stays a single row. Split in Excel with Data, Text to Columns on the separator if you need them apart.",
+      },
+      {
+        problem: "Dates look odd in Excel.",
+        solution:
+          "RIS year and date fields are written as text to avoid Excel reinterpreting partial dates. Format the column as text or a custom date if you want a different display.",
+      },
+    ],
+  },
+  "nbib-to-xlsx": {
+    whyConvert:
+      "PubMed's .nbib export is built for citation managers. If you just want the search results in a spreadsheet to screen titles, dedupe by DOI, or chart publications per year, XLSX is the format that needs zero import steps.",
+    example:
+      "You run a PubMed query, hit Send to, Citation manager, and get a .nbib file. Convert it here and open the XLSX to sort 300 hits by year and skim titles for a literature review.",
+    troubleshooting: [
+      {
+        problem: "Some records are missing the journal.",
+        solution:
+          "Older PubMed records sometimes omit the full journal tag and only carry the abbreviation. The abbreviation is what gets written. Re-export from PubMed with the MEDLINE format if you need the full title.",
+      },
+      {
+        problem: '"No references found".',
+        solution:
+          "The export was likely the summary text format, not .nbib. In PubMed choose Send to, Citation manager (which produces .nbib) and reconvert.",
+      },
+    ],
+  },
+  "gedcom-to-xlsx": {
+    whyConvert:
+      "GEDCOM is a genealogy interchange format no spreadsheet reads natively. Converting to XLSX gives you one row per person with names, dates, places, and family links, so you can sort your tree by birth year, spot gaps, or share it with relatives who only have Excel.",
+    example:
+      "You exported a 1,200-person tree from Ancestry as .ged and want to find everyone born before 1850 with no death date. Convert to XLSX, filter the birth and death columns, and the gaps are obvious.",
+    troubleshooting: [
+      {
+        problem: "Family relationships look like ID codes.",
+        solution:
+          "familyAsChild and familyAsSpouse hold GEDCOM family IDs on purpose so you can join people back to households. Sort or filter by those columns to group a family.",
+      },
+      {
+        problem: "Accented or non-Latin names look wrong.",
+        solution:
+          "Older GEDCOM files use ANSEL or a non-UTF-8 encoding. Re-export as GEDCOM 5.5.1 with UTF-8 from your genealogy software, then reconvert.",
+      },
+    ],
+  },
+  "mbox-to-csv": {
+    whyConvert:
+      "An mbox archive is one giant text blob of concatenated emails. Converting to CSV gives you one row per message with date, from, to, cc, subject, and message-id, which is exactly what you need to index a mailbox, build an e-discovery log, or analyze who emailed whom.",
+    example:
+      "You exported your Gmail with Google Takeout and got a multi-gigabyte .mbox. You only need a list of who you emailed about an invoice. Convert to CSV, open in a spreadsheet, filter the subject column.",
+    troubleshooting: [
+      {
+        problem: "Bodies are not in the CSV.",
+        solution:
+          "By design. Message bodies vary wildly in size and would make the spreadsheet unusable. This tool indexes headers. Use mbox-to-eml or mbox-to-pdf if you need the full content.",
+      },
+      {
+        problem: "Fewer rows than expected.",
+        solution:
+          "Unparseable or truncated messages are skipped rather than failing the whole file. If a large block is missing, the mbox may have been cut mid-message during export, re-export it.",
+      },
+    ],
+  },
+  "fen-to-pgn": {
+    whyConvert:
+      "A FEN is a single frozen position. Engines, databases, and chess GUIs open games as PGN. Converting wraps the position in a standards-compliant PGN with the SetUp and FEN tags so you can load it into Lichess study, ChessBase, or an engine as a starting point for analysis.",
+    example:
+      "You found a tactics position posted as a FEN string. You want to analyze it on your desktop engine, which only imports PGN. Paste the FEN, convert, and open the .pgn in your GUI ready to play out lines.",
+    troubleshooting: [
+      {
+        problem: "The PGN has no moves.",
+        solution:
+          "Correct, a FEN is a position, not a game, so the PGN only carries the starting position via the FEN tag. Your engine or GUI will let you play and save moves from there.",
+      },
+      {
+        problem: '"Could not convert" error.',
+        solution:
+          "The FEN is malformed. It is validated before writing so a broken string fails loudly instead of producing a wrong game. Check the piece-placement field has eight ranks separated by slashes.",
+      },
+    ],
+  },
+  "fen-to-png": {
+    whyConvert:
+      "A FEN string is unreadable to anyone who is not a chess engine. Rendering it to a PNG board image lets you drop the position into notes, a blog post, a forum, or slides without a chess program, and it stays readable to everyone.",
+    example:
+      "You are writing a tactics article and want a clean diagram of the critical position. Paste the FEN, convert to PNG, and drop the image straight into your document. No screenshots of a chess site needed.",
+    troubleshooting: [
+      {
+        problem: "Pieces look like boxes or are missing.",
+        solution:
+          "Pieces are drawn with Unicode chess glyphs. The render happens in your browser, so a browser or OS missing a Unicode chess font can show tofu boxes. Modern Chrome, Firefox, Safari, and Edge all include them.",
+      },
+      {
+        problem: "I have many FENs.",
+        solution:
+          "This route renders the first position in the file. To batch many FENs, drop multiple files and each is rendered to its own PNG, then download them together.",
+      },
+    ],
+  },
 };
 
 export function getExtendedCopy(toolId: string): ExtendedCopy | undefined {

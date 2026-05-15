@@ -274,6 +274,7 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "eml-to-mbox": { provider: () => text("test.eml", F.eml, "message/rfc822"), env: "node" },
   "mbox-to-eml": { provider: () => text("test.mbox", `From alice@example.com Mon Jan 1 12:00:00 2024\n${F.eml}\n`, "application/mbox"), env: "node" },
   "mbox-to-pdf": { provider: () => text("test.mbox", `From alice@example.com Mon Jan 1 12:00:00 2024\n${F.eml}\n`, "application/mbox"), env: "browser" },
+  "mbox-to-csv": { provider: () => text("test.mbox", F.mbox, "application/mbox"), env: "node" },
 
   // ===== Finance =====
   "ofx-to-csv":  { provider: () => text("test.ofx", F.ofx, "application/x-ofx"), env: "node" },
@@ -290,6 +291,7 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
 
   // ===== Genealogy / bibliography / ham radio / chess =====
   "gedcom-to-csv":  { provider: () => text("test.ged", F.gedcom), env: "node" },
+  "gedcom-to-xlsx": { provider: () => text("test.ged", F.gedcom), env: "node" },
   "gedcom-to-json": { provider: () => text("test.ged", F.gedcom), env: "node" },
   "gedcom-to-html": { provider: () => text("test.ged", F.gedcom), env: "node" },
   "gedcom-to-pdf":  { provider: () => text("test.ged", F.gedcom), env: "browser" },
@@ -298,12 +300,15 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "bibtex-to-csv":         { provider: () => text("test.bib", F.bibtex, "application/x-bibtex"), env: "node" },
   "bibtex-to-nbib":        { provider: () => text("test.bib", F.bibtex, "application/x-bibtex"), env: "node" },
   "bibtex-to-endnote-xml": { provider: () => text("test.bib", F.bibtex, "application/x-bibtex"), env: "node" },
+  "bibtex-to-xlsx":        { provider: () => text("test.bib", F.bibtex, "application/x-bibtex"), env: "node" },
   "ris-to-bibtex":         { provider: () => text("test.ris", F.ris, "application/x-research-info-systems"), env: "node" },
   "ris-to-csv":            { provider: () => text("test.ris", F.ris, "application/x-research-info-systems"), env: "node" },
   "ris-to-nbib":           { provider: () => text("test.ris", F.ris, "application/x-research-info-systems"), env: "node" },
   "ris-to-endnote-xml":    { provider: () => text("test.ris", F.ris, "application/x-research-info-systems"), env: "node" },
+  "ris-to-xlsx":           { provider: () => text("test.ris", F.ris, "application/x-research-info-systems"), env: "node" },
   "nbib-to-bibtex":        { provider: () => text("test.nbib", F.nbib, "application/x-research-info-systems"), env: "node" },
   "nbib-to-ris":           { provider: () => text("test.nbib", F.nbib, "application/x-research-info-systems"), env: "node" },
+  "nbib-to-xlsx":          { provider: () => text("test.nbib", F.nbib, "application/x-research-info-systems"), env: "node" },
   "endnote-xml-to-bibtex": { provider: () => text("test.xml", F.endnoteXml, "application/xml"), env: "node" },
   "endnote-xml-to-ris":    { provider: () => text("test.xml", F.endnoteXml, "application/xml"), env: "node" },
 
@@ -314,6 +319,8 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
 
   "pgn-to-csv":  { provider: () => text("test.pgn", `[Event "Test"]\n[White "Alice"]\n[Black "Bob"]\n[Result "1-0"]\n\n1. e4 e5 1-0\n`, "application/x-chess-pgn"), env: "node" },
   "pgn-to-fen":  { provider: () => text("test.pgn", `[Event "Test"]\n[White "Alice"]\n[Black "Bob"]\n[Result "1-0"]\n\n1. e4 e5 1-0\n`, "application/x-chess-pgn"), env: "node" },
+  "fen-to-pgn":  { provider: () => text("test.fen", F.fen, "application/x-fen"), env: "node" },
+  "fen-to-png":  { provider: () => text("test.fen", F.fen, "application/x-fen"), env: "browser" },
   "pgn-to-json": { provider: () => text("test.pgn", `[Event "Test"]\n[White "Alice"]\n[Black "Bob"]\n[Result "1-0"]\n\n1. e4 e5 1-0\n`, "application/x-chess-pgn"), env: "node" },
 
   // ===== Design / palette / LUT / 3D / music notation =====
