@@ -113,12 +113,10 @@ body {
 
 /* Dropzone hover/drag state */
 .dropzone-active {
-  background: var(--color-pink-50);
+  /* Drag feedback is just the dashed border turning pink. No fill, no
+     shadow, no ring: anything beyond border-color drew a box/halo that
+     didn't trace the dropzone exactly. */
   border-color: var(--color-pink-600);
-  /* Keep the active highlight confined to the dashed box: an inset ring
-     only, and the same resting shadow as idle (--shadow-md) so we don't
-     grow a large offset grey halo that no longer matches the box shape. */
-  box-shadow: inset 0 0 0 2px rgb(224 41 123 / 0.18), var(--shadow-md);
 }
 
 /* ===== Hover micro-interactions (calm) ===== */
