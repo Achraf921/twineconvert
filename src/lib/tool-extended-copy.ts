@@ -1434,6 +1434,714 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       },
     ],
   },
+
+  // ===== Batch 2a: image format pairs (real search volume) =====
+  "bmp-to-png": {
+    whyConvert:
+      "BMP is an ancient uncompressed Windows format — a 1080p BMP is ~6MB where the same image as PNG is a fraction of that, losslessly. Convert when you've got BMPs out of legacy Windows software, an old scanner, or a screenshot tool and need something modern apps and the web actually accept.",
+    example:
+      "An industrial camera or a legacy LIMS exports frames as .bmp. You need to attach one to a Jira ticket, but it's 6MB and Jira balks. Convert to PNG — same pixels exactly, a fraction of the size, uploads fine.",
+    troubleshooting: [
+      {
+        problem: "The PNG isn't much smaller than the BMP.",
+        solution:
+          "PNG is lossless, so a photographic BMP (lots of unique colors) won't shrink dramatically — it only wins big on flat-color content (screenshots, UI, diagrams). If it's a photo and size is critical and you don't need lossless, convert to JPG instead.",
+      },
+    ],
+  },
+  "png-to-bmp": {
+    whyConvert:
+      "Some legacy or embedded software only ingests uncompressed BMP — old industrial HMIs, certain medical/lab instruments, vintage game modding tools, some Windows-only kiosks. BMP is the lowest-common-denominator raster these expect.",
+    example:
+      "You're modding an old game whose texture loader only reads 24-bit BMP. Your edited texture is a PNG. Convert to BMP here, drop it in the assets folder, the game loads it.",
+    troubleshooting: [
+      {
+        problem: "Transparency disappeared.",
+        solution:
+          "Standard 24-bit BMP has no alpha channel. Transparent pixels are flattened onto white. If the target software needs transparency it won't be via BMP — that's a format limitation.",
+      },
+    ],
+  },
+  "bmp-to-jpg": {
+    whyConvert:
+      "A photographic BMP is enormous and uncompressed. JPG shrinks it 10-20x with no visible quality loss for photos — the right move when a legacy device gave you BMPs you need to email, upload, or store at scale.",
+    example:
+      "An old scanner saved a stack of document photos as .bmp, 6MB each. The expense portal caps uploads at 5MB. Convert to JPG — they drop to a few hundred KB, well under the limit.",
+    troubleshooting: [
+      {
+        problem: "Text/screenshots look fuzzy after conversion.",
+        solution:
+          "JPG smears sharp edges (text, UI lines). It's only the right target for photographs. For a BMP screenshot, use PNG instead — lossless and crisp.",
+      },
+    ],
+  },
+  "gif-to-jpg": {
+    whyConvert:
+      "If a GIF is actually a single still photo someone saved in the wrong format, JPG is far smaller and the natural container for photographic content. (For animated GIFs, only the first frame is taken — use gif-to-mp4 for motion.)",
+    example:
+      "Someone sent a photo as a .gif (256-color, banded, oversized). You want a clean, small JPG to drop into a doc. Convert here — note JPG can't restore the colors the GIF already quantized away; it just gives you a properly-compressed photographic file.",
+    troubleshooting: [
+      {
+        problem: "Colors look banded / posterized.",
+        solution:
+          "The banding is baked into the GIF — it was reduced to ≤256 colors when the GIF was made. No converter can reconstruct the discarded colors; you'd need the original full-color source.",
+      },
+      {
+        problem: "My animated GIF only produced one image.",
+        solution:
+          "JPG isn't an animation format — we extract the first frame. For motion, use gif-to-mp4 (smaller and full color than the GIF).",
+      },
+    ],
+  },
+  "ico-to-png": {
+    whyConvert:
+      "ICO is the Windows icon container — favicons, .exe icons, shortcut icons. To edit one in a normal image editor, preview it, or reuse the artwork elsewhere, you need it as a standard PNG with transparency intact.",
+    example:
+      "You inherited a project with only `favicon.ico` and need to redesign it. Convert to PNG here, open in Figma/Photopea, edit, then export back to ICO (png-to-ico) when done.",
+    troubleshooting: [
+      {
+        problem: "The PNG came out tiny (16x16 or 32x32).",
+        solution:
+          "ICO files pack multiple resolutions; many favicons only contain 16/32px. We extract the largest available. If the source ICO only has small sizes, there's no high-res version inside to recover — the artwork must be recreated at higher resolution.",
+      },
+    ],
+  },
+  "ico-to-jpg": {
+    whyConvert:
+      "Quick way to get a viewable, shareable raster of an icon when you don't need transparency — pasting an app icon into a doc, a slide, or a chat. JPG opens literally everywhere.",
+    example:
+      "You want to show a client the favicon options in a Google Doc. Convert each .ico to JPG and drop them inline — no plugin, no 'can't preview this file type.'",
+    troubleshooting: [
+      {
+        problem: "The icon has a colored box behind it now.",
+        solution:
+          "JPG can't store transparency, so the icon's transparent background is flattened (to white by default). For icons you almost always want ico-to-png instead, which keeps the transparency.",
+      },
+    ],
+  },
+  "heic-to-webp": {
+    whyConvert:
+      "Best of both: take an iPhone HEIC and get a modern, tiny, web-ready image that keeps transparency and is far smaller than PNG/JPG. Ideal when the HEIC photo is destined for a website, app, or anywhere page weight matters. Also strips the GPS/camera metadata Apple embeds.",
+    example:
+      "You shot product photos on your iPhone (HEIC) for your store's site. Convert to WebP — smallest modern format, browsers all support it since 2020, and your product pages stay fast on mobile.",
+    troubleshooting: [
+      {
+        problem: "A recipient's old software won't open the WebP.",
+        solution:
+          "WebP is universal on the modern web but legacy desktop apps (old Office, some email clients) predate it. For web use it's ideal; for emailing to someone on old software, use heic-to-jpg.",
+      },
+    ],
+  },
+  "heic-to-pdf": {
+    whyConvert:
+      "Turn iPhone photos of documents — receipts, signed forms, ID cards, whiteboards — into a single shareable, printable PDF that every portal and office workflow expects. One PDF beats a pile of .heic files nobody on Windows can open.",
+    example:
+      "You photographed 4 pages of a signed contract on your iPhone (HEIC). The other party wants 'one PDF.' Convert here — 4 HEICs become a single 4-page PDF, in order, ready to email.",
+    troubleshooting: [
+      {
+        problem: "Document photos look dark or skewed in the PDF.",
+        solution:
+          "We embed the photos as captured — no auto-deskew/brighten. For document scans, use your iPhone's built-in scanner (Notes → scan, or Files → scan) first; it auto-corrects perspective and contrast. Then convert the cleaned images.",
+      },
+    ],
+  },
+  "avif-to-png": {
+    whyConvert:
+      "AVIF is the newest, smallest web image format, but support is still uneven — older Safari, many desktop editors, print/upload pipelines can't open it. PNG is the universal lossless fallback that works everywhere and keeps transparency.",
+    example:
+      "You saved an image from a modern site (served AVIF). Your design tool / the client's CMS won't open .avif. Convert to PNG here and it works everywhere, lossless.",
+    troubleshooting: [
+      {
+        problem: "The PNG is much larger than the AVIF.",
+        solution:
+          "Expected — AVIF is highly compressed; PNG is lossless. If you need a small file and don't need lossless/transparency, avif-to-jpg produces something far smaller for photos.",
+      },
+    ],
+  },
+  "avif-to-webp": {
+    whyConvert:
+      "When AVIF is too new for your target but you still want a small, transparent, modern web image: WebP is the slightly-older format with near-universal browser support since 2020. The pragmatic downgrade for broad web compatibility.",
+    example:
+      "Your CDN's image pipeline doesn't yet support AVIF source files but does WebP. Convert your AVIF masters to WebP here so they slot into the existing pipeline with minimal size penalty.",
+    troubleshooting: [
+      {
+        problem: "Slight quality change vs. the AVIF.",
+        solution:
+          "AVIF → WebP is a re-encode between two lossy formats, so there's a small unavoidable pass. Usually imperceptible at web sizes. For zero extra loss you'd need the original source to encode straight to WebP.",
+      },
+    ],
+  },
+  "jpg-to-avif": {
+    whyConvert:
+      "AVIF compresses ~50% smaller than JPG at the same visual quality — the biggest single image-weight win available for the web. Convert when you're optimizing a media-heavy site and your audience is on current browsers.",
+    example:
+      "Your photography portfolio's gallery is 30 large JPGs, 6MB total, slow on mobile. Convert to AVIF — same perceived quality, roughly half the bytes, gallery loads visibly faster.",
+    troubleshooting: [
+      {
+        problem: "Encoding took noticeably longer.",
+        solution:
+          "AVIF encoding is computationally heavy (it's the AV1 video codec applied to a still). That's inherent. Worth it for delivery; just expect a slower convert step on large images.",
+      },
+      {
+        problem: "An older browser/app can't open the AVIF.",
+        solution:
+          "Serve AVIF with a `<picture>` fallback to JPG/WebP for the few clients that lack support. For non-web use (emailing, legacy apps), keep JPG.",
+      },
+    ],
+  },
+  "jpg-to-bmp": {
+    whyConvert:
+      "Niche but real: some legacy/embedded software and a few scientific instruments only accept uncompressed 24-bit BMP. Convert when a downstream tool literally won't take anything else.",
+    example:
+      "An old machine-vision SDK's import only reads BMP. Your reference image is a JPG. Convert to BMP here so the SDK ingests it.",
+    troubleshooting: [
+      {
+        problem: "The BMP is huge.",
+        solution:
+          "BMP is uncompressed by design — that's why the legacy tool wants it. Large size is expected and unavoidable for this format.",
+      },
+    ],
+  },
+  "jpg-to-gif": {
+    whyConvert:
+      "Only useful for a specific case: you need a single still image in GIF form because a destination only accepts GIF (an old forum, a legacy CMS field, a specific chat sticker slot). For photos GIF is a poor choice — 256 colors — but sometimes the destination forces it.",
+    example:
+      "An old vBulletin-style forum's avatar uploader only accepts .gif. Your photo is a JPG. Convert here to satisfy the uploader (accepting the 256-color limitation it imposes).",
+    troubleshooting: [
+      {
+        problem: "The photo looks banded/posterized.",
+        solution:
+          "GIF caps at 256 colors per frame, so photographs band badly. This is a hard GIF limitation. If the destination accepts PNG or JPG, use those instead — GIF is only for places that force it.",
+      },
+    ],
+  },
+
+  // ===== Batch 2b: color space conversions =====
+  "hsl-to-hex": {
+    whyConvert:
+      "Designers and CSS authors think in HSL (hue/saturation/lightness — easy to reason about 'a bit darker, less saturated'), but most design tools, brand guides, and legacy CSS want hex. Convert when handing an HSL value off to anything that expects `#RRGGBB`.",
+    example:
+      "You dialed in a color in dev tools as `hsl(210, 80%, 45%)` and need to put it in the brand palette doc that lists everything as hex. Convert here, paste `#1f7acc` into the doc.",
+    troubleshooting: [
+      {
+        problem: "The hex doesn't look exactly like the HSL preview.",
+        solution:
+          "HSL → RGB → hex involves rounding to 8-bit channels, so there can be a ±1 difference per channel. It's imperceptible. For exact round-tripping keep the HSL as the source of truth.",
+      },
+    ],
+  },
+  "hsl-to-rgb": {
+    whyConvert:
+      "HSL is intuitive to author; RGB is what canvas APIs, many graphics libraries, game engines, and older systems consume. Convert when moving a designer-chosen HSL value into code that needs `rgb()` triplets.",
+    example:
+      "Your designer specced accent colors in HSL. Your Unity/Canvas/SVG code needs RGB 0-255. Convert each here and drop the triplets into the code.",
+    troubleshooting: [
+      {
+        problem: "RGB values are floats, I need 0-255 ints.",
+        solution:
+          "We output 0-255 integers. If you see floats it's a different tool — for code use, round each channel; the visual difference from rounding is zero.",
+      },
+    ],
+  },
+  "cmyk-to-hex": {
+    whyConvert:
+      "Print designers work in CMYK; the web works in hex/RGB. Convert when you need to approximate a print color on screen — a brand color from a print style guide that you now need in a website or slide.",
+    example:
+      "The brand book lists the primary as CMYK `0/85/75/0` for print. You're building the site and need the closest screen equivalent. Convert here for a usable hex approximation.",
+    troubleshooting: [
+      {
+        problem: "The on-screen color doesn't perfectly match the printed sample.",
+        solution:
+          "CMYK → RGB is fundamentally an approximation — print (subtractive, ink on paper) and screen (additive, emitted light) have different gamuts, and exact matching requires an ICC profile we don't apply. The result is a close, usable screen equivalent, not a colorimetric match. For brand-critical work, get the official RGB/hex from the brand team.",
+      },
+    ],
+  },
+  "cmyk-to-rgb": {
+    whyConvert:
+      "Same as cmyk-to-hex but when your target wants RGB triplets (graphics code, a design tool's RGB input) rather than a hex string. The bridge from a print spec to a screen workflow.",
+    example:
+      "A printer sent artwork specced in CMYK. You're recreating it in Figma which takes RGB. Convert each CMYK value here for the closest screen RGB.",
+    troubleshooting: [
+      {
+        problem: "Colors look duller than the print proof.",
+        solution:
+          "Naive (non-color-managed) CMYK→RGB can desaturate, and screen vs. ink gamuts differ inherently. It's a usable approximation. For exact brand color, request the official RGB from whoever owns the brand spec.",
+      },
+    ],
+  },
+  "hex-to-cmyk": {
+    whyConvert:
+      "You have a web/brand color as hex and a print vendor asks for CMYK. Convert to get a sensible CMYK starting point for the print job.",
+    example:
+      "Your site's accent is `#1f7acc`. The print shop doing your business cards wants CMYK. Convert here and hand them the CMYK values as the starting point (they'll fine-tune against their press profile).",
+    troubleshooting: [
+      {
+        problem: "The print shop says the CMYK is off.",
+        solution:
+          "Generic hex→CMYK ignores the press's ICC profile and paper stock, which materially affect ink mix. Treat our output as a starting point; the print shop's prepress will adjust it against their actual press. That's normal print workflow.",
+      },
+    ],
+  },
+  "hex-to-oklch": {
+    whyConvert:
+      "OKLCH is the perceptually-uniform color space in CSS Color Level 4 — Tailwind v4's default, and the right space for generating accessible palettes and consistent lightness ramps. Convert your existing hex brand colors to OKLCH to build modern, perceptually-even design tokens.",
+    example:
+      "You're migrating a design system to Tailwind v4 / modern CSS. Your tokens are hex. Convert each to `oklch()` here so you can adjust lightness/chroma perceptually-uniformly instead of guessing in RGB.",
+    troubleshooting: [
+      {
+        problem: "Round-tripping hex → OKLCH → hex shifts a value slightly.",
+        solution:
+          "OKLCH covers a wider gamut than sRGB hex; conversion clamps/rounds at the sRGB boundary, so extreme colors can shift by ±1 per channel. For in-gamut colors it's exact. Keep one representation as the source of truth.",
+      },
+    ],
+  },
+  "hex-to-lab": {
+    whyConvert:
+      "CIELAB (L*a*b*) is the perceptual color space used in color science, print color matching, and Photoshop's Lab mode. Convert hex to Lab when you need perceptual color difference (ΔE) calculations or to work in Photoshop's Lab workflow.",
+    example:
+      "You're measuring how perceptually different two brand candidates are. Convert both hex values to Lab here, then compute ΔE between them — RGB distance lies about perceived difference; Lab doesn't.",
+    troubleshooting: [
+      {
+        problem: "The L*a*b* numbers don't match Photoshop exactly.",
+        solution:
+          "Lab depends on the reference white and RGB working space. We convert via sRGB/D65. Photoshop's Lab uses D50 by default — small numeric differences are expected from the different white point, not a conversion bug.",
+      },
+    ],
+  },
+
+  // ===== Batch 2c: genealogy (proven traffic vertical) =====
+  "gedcom-to-csv": {
+    whyConvert:
+      "GEDCOM is the universal family-tree interchange format (Ancestry, MyHeritage, FamilySearch, Gramps, RootsMagic all export it), but it's an unreadable nested-tag text format. CSV puts every person in a row — name, birth, death, place — so you can sort, filter, dedupe, and audit your tree in a spreadsheet, or share it with relatives who don't run genealogy software.",
+    example:
+      "Your tree has 1,200 people across 6 generations. You suspect duplicate ancestors and missing birth years. Export GEDCOM from Ancestry, convert to CSV here, sort by surname + birth year in Sheets — duplicates and gaps jump out in minutes.",
+    troubleshooting: [
+      {
+        problem: "Some people are missing dates/places in the CSV.",
+        solution:
+          "GEDCOM only carries what was entered. Blank cells mean that fact isn't in the source file, not a conversion loss — confirm by opening the .ged in a text editor and checking the INDI record.",
+      },
+      {
+        problem: "Family relationships (parents/children) aren't shown.",
+        solution:
+          "This export is one row per individual (the most-requested view). GEDCOM stores relationships in separate FAM records via @ references; flattening the full graph into one CSV is lossy. For relationship analysis keep working in genealogy software; use the CSV for per-person auditing.",
+      },
+    ],
+  },
+  "gedcom-to-html": {
+    whyConvert:
+      "Turn a GEDCOM into a readable web page you can open in any browser or share with family who don't use genealogy apps — no Ancestry login, no software install, just a clickable HTML file of the tree's people and facts.",
+    example:
+      "You want to email Grandma a readable version of the family tree. She's not installing Gramps. Convert the GEDCOM to HTML, send the file — she double-clicks, it opens in her browser, done.",
+    troubleshooting: [
+      {
+        problem: "Living relatives' details are visible — privacy concern.",
+        solution:
+          "We render what's in the GEDCOM as-is, including living people. Before sharing, either privatize living individuals in your genealogy software and re-export, or remove those INDI records from the .ged first. The conversion never uploads anything, but the output file contains whatever the source did.",
+      },
+    ],
+  },
+  "csv-to-gedcom": {
+    whyConvert:
+      "You collected family data in a spreadsheet (a relative's list, a research log, a transcription project) and need it in real genealogy software. GEDCOM is the import format every tool accepts — convert the CSV so Ancestry/MyHeritage/Gramps can ingest it as actual linked records.",
+    example:
+      "A cousin sent a spreadsheet of 80 newly-found relatives. You want them in your RootsMagic tree. Convert the CSV to GEDCOM here, import the .ged into RootsMagic, merge into your tree.",
+    troubleshooting: [
+      {
+        problem: "Relationships didn't import — everyone's an isolated individual.",
+        solution:
+          "A flat CSV has no inherent relationship links. We create INDI records from rows; building FAM (parent/child/spouse) links requires relationship columns the CSV may not have. For a connected tree, add the relationships in your genealogy software after import, or structure the CSV with explicit relationship references.",
+      },
+    ],
+  },
+
+  // ===== Batch 2d: geographic / mapping =====
+  "gpx-to-kml": {
+    whyConvert:
+      "GPX is what GPS watches, bike computers, and hiking apps (Garmin, Strava, Komoot, Gaia) export. KML is what Google Earth and Google My Maps read. Convert to visualize a recorded track or route in Google Earth, or to share it as a map anyone can open.",
+    example:
+      "You recorded a 40km hike on your Garmin (GPX). You want to show the route in Google Earth with the terrain flyover. Convert to KML here, open in Google Earth, hit play on the tour.",
+    troubleshooting: [
+      {
+        problem: "Elevation/timestamps seem missing in Google Earth.",
+        solution:
+          "KML carries coordinates and basic track geometry; GPX's per-point heart-rate/cadence/time extensions don't map to standard KML and are dropped. For full activity data keep the GPX; KML is for visualization.",
+      },
+    ],
+  },
+  "gpx-to-geojson": {
+    whyConvert:
+      "GeoJSON is the lingua franca of web mapping — Leaflet, Mapbox, deck.gl, Turf.js, PostGIS all speak it. Convert a recorded GPX track to GeoJSON to render it on a web map, run spatial analysis, or store it in a geo database.",
+    example:
+      "You're building a Leaflet map of your hikes. Each hike is a GPX. Convert to GeoJSON here, drop the FeatureCollection into `L.geoJSON(...)`, the track renders on the map.",
+    troubleshooting: [
+      {
+        problem: "Elevation/time data isn't in the GeoJSON.",
+        solution:
+          "Standard GeoJSON geometry is 2D coordinate pairs. We can carry coordinates and properties; per-point time/elevation extensions from GPX don't have a standard GeoJSON home and are dropped. For elevation profiles keep the GPX alongside.",
+      },
+    ],
+  },
+  "geojson-to-kml": {
+    whyConvert:
+      "You have GeoJSON from a web-mapping tool or a GIS export and need it in Google Earth / Google My Maps, which want KML. Convert to visualize the features with Google's 3D terrain and sharing.",
+    example:
+      "Your team's delivery zones are a GeoJSON FeatureCollection. Ops wants to see them overlaid on Google Earth terrain. Convert to KML here, open in Google Earth Pro.",
+    troubleshooting: [
+      {
+        problem: "Styling (colors/fills) didn't carry over.",
+        solution:
+          "GeoJSON has no standard styling spec (style lives in the rendering layer, e.g., Mapbox style JSON). KML has its own <Style>. We convert geometry + properties; re-apply styling in Google Earth or My Maps. The shapes and data are intact.",
+      },
+    ],
+  },
+
+  // ===== Batch 3a: documents =====
+  "docx-to-html": {
+    whyConvert:
+      "You need Word content on the web — a CMS that takes HTML, an email template, a static site, a knowledge base — without the bloated markup Word's own 'Save as Web Page' produces. Clean HTML drops into any page.",
+    example:
+      "Marketing wrote the new help article in Word. Your docs site takes HTML/Markdown. Convert to HTML here, paste the body into the CMS, fix any heading levels, publish — no Word-export `<o:p>` garbage.",
+    troubleshooting: [
+      {
+        problem: "Complex tables / text boxes / SmartArt look broken.",
+        solution:
+          "DOCX features without an HTML equivalent (floating text boxes, SmartArt, drawing canvas) can't translate cleanly. Body text, headings, lists, basic tables, bold/italic convert well. For heavily-designed docs, expect to touch up the HTML or rebuild complex visuals natively.",
+      },
+      {
+        problem: "Images didn't appear.",
+        solution:
+          "Embedded images are extracted but referenced — the HTML expects them alongside it. If you need a single self-contained file, the images come out as separate assets; host them and fix the `src` paths, or use a Word→PDF route if you just need a fixed visual.",
+      },
+    ],
+  },
+  "docx-to-txt": {
+    whyConvert:
+      "Strip a Word doc to pure text: feeding it to an LLM, word-counting a manuscript, diffing two drafts, grepping for a clause, or pasting into a plain-text-only system. No formatting noise, just the words.",
+    example:
+      "You need an accurate word count of a 90-page Word manuscript minus the front matter and footnotes for a submission limit. Convert to TXT, paste into your counter or `wc -w` — exact, no formatting inflating the count.",
+    troubleshooting: [
+      {
+        problem: "Tables turned into run-together text.",
+        solution:
+          "Plain text has no table concept — cells get linearized. That's expected for TXT. If you need structured tabular data out of the doc, copy the table into a spreadsheet instead; TXT is for prose.",
+      },
+    ],
+  },
+  "html-to-markdown": {
+    whyConvert:
+      "You're moving web content into a Markdown-based system — a static site (Hugo, Astro, Next MDX), a wiki, a README, an Obsidian vault, an LLM context file. Markdown is portable, diffable, and clean where raw HTML is noisy.",
+    example:
+      "You're migrating 40 blog posts off WordPress into an Astro site. Save each post's HTML, convert to Markdown here, drop the .md into `src/content/`, commit. Clean front-matter-ready text instead of WordPress div soup.",
+    troubleshooting: [
+      {
+        problem: "Some HTML (custom embeds, complex tables) stayed as raw HTML in the output.",
+        solution:
+          "Markdown is a subset of HTML's expressiveness — constructs with no Markdown equivalent (iframes, complex nested tables, custom components) are passed through as inline HTML, which is valid in most Markdown renderers (MDX, GitHub). Leave them or rebuild as components.",
+      },
+    ],
+  },
+  "html-to-docx": {
+    whyConvert:
+      "Someone needs a web page or HTML report as an editable Word document — a client who 'only uses Word', a contract that must be redlined, a report that goes into a Word-based approval workflow.",
+    example:
+      "Your app generates an HTML invoice/report. The finance team needs to annotate it in Word before sign-off. Convert to DOCX here, send it, they track-changes in Word.",
+    troubleshooting: [
+      {
+        problem: "CSS layout/styling didn't fully carry over.",
+        solution:
+          "Word's layout model isn't CSS. Structural content (headings, paragraphs, lists, tables, basic emphasis) converts; complex CSS grid/flex layouts and web fonts approximate. For pixel-faithful output where editing isn't needed, use an HTML→PDF route instead.",
+      },
+    ],
+  },
+  "epub-to-pdf": {
+    whyConvert:
+      "EPUB is reflowable e-reader format; PDF is fixed-page for printing, annotating in a PDF app, or reading on something that doesn't do EPUB well. Convert when you want to print a book/sample or mark it up with a PDF tool.",
+    example:
+      "You have a technical book as EPUB but want to print two chapters double-sided to read away from screens. Convert to PDF here, print pages 40-95.",
+    troubleshooting: [
+      {
+        problem: "Text doesn't fit the page / odd line breaks.",
+        solution:
+          "EPUB has no fixed page size — converting to PDF imposes one, so reflow can produce awkward breaks. It's readable but not typeset like a print book. For best reading fidelity, an e-reader rendering the EPUB natively beats any EPUB→PDF.",
+      },
+    ],
+  },
+  "epub-to-text": {
+    whyConvert:
+      "Pull the raw prose out of an e-book: feeding it to an LLM, full-text searching, analyzing word frequency, or extracting quotes. Plain text strips the EPUB's XHTML/packaging.",
+    example:
+      "You want to ask an LLM questions about a public-domain book you have as EPUB. Convert to TXT here, paste (or chunk) it into the model's context.",
+    troubleshooting: [
+      {
+        problem: "Chapter order looks scrambled.",
+        solution:
+          "We extract reading-order content from the EPUB spine. DRM-protected EPUBs can't be read at all (encrypted) — strip DRM with software you're licensed to use first. Non-DRM books extract in spine order.",
+      },
+    ],
+  },
+  "epub-to-html": {
+    whyConvert:
+      "Get an e-book's content as a single browsable HTML file — to read in a browser, host on a site, or repurpose the text — without an e-reader app.",
+    example:
+      "You want to put a public-domain book online as a simple readable web page. Convert the EPUB to HTML here, host the file, done — no reader app required for visitors.",
+    troubleshooting: [
+      {
+        problem: "Images / fonts missing.",
+        solution:
+          "EPUB bundles assets internally; on conversion they're extracted as separate files the HTML references. Host them alongside the HTML and the references resolve. DRM-protected EPUBs can't be converted at all.",
+      },
+    ],
+  },
+
+  // ===== Batch 3b: data / config =====
+  "csv-to-tsv": {
+    whyConvert:
+      "TSV (tab-separated) is what many bioinformatics tools, older Unix pipelines, and Excel's clipboard paste expect — and it sidesteps the 'comma inside a field' quoting headaches CSV has. Convert when a downstream tool wants tabs, not commas.",
+    example:
+      "A genomics tool's importer only reads tab-delimited files. Your data is CSV with quoted fields containing commas. Convert to TSV here — fields with commas no longer need quoting, the tool ingests it cleanly.",
+    troubleshooting: [
+      {
+        problem: "A field contained a tab character and broke columns.",
+        solution:
+          "TSV has no standard quoting — a literal tab inside a value is ambiguous. We escape/strip embedded tabs. If your data legitimately contains tabs in values, TSV is the wrong target; keep CSV with proper quoting.",
+      },
+    ],
+  },
+  "csv-to-yaml": {
+    whyConvert:
+      "Turn tabular data into YAML for config-driven systems — seeding a config file, generating Kubernetes/Ansible data, or feeding a tool that takes YAML lists of records.",
+    example:
+      "You maintain feature-flag defaults in a spreadsheet. Your app reads a YAML config. Convert the CSV to a YAML list here, drop it into `config/flags.yaml`.",
+    troubleshooting: [
+      {
+        problem: "Numbers/booleans are quoted strings in the YAML.",
+        solution:
+          "CSV is typeless — every cell is text. We preserve values as strings to avoid corrupting IDs/ZIPs with leading zeros. If a consumer needs real numbers/bools, coerce the specific keys after load, or post-process the YAML.",
+      },
+    ],
+  },
+  "csv-to-jsonl": {
+    whyConvert:
+      "JSONL (one JSON object per line) is the format for LLM fine-tuning datasets (OpenAI, etc.), streaming data pipelines (BigQuery, ClickHouse load), and log ingestion. Convert a spreadsheet of training examples or records into the line-delimited shape these expect.",
+    example:
+      "You collected 2,000 prompt/completion pairs in a spreadsheet for fine-tuning. OpenAI's fine-tune API wants JSONL. Convert here — each row becomes one `{...}` line, ready to upload.",
+    troubleshooting: [
+      {
+        problem: "Numbers came through as strings.",
+        solution:
+          "CSV has no types. We keep values as strings to protect IDs/ZIPs with leading zeros. For fine-tuning that's usually fine (text anyway); if you need typed fields, transform the specific keys in a quick script after conversion.",
+      },
+    ],
+  },
+  "ini-to-json": {
+    whyConvert:
+      "INI is human-friendly config (Windows apps, PHP, Python configparser, Git config style); JSON is what code and tooling consume. Convert when migrating legacy INI config into a modern JSON-based system or reading it programmatically.",
+    example:
+      "A legacy service is configured via `settings.ini` with `[section]` keys. You're rewriting it in Node and want the config as JSON. Convert here, `require()` / import the JSON.",
+    troubleshooting: [
+      {
+        problem: "Duplicate keys / repeated sections collapsed.",
+        solution:
+          "JSON objects can't have duplicate keys; INI files that repeat a key within a section lose all but the last. If your INI relies on repeated keys (rare), that data needs a different representation (array) — restructure before converting.",
+      },
+    ],
+  },
+  "env-to-json": {
+    whyConvert:
+      "Turn a `.env` file into JSON for tooling that ingests config as JSON, for inspecting what's set, or for generating typed config objects. Useful in CI/build scripts and config audits.",
+    example:
+      "Your CI step needs the project's env defaults as a JSON object to merge with secrets. Convert `.env` here, feed the JSON into the build config merge.",
+    troubleshooting: [
+      {
+        problem: "Quotes / multiline values look wrong.",
+        solution:
+          "dotenv quoting rules vary by loader. We handle the common `KEY=value` and quoted forms; exotic multiline or interpolated `${VAR}` values may need manual fix-up. Never convert a `.env` containing real secrets through any web tool — this runs locally in your browser, but treat secrets carefully regardless.",
+      },
+    ],
+  },
+  "html-table-to-csv": {
+    whyConvert:
+      "Scrape a table off a web page into a spreadsheet without copy-paste mangling it. Save the page (or the table's HTML), convert, and you've got clean CSV for Excel/Sheets/analysis.",
+    example:
+      "A Wikipedia / stats page has a 200-row table you need in Excel. Copy the table's HTML (or save the page), convert here, open the CSV — rows and columns intact, no manual re-typing.",
+    troubleshooting: [
+      {
+        problem: "Merged cells (rowspan/colspan) misaligned the columns.",
+        solution:
+          "HTML rowspan/colspan has no clean CSV equivalent — spanned cells are expanded/duplicated heuristically. For tables with heavy merged headers, expect to fix the header rows in the spreadsheet. Simple grid tables convert exactly.",
+      },
+      {
+        problem: "Got multiple tables mashed together.",
+        solution:
+          "If the HTML had several `<table>` elements we extract them in document order. Isolate just the table you want (copy only that `<table>...</table>`) before converting for a clean single-table CSV.",
+      },
+    ],
+  },
+
+  // ===== Batch 3c: email =====
+  "eml-to-pdf": {
+    whyConvert:
+      "Archive or share an email as a fixed, printable document — for legal/compliance records, expense documentation, or sending a thread to someone without forwarding. PDF preserves the message exactly and opens everywhere.",
+    example:
+      "Legal asked for 'the confirmation email as a PDF' for a dispute file. You saved it as .eml from Outlook/Apple Mail. Convert here, attach the PDF to the case folder.",
+    troubleshooting: [
+      {
+        problem: "Inline images / HTML styling look off.",
+        solution:
+          "HTML emails with remote images render those only if reachable; tracking pixels and external CSS may not load (by design — privacy). The text and inline content are preserved. For a pixel-exact capture of a complex HTML email, a print-to-PDF from the mail client is the fallback.",
+      },
+      {
+        problem: "Attachments aren't in the PDF.",
+        solution:
+          "We render the message body. Attachments inside the .eml aren't flattened into the PDF — extract them separately if needed (eml-to-* or an unzip-style tool).",
+      },
+    ],
+  },
+  "eml-to-html": {
+    whyConvert:
+      "View or embed an email as a standalone web page — for a help-desk knowledge base, a public archive, or just reading an .eml without an email client.",
+    example:
+      "You exported a support thread as .eml and want it on the internal wiki. Convert to HTML here, paste into the wiki page.",
+    troubleshooting: [
+      {
+        problem: "Remote images don't show.",
+        solution:
+          "Emails reference remote images that may be gone or blocked. The message structure and text are intact; re-host any critical images and fix the `src` if you need them visible long-term.",
+      },
+    ],
+  },
+  "eml-to-mbox": {
+    whyConvert:
+      "MBOX is the format Thunderbird, Apple Mail import, and many archive tools expect for a mailbox. Convert individual .eml files into MBOX to bulk-import a rescued/exported set of messages into a mail client.",
+    example:
+      "You recovered 300 individual .eml files from a backup. You want them back in Thunderbird as a folder. Convert to MBOX, then Thunderbird → ImportExportTools NG → import the .mbox.",
+    troubleshooting: [
+      {
+        problem: "The mail client only imported one message.",
+        solution:
+          "MBOX concatenates messages with `From ` separator lines. If you converted a single .eml you get a one-message MBOX. To combine many, convert/append them into one MBOX (or use a client tool that imports a folder of .eml directly).",
+      },
+    ],
+  },
+  "eml-to-csv": {
+    whyConvert:
+      "Extract email metadata (from, to, subject, date) into a spreadsheet — for e-discovery review, an audit, building a contact list, or analyzing a thread's timeline.",
+    example:
+      "Compliance wants a spreadsheet of every email in a dispute: sender, recipient, subject, timestamp. Convert the .eml files to CSV here, load into Excel, sort by date for the timeline.",
+    troubleshooting: [
+      {
+        problem: "The body isn't fully in the CSV.",
+        solution:
+          "CSV is metadata-oriented here; long HTML bodies are truncated/flattened into a cell because spreadsheets choke on huge multiline cells. For full-body review, use eml-to-pdf or eml-to-html per message; CSV is for the metadata index.",
+      },
+    ],
+  },
+
+  // ===== Batch 3d: finance (personal-finance import formats) =====
+  "csv-to-ofx": {
+    whyConvert:
+      "Your bank only gives CSV, but your accounting/budget app (Quicken, GnuCash, older Money, some bookkeeping tools) imports OFX. Convert so the transactions land in your books with proper structure instead of a manual CSV mapping every time.",
+    example:
+      "Your bank exports CSV only. GnuCash's clean import path is OFX. Convert your statement CSV to OFX here, import into GnuCash — payee/amount/date mapped automatically.",
+    troubleshooting: [
+      {
+        problem: "Dates or amounts imported wrong.",
+        solution:
+          "OFX expects specific date (YYYYMMDD) and signed-amount conventions. Make sure the source CSV's date column is unambiguous and debits are negative. If your bank's CSV uses a regional date format, normalize it in a spreadsheet before converting.",
+      },
+      {
+        problem: "Duplicate transactions after import.",
+        solution:
+          "OFX uses FITID to dedupe; a CSV usually has no stable transaction ID, so re-importing overlapping date ranges can double up. Import non-overlapping ranges, or let your finance app's duplicate detection catch them.",
+      },
+    ],
+  },
+  "csv-to-qif": {
+    whyConvert:
+      "QIF is the legacy Quicken import format still accepted by GnuCash, Moneydance, and older Quicken/Money versions. Convert a bank CSV to QIF when your app's QIF path is more reliable than its CSV mapper.",
+    example:
+      "Moneydance imports QIF cleanly but its CSV importer needs fiddly column mapping each time. Convert the bank CSV to QIF here for a one-click import.",
+    troubleshooting: [
+      {
+        problem: "Account type / categories wrong.",
+        solution:
+          "QIF is old and loosely specified — the `!Type:` header and category handling vary by app. We emit a standard bank-transaction QIF. Set the target account in your finance app at import time rather than relying on QIF to carry it.",
+      },
+    ],
+  },
+  "csv-to-qfx": {
+    whyConvert:
+      "QFX is Intuit's Quicken-specific OFX variant. Some Quicken versions only accept QFX (not generic OFX). Convert a bank CSV to QFX when Quicken rejects plain OFX.",
+    example:
+      "Quicken won't take your bank's CSV and rejects generic OFX with a financial-institution error. Convert CSV to QFX here for Quicken's Web Connect import.",
+    troubleshooting: [
+      {
+        problem: "Quicken says the financial institution isn't recognized.",
+        solution:
+          "QFX embeds Intuit FI identifiers Quicken validates. A converted file uses generic identifiers, so some Quicken versions warn or block. If yours hard-blocks QFX without a real FI ID, csv-to-qif is the more tolerant path for manual imports.",
+      },
+    ],
+  },
+  "csv-to-qbo": {
+    whyConvert:
+      "QBO is the QuickBooks Web Connect import format. When your bank doesn't offer a QuickBooks direct feed and only gives CSV, converting to QBO gets transactions into QuickBooks without manual entry.",
+    example:
+      "A small-business client's bank has no QuickBooks integration, only CSV downloads. Convert each month's CSV to QBO here, import via QuickBooks → File → Utilities → Import → Web Connect.",
+    troubleshooting: [
+      {
+        problem: "QuickBooks rejects the file or asks to set up the account.",
+        solution:
+          "QBO validates bank routing/FI identifiers. A converted file uses generic ones, so QuickBooks may prompt you to map it to an existing account the first time — that's expected; choose the right account and subsequent imports remember it.",
+      },
+    ],
+  },
+
+  // ===== Batch 3e: bibliography (extends the proven academic vertical) =====
+  "bibtex-to-nbib": {
+    whyConvert:
+      "NBIB is PubMed's citation format and the import format for several medical/clinical reference workflows. Convert BibTeX to NBIB when collaborating with a PubMed-centric researcher or feeding a tool that ingests PubMed-format records.",
+    example:
+      "Your lab manages refs in BibTeX but the systematic-review tool the team uses imports NBIB (PubMed) only. Export `.bib`, convert to NBIB here, import into the review tool.",
+    troubleshooting: [
+      {
+        problem: "Some fields didn't map.",
+        solution:
+          "BibTeX and NBIB have different field vocabularies; core fields (authors, title, journal, year, DOI) map cleanly, BibTeX-specific extras may drop. For pure round-tripping keep the BibTeX as the master copy.",
+      },
+    ],
+  },
+  "csv-to-bibtex": {
+    whyConvert:
+      "You compiled references in a spreadsheet (a lit-review tracker, a shared sheet, a scraped list) and need them in LaTeX. Convert to BibTeX so `\\cite{}` works and your bibliography compiles.",
+    example:
+      "Co-authors tracked 90 candidate papers in a Google Sheet (title, authors, year, journal, DOI columns). You need them in your LaTeX paper. Convert to BibTeX here, drop into `refs.bib`, cite away.",
+    troubleshooting: [
+      {
+        problem: "Citation keys are awkward / collide.",
+        solution:
+          "We generate keys from author+year. Collisions get disambiguated, but if you have a key convention (e.g., `smith2024neural`) add a `key`/`citekey` column to the CSV and we'll use it verbatim.",
+      },
+      {
+        problem: "Entry types are all @article.",
+        solution:
+          "Without a type column we default to @article. Add a `type`/`entrytype` column (book, inproceedings, phdthesis, ...) to the CSV to get correct BibTeX entry types.",
+      },
+    ],
+  },
+  "csl-json-to-bibtex": {
+    whyConvert:
+      "CSL-JSON is Zotero's and Pandoc's native bibliography format; BibTeX is what LaTeX needs. Convert when moving references from a Zotero/Pandoc workflow into a LaTeX manuscript.",
+    example:
+      "You manage refs in Zotero and export CSL-JSON for a Pandoc workflow, but a journal requires LaTeX submission. Convert the CSL-JSON to BibTeX here for the LaTeX build.",
+    troubleshooting: [
+      {
+        problem: "Some CSL fields aren't in the BibTeX.",
+        solution:
+          "CSL-JSON has a richer field set than standard BibTeX; unmapped fields are dropped or moved to a note. Core bibliographic data is preserved. If you need lossless round-trips, keep CSL-JSON as the source of truth and regenerate BibTeX as needed.",
+      },
+    ],
+  },
 };
 
 export function getExtendedCopy(toolId: string): ExtendedCopy | undefined {
