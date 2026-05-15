@@ -115,9 +115,10 @@ body {
 .dropzone-active {
   background: var(--color-pink-50);
   border-color: var(--color-pink-600);
-  /* Inset ring so the active accent stays inside the rounded dashed
-     border instead of an outward ring that overlaps the dashes. */
-  box-shadow: inset 0 0 0 2px rgb(224 41 123 / 0.18), var(--shadow-lg);
+  /* Keep the active highlight confined to the dashed box: an inset ring
+     only, and the same resting shadow as idle (--shadow-md) so we don't
+     grow a large offset grey halo that no longer matches the box shape. */
+  box-shadow: inset 0 0 0 2px rgb(224 41 123 / 0.18), var(--shadow-md);
 }
 
 /* ===== Hover micro-interactions (calm) ===== */
