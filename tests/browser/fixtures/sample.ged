@@ -1,0 +1,39 @@
+0 HEAD
+1 SOUR twineconvert
+2 VERS 1.0
+1 GEDC
+2 VERS 5.5.1
+2 FORM LINEAGE-LINKED
+1 CHAR UTF-8
+0 @I1@ INDI
+1 NAME John /Smith/
+1 SEX M
+1 BIRT
+2 DATE 1 JAN 1950
+2 PLAC Boston, Massachusetts, USA
+1 DEAT
+2 DATE 14 SEP 2018
+2 PLAC Boston, Massachusetts, USA
+1 FAMS @F1@
+0 @I2@ INDI
+1 NAME Jane /Doe/
+1 SEX F
+1 BIRT
+2 DATE 5 MAR 1952
+2 PLAC Chicago, Illinois, USA
+1 FAMS @F1@
+0 @I3@ INDI
+1 NAME Mary /Smith/
+1 SEX F
+1 BIRT
+2 DATE 22 JUL 1977
+2 PLAC Boston, Massachusetts, USA
+1 FAMC @F1@
+0 @F1@ FAM
+1 HUSB @I1@
+1 WIFE @I2@
+1 CHIL @I3@
+1 MARR
+2 DATE 12 JUN 1975
+2 PLAC Boston, Massachusetts, USA
+0 TRLR

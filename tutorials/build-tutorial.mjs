@@ -56,6 +56,23 @@ const FIXTURE_BY_TOOL = {
   "heic-to-pdf": "tests/browser/fixtures/sample.heic",
   "mp4-to-mp3": "tests/browser/fixtures/sample.mp4",
   "mp4-to-gif": "tests/browser/fixtures/sample.mp4",
+  "pdf-to-jpg": "tests/browser/fixtures/sample.pdf",
+  "pdf-to-png": "tests/browser/fixtures/sample.pdf",
+  "pdf-to-webp": "tests/browser/fixtures/sample.pdf",
+  "pdf-to-text": "tests/browser/fixtures/sample.pdf",
+  "pdf-to-docx": "tests/browser/fixtures/sample.pdf",
+  "compress-pdf": "tests/browser/fixtures/sample.pdf",
+  "bibtex-to-csv": "tests/browser/fixtures/sample.bib",
+  "bibtex-to-ris": "tests/browser/fixtures/sample.bib",
+  "bibtex-to-nbib": "tests/browser/fixtures/sample.bib",
+  "bibtex-to-csl-json": "tests/browser/fixtures/sample.bib",
+  "bibtex-to-yaml": "tests/browser/fixtures/sample.bib",
+  "bibtex-to-markdown": "tests/browser/fixtures/sample.bib",
+  "bibtex-to-html": "tests/browser/fixtures/sample.bib",
+  "gedcom-to-csv": "tests/browser/fixtures/sample.ged",
+  "gedcom-to-json": "tests/browser/fixtures/sample.ged",
+  "gedcom-to-pdf": "tests/browser/fixtures/sample.ged",
+  "gedcom-to-html": "tests/browser/fixtures/sample.ged",
 };
 const DEMO_FIXTURE = resolve(FIXTURE_BY_TOOL[tool] ?? "tests/browser/fixtures/sample.heic");
 
@@ -313,7 +330,12 @@ if (hasDemoSegment) {
     recordVideo: { dir: WORK_DIR, size: { width: 1920, height: 1080 } },
   });
   const page = await ctx.newPage();
-  await page.goto(`https://twineconvert.com/${tool}`, { waitUntil: "networkidle" });
+  // DEMO_HOST env override lets the build run from networks where
+  // twineconvert.com's custom-domain DNS is broken (e.g. McGill's
+  // resolver returning stale A records). The .vercel.app preview URL
+  // serves the same deployment, so the demo footage is identical.
+  const DEMO_HOST = process.env.DEMO_HOST ?? "https://twineconvert.com";
+  await page.goto(`${DEMO_HOST}/${tool}`, { waitUntil: "networkidle" });
   await page.waitForTimeout(800);
   const fileInput = await page.$('input[type="file"]');
   if (!fileInput) throw new Error("no file input on tool page");

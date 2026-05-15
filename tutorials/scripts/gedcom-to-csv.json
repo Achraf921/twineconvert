@@ -1,0 +1,63 @@
+{
+  "tool": "gedcom-to-csv",
+  "title": "How to convert a GEDCOM file to CSV (free, in your browser)",
+  "thumbnailHook": "GEDCOM to\nSpreadsheet",
+  "thumbnailEmoji": "🌳",
+  "thumbnailBadge": "FREE",
+  "segments": [
+    {
+      "voice": "Got a GEDCOM file exported from Ancestry, MyHeritage, or FamilySearch?",
+      "scene": {
+        "type": "emoji-text",
+        "emoji": "🌳",
+        "headline": "GEDCOM file\non your hands?",
+        "sub": "exported from Ancestry, MyHeritage, Gramps, FamilySearch"
+      }
+    },
+    {
+      "voice": "But you want it in a spreadsheet to sort, filter, and check your tree.",
+      "scene": {
+        "type": "emoji-text",
+        "emoji": "📊",
+        "headline": "Need it as\na spreadsheet",
+        "sub": "names, dates, places in sortable rows"
+      }
+    },
+    {
+      "voice": "Your family tree is private. This converts it without uploading anything.",
+      "scene": {
+        "type": "emoji-text",
+        "emoji": "🔒",
+        "headline": "Your family data\nstays on your device",
+        "sub": "nothing sent to a server"
+      }
+    },
+    {
+      "voice": "Free. No signup. Nothing to install.",
+      "scene": {
+        "type": "centered-headline",
+        "headline": "Free. No signup.\nNo install.",
+        "sub": "everything happens in your browser"
+      }
+    },
+    {
+      "voice": "Go to twineconvert dot com slash gedcom to csv.",
+      "scene": {
+        "type": "url-card",
+        "url": "twineconvert.com/gedcom-to-csv"
+      }
+    },
+    {
+      "voice": "Drop the dot ged file. Click convert. Open the CSV in Excel or Sheets.",
+      "scene": { "type": "demo-recording" }
+    },
+    {
+      "voice": "Link's in the bio, give it a try!",
+      "scene": {
+        "type": "cta",
+        "url": "Link in bio ↓",
+        "tagline": "Have fun converting!"
+      }
+    }
+  ]
+}
