@@ -14,10 +14,11 @@
  * styled to our white + pink brand.
  */
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import posthog from "posthog-js";
 import { run } from "@/lib/engine/runner";
 import { convertBatch, packageBatchZip } from "@/lib/engine/batch";
+import { takePendingFiles } from "@/lib/pending-files";
 
 type Phase = "idle" | "ready" | "running" | "done" | "error";
 
@@ -120,6 +121,18 @@ export function Dropzone({ toolId, toolLabel, accept }: Props) {
     },
     [onFiles],
   );
+
+  // Files dropped on the homepage are handed off here (it only routes; the
+  // conversion runs on this page). Consume once on mount so a later plain
+  // visit to the same tool doesn't replay them.
+  useEffect(() => {
+    const handed = takePendingFiles();
+    if (handed && handed.length > 0) {
+      // Defer out of the effect so the state update isn't synchronous
+      // within it (avoids a cascading render on mount).
+      queueMicrotask(() => onFiles(handed));
+    }
+  }, [onFiles]);
 
   const startConversion = useCallback(async () => {
     if (!file) return;

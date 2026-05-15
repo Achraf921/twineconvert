@@ -115,7 +115,9 @@ body {
 .dropzone-active {
   background: var(--color-pink-50);
   border-color: var(--color-pink-600);
-  box-shadow: 0 0 0 4px rgb(224 41 123 / 0.12), var(--shadow-lg);
+  /* Inset ring so the active accent stays inside the rounded dashed
+     border instead of an outward ring that overlaps the dashes. */
+  box-shadow: inset 0 0 0 2px rgb(224 41 123 / 0.18), var(--shadow-lg);
 }
 
 /* ===== Hover micro-interactions (calm) ===== */

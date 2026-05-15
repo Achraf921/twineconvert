@@ -12,6 +12,7 @@
 
 import { useCallback, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { setPendingFiles } from "@/lib/pending-files";
 
 interface Props {
   /** Pre-built routing table: extension (e.g. ".heic") to list of matching tool IDs. */
@@ -26,10 +27,28 @@ export function HomeDropzone({ routes, acceptAll }: Props) {
   const [isDragging, setIsDragging] = useState(false);
   const [picker, setPicker] = useState<Array<{ id: string; label: string }> | null>(null);
   const [pickedExt, setPickedExt] = useState<string>("");
+  // Held while the format picker is open so we can hand them to the tool
+  // page once a format is chosen.
+  const [heldFiles, setHeldFiles] = useState<File[]>([]);
 
-  const handleFile = useCallback(
-    (file: File) => {
-      const lower = file.name.toLowerCase();
+  const goToTool = useCallback(
+    (toolId: string, files: File[]) => {
+      // Stash before navigating: the tool page picks these up on mount and
+      // runs them (single file → normal flow, 2+ → batch). App Router keeps
+      // the JS context so the File objects survive the client-side push.
+      setPendingFiles(files);
+      router.push(`/${toolId}`);
+    },
+    [router],
+  );
+
+  const handleFiles = useCallback(
+    (files: File[]) => {
+      if (files.length === 0) return;
+      // Route by the first file's extension. Mismatched stragglers are
+      // surfaced as failed rows on the tool page (already handled there),
+      // which is friendlier than blocking the whole drop here.
+      const lower = files[0].name.toLowerCase();
       const ext = lower.includes(".") ? `.${lower.split(".").pop()}` : "";
       const matches = ext ? routes[ext] : undefined;
       if (!matches || matches.length === 0) {
@@ -39,13 +58,14 @@ export function HomeDropzone({ routes, acceptAll }: Props) {
         return;
       }
       if (matches.length === 1) {
-        router.push(`/${matches[0].id}`);
+        goToTool(matches[0].id, files);
         return;
       }
+      setHeldFiles(files);
       setPicker(matches);
       setPickedExt(ext);
     },
-    [routes, router],
+    [routes, goToTool],
   );
 
   const onPick = () => inputRef.current?.click();
@@ -54,10 +74,10 @@ export function HomeDropzone({ routes, acceptAll }: Props) {
     (e: React.DragEvent<HTMLDivElement>) => {
       e.preventDefault();
       setIsDragging(false);
-      const file = e.dataTransfer.files[0];
-      if (file) handleFile(file);
+      const files = Array.from(e.dataTransfer.files);
+      if (files.length > 0) handleFiles(files);
     },
-    [handleFile],
+    [handleFiles],
   );
 
   return (
@@ -66,10 +86,11 @@ export function HomeDropzone({ routes, acceptAll }: Props) {
         ref={inputRef}
         type="file"
         accept={acceptAll.join(",")}
+        multiple
         className="sr-only"
         onChange={(e) => {
-          const f = e.target.files?.[0];
-          if (f) handleFile(f);
+          const files = e.target.files ? Array.from(e.target.files) : [];
+          if (files.length > 0) handleFiles(files);
           e.target.value = "";
         }}
       />
@@ -117,7 +138,7 @@ export function HomeDropzone({ routes, acceptAll }: Props) {
           ext={pickedExt}
           options={picker}
           onClose={() => setPicker(null)}
-          onPick={(id) => router.push(`/${id}`)}
+          onPick={(id) => goToTool(id, heldFiles)}
         />
       )}
     </div>
