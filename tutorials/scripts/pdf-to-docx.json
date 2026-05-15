@@ -1,0 +1,63 @@
+{
+  "tool": "pdf-to-docx",
+  "title": "How to convert PDF to Word (DOCX) in your browser, free",
+  "thumbnailHook": "PDF to\nWord",
+  "thumbnailEmoji": "📝",
+  "thumbnailBadge": "FREE",
+  "segments": [
+    {
+      "voice": "Got a PDF you need to edit in Word?",
+      "scene": {
+        "type": "emoji-text",
+        "emoji": "📝",
+        "headline": "PDF to Word?",
+        "sub": "editable text, paragraphs, formatting"
+      }
+    },
+    {
+      "voice": "Resumes, contracts, study notes, forms. Anything where you need to actually change the words.",
+      "scene": {
+        "type": "emoji-text",
+        "emoji": "✏️",
+        "headline": "Resumes, contracts,\nforms, study notes",
+        "sub": "anywhere editable text matters"
+      }
+    },
+    {
+      "voice": "Most online converters upload your file. Yours stays on your computer here.",
+      "scene": {
+        "type": "emoji-text",
+        "emoji": "🔒",
+        "headline": "Your PDF\nstays private",
+        "sub": "no uploads, no third-party servers"
+      }
+    },
+    {
+      "voice": "Free. No signup. Nothing to install.",
+      "scene": {
+        "type": "centered-headline",
+        "headline": "Free. No signup.\nNo install.",
+        "sub": "everything happens in your browser"
+      }
+    },
+    {
+      "voice": "Go to twineconvert dot com slash pdf to docx.",
+      "scene": {
+        "type": "url-card",
+        "url": "twineconvert.com/pdf-to-docx"
+      }
+    },
+    {
+      "voice": "Drop the PDF. Click convert. Open the docx in Word, Pages, or Docs.",
+      "scene": { "type": "demo-recording" }
+    },
+    {
+      "voice": "Link's in the bio, give it a try!",
+      "scene": {
+        "type": "cta",
+        "url": "Link in bio ↓",
+        "tagline": "Have fun converting!"
+      }
+    }
+  ]
+}

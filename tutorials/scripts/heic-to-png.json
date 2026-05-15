@@ -1,0 +1,63 @@
+{
+  "tool": "heic-to-png",
+  "title": "How to convert HEIC to PNG (free, no upload, in your browser)",
+  "thumbnailHook": "HEIC to\nPNG?",
+  "thumbnailEmoji": "🖼️",
+  "thumbnailBadge": "FREE",
+  "segments": [
+    {
+      "voice": "Got an iPhone photo that nothing on your computer can open?",
+      "scene": {
+        "type": "emoji-text",
+        "emoji": "🖼️",
+        "headline": "HEIC won't open?",
+        "sub": "the format iPhones save photos in"
+      }
+    },
+    {
+      "voice": "Convert it to PNG. Lossless, opens everywhere, keeps transparency.",
+      "scene": {
+        "type": "emoji-text",
+        "emoji": "✨",
+        "headline": "PNG: lossless\n+ opens everywhere",
+        "sub": "no quality drop, no compatibility headache"
+      }
+    },
+    {
+      "voice": "Bonus: PNG strips the GPS location and camera serial number embedded in your HEIC.",
+      "scene": {
+        "type": "emoji-text",
+        "emoji": "🔒",
+        "headline": "GPS metadata\nstripped automatically",
+        "sub": "your location stays private when you share"
+      }
+    },
+    {
+      "voice": "Free. No signup. Nothing to install.",
+      "scene": {
+        "type": "centered-headline",
+        "headline": "Free. No signup.\nNo install.",
+        "sub": "everything happens in your browser"
+      }
+    },
+    {
+      "voice": "Go to twineconvert dot com slash heic to png.",
+      "scene": {
+        "type": "url-card",
+        "url": "twineconvert.com/heic-to-png"
+      }
+    },
+    {
+      "voice": "Drop the HEIC. Click convert. Download your PNG. Done.",
+      "scene": { "type": "demo-recording" }
+    },
+    {
+      "voice": "Link's in the bio, give it a try!",
+      "scene": {
+        "type": "cta",
+        "url": "Link in bio ↓",
+        "tagline": "Have fun converting!"
+      }
+    }
+  ]
+}

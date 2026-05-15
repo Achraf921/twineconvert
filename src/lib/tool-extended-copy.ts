@@ -910,6 +910,530 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       },
     ],
   },
+
+  // ===== High-volume raster image conversions =====
+  "jpg-to-png": {
+    whyConvert:
+      "JPG is lossy: every save re-compresses and degrades the image, and it can't store transparency. Converting to PNG stops the quality bleed (PNG is lossless) and gives you an alpha channel. The usual reason: you need a screenshot, logo, or diagram with a transparent background, or you're editing an image repeatedly and don't want each save to lose detail.",
+    example:
+      "A designer sent you `logo.jpg` with an ugly white box behind it. You need it on a colored slide. Convert to PNG here, then knock out the white background in Preview/Photos/Photopea — impossible while it's a JPG with no alpha channel.",
+    troubleshooting: [
+      {
+        problem: "The PNG is way bigger than the original JPG.",
+        solution:
+          "Expected. PNG is lossless so photographic content (millions of colors, no flat regions) doesn't compress well — a 200KB JPG photo can become a 2MB PNG. PNG only wins on file size for flat-color graphics (logos, screenshots, UI). If it's a photo and you don't need transparency, keep it as JPG.",
+      },
+      {
+        problem: "JPG compression artifacts (blocky edges) are still visible in the PNG.",
+        solution:
+          "Converting JPG → PNG can't undo damage already baked into the JPG. The blocking happened when the JPG was created; PNG just preserves it losslessly from here on. There's no lossless way to recover the original — you'd need the pre-JPG source.",
+      },
+    ],
+  },
+  "png-to-jpg": {
+    whyConvert:
+      "PNG photos are often 5-10x larger than they need to be. JPG re-compresses photographic content to a fraction of the size with no visible quality loss at high quality settings. Convert when you're uploading photos somewhere with a size cap (job application portals, government forms, older email systems) or shrinking a folder of screenshots-of-photos.",
+    example:
+      "You exported 40 product photos as PNG from Figma — 180MB total. The supplier portal rejects anything over 50MB. Convert to JPG here; the same 40 images come out around 12MB with no visible difference at typical viewing size.",
+    troubleshooting: [
+      {
+        problem: "Transparent areas turned black (or white).",
+        solution:
+          "JPG has no transparency channel, so transparent pixels must be flattened onto a solid background. We composite onto white by default. If your PNG had transparency and you need it preserved, JPG is the wrong target — use WebP (`png-to-webp`) which keeps the alpha channel.",
+      },
+      {
+        problem: "Text/lines look fuzzy after conversion.",
+        solution:
+          "JPG's DCT compression smears sharp high-contrast edges (text, UI lines, diagrams). That content should stay PNG. JPG is only the right choice for photographs. If you must use JPG for a screenshot, it'll never look as crisp as the PNG.",
+      },
+    ],
+  },
+  "png-to-webp": {
+    whyConvert:
+      "WebP compresses 25-35% smaller than PNG at the same visual quality and keeps the alpha channel. For anything going on the web — site assets, blog images, app icons — WebP is the modern default that Lighthouse and PageSpeed explicitly recommend. Smaller images = faster pages = better SEO and lower bandwidth bills.",
+    example:
+      "Your Next.js site's hero image is a 1.4MB transparent PNG and Lighthouse is dinging your LCP. Convert to WebP here; it drops to ~400KB with identical visual quality and transparency intact. Swap the file, redeploy, LCP improves.",
+    troubleshooting: [
+      {
+        problem: "An older tool / email client won't open the WebP.",
+        solution:
+          "WebP has had universal browser support since 2020 (Safari was last, in Big Sur). But legacy desktop software — old Office versions, some email clients, Windows 7-era image viewers — predates it. If the recipient is on legacy software, keep PNG. WebP is for the web, not for emailing to your accountant.",
+      },
+    ],
+  },
+  "webp-to-png": {
+    whyConvert:
+      "You downloaded a WebP (Google Images, a website's right-click-save, a generated AI image) and a tool you need to use won't accept it — older Photoshop, a print shop's upload form, a legacy CMS. PNG is the universal lossless fallback that everything from 1996 onward reads, and it preserves the WebP's transparency.",
+    example:
+      "You saved an illustration from a website and it came down as `art.webp`. Your print-on-demand service only accepts PNG/TIFF. Convert here, upload the PNG, transparency preserved, no quality loss.",
+    troubleshooting: [
+      {
+        problem: "The original WebP was animated and only the first frame converted.",
+        solution:
+          "Animated WebP → PNG only extracts the first frame (PNG isn't an animation format). If you need the full animation, convert WebP → GIF instead, or WebP → MP4 for better quality.",
+      },
+    ],
+  },
+  "jpg-to-webp": {
+    whyConvert:
+      "Re-compressing JPG to WebP cuts file size another 25-30% with no perceptible quality loss — meaningful when you have hundreds of product photos or a media-heavy site. WebP is the format Google's own tools tell you to use for web delivery.",
+    example:
+      "An e-commerce catalog has 800 JPG product shots averaging 300KB. Total: 240MB, slow to serve. Batch-convert to WebP; the catalog drops to ~165MB and product pages load measurably faster on mobile.",
+    troubleshooting: [
+      {
+        problem: "Quality looks slightly worse than the source JPG.",
+        solution:
+          "WebP → from an already-lossy JPG is a second lossy pass; some quality loss is unavoidable (you're compressing compressed data). It's usually imperceptible at web sizes. For zero additional loss you'd need the pre-JPG original to encode straight to WebP.",
+      },
+    ],
+  },
+  "webp-to-jpg": {
+    whyConvert:
+      "Something downstream rejects WebP and you don't need transparency: a job-application portal, a photo-print kiosk, an older CRM, a relative's ancient phone. JPG is the universal photographic format every device and form on earth accepts.",
+    example:
+      "You saved a photo from a website as WebP and the passport-photo print machine at the pharmacy only takes JPG off a USB stick. Convert here, copy to the stick, print.",
+    troubleshooting: [
+      {
+        problem: "Transparent background became a solid color.",
+        solution:
+          "JPG can't store transparency. We flatten transparent pixels onto white. If the image needs transparency, JPG is the wrong format — use PNG instead.",
+      },
+    ],
+  },
+  "heic-to-jpg": {
+    whyConvert:
+      "HEIC is the format every iPhone since 2017 saves photos in, and most non-Apple software still can't open it: Windows without the paid codec, older Android phones, web upload forms, print kiosks. JPG is the universal fallback every device and website accepts. Bonus: the conversion strips the GPS coordinates and camera serial number Apple embeds in HEIC EXIF.",
+    example:
+      "You're applying for a visa and the portal demands a JPG photo, max 2MB. Your iPhone shot it as a 3.5MB HEIC the portal flat-out rejects. Convert here, get a compliant JPG, upload.",
+    troubleshooting: [
+      {
+        problem: '"HEIC decode failed" on a photo that opens fine in Apple Photos.',
+        solution:
+          "Modern iPhones (2022+) write HEIC profiles — Live Photos, HEVC main-10, edited photos — that older decoders reject. We use libheif (current build) which handles these. If a specific file still fails, paste the iPhone model + whether it's a Live Photo / edited, and we'll dig in.",
+      },
+      {
+        problem: "The colors look slightly off vs. the iPhone.",
+        solution:
+          "iPhone HEICs are often in the Display P3 wide-gamut color space; JPG is typically sRGB. We convert P3 → sRGB which can desaturate very vivid colors slightly. This is correct behavior for compatibility — most screens and printers are sRGB anyway.",
+      },
+    ],
+  },
+  "heic-to-png": {
+    whyConvert:
+      "PNG over JPG when you need the iPhone photo lossless (no re-compression) or with transparency — e.g., a screenshot of a Live Photo, a product shot you'll cut out, anything you'll edit repeatedly. PNG conversion also strips the GPS and camera-serial metadata Apple bakes into HEIC.",
+    example:
+      "You screenshotted a receipt on your iPhone (saved as HEIC) and need to mark it up and email it to accounting without re-compression artifacts on the text. Convert to PNG, annotate in Preview, send. Text stays razor-sharp.",
+    troubleshooting: [
+      {
+        problem: "The PNG is enormous (10MB+ from a phone photo).",
+        solution:
+          "PNG is lossless so a 12MP iPhone photo balloons. If you don't specifically need lossless or transparency, `heic-to-jpg` produces a file 5-10x smaller at no visible quality loss for a photograph.",
+      },
+    ],
+  },
+  "gif-to-png": {
+    whyConvert:
+      "A GIF is capped at 256 colors and is the wrong container for a single still image. If what you actually have is one frame (a logo, an icon, a meme screenshot saved as GIF), PNG gives you full color depth, transparency, and lossless quality.",
+    example:
+      "You have a company logo someone saved as `logo.gif` years ago — 256 colors, visible banding on the gradient. Convert to PNG to stop the color clipping before placing it on a high-res page (note: PNG can't recover colors the GIF already discarded; this just prevents further loss).",
+    troubleshooting: [
+      {
+        problem: "The animated GIF only produced one PNG.",
+        solution:
+          "PNG isn't an animation format, so we extract the first frame. For an animated source you want GIF → MP4 (better quality, smaller) or keep it as GIF.",
+      },
+      {
+        problem: "Colors look banded / posterized in the PNG.",
+        solution:
+          "The banding is already in the GIF — it was quantized to ≤256 colors when the GIF was made. PNG preserves exactly what's there; it can't reconstruct the discarded colors. You'd need the original full-color source.",
+      },
+    ],
+  },
+  "png-to-ico": {
+    whyConvert:
+      "ICO is the Windows icon format — favicons, .exe icons, desktop shortcuts, Windows app resources. Browsers and Windows both expect a real multi-resolution .ico, not a renamed PNG. Convert when you're shipping a favicon or building a Windows app/installer.",
+    example:
+      "You designed a 512x512 app icon in Figma and exported `icon.png`. Your Electron/Tauri build config wants `icon.ico`. Convert here, drop it in `build/`, and the Windows build picks up a proper multi-size icon.",
+    troubleshooting: [
+      {
+        problem: "The favicon looks blurry in the browser tab.",
+        solution:
+          "Browsers render the favicon at 16x16 / 32x32. If your source PNG had fine detail or thin lines, downscaling to 16px destroys it. Design the icon to read at 16px (bold shapes, no thin strokes) before converting — this is a design constraint, not a conversion bug.",
+      },
+    ],
+  },
+  "avif-to-jpg": {
+    whyConvert:
+      "AVIF is the newest, smallest image format — but support is still uneven (older Safari, many desktop apps, most print/upload pipelines can't open it). You downloaded an AVIF and need it to actually work somewhere. JPG is the universal photographic fallback.",
+    example:
+      "You saved an image from a modern website that served AVIF. Your design app / the client's CMS / the print shop can't open `.avif`. Convert to JPG here and it works everywhere.",
+    troubleshooting: [
+      {
+        problem: "Slight quality loss vs. the AVIF.",
+        solution:
+          "AVIF → JPG is a re-encode from one lossy format to another, so there's a small unavoidable quality pass. Usually imperceptible. If you need transparency from the AVIF, use PNG instead — JPG flattens it.",
+      },
+    ],
+  },
+  "webp-to-avif": {
+    whyConvert:
+      "AVIF compresses ~20% smaller than WebP at equivalent quality and is the current best-in-class web image format. If you're optimizing a site that already serves WebP and want the next file-size win (and your audience is on current browsers), AVIF is the upgrade.",
+    example:
+      "Your image CDN serves WebP. Lighthouse still flags 'serve images in next-gen formats' because AVIF exists. Convert the heaviest hero/banner images to AVIF, serve with a `<picture>` fallback to WebP, shave another 20% off the largest payloads.",
+    troubleshooting: [
+      {
+        problem: "Encoding took noticeably longer than other conversions.",
+        solution:
+          "AVIF encoding is computationally heavier than WebP/JPG — that's inherent to the codec (it's based on the AV1 video codec). The output is worth it for delivery; just expect a slower convert step, especially on large images.",
+      },
+    ],
+  },
+  "svg-to-png": {
+    whyConvert:
+      "SVG is vector and infinitely scalable, but tons of contexts only accept raster: email clients (which strip SVG for security), social media uploads, slide decks, OG/preview images, Office documents, print workflows. PNG rasterizes the SVG at a fixed resolution with transparency preserved.",
+    example:
+      "You have a logo as `logo.svg`. You need it as the image in a Mailchimp email — but every email client strips SVG. Rasterize to PNG at 2x your display size for retina sharpness, drop it into the email template.",
+    troubleshooting: [
+      {
+        problem: "The PNG came out blurry or too small.",
+        solution:
+          "SVG has no inherent pixel size — rasterizing uses the SVG's viewBox/width. If your SVG declares a small width (e.g., 24x24) the PNG is tiny. Edit the SVG's `width`/`height` (or viewBox scale) up before converting, then export at 2x for retina.",
+      },
+      {
+        problem: "Fonts/text in the SVG rendered wrong or as a fallback font.",
+        solution:
+          "SVG text referencing a font that isn't embedded falls back to a system font when rasterized. Either convert the text to outlines/paths in your vector editor (Inkscape: Path → Object to Path) before exporting the SVG, or embed the font, then re-convert.",
+      },
+    ],
+  },
+
+  // ===== PDF document conversions =====
+  "jpg-to-pdf": {
+    whyConvert:
+      "PDF is the format every form, portal, and office workflow expects for documents. Wrapping JPGs in a PDF turns a folder of phone-photographed pages, receipts, or scans into one shareable, printable, paginated file you can email or upload as a single attachment.",
+    example:
+      "Your landlord wants 'one PDF of all your pay stubs.' You photographed 6 of them with your phone (6 JPGs). Convert here — they come out as a single 6-page PDF in order, one stub per page, ready to email.",
+    troubleshooting: [
+      {
+        problem: "Pages are in the wrong order.",
+        solution:
+          "Pages follow the order you select/drop the files. Rename them `01.jpg`, `02.jpg`, ... before adding so the sort is unambiguous, or add them one at a time in the order you want.",
+      },
+      {
+        problem: "Photos of documents look skewed/dark in the PDF.",
+        solution:
+          "We embed the JPG as-is — we don't auto-deskew or brighten. For document photos, run them through your phone's built-in scanner (iOS Notes → scan, or Google Drive → scan) first; those auto-correct perspective and contrast, then convert the cleaned images here.",
+      },
+    ],
+  },
+  "pdf-to-jpg": {
+    whyConvert:
+      "Sometimes you need a page as an image, not a document: posting a single page to Instagram/X/LinkedIn, embedding it in slides or Notion, an email preview, or sending to someone who can't open PDFs. Each PDF page becomes one JPG.",
+    example:
+      "You want to share page 3 of a research paper as an image in a tweet. Convert the PDF here, grab the JPG of page 3, attach it. No 'click to download PDF' friction for your readers.",
+    troubleshooting: [
+      {
+        problem: "Text in the JPG looks soft/fuzzy.",
+        solution:
+          "PDFs are vector; rasterizing to JPG fixes a resolution. Low DPI = soft text. We render at a sensible default, but tiny text on a dense page will always soften when flattened. For sharp text consider `pdf-to-png` (no JPG compression smear on edges).",
+      },
+      {
+        problem: "Multi-page PDF — where are the other pages?",
+        solution:
+          "Each page is a separate JPG; a multi-page PDF produces a zip of per-page images. If you only got one, the source PDF likely has one page.",
+      },
+    ],
+  },
+  "png-to-pdf": {
+    whyConvert:
+      "Same as jpg-to-pdf but for lossless/transparent images: turning screenshots, scanned documents, or design mockups into a single shareable, printable PDF. PDF is what every submission portal and office workflow wants.",
+    example:
+      "You took 4 screenshots documenting a bug for a support ticket. The vendor's portal wants 'a single PDF.' Convert the 4 PNGs here into one 4-page PDF and attach it.",
+    troubleshooting: [
+      {
+        problem: "The PDF file is very large.",
+        solution:
+          "PNGs are lossless so screenshots-of-photos embed huge. If the images are photographic and size matters, convert them to JPG first then to PDF, or use `compress-pdf` on the result.",
+      },
+    ],
+  },
+  "pdf-to-docx": {
+    whyConvert:
+      "You need to edit the words, not just view them: updating a resume someone sent as PDF, revising an old contract you only have as PDF, reformatting study notes, filling a non-fillable form. DOCX opens in Word, Pages, Google Docs, and LibreOffice with editable text and paragraphs.",
+    example:
+      "A recruiter sent your own resume back as a PDF with their agency's footer stamped on it. You need to tweak a bullet and remove the footer. Convert to DOCX here, edit in Word, export clean.",
+    troubleshooting: [
+      {
+        problem: "The layout is messy — columns/tables didn't survive.",
+        solution:
+          "PDF has no concept of paragraphs or tables — it's positioned glyphs on a page. Reconstructing structure is inherently lossy for heavily-designed layouts (multi-column, complex tables, infographics). Simple text-document PDFs convert cleanly; magazine-style layouts will need touch-up in Word.",
+      },
+      {
+        problem: "It's a scanned PDF and the DOCX has no editable text.",
+        solution:
+          "A scanned PDF is just images of pages — there's no text to extract. You need OCR first to recognize the characters. Run the PDF through an OCR step (or `pdf-to-text` if it has a text layer), then the result is editable.",
+      },
+    ],
+  },
+  "docx-to-pdf": {
+    whyConvert:
+      "PDF is the universal final-form document: it looks identical on every device, can't be accidentally edited, and is what every job portal, court e-filing, print shop, and email-an-invoice workflow expects. You write in Word; you send as PDF.",
+    example:
+      "You finished a cover letter in Word. The job application portal only accepts PDF and warns that DOCX uploads are rejected. Convert here, upload the PDF, formatting locked exactly as you laid it out.",
+    troubleshooting: [
+      {
+        problem: "Fonts changed in the PDF.",
+        solution:
+          "If the DOCX used a font not embedded in the file, conversion substitutes a fallback. In Word: File → Options → Save → check 'Embed fonts in the file', re-save the DOCX, then convert. Or use common fonts (Calibri, Arial, Times) that are universally available.",
+      },
+      {
+        problem: "Page breaks / spacing shifted slightly.",
+        solution:
+          "Word reflows text based on the rendering engine; small spacing differences between Word's layout and the PDF renderer are normal. For pixel-exact output, in Word use Print → Save as PDF (uses Word's own layout engine), or accept the minor reflow — readers won't notice.",
+      },
+    ],
+  },
+  "pdf-to-text": {
+    whyConvert:
+      "You want the raw words, no formatting: feeding a document into an LLM, grepping a contract for a clause, word-counting a manuscript, pulling quotes from a paper, or diffing two versions of a document. Plain text strips all the layout noise.",
+    example:
+      "You're checking whether a 90-page vendor contract mentions 'auto-renewal' anywhere. Convert to text, Cmd-F / grep for the term across the whole thing in two seconds instead of eyeballing 90 PDF pages.",
+    troubleshooting: [
+      {
+        problem: "The output is empty or garbled.",
+        solution:
+          "The PDF is almost certainly a scan (images of pages) with no embedded text layer. Text extraction needs an actual text layer. Run the PDF through OCR first, then extract. You can check: if you can't select/highlight text in the PDF viewer, there's no text layer.",
+      },
+      {
+        problem: "Columns got interleaved (lines from two columns mixed).",
+        solution:
+          "PDF stores glyph positions, not reading order. Two-column academic papers often extract with left and right columns interleaved line-by-line. This is a known hard problem in PDF text extraction; for clean multi-column extraction you may need a layout-aware tool. Single-column documents extract correctly.",
+      },
+    ],
+  },
+  "compress-pdf": {
+    whyConvert:
+      "Email gateways (25MB Gmail, 10MB many corporate), court e-filing systems, and upload forms reject big PDFs. Compression shrinks the file — mostly by re-compressing embedded images — so the document goes through without you having to split or rebuild it.",
+    example:
+      "You scanned a 30-page contract at high DPI; it's 48MB and bounces off the court's 35MB e-filing limit. Compress here; the text stays readable and it drops under the limit so the filing goes through.",
+    troubleshooting: [
+      {
+        problem: "The file barely got smaller.",
+        solution:
+          "Most PDF size lives in embedded images. A text-only PDF is already small — there's little to compress. If yours is text-heavy and already lean, there's no further win to extract; the file is just that size.",
+      },
+      {
+        problem: "Scanned text looks degraded after compression.",
+        solution:
+          "Aggressive image re-compression on a scanned (image-only) PDF can soften text. There's an inherent trade-off between size and scan fidelity. If text legibility is critical, the document needs OCR + a text layer (tiny) rather than image compression.",
+      },
+    ],
+  },
+
+  // ===== Audio / video conversions =====
+  "mp4-to-mp3": {
+    whyConvert:
+      "You want the audio without the video: a song from a downloaded clip, a lecture you'll listen to on a walk, an interview to transcribe, a podcast episode someone sent as a video file. MP3 is tiny, plays on every device, and works in every podcast/music app.",
+    example:
+      "A 45-minute conference talk was shared as a 1.2GB MP4. You just want to listen on your commute. Convert to MP3 — about 40MB — drop it in your podcast app's local files, done.",
+    troubleshooting: [
+      {
+        problem: "Large video took a long time or ran out of memory.",
+        solution:
+          "The whole conversion runs in your browser tab, so a 2GB+ video can hit browser memory limits, especially on mobile. Use a desktop browser for big files, close other tabs, or trim the video to the segment you need first.",
+      },
+      {
+        problem: "There's no audio in the output.",
+        solution:
+          "The source MP4 has no audio track (screen recordings without mic, some silent clips). Nothing to extract. Confirm the video actually plays sound in a media player.",
+      },
+    ],
+  },
+  "mov-to-mp4": {
+    whyConvert:
+      "MOV is Apple's video container — what iPhones and QuickTime produce. MP4 is the universal one that Windows, Android, every social platform, and every video editor accepts without complaint. Convert when you're sending an iPhone video to a non-Apple recipient or uploading where MOV is rejected.",
+    example:
+      "You filmed a clip on your iPhone (it's a .mov) and the contest submission form only accepts MP4. Convert here, upload the MP4 — same video, universally accepted container.",
+    troubleshooting: [
+      {
+        problem: "The conversion is slow for a long video.",
+        solution:
+          "If the MOV's codec is already H.264/H.265 we can often re-wrap to MP4 fast (no re-encode). Some MOVs use Apple ProRes or other codecs that require a full re-encode, which is slow in-browser. For very large ProRes files a desktop tool will be faster.",
+      },
+    ],
+  },
+  "mp4-to-gif": {
+    whyConvert:
+      "GIF autoplays silently and loops everywhere — Slack, Discord, GitHub READMEs, docs, places that don't allow video embeds. Converting a short MP4 clip to GIF makes it shareable in all those text-first contexts.",
+    example:
+      "You recorded a 4-second screen capture of a UI bug as MP4. The bug tracker doesn't embed video but does render GIFs inline. Convert here, paste the GIF into the ticket, reviewers see the repro without downloading anything.",
+    troubleshooting: [
+      {
+        problem: "The GIF file is huge / bigger than the MP4.",
+        solution:
+          "GIF is an ancient, inefficient format — a 5-second clip can easily exceed the source MP4. Keep clips short (under ~6s), and crop to the region that matters. If the destination accepts video, MP4 is dramatically smaller; GIF is only for places that won't take video.",
+      },
+      {
+        problem: "Colors look banded / washed out.",
+        solution:
+          "GIF is capped at 256 colors per frame, so gradients and video footage band visibly. This is a hard format limitation, not a conversion bug. Screen recordings with flat UI colors convert cleanly; camera footage will always posterize.",
+      },
+    ],
+  },
+  "gif-to-mp4": {
+    whyConvert:
+      "MP4 is 5-20x smaller than the equivalent GIF and full color. Twitter/X, Reddit, and most modern platforms auto-convert GIFs to MP4 on upload anyway — doing it yourself first means a smaller upload, faster load, and better quality for viewers.",
+    example:
+      "You have a 12MB reaction GIF you want to post. Convert to MP4 here — it drops to under 1MB with smoother playback and full color, and it loops fine as a video.",
+    troubleshooting: [
+      {
+        problem: "The MP4 doesn't loop automatically where I posted it.",
+        solution:
+          "Looping is a player/platform setting, not a property of the file. On the web use `<video autoplay loop muted playsinline>`. Most social platforms loop short MP4s automatically; some don't. The conversion is correct — looping behavior is downstream.",
+      },
+    ],
+  },
+  "wav-to-mp3": {
+    whyConvert:
+      "WAV is uncompressed — roughly 10MB per minute. MP3 is ~1MB per minute at good quality, plays everywhere, and is what you want for sharing voice memos, music demos, podcast drafts, or anything you'll email or upload.",
+    example:
+      "You recorded a 20-minute interview in a DAW and exported WAV — it's 200MB, too big to email. Convert to MP3, ~20MB, send it to the transcriptionist.",
+    troubleshooting: [
+      {
+        problem: "Audiophile says the MP3 lost detail vs. the WAV.",
+        solution:
+          "True — MP3 is lossy and discards frequency content the encoder judges inaudible. For casual listening, voice, and demos it's indistinguishable. For mastering or archival, keep the WAV (or use FLAC for lossless compression). Pick MP3 only when size/compatibility beats absolute fidelity.",
+      },
+    ],
+  },
+  "mp3-to-wav": {
+    whyConvert:
+      "Audio editors and DAWs (Audacity, Audition, Pro Tools, Logic) prefer uncompressed WAV for editing — every MP3 re-export is another lossy pass. Converting MP3 → WAV gives you a stable working file that won't degrade further as you cut, splice, and process it.",
+    example:
+      "You only have a song as MP3 but need to chop it into samples in Ableton. Convert to WAV first so each edit/export isn't re-compressing — the WAV is your lossless working copy from here on.",
+    troubleshooting: [
+      {
+        problem: "The WAV doesn't sound better than the MP3.",
+        solution:
+          "Correct — converting MP3 → WAV can't recover detail the MP3 already discarded. It just stops further loss during editing. The WAV is for a clean editing workflow, not for resurrecting quality that's gone.",
+      },
+      {
+        problem: "The WAV file is massive.",
+        solution:
+          "Expected — WAV is uncompressed (~10MB/minute). That's the point for editing. Export back to MP3/AAC for delivery once you're done editing.",
+      },
+    ],
+  },
+
+  // ===== Data / tabular conversions =====
+  "csv-to-json": {
+    whyConvert:
+      "CSV is what spreadsheets and analysts export; JSON is what code, APIs, and config systems consume. Converting bridges the gap when you need to seed a database, feed a script, mock an API response, or import data into a JS/Python tool that expects an array of objects.",
+    example:
+      "A colleague sends `users.csv` from Excel. You need to seed your dev database with it via a Node script that expects `[{name, email, ...}]`. Convert here, get a JSON array, `JSON.parse` it in the seed script.",
+    troubleshooting: [
+      {
+        problem: "Numbers came through as strings (\"42\" not 42).",
+        solution:
+          "CSV has no types — every cell is text. We preserve values as strings to avoid corrupting things like ZIP codes, phone numbers, and IDs with leading zeros (`007` must not become `7`). Coerce specific fields to numbers in your code where you know it's safe.",
+      },
+      {
+        problem: "Commas inside a field broke the columns.",
+        solution:
+          "Properly quoted CSV (`\"Smith, John\"`) parses correctly. If the source wasn't quoting fields with commas, that CSV is malformed at the source — re-export from the spreadsheet with proper quoting (every standard exporter does this by default).",
+      },
+    ],
+  },
+  "json-to-csv": {
+    whyConvert:
+      "JSON comes out of APIs and apps; CSV is what opens in Excel/Sheets/Numbers for the non-technical people who need to filter, pivot, and chart it. Converting turns an API dump into something a finance or ops colleague can actually work with.",
+    example:
+      "You pulled 2,000 orders from a REST API as a JSON array. Your ops lead wants to pivot them by region in Excel. Convert to CSV here, send the file, they open it in Excel and pivot — no JSON tooling on their end.",
+    troubleshooting: [
+      {
+        problem: "Nested objects became [object Object] or weird strings.",
+        solution:
+          "CSV is flat — it has no way to represent nested structures. Nested objects/arrays get JSON-stringified into a single cell. If you need nested fields as their own columns, flatten the JSON first (e.g., `address.city` → a `city` key) before converting.",
+      },
+      {
+        problem: "Rows have different columns / missing values.",
+        solution:
+          "If the JSON objects don't all have the same keys, the CSV header is the union of all keys and missing values are blank. That's correct behavior — but if you expected uniform rows, the source data is heterogeneous; inspect the JSON.",
+      },
+    ],
+  },
+  "xlsx-to-csv": {
+    whyConvert:
+      "CSV is the universal data interchange format — every database import, every data pipeline, every scripting language reads it; XLSX is a zipped XML bundle that needs a library. Convert when you're feeding spreadsheet data into anything programmatic, or stripping a workbook down to plain rows.",
+    example:
+      "Finance sends `Q3.xlsx`. Your data pipeline's loader only accepts CSV. Convert the relevant sheet here, drop the CSV into the pipeline's input folder, the nightly job picks it up.",
+    troubleshooting: [
+      {
+        problem: "Only one sheet came through — my workbook has several.",
+        solution:
+          "CSV is a single table; it can't hold multiple sheets. We export the first (or active) sheet. For a multi-sheet workbook, convert each sheet separately, or export the specific sheet you need from Excel first (right-click tab → Move or Copy → to new workbook → save).",
+      },
+      {
+        problem: "Formulas turned into their computed values.",
+        solution:
+          "Correct and intended — CSV has no formula concept, so each cell becomes its current calculated result. If you need the formulas themselves, CSV is the wrong target; keep the XLSX.",
+      },
+      {
+        problem: "Dates look like serial numbers (45678) or shifted.",
+        solution:
+          "Excel stores dates as serial numbers internally. We convert recognized date-formatted cells to ISO date strings. If a column was formatted as 'General' rather than 'Date' in Excel, it exports as the raw serial — reformat the column as Date in Excel before converting.",
+      },
+    ],
+  },
+  "csv-to-xlsx": {
+    whyConvert:
+      "CSV opens in Excel but loses all the things a real workbook needs: number/date formatting, multiple sheets, frozen headers, the ability to add formulas. Converting to XLSX gives the recipient a proper editable workbook instead of a raw text file Excel sometimes mangles (leading zeros, big numbers, dates).",
+    example:
+      "You exported a report as CSV but the client opens it in Excel and the order IDs `00451` show as `451`, and the phone numbers turned into scientific notation. Convert to XLSX where text columns stay text — the client sees the data correctly without manually importing.",
+    troubleshooting: [
+      {
+        problem: "Numbers I wanted as text (IDs, ZIPs) still look numeric.",
+        solution:
+          "We type-detect conservatively. Values with leading zeros or that look like identifiers are kept as text; clearly numeric columns become numbers. If a specific column must be forced to text, prefix the CSV values with a single quote or format the column as Text in Excel after opening.",
+      },
+    ],
+  },
+  "bibtex-to-csv": {
+    whyConvert:
+      "BibTeX is LaTeX's bibliography format — great for compiling a paper, useless for a literature-review spreadsheet. Converting to CSV puts every reference in a row with title/author/year/journal columns you can sort, filter, dedupe, and share with non-LaTeX collaborators.",
+    example:
+      "Your advisor wants a spreadsheet of all 140 references in your thesis, sortable by year, to check coverage. Export your `.bib` from Zotero/Mendeley, convert here, open the CSV in Sheets, sort by year — gaps obvious in seconds.",
+    troubleshooting: [
+      {
+        problem: "Author names show as Garc{\\'i}a or M\\'exico.",
+        solution:
+          "Those are LaTeX accent macros. We decode the common ones (`\\'a` → á, `\\~n` → ñ, etc.) automatically. If a rare macro slips through, it's a less-common command — paste the exact string and we'll add it to the decoder.",
+      },
+      {
+        problem: '"No citations found" error.',
+        solution:
+          "The file may not be BibTeX (a RIS or EndNote export renamed .bib), may use an unusual delimiter, or may be empty. Open it in a text editor and confirm it starts with `@article{`, `@book{`, etc. If you exported from Mendeley, make sure you chose BibTeX, not RIS.",
+      },
+    ],
+  },
+  "bibtex-to-ris": {
+    whyConvert:
+      "RIS is the import format for EndNote, Reference Manager, RefWorks, and Zotero. If a collaborator uses one of those instead of a BibTeX-native tool, RIS is how you hand off your library so they can import it cleanly with authors, journals, and DOIs intact.",
+    example:
+      "You manage references in JabRef (BibTeX). Your co-author uses EndNote and needs your 60 sources. Export `.bib`, convert to RIS here, send it — they do File → Import → Reference Manager (RIS) and your library lands in EndNote with fields mapped.",
+    troubleshooting: [
+      {
+        problem: "Conference papers lost their venue/booktitle in EndNote.",
+        solution:
+          "BibTeX `booktitle` maps to RIS `T2` (secondary title), which our converter emits. If EndNote still shows it blank, check EndNote's RIS import filter maps T2 → 'Secondary Title' for the Conference Paper reference type (Edit → Import Filters).",
+      },
+      {
+        problem: "Accented author names look wrong after import.",
+        solution:
+          "We decode LaTeX accent macros (`\\'a` → á) to real Unicode before writing RIS. If they still look off, the reference manager may be importing the RIS as the wrong character encoding — set the import to UTF-8.",
+      },
+    ],
+  },
 };
 
 export function getExtendedCopy(toolId: string): ExtendedCopy | undefined {
