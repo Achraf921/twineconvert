@@ -1178,6 +1178,56 @@ Message-ID: <msg2@example.com>
 
 Hi Alice, replying back to you.
 `,
+
+  // vCard 3.0, two contacts, with a folded NOTE line (RFC continuation).
+  vcard: `BEGIN:VCARD
+VERSION:3.0
+N:Smith;John;;;
+FN:John Smith
+ORG:Acme Inc
+TITLE:Engineer
+EMAIL;TYPE=INTERNET:john@acme.example
+TEL;TYPE=CELL:+1-555-0101
+URL:https://acme.example/john
+BDAY:1985-04-12
+NOTE:Met at the
+  2024 conference
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Doe;Jane;;;
+FN:Jane Doe
+EMAIL;TYPE=INTERNET:jane@example.org
+TEL;TYPE=WORK:+1-555-0199
+END:VCARD
+`,
+
+  // iCalendar with a timed event and an all-day event.
+  ics: `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Example//EN
+BEGIN:VEVENT
+UID:evt-1@example.com
+DTSTART:20240115T130000Z
+DTEND:20240115T140000Z
+SUMMARY:Project kickoff
+LOCATION:Room 4B
+DESCRIPTION:Quarterly planning\\nbring laptops
+END:VEVENT
+BEGIN:VEVENT
+UID:evt-2@example.com
+DTSTART;VALUE=DATE:20240201
+DTEND;VALUE=DATE:20240202
+SUMMARY:Company holiday
+END:VEVENT
+END:VCALENDAR
+`,
+
+  // RTF with a font table + color table to skip, two paragraphs, a tab,
+  // a unicode escape, and a hex escape.
+  rtf: `{\\rtf1\\ansi\\deff0{\\fonttbl{\\f0 Helvetica;}}{\\colortbl;\\red255\\green0\\blue0;}
+\\f0\\fs24 First paragraph with a\\tab tab.\\par
+Second paragraph caf\\'e9 and \\u233?.\\par}`,
 } as const;
 
 /** Helper: wrap a text fixture as a File (which converters expect). */

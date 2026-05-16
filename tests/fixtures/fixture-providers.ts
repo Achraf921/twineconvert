@@ -199,6 +199,16 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "csv-to-gedcom": { provider: () => text("test.csv", F.genericCsv, "text/csv"), env: "node" },
   "csv-to-adif":   { provider: () => text("test.csv", F.bankCsv, "text/csv"), env: "node" },
   "json-to-csv":   { provider: () => text("test.json", F.jsonArray, "application/json"), env: "node" },
+
+  // Contacts / calendar / RTF
+  "vcf-to-csv":  { provider: () => text("test.vcf", F.vcard, "text/vcard"), env: "node" },
+  "vcf-to-json": { provider: () => text("test.vcf", F.vcard, "text/vcard"), env: "node" },
+  "csv-to-vcf":  { provider: () => text("test.csv", "fullName,firstName,lastName,email,phone\nJohn Smith,John,Smith,john@x.com,+15550101\n", "text/csv"), env: "node" },
+  "ics-to-csv":  { provider: () => text("test.ics", F.ics, "text/calendar"), env: "node" },
+  "ics-to-json": { provider: () => text("test.ics", F.ics, "text/calendar"), env: "node" },
+  "csv-to-ics":  { provider: () => text("test.csv", "summary,start,end,location\nKickoff,2024-01-15 13:00:00,2024-01-15 14:00:00,Room 4B\n", "text/csv"), env: "node" },
+  "rtf-to-txt":  { provider: () => text("test.rtf", F.rtf, "application/rtf"), env: "node" },
+  "rtf-to-html": { provider: () => text("test.rtf", F.rtf, "application/rtf"), env: "node" },
   "json-to-xlsx":  { provider: () => text("test.json", F.jsonArray, "application/json"), env: "node" },
 
   // YAML/TOML cross-conversions with the JSON pivot in both directions

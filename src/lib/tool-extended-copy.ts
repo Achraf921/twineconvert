@@ -2270,6 +2270,152 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       },
     ],
   },
+
+  // ===== Contacts / calendar / RTF batch =====
+  "vcf-to-csv": {
+    whyConvert:
+      "A .vcf is fine for a phone but useless for a mail merge, a CRM import, or just cleaning up duplicates. Converting to CSV gives you one row per contact with name, email, phone, and organization columns you can sort, dedupe, and bulk edit in any spreadsheet.",
+    example:
+      "You exported all 800 contacts from your phone as a single .vcf and need to upload them into a new CRM that only accepts CSV. Convert here, open in Sheets, map the columns, import. No retyping.",
+    troubleshooting: [
+      {
+        problem: "Only one row came out but I had hundreds of contacts.",
+        solution:
+          "Some phones export each contact as a separate file inside a zip rather than one multi-card .vcf. Unzip first and convert the combined .vcf, or drop all the .vcf files as a batch.",
+      },
+      {
+        problem: "A long note got split or looks cut off.",
+        solution:
+          "vCard folds long lines across multiple physical lines. We unfold them per the spec before parsing, so the full note is preserved. If a value still looks wrong, the source file may use a non-standard fold; send a sample.",
+      },
+    ],
+  },
+  "csv-to-vcf": {
+    whyConvert:
+      "Phones and address books import .vcf, not spreadsheets. If your contacts live in a CSV (a CRM export, an event signup sheet, a list someone emailed you), converting to vCard is how you get them into iPhone, Android, or Outlook contacts in one import instead of typing each one.",
+    example:
+      "You collected 120 attendees in a Google Sheet and want them in your phone before the conference. Export the sheet as CSV, convert to .vcf here, AirDrop or email the file to yourself, open it, add all.",
+    troubleshooting: [
+      {
+        problem: "Names or emails are blank in the imported contacts.",
+        solution:
+          "The converter maps columns by header name (fullName, firstName, lastName, email, phone, organization, title, url, birthday, address, note). Rename your CSV headers to match and reconvert.",
+      },
+      {
+        problem: "Phone numbers lost their plus sign or leading zero.",
+        solution:
+          "That happens in the spreadsheet, not here: Excel/Sheets strip leading zeros and treat numbers as math. Format the phone column as plain text before exporting the CSV.",
+      },
+    ],
+  },
+  "vcf-to-json": {
+    whyConvert:
+      "If you are scripting against contacts (a sync job, a dedupe tool, an import pipeline) JSON is far easier to work with than raw vCard line folding and escaping. This gives you a clean array of contact objects with predictable keys.",
+    example:
+      "You are writing a script to merge contacts from three sources. Convert each .vcf export to JSON here, load the arrays, dedupe by email in code instead of parsing vCard by hand.",
+    troubleshooting: [
+      {
+        problem: "I expected nested fields and got flat ones.",
+        solution:
+          "The output is intentionally flat (one object per contact with string fields) so it maps cleanly to a spreadsheet or a simple import. If you need structured N/ADR components, that is a different shape; ask and we can add a variant.",
+      },
+      {
+        problem: '"No contacts found".',
+        solution:
+          "The file is probably not vCard. Open it and confirm it has BEGIN:VCARD / END:VCARD blocks. An exported CSV renamed .vcf will not parse.",
+      },
+    ],
+  },
+  "ics-to-csv": {
+    whyConvert:
+      "An .ics file is built for calendar apps, not for analysis. Converting to CSV gives you one row per event with start, end, summary, and location columns so you can total hours, filter by month, or import into a planner or invoicing tool.",
+    example:
+      "You need to bill a client for every meeting that had their name in the title last quarter. Export your calendar as .ics, convert to CSV, filter the summary column, sum the durations.",
+    troubleshooting: [
+      {
+        problem: "Recurring events only show once.",
+        solution:
+          "We export each VEVENT as written. Recurrence rules (RRULE) are not expanded into individual instances, that needs a full calendar engine. For billing, export the date range you need from your calendar app so instances are already materialized.",
+      },
+      {
+        problem: "Times look shifted.",
+        solution:
+          "iCal stores UTC (the trailing Z). We keep the stored value rather than guessing your timezone. If you need local time, offset in the spreadsheet or export from your calendar in local time.",
+      },
+    ],
+  },
+  "csv-to-ics": {
+    whyConvert:
+      "Bulk-creating calendar events by hand is painful. If your events are in a spreadsheet (a class schedule, a content calendar, a shift roster), converting to .ics lets you import them all into Google Calendar, Apple Calendar, or Outlook in one go.",
+    example:
+      "You have a 40-row content calendar in Sheets. Add summary, start, and end columns, export CSV, convert to .ics here, import into Google Calendar. Forty events created in one step.",
+    troubleshooting: [
+      {
+        problem: '"CSV needs a summary or start column".',
+        solution:
+          "The converter needs at least a 'summary' or 'start' header to build events. Match the headers: summary, start, end, location, description, allDay. Dates as YYYY-MM-DD HH:MM:SS or YYYY-MM-DD.",
+      },
+      {
+        problem: "All-day events show a time.",
+        solution:
+          "Set the allDay column to true and use a date-only start (YYYY-MM-DD). The converter then writes a DATE-valued event the calendar treats as all-day.",
+      },
+    ],
+  },
+  "ics-to-json": {
+    whyConvert:
+      "For any code that consumes calendar data (a dashboard, a sync script, an availability checker) JSON beats parsing iCalendar's folding and escaping yourself. You get a clean array of event objects.",
+    example:
+      "You are building an internal page that shows the team's upcoming events. Convert the shared .ics to JSON here, fetch it, render. No iCal parser dependency.",
+    troubleshooting: [
+      {
+        problem: "Dates are strings, not Date objects.",
+        solution:
+          "JSON has no date type, so dates are normalized strings (YYYY-MM-DD HH:MM:SS). Parse them in your code with whatever timezone handling you need.",
+      },
+      {
+        problem: '"No events found".',
+        solution:
+          "The file has no VEVENT blocks (it may be a to-do or free/busy file, or not iCalendar at all). Confirm it contains BEGIN:VEVENT.",
+      },
+    ],
+  },
+  "rtf-to-txt": {
+    whyConvert:
+      "RTF is a markup stream wrapped around your text. When you just need the words (to paste somewhere plain, to feed a script, to diff two versions) converting to TXT strips all the control codes and gives you the readable content.",
+    example:
+      "A government form arrived as .rtf and you need to paste its text into a web form that mangles rich text. Convert to TXT here, copy the clean text, paste.",
+    troubleshooting: [
+      {
+        problem: "Formatting (bold, tables) is gone.",
+        solution:
+          "That is the point of TXT: it is plain text only. If you need to keep layout, use rtf-to-html instead, which preserves paragraph structure.",
+      },
+      {
+        problem: "Some special characters look wrong.",
+        solution:
+          "We decode the common RTF escapes (\\'hh hex and \\uN unicode). A rare code page or an exotic escape can still slip through; send a sample and we will extend the decoder.",
+      },
+    ],
+  },
+  "rtf-to-html": {
+    whyConvert:
+      "If you want RTF content on a web page or in an email, HTML is the target, not RTF (browsers and mail clients do not render .rtf). This pulls the text into clean paragraph markup you can drop into a CMS or template.",
+    example:
+      "You are migrating old .rtf knowledge-base articles into a web CMS. Convert each to HTML here, paste the body into the editor, done, no manual reformatting.",
+    troubleshooting: [
+      {
+        problem: "I lost fonts and colors.",
+        solution:
+          "This extracts structure and text, not visual styling. Font and color tables are intentionally dropped because inline RTF styling rarely maps cleanly to a site's own CSS. Style it with the destination's stylesheet.",
+      },
+      {
+        problem: "Everything is one big paragraph.",
+        solution:
+          "The source RTF may use line breaks instead of real paragraph breaks (\\par). We split on paragraph breaks; if the original has none, there is no structure to recover. Check the source in an RTF editor.",
+      },
+    ],
+  },
 };
 
 export function getExtendedCopy(toolId: string): ExtendedCopy | undefined {

@@ -154,6 +154,24 @@ export const registry: Record<string, ConverterLoader> = {
     import("./converters/csv-to-json").then((m) => m.default),
   "json-to-csv": () =>
     import("./converters/json-to-csv").then((m) => m.default),
+
+  // Contacts (vCard) + calendar (iCalendar) + RTF text extraction
+  "vcf-to-csv": () =>
+    import("./converters/vcf-to-csv").then((m) => m.default),
+  "csv-to-vcf": () =>
+    import("./converters/csv-to-vcf").then((m) => m.default),
+  "vcf-to-json": () =>
+    import("./converters/vcf-to-json").then((m) => m.default),
+  "ics-to-csv": () =>
+    import("./converters/ics-to-csv").then((m) => m.default),
+  "csv-to-ics": () =>
+    import("./converters/csv-to-ics").then((m) => m.default),
+  "ics-to-json": () =>
+    import("./converters/ics-to-json").then((m) => m.default),
+  "rtf-to-txt": () =>
+    import("./converters/rtf-to-txt").then((m) => m.default),
+  "rtf-to-html": () =>
+    import("./converters/rtf-to-html").then((m) => m.default),
   "json-to-xlsx": () =>
     import("./converters/json-to-xlsx").then((m) => m.default),
 

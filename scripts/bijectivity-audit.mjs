@@ -54,6 +54,8 @@ const FORMATS = {
   // ==== Tabular / data ====
   csv: { kind: "data", lossless: true, family: "data" },
   json: { kind: "data", lossless: true, family: "data" },
+  vcf: { kind: "data", lossless: true, family: "data" }, // contacts; round-trips for exposed fields
+  ics: { kind: "data", lossless: true, family: "data" }, // calendar events; round-trips for exposed fields
   xlsx: { kind: "data", lossless: true, family: "data" }, // tabular data only; if no formulas/styles
   yaml: { kind: "data", lossless: true, family: "data" }, // semantic equivalence with JSON
   yml: { kind: "data", lossless: true, family: "data" },

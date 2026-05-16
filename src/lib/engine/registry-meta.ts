@@ -650,6 +650,112 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "text/csv",
     "maxFileSizeBytes": 52428800
   },
+  "vcf-to-csv": {
+    "label": "VCF → CSV",
+    "accept": [
+      ".vcf",
+      ".vcard"
+    ],
+    "fromMime": [
+      "text/vcard",
+      "text/x-vcard",
+      "text/plain"
+    ],
+    "toMime": "text/csv",
+    "maxFileSizeBytes": 26214400
+  },
+  "csv-to-vcf": {
+    "label": "CSV → VCF",
+    "accept": [
+      ".csv"
+    ],
+    "fromMime": [
+      "text/csv",
+      "application/csv"
+    ],
+    "toMime": "text/vcard",
+    "maxFileSizeBytes": 26214400
+  },
+  "vcf-to-json": {
+    "label": "VCF → JSON",
+    "accept": [
+      ".vcf",
+      ".vcard"
+    ],
+    "fromMime": [
+      "text/vcard",
+      "text/x-vcard",
+      "text/plain"
+    ],
+    "toMime": "application/json",
+    "maxFileSizeBytes": 26214400
+  },
+  "ics-to-csv": {
+    "label": "ICS → CSV",
+    "accept": [
+      ".ics",
+      ".ical",
+      ".ifb"
+    ],
+    "fromMime": [
+      "text/calendar",
+      "text/plain"
+    ],
+    "toMime": "text/csv",
+    "maxFileSizeBytes": 26214400
+  },
+  "csv-to-ics": {
+    "label": "CSV → ICS",
+    "accept": [
+      ".csv"
+    ],
+    "fromMime": [
+      "text/csv",
+      "application/csv"
+    ],
+    "toMime": "text/calendar",
+    "maxFileSizeBytes": 26214400
+  },
+  "ics-to-json": {
+    "label": "ICS → JSON",
+    "accept": [
+      ".ics",
+      ".ical",
+      ".ifb"
+    ],
+    "fromMime": [
+      "text/calendar",
+      "text/plain"
+    ],
+    "toMime": "application/json",
+    "maxFileSizeBytes": 26214400
+  },
+  "rtf-to-txt": {
+    "label": "RTF → TXT",
+    "accept": [
+      ".rtf"
+    ],
+    "fromMime": [
+      "application/rtf",
+      "text/rtf",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 26214400
+  },
+  "rtf-to-html": {
+    "label": "RTF → HTML",
+    "accept": [
+      ".rtf"
+    ],
+    "fromMime": [
+      "application/rtf",
+      "text/rtf",
+      "text/plain"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 26214400
+  },
   "json-to-xlsx": {
     "label": "JSON → XLSX",
     "accept": [
