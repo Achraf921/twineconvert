@@ -981,6 +981,38 @@ describe("regression: PostHog convert_error tools (real-file smoke + integrity)"
     expect(adif).toMatch(/<MODE:3>SSB/i);
   });
 
+  it("csv-to-adif: semicolon-delimited export (Log4OM/EU Excel) converts", async () => {
+    // Regression: hardcoded comma delimiter failed every semicolon export.
+    const csv =
+      "CALL;QSO_DATE;TIME_ON;BAND;MODE\n" +
+      "K1ABC;20260514;1200;20m;SSB\n" +
+      "W2XYZ;20260514;1305;40m;CW\n";
+    const result = await run(
+      "csv-to-adif",
+      fileFromText("log.csv", csv, "text/csv"),
+    );
+    const adif = await result.blob.text();
+    expect((adif.match(/<eor>/gi) ?? []).length).toBe(2);
+    expect(adif).toMatch(/<CALL:5>K1ABC/i);
+    expect(adif).toMatch(/<MODE:2>CW/i);
+  });
+
+  it("csv-to-adif: ragged rows / comma in a comment do not abort the log", async () => {
+    // Regression: FieldMismatch was fatal; real logs have comment commas.
+    const csv =
+      "CALL,QSO_DATE,MODE,COMMENT\n" +
+      'K1ABC,20260514,SSB,"Great signal, 59 both ways"\n' +
+      "W2XYZ,20260514,CW\n"; // short row, no comment
+    const result = await run(
+      "csv-to-adif",
+      fileFromText("log.csv", csv, "text/csv"),
+    );
+    const adif = await result.blob.text();
+    expect((adif.match(/<eor>/gi) ?? []).length).toBe(2);
+    expect(adif).toMatch(/<CALL:5>K1ABC/i);
+    expect(adif).toMatch(/<CALL:5>W2XYZ/i);
+  });
+
   it("csv-to-adif: JSON uploaded as .csv → actionable error", async () => {
     const input = fileFromText("log.csv", '[{"call":"K1ABC"}]', "text/csv");
     await expect(run("csv-to-adif", input)).rejects.toThrow(/looks like JSON|export.*as CSV/i);

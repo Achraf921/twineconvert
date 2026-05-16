@@ -32,16 +32,25 @@ const csvToAdif: Converter = {
           "This is already an ADIF (.adi) file, not a CSV — no conversion needed; it's ready to import into your logging software as-is.",
         );
       }
+      // Ham-logging software (Log4OM, N1MM, DXKeeper) and EU-locale Excel
+      // frequently export semicolon- or tab-delimited "CSV". Hardcoding a
+      // comma made every one of those fail. Sniff the header line for the
+      // delimiter that splits it into the most columns.
+      const headerLine = head.split(/\r?\n/, 1)[0] ?? "";
+      const delimiter = ([",", ";", "\t", "|"] as const)
+        .map((d) => ({ d, n: headerLine.split(d).length }))
+        .sort((a, b) => b.n - a.n)[0].d;
       const parsed = Papa.parse<Record<string, string>>(text, {
         header: true,
         skipEmptyLines: true,
-        delimiter: ",",
+        delimiter,
       });
-      // Papa emits non-fatal warnings (delimiter guesses) AND fatal
-      // structural errors in the same array. Only fail on the fatal kind.
-      const fatal = parsed.errors.find(
-        (e) => e.type === "Quotes" || e.type === "FieldMismatch",
-      );
+      // Only a genuinely unparseable quote state is fatal. FieldMismatch
+      // (ragged rows, a comma inside an unquoted COMMENT/QSL_MSG/NAME
+      // field) is normal in real logs and Papa still yields usable rows,
+      // so we proceed and let the "no log entries" guard catch the case
+      // where nothing usable came through.
+      const fatal = parsed.errors.find((e) => e.type === "Quotes");
       if (fatal) {
         throw new Error(
           `CSV is malformed (${fatal.message}${fatal.row != null ? ` near row ${fatal.row + 2}` : ""}). ` +

@@ -1,0 +1,55 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Carter;Maria;;;
+FN:Maria Carter
+ORG:Brightline Design
+TITLE:Art Director
+EMAIL;TYPE=INTERNET:maria.carter@brightline.example
+TEL;TYPE=CELL:+1-415-555-0142
+TEL;TYPE=WORK:+1-415-555-0188
+URL:https://brightline.example/maria
+ADR:;;240 Market Street;San Francisco;CA;94105;USA
+BDAY:1988-07-19
+NOTE:Met at the 2025 design summit
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Okafor;Daniel;;;
+FN:Daniel Okafor
+ORG:Northwind Logistics
+TITLE:Operations Manager
+EMAIL;TYPE=INTERNET:d.okafor@northwind.example
+TEL;TYPE=CELL:+44 20 7946 0321
+URL:https://northwind.example
+ADR:;;18 Canal Road;Manchester;;M1 2AB;United Kingdom
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Nguyen;Linh;;;
+FN:Linh Nguyen
+ORG:Cedar Health
+TITLE:Nurse Practitioner
+EMAIL;TYPE=INTERNET:linh.nguyen@cedarhealth.example
+TEL;TYPE=CELL:+1-206-555-0173
+BDAY:1991-11-03
+NOTE:Prefers email over calls
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Silva;Rafael;;;
+FN:Rafael Silva
+ORG:Atlas Tutoring
+TITLE:Founder
+EMAIL;TYPE=INTERNET:rafael@atlastutoring.example
+TEL;TYPE=CELL:+55 11 95555 0190
+URL:https://atlastutoring.example/rafael
+ADR:;;Rua das Flores 88;Sao Paulo;SP;01310-100;Brazil
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Brooks;Evelyn;;;
+FN:Evelyn Brooks
+EMAIL;TYPE=INTERNET:evelyn.brooks@example.org
+TEL;TYPE=HOME:+1-312-555-0156
+NOTE:Family contact
+END:VCARD

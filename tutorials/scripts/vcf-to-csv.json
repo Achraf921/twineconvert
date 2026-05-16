@@ -1,0 +1,63 @@
+{
+  "tool": "vcf-to-csv",
+  "title": "Convert VCF to CSV in your browser, free, no upload",
+  "thumbnailHook": "VCF to\nSpreadsheet",
+  "thumbnailEmoji": "📇",
+  "thumbnailBadge": "FREE",
+  "segments": [
+    {
+      "voice": "Got a VCF file of contacts exported from your phone, Google Contacts, or Outlook?",
+      "scene": {
+        "type": "emoji-text",
+        "emoji": "📇",
+        "headline": "A VCF file\nof contacts",
+        "sub": "exported from iPhone, Android, Google, or Outlook"
+      }
+    },
+    {
+      "voice": "But you need it as a spreadsheet to clean it up, remove duplicates, or import it somewhere.",
+      "scene": {
+        "type": "emoji-text",
+        "emoji": "📊",
+        "headline": "You need a\nspreadsheet",
+        "sub": "names, emails, phones in sortable rows"
+      }
+    },
+    {
+      "voice": "Your contacts are private. This converts them without uploading anything.",
+      "scene": {
+        "type": "emoji-text",
+        "emoji": "🔒",
+        "headline": "Your contacts\nstay on your device",
+        "sub": "nothing is sent to a server"
+      }
+    },
+    {
+      "voice": "Free. No signup. Nothing to install.",
+      "scene": {
+        "type": "centered-headline",
+        "headline": "Free. No signup.\nNo install.",
+        "sub": "everything happens in your browser"
+      }
+    },
+    {
+      "voice": "Go to twineconvert dot com slash vcf to csv.",
+      "scene": {
+        "type": "url-card",
+        "url": "twineconvert.com/vcf-to-csv"
+      }
+    },
+    {
+      "voice": "Drop the dot vcf file. Click convert. Open the CSV in Excel or Google Sheets.",
+      "scene": { "type": "demo-recording" }
+    },
+    {
+      "voice": "Link's in the bio, give it a try!",
+      "scene": {
+        "type": "cta",
+        "url": "Link in bio ↓",
+        "tagline": "Have fun converting!"
+      }
+    }
+  ]
+}
