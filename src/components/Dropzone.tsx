@@ -47,6 +47,12 @@ function sizeBucket(bytes: number): "tiny" | "small" | "medium" | "large" {
   return "large";                                       // >100MB
 }
 
+/** Lowercase file extension including the leading dot, or "" if none. */
+function extOf(name: string): string {
+  const i = name.lastIndexOf(".");
+  return i >= 0 ? name.slice(i).toLowerCase() : "";
+}
+
 interface Props {
   /** Converter id from the registry, e.g. "heic-to-jpg". */
   toolId: string;
@@ -159,12 +165,18 @@ export function Dropzone({ toolId, toolLabel, accept }: Props) {
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
       setPhase("error");
-      // Capture error class (not the raw message) so we can spot patterns
-      // without leaking file content into the analytics stream.
+      // Rich error context (no PII: error.message is our own thrown text,
+      // input_ext/mime/size are metadata not contents). Lets the next
+      // fix-loop iteration diagnose bug vs guardrail without seeing files.
       posthog.capture("convert_error", {
         tool: toolId,
         size: sizeBucket(file.size),
         error_class: e instanceof Error ? e.constructor.name : "Unknown",
+        error_message:
+          e instanceof Error ? e.message.slice(0, 200) : String(e).slice(0, 200),
+        input_ext: extOf(file.name),
+        input_mime: file.type || "unknown",
+        input_size_bytes: file.size,
       });
     }
   }, [file, toolId]);
@@ -238,6 +250,10 @@ export function Dropzone({ toolId, toolLabel, accept }: Props) {
               tool: toolId,
               size: sizeBucket(result.file.size),
               error_class: result.errorClass ?? "Unknown",
+              error_message: (result.error ?? "").slice(0, 200),
+              input_ext: extOf(result.file.name),
+              input_mime: result.file.type || "unknown",
+              input_size_bytes: result.file.size,
               batch_size: rows.length,
             });
           }
