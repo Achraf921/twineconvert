@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { ToolPage } from "@/components/ToolPage";
 import { getMeta } from "@/lib/engine/registry-meta";
 import { getProfilesForToolId } from "@/lib/formats";
+import { getToolSeoOverride } from "@/lib/tool-seo-overrides";
 
 /**
  * Per-tool dynamic route. ISR-style: we pre-render the most popular
@@ -61,6 +62,12 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   let description: string;
   let keywords: string[];
 
+  // Per-tool SERP overrides for high-impression / low-CTR pages that
+  // need bespoke titles weaving in the modifier intent we see in GSC
+  // (brand names like "QuickBooks", "Quicken", verbs like "export").
+  // Applied first; falls through to the autogenerator otherwise.
+  const override = getToolSeoOverride(tool);
+
   if (profiles) {
     // Use the per-format primaryUse strings to compose a description that's
     // unique per conversion; near-duplicate descriptions across 192 pages
@@ -97,6 +104,12 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
     title = `${meta.label}, Free, in Your Browser`;
     description = `${meta.label} in Your Browser. Your File Never Uploads. No Signup, No File Size Cap, No Watermark.`;
     keywords = [meta.label.toLowerCase(), "free", "in-browser", "no upload"];
+  }
+
+  if (override) {
+    if (override.title) title = override.title;
+    if (override.description) description = override.description;
+    if (override.keywords) keywords = override.keywords;
   }
 
   return {
