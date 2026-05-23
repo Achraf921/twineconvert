@@ -95,10 +95,10 @@ You will see all of these and they all mean the same format:
 - Newline-delimited JSON
 - JSON stream
 
-The community has not converged on one name. The format spec at <https://jsonlines.org/> uses "JSON Lines." Most tools accept any of the above as input.
+The community has not converged on one name. The format spec at [jsonlines.org](https://jsonlines.org/) uses "JSON Lines." Most tools accept any of the above as input.
 
 ## When to skip JSONL
 
-If your data is small (<100 MB) and your tool reads JSON natively, JSON is simpler. No newline-splitting, no per-line parsing, no edge cases with trailing newlines or BOM markers.
+If your data is small (under 100 MB) and your tool reads JSON natively, JSON is simpler. No newline-splitting, no per-line parsing, no edge cases with trailing newlines or BOM markers.
 
 Use JSONL specifically when you need streaming or you are integrating with a tool that requires it. For "I have some data, where do I put it," regular JSON or CSV is usually the right answer.
