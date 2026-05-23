@@ -186,6 +186,13 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "m4a-to-mp3":  { provider: () => Promise.reject(new Error("m4a fixture pending")), env: "browser" },
   "flac-to-mp3": { provider: () => Promise.reject(new Error("flac fixture pending")), env: "browser" },
   "ogg-to-mp3":  { provider: () => Promise.reject(new Error("ogg fixture pending")), env: "browser" },
+  "aac-to-mp3":  { provider: () => Promise.reject(new Error("aac fixture pending")), env: "browser" },
+  "opus-to-mp3": { provider: () => Promise.reject(new Error("opus fixture pending")), env: "browser" },
+  "wma-to-mp3":  { provider: () => Promise.reject(new Error("wma fixture pending")), env: "browser" },
+  "aiff-to-mp3": { provider: () => Promise.reject(new Error("aiff fixture pending")), env: "browser" },
+  "amr-to-mp3":  { provider: () => Promise.reject(new Error("amr fixture pending")), env: "browser" },
+  "mp3-to-aac":  { provider: () => Promise.reject(new Error("mp3 fixture pending")), env: "browser" },
+  "mp3-to-m4r":  { provider: () => Promise.reject(new Error("mp3 fixture pending")), env: "browser" },
 
   // ===== Office docs (text-based for our fixtures) =====
   "csv-to-xlsx": { provider: () => text("test.csv", F.bankCsv, "text/csv"), env: "node" },

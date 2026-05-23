@@ -556,6 +556,93 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "audio/mpeg",
     "maxFileSizeBytes": 209715200
   },
+  "aac-to-mp3": {
+    "label": "AAC → MP3",
+    "accept": [
+      ".aac"
+    ],
+    "fromMime": [
+      "audio/aac",
+      "audio/x-aac",
+      "audio/mp4"
+    ],
+    "toMime": "audio/mpeg",
+    "maxFileSizeBytes": 209715200
+  },
+  "opus-to-mp3": {
+    "label": "Opus → MP3",
+    "accept": [
+      ".opus"
+    ],
+    "fromMime": [
+      "audio/opus",
+      "audio/ogg"
+    ],
+    "toMime": "audio/mpeg",
+    "maxFileSizeBytes": 209715200
+  },
+  "wma-to-mp3": {
+    "label": "WMA → MP3",
+    "accept": [
+      ".wma"
+    ],
+    "fromMime": [
+      "audio/x-ms-wma",
+      "audio/wma"
+    ],
+    "toMime": "audio/mpeg",
+    "maxFileSizeBytes": 209715200
+  },
+  "aiff-to-mp3": {
+    "label": "AIFF → MP3",
+    "accept": [
+      ".aiff",
+      ".aif",
+      ".aifc"
+    ],
+    "fromMime": [
+      "audio/aiff",
+      "audio/x-aiff"
+    ],
+    "toMime": "audio/mpeg",
+    "maxFileSizeBytes": 524288000
+  },
+  "amr-to-mp3": {
+    "label": "AMR → MP3",
+    "accept": [
+      ".amr"
+    ],
+    "fromMime": [
+      "audio/amr",
+      "audio/3gpp"
+    ],
+    "toMime": "audio/mpeg",
+    "maxFileSizeBytes": 104857600
+  },
+  "mp3-to-aac": {
+    "label": "MP3 → AAC",
+    "accept": [
+      ".mp3"
+    ],
+    "fromMime": [
+      "audio/mpeg",
+      "audio/mp3"
+    ],
+    "toMime": "audio/aac",
+    "maxFileSizeBytes": 209715200
+  },
+  "mp3-to-m4r": {
+    "label": "MP3 → M4R (iPhone Ringtone)",
+    "accept": [
+      ".mp3"
+    ],
+    "fromMime": [
+      "audio/mpeg",
+      "audio/mp3"
+    ],
+    "toMime": "audio/mp4",
+    "maxFileSizeBytes": 104857600
+  },
   "docx-to-html": {
     "label": "DOCX → HTML",
     "accept": [

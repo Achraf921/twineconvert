@@ -2416,6 +2416,99 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       },
     ],
   },
+
+  // ===== Tier 1 audio batch (FFmpeg.wasm) =====
+  "aac-to-mp3": {
+    whyConvert:
+      "Plenty of older car stereos, basic media players, and corporate audio systems still refuse AAC. MP3 is the universally compatible format, so converting once means the file plays everywhere without re-fighting codec support every time.",
+    example:
+      "You exported a podcast episode as .aac and your editing client opens it fine but the guest's car infotainment will not. Convert to MP3, email it back, problem solved.",
+    troubleshooting: [
+      {
+        problem: "Output sounds slightly different from the source.",
+        solution:
+          "Re-encoding lossy audio twice (AAC then MP3) always loses a little quality. The default VBR ~190kbps is transparent for speech and most music. If you need pristine fidelity, keep the original AAC.",
+      },
+    ],
+  },
+  "opus-to-mp3": {
+    whyConvert:
+      "Opus is the format WhatsApp voice notes, Discord recordings, and most browser-captured audio use. It is excellent technically but still does not play in QuickTime, older Windows Media Player, in-car systems, or many podcast tools. MP3 fixes that.",
+    example:
+      "You exported a WhatsApp voice note (.opus) and need to send it to a transcription service that only accepts MP3. Convert here, upload, done.",
+    troubleshooting: [
+      {
+        problem: "File is silent or extremely short after conversion.",
+        solution:
+          "Opus voice notes are often very low bitrate. If the source is corrupt or truncated the MP3 will be too. Re-export from the original app if possible.",
+      },
+    ],
+  },
+  "wma-to-mp3": {
+    whyConvert:
+      "Windows Media Audio shows up in old Windows Movie Maker exports, legacy voice recordings, and 2000s-era podcast archives. Almost nothing outside the Microsoft ecosystem plays it any more, so MP3 is the migration target.",
+    example:
+      "You inherited a folder of family videos with .wma narration tracks from a Windows XP era. Convert each to MP3 so they import cleanly into your modern editor.",
+    troubleshooting: [
+      {
+        problem: "WMA with DRM fails to convert.",
+        solution:
+          "DRM-protected WMA (from Zune Marketplace and old subscription services) cannot be decoded. The file has to be DRM-free first, which is outside what this tool can do.",
+      },
+    ],
+  },
+  "aiff-to-mp3": {
+    whyConvert:
+      "AIFF is Apple's uncompressed audio: huge files coming out of Logic, GarageBand, Pro Tools sessions, or CD rips on a Mac. MP3 at VBR ~190kbps cuts size roughly 10x with no perceptible quality loss, which is what you want for sharing or upload.",
+    example:
+      "Your friend airdropped you a 60 MB AIFF mix. Convert to MP3 here, it becomes ~6 MB, fits in any email or messaging app.",
+    troubleshooting: [
+      {
+        problem: "Multichannel AIFF gets downmixed.",
+        solution:
+          "MP3 supports stereo cleanly but is awkward with 5.1 or higher. The default re-encode preserves stereo. For surround masters, keep the AIFF or convert to a format that supports the channel count.",
+      },
+    ],
+  },
+  "amr-to-mp3": {
+    whyConvert:
+      "AMR is the narrowband telephony codec older Android phones and most basic voice-recorder apps use. It is fine for voice but barely anything else plays it. MP3 is the format you actually want for editing, sharing, or pasting into a transcription tool.",
+    example:
+      "You recorded a meeting with the stock Android Sound Recorder and it saved as .amr. Convert to MP3 here, drop into your transcription service of choice.",
+    troubleshooting: [
+      {
+        problem: "Output sounds tinny.",
+        solution:
+          "AMR is narrowband (sampled around 8 kHz) so the source is already low fidelity. MP3 cannot recover detail that was never there. The conversion preserves what is in the source, no more.",
+      },
+    ],
+  },
+  "mp3-to-aac": {
+    whyConvert:
+      "AAC is the codec Apple devices, modern web players, and HLS or DASH streaming pipelines prefer. At a given perceived quality the file is smaller than MP3, which matters when you are targeting iOS or piping into a video workflow.",
+    example:
+      "You are building an HLS stream and your encoder wants AAC audio. Convert your MP3 master to AAC at 192 kbps here, then mux into the video pipeline.",
+    troubleshooting: [
+      {
+        problem: "Is this lossless?",
+        solution:
+          "No. MP3 to AAC is two lossy codecs in a row, so there is a small quality cost. If you have the original uncompressed source (WAV, AIFF, FLAC), encode AAC directly from that for the best result.",
+      },
+    ],
+  },
+  "mp3-to-m4r": {
+    whyConvert:
+      "iPhones recognise .m4r as a ringtone, but only if the audio is AAC inside a properly muxed iPod-compatible MP4 container and is no longer than ~40 seconds. Renaming an .mp3 to .m4r does not work. This converter does the whole transform correctly.",
+    example:
+      "You want the chorus of a song as your ringtone. Trim the MP3 to 40 seconds or less in any audio tool, convert here, AirDrop the .m4r to your iPhone, set it as your ringtone in Settings.",
+    troubleshooting: [
+      {
+        problem: "iPhone refuses the file as a ringtone.",
+        solution:
+          "iOS requires the file under 40 seconds. The converter caps duration at 40s automatically. If your iPhone still refuses, you may need to use the Files app (not iTunes/Finder transfer) and explicitly add it under Settings, Sounds & Haptics.",
+      },
+    ],
+  },
 };
 
 export function getExtendedCopy(toolId: string): ExtendedCopy | undefined {

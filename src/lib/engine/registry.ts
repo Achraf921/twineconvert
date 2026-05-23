@@ -136,6 +136,20 @@ export const registry: Record<string, ConverterLoader> = {
     import("./converters/flac-to-mp3").then((m) => m.default),
   "ogg-to-mp3": () =>
     import("./converters/ogg-to-mp3").then((m) => m.default),
+  "aac-to-mp3": () =>
+    import("./converters/aac-to-mp3").then((m) => m.default),
+  "opus-to-mp3": () =>
+    import("./converters/opus-to-mp3").then((m) => m.default),
+  "wma-to-mp3": () =>
+    import("./converters/wma-to-mp3").then((m) => m.default),
+  "aiff-to-mp3": () =>
+    import("./converters/aiff-to-mp3").then((m) => m.default),
+  "amr-to-mp3": () =>
+    import("./converters/amr-to-mp3").then((m) => m.default),
+  "mp3-to-aac": () =>
+    import("./converters/mp3-to-aac").then((m) => m.default),
+  "mp3-to-m4r": () =>
+    import("./converters/mp3-to-m4r").then((m) => m.default),
 
   // Office documents, mammoth (DOCX), SheetJS (XLSX), Papa Parse (CSV)
   "docx-to-html": () =>

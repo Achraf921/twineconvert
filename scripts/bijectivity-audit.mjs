@@ -76,6 +76,12 @@ const FORMATS = {
   ogg: { kind: "audio", lossless: false, family: "audio" },
   wav: { kind: "audio", lossless: true, family: "audio" },
   flac: { kind: "audio", lossless: true, family: "audio" },
+  aac: { kind: "audio", lossless: false, family: "audio" },
+  opus: { kind: "audio", lossless: false, family: "audio" },
+  wma: { kind: "audio", lossless: false, family: "audio" },
+  aiff: { kind: "audio", lossless: true, family: "audio" },
+  amr: { kind: "audio", lossless: false, family: "audio" },
+  m4r: { kind: "audio", lossless: false, family: "audio" }, // iPhone ringtone (AAC in MP4)
   // ==== Video ====
   mp4: { kind: "video", lossless: false, family: "video" },
   mov: { kind: "video", lossless: false, family: "video" },

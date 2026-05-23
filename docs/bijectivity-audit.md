@@ -1,16 +1,16 @@
 # Bijectivity Audit
 
-Generated 2026-05-16 from src/lib/engine/converters/.
+Generated 2026-05-23 from src/lib/engine/converters/.
 
 ## Summary
 
 | Classification | Count |
 |---|---:|
-| Total converters | 332 |
+| Total converters | 339 |
 | **Bijective candidates** (lossless, same-kind, both directions exist) | 162 |
 | **Bijective candidates missing reverse converter** | 16 |
 | **Bijective candidates missing round-trip test** | 6 |
-| Lossy encoding (same kind, but lossy format) | 66 |
+| Lossy encoding (same kind, but lossy format) | 73 |
 | Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 35 |
 | Single-action (no reverse possible) | 53 |
 | Unknown formats (need to add to FORMATS table) | 0 |
@@ -59,11 +59,14 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `3dl-to-cube` | bijective-candidate | ✓ | ✓ | both lossless lut formats; should round-trip cleanly |
 | `3mf-to-obj` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
 | `3mf-to-stl` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
+| `aac-to-mp3` | lossy-encoding | ✓ | n/a | aac or mp3 uses lossy encoding |
 | `aco-to-ase` | bijective-candidate | ✓ | ✓ | both lossless palette formats; should round-trip cleanly |
 | `aco-to-gpl` | bijective-candidate | ✓ | ✓ | both lossless palette formats; should round-trip cleanly |
 | `adif-to-cabrillo` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `adif-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `adif-to-kml` | bijective-candidate | (`kml-to-adif` missing) | n/a | both lossless data formats; should round-trip cleanly |
+| `aiff-to-mp3` | lossy-encoding | (`mp3-to-aiff` missing) | n/a | aiff or mp3 uses lossy encoding |
+| `amr-to-mp3` | lossy-encoding | (`mp3-to-amr` missing) | n/a | amr or mp3 uses lossy encoding |
 | `apple-health-heart-rate-to-csv` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
 | `apple-health-sleep-to-csv` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
 | `apple-health-steps-to-csv` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
@@ -265,8 +268,10 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `midi-to-musicxml` | lossy-encoding | ✓ | n/a | midi or musicxml uses lossy encoding |
 | `mkv-to-mp4` | lossy-encoding | ✓ | ✓ | mkv or mp4 uses lossy encoding |
 | `mov-to-mp4` | lossy-encoding | ✓ | ✓ | mov or mp4 uses lossy encoding |
+| `mp3-to-aac` | lossy-encoding | ✓ | n/a | mp3 or aac uses lossy encoding |
 | `mp3-to-flac` | lossy-encoding | ✓ | ✓ | mp3 or flac uses lossy encoding |
 | `mp3-to-m4a` | lossy-encoding | ✓ | ✓ | mp3 or m4a uses lossy encoding |
+| `mp3-to-m4r` | lossy-encoding | (`m4r-to-mp3` missing) | n/a | mp3 or m4r uses lossy encoding |
 | `mp3-to-ogg` | lossy-encoding | ✓ | ✓ | mp3 or ogg uses lossy encoding |
 | `mp3-to-wav` | lossy-encoding | ✓ | ✓ | mp3 or wav uses lossy encoding |
 | `mp4-to-avi` | lossy-encoding | ✓ | ✓ | mp4 or avi uses lossy encoding |
@@ -292,6 +297,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `oklch-to-hex` | cross-kind | ✓ | ✓ | color -> palette: cross-domain, inherently lossy |
 | `oklch-to-rgb` | lossy-encoding | ✓ | n/a | oklch or rgb uses lossy encoding |
 | `opt-to-csv` | bijective-candidate | (`csv-to-opt` missing) | ✓ | both lossless data formats; should round-trip cleanly |
+| `opus-to-mp3` | lossy-encoding | (`mp3-to-opus` missing) | n/a | opus or mp3 uses lossy encoding |
 | `otf-to-ttf` | bijective-candidate | (`ttf-to-otf` missing) | n/a | both lossless font formats; should round-trip cleanly |
 | `pacer-docket-to-csv` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
 | `pages-to-pdf` | lossy-encoding | (`pdf-to-pages` missing) | ✓ | pages or pdf uses lossy encoding |
@@ -377,6 +383,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `whatsapp-chat-to-html` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
 | `whatsapp-chat-to-json` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
 | `whatsapp-chat-to-pdf` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
+| `wma-to-mp3` | lossy-encoding | (`mp3-to-wma` missing) | n/a | wma or mp3 uses lossy encoding |
 | `woff-to-ttf` | bijective-candidate | ✓ | ✗ MISSING | both lossless font formats; should round-trip cleanly |
 | `xlsx-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `xlsx-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
