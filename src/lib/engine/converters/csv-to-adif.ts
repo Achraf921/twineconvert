@@ -15,7 +15,6 @@ const csvToAdif: Converter = {
     opts?.onProgress?.(0.1);
     let adif: string;
     try {
-      const Papa = (await import("papaparse")).default;
       const text = await input.text();
       // A non-CSV file renamed .csv (a JSON dump, an .adi file, binary)
       // is the common misuse caught via PostHog convert_error. Detect
@@ -32,32 +31,9 @@ const csvToAdif: Converter = {
           "This is already an ADIF (.adi) file, not a CSV — no conversion needed; it's ready to import into your logging software as-is.",
         );
       }
-      // Ham-logging software (Log4OM, N1MM, DXKeeper) and EU-locale Excel
-      // frequently export semicolon- or tab-delimited "CSV". Hardcoding a
-      // comma made every one of those fail. Sniff the header line for the
-      // delimiter that splits it into the most columns.
-      const headerLine = head.split(/\r?\n/, 1)[0] ?? "";
-      const delimiter = ([",", ";", "\t", "|"] as const)
-        .map((d) => ({ d, n: headerLine.split(d).length }))
-        .sort((a, b) => b.n - a.n)[0].d;
-      const parsed = Papa.parse<Record<string, string>>(text, {
-        header: true,
-        skipEmptyLines: true,
-        delimiter,
-      });
-      // Only a genuinely unparseable quote state is fatal. FieldMismatch
-      // (ragged rows, a comma inside an unquoted COMMENT/QSL_MSG/NAME
-      // field) is normal in real logs and Papa still yields usable rows,
-      // so we proceed and let the "no log entries" guard catch the case
-      // where nothing usable came through.
-      const fatal = parsed.errors.find((e) => e.type === "Quotes");
-      if (fatal) {
-        throw new Error(
-          `CSV is malformed (${fatal.message}${fatal.row != null ? ` near row ${fatal.row + 2}` : ""}). ` +
-            "Re-export from your logging software, or open in a spreadsheet and re-save as CSV.",
-        );
-      }
-      const rows = parsed.data.filter(
+      const { parseCsvFlex } = await import("../util/csv-parse-flex");
+      const parsed = parseCsvFlex<Record<string, string>>(text);
+      const rows = parsed.rows.filter(
         (r): r is Record<string, string> =>
           typeof r === "object" && r !== null && !Array.isArray(r),
       );

@@ -27,13 +27,25 @@ const fenToPgn: Converter = {
         .map((l) => l.trim())
         .filter((l) => l.length > 0 && !l.startsWith("#"));
       if (lines.length === 0) throw new Error("No FEN found in input");
+      // Per-line tolerance: a single garbage line in a multi-FEN file
+      // used to fail the whole conversion. Skip invalid lines and only
+      // error if NO line produced a valid PGN.
       const games: string[] = [];
+      const skipped: string[] = [];
       for (const fen of lines) {
-        // chess.js throws on an invalid FEN — surfaces as a clear error
-        // instead of writing a broken PGN.
-        const chess = new Chess(fen);
-        chess.header("SetUp", "1", "FEN", fen);
-        games.push(chess.pgn());
+        try {
+          const chess = new Chess(fen);
+          chess.header("SetUp", "1", "FEN", fen);
+          games.push(chess.pgn());
+        } catch {
+          skipped.push(fen);
+        }
+      }
+      if (games.length === 0) {
+        throw new Error(
+          `No valid FEN found. Skipped ${skipped.length} line${skipped.length === 1 ? "" : "s"}. ` +
+            "A FEN looks like 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1' — eight ranks separated by slashes.",
+        );
       }
       pgn = games.join("\n\n") + "\n";
     } catch (err) {

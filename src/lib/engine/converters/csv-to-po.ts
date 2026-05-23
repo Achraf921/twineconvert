@@ -1,8 +1,8 @@
-import Papa from "papaparse";
 import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
 import { buildPo, type PoEntry } from "../util/po";
+import { parseCsvFlex } from "../util/csv-parse-flex";
 
 /**
  * CSV -> PO. Inverse of po-to-csv. Expects the columns that po-to-csv
@@ -23,20 +23,11 @@ const csvToPo: Converter = {
     let out: string;
     try {
       const text = await input.text();
-      const parsed = Papa.parse<Record<string, string>>(text, {
-        header: true,
-        skipEmptyLines: true,
-        delimiter: ",",
-      });
-      if (parsed.errors.length) {
-        // Papa flags non-fatal warnings too. Surface the first real error.
-        const fatal = parsed.errors.find((e) => e.type === "Quotes" || e.type === "FieldMismatch");
-        if (fatal) throw new Error(`CSV parse error: ${fatal.message}`);
-      }
-      if (!parsed.data.length) {
+      const { rows } = parseCsvFlex<Record<string, string>>(text);
+      if (!rows.length) {
         throw new Error("CSV has no rows. Expected at least one row with an `msgid` column.");
       }
-      const entries: PoEntry[] = parsed.data.map((row, i) => {
+      const entries: PoEntry[] = rows.map((row, i) => {
         const msgid = row.msgid ?? row.Msgid ?? "";
         if (!msgid && (i > 0 || Object.keys(row).length > 1)) {
           // Allow a single empty-msgid row as the header entry (canonical PO).

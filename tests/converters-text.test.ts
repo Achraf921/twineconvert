@@ -997,6 +997,29 @@ describe("regression: PostHog convert_error tools (real-file smoke + integrity)"
     expect(adif).toMatch(/<MODE:2>CW/i);
   });
 
+  it("csv-to-po: semicolon-delimited CSV (EU-locale Excel) converts", async () => {
+    const csv =
+      "msgid;msgstr\n" +
+      "Hello;Bonjour\n" +
+      "Goodbye;Au revoir\n";
+    const result = await run("csv-to-po", fileFromText("strings.csv", csv, "text/csv"));
+    const po = await result.blob.text();
+    expect(po).toMatch(/msgid\s+"Hello"/);
+    expect(po).toMatch(/msgstr\s+"Bonjour"/);
+    expect(po).toMatch(/msgid\s+"Goodbye"/);
+  });
+
+  it("csv-to-dat: tab-delimited CSV (TSV-as-CSV) converts", async () => {
+    const csv = "ID\tName\n1\tFoo\n2\tBar\n";
+    const result = await run("csv-to-dat", fileFromText("rows.csv", csv, "text/csv"));
+    const dat = await result.blob.text();
+    // Concordance DAT wraps cells in U+00FE qualifiers; we just want the
+    // values to have survived the parse.
+    expect(dat).toContain("Foo");
+    expect(dat).toContain("Bar");
+    expect(dat).toContain("Name");
+  });
+
   it("csv-to-adif: ragged rows / comma in a comment do not abort the log", async () => {
     // Regression: FieldMismatch was fatal; real logs have comment commas.
     const csv =

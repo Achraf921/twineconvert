@@ -148,4 +148,25 @@ describe("demand-batch: fen-to-pgn", () => {
     const input = fileFromText("bad.fen", "not a valid fen string", "application/x-fen");
     await expect(run("fen-to-pgn", input)).rejects.toThrow();
   });
+
+  it("a single garbage line in a multi-FEN file does not abort the rest", async () => {
+    const mixed = [
+      "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+      "this line is garbage",
+      "r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 2 3",
+    ].join("\n");
+    const result = await run(
+      "fen-to-pgn",
+      fileFromText("mixed.fen", mixed, "application/x-fen"),
+    );
+    const pgn = await result.blob.text();
+    const { Chess } = await import("chess.js");
+    const games = pgn.split(/\n\s*\n(?=\[)/).map((g) => g.trim()).filter(Boolean);
+    expect(games).toHaveLength(2); // two valid FENs survived, garbage skipped
+    for (const g of games) {
+      const c = new Chess();
+      c.loadPgn(g);
+      expect(c.fen()).toMatch(/^[rnbqkpRNBQKP1-8]+\/.+\s[wb]\s/);
+    }
+  });
 });

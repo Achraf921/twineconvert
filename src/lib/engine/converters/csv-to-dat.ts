@@ -23,22 +23,16 @@ const csvToDat: Converter = {
     opts?.onProgress?.(0.1);
     let dat: string;
     try {
-      const Papa = (await import("papaparse")).default;
-      // Explicit comma delimiter — Papa's auto-detect emits a non-fatal
-      // "Unable to auto-detect" warning that we'd otherwise mistakenly
-      // throw on. CSV input from any of our other converters always uses
-      // commas; setting it explicitly just suppresses the false warning.
-      const parsed = Papa.parse<string[]>(await input.text(), {
-        skipEmptyLines: true,
-        delimiter: ",",
+      // Sniff the delimiter and tolerate FieldMismatch (ragged rows are
+      // normal in real exports). Only an unparseable quote state is fatal.
+      const { parseCsvFlex } = await import("../util/csv-parse-flex");
+      const { rows: aoa } = parseCsvFlex<string[]>(await input.text(), {
+        header: false,
       });
-      if (parsed.errors.length > 0) {
-        throw new Error(`CSV parse error: ${parsed.errors[0].message}`);
-      }
-      if (parsed.data.length < 2) {
+      if (aoa.length < 2) {
         throw new Error("CSV must have a header row and at least one data row");
       }
-      dat = buildDat({ headers: parsed.data[0], rows: parsed.data.slice(1) });
+      dat = buildDat({ headers: aoa[0], rows: aoa.slice(1) });
     } catch (err) {
       throw new ConvertFailedError(
         err instanceof Error ? err.message : "Could not convert CSV to DAT",
