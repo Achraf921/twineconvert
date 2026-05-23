@@ -40,7 +40,9 @@ export function parseCube(text: string): Lut3D {
   let domainMax: [number, number, number] | undefined;
   const triples: number[] = [];
 
-  for (const rawLine of text.split(/\r?\n/)) {
+  // Strip leading BOM. Resolve / DaVinci sometimes save with UTF-8 BOM
+  // and the first TITLE/LUT_3D_SIZE line then fails the startsWith check.
+  for (const rawLine of text.replace(/^﻿/, "").split(/\r?\n/)) {
     const line = rawLine.trim();
     if (!line || line.startsWith("#")) continue;
     if (line.startsWith("TITLE")) {
@@ -101,7 +103,8 @@ export function buildCube(lut: Lut3D): string {
 export function parse3dl(text: string): Lut3D {
   let coords: number[] | null = null;
   const triples: number[] = [];
-  const lines = text.split(/\r?\n/);
+  // Strip leading BOM (Windows-saved Autodesk Lustre exports carry one).
+  const lines = text.replace(/^﻿/, "").split(/\r?\n/);
 
   for (const rawLine of lines) {
     const line = rawLine.trim();

@@ -174,7 +174,12 @@ export function parseRis(text: string): Citation[] {
     lastTag = null;
   };
 
-  for (const rawLine of text.split(/\r?\n/)) {
+  // Strip the UTF-8 BOM real Windows-exported PubMed and Mendeley files
+  // carry. Without this the very first line is "﻿PMID- ..." which
+  // fails the tag regex, no record ever starts, the parser returns empty,
+  // and the converter throws "No references found in NBIB file" even
+  // though the file is perfectly valid.
+  for (const rawLine of text.replace(/^﻿/, "").split(/\r?\n/)) {
     // Blank lines terminate records in NBIB; in RIS they're harmless
     // between/inside records and the ER tag is authoritative anyway.
     if (rawLine.trim() === "") {

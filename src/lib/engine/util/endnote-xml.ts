@@ -59,7 +59,11 @@ function getAuthors(record: Element): string[] | undefined {
 
 export function parseEndnoteXml(text: string): Citation[] {
   if (typeof DOMParser === "undefined") throw new Error("DOMParser unavailable");
-  const doc = new DOMParser().parseFromString(text, "application/xml");
+  // Real EndNote exports from Windows often carry a UTF-8 BOM. Without
+  // stripping it the XML parser fails on the leading character before
+  // even seeing the <xml> root, throwing "EndNote XML parse failed"
+  // on a perfectly valid file.
+  const doc = new DOMParser().parseFromString(text.replace(/^﻿/, ""), "application/xml");
   const parseError = doc.getElementsByTagName("parsererror")[0];
   if (parseError) throw new Error(`EndNote XML parse failed: ${parseError.textContent?.slice(0, 120)}`);
 
