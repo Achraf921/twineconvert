@@ -35,6 +35,7 @@ export interface Lut3D {
 
 export function parseCube(text: string): Lut3D {
   let size = 0;
+  let oneDSize = 0;
   let title: string | undefined;
   let domainMin: [number, number, number] | undefined;
   let domainMax: [number, number, number] | undefined;
@@ -53,6 +54,10 @@ export function parseCube(text: string): Lut3D {
       size = parseInt(line.split(/\s+/)[1], 10);
       continue;
     }
+    if (line.startsWith("LUT_1D_SIZE")) {
+      oneDSize = parseInt(line.split(/\s+/)[1], 10);
+      continue;
+    }
     if (line.startsWith("DOMAIN_MIN")) {
       const parts = line.split(/\s+/).slice(1).map(parseFloat);
       domainMin = [parts[0], parts[1], parts[2]];
@@ -63,15 +68,32 @@ export function parseCube(text: string): Lut3D {
       domainMax = [parts[0], parts[1], parts[2]];
       continue;
     }
-    // 1D LUT or other directives we don't care about, skip non-numeric lines.
     const parts = line.split(/\s+/);
     if (parts.length === 3 && !isNaN(parseFloat(parts[0]))) {
       triples.push(parseFloat(parts[0]), parseFloat(parts[1]), parseFloat(parts[2]));
     }
   }
 
-  if (size === 0 || triples.length !== size * size * size * 3) {
-    throw new Error(`CUBE LUT malformed: declared size ${size} but got ${triples.length / 3} entries`);
+  // 1D LUT declared and matches the data: tell the caller cleanly that
+  // this is a 1D file, which the 3D writers cannot represent.
+  if (oneDSize > 0 && size === 0) {
+    throw new Error(
+      `This CUBE file is a 1D LUT (LUT_1D_SIZE ${oneDSize}). The 3DL/Resolve targets require a 3D LUT. Re-export as a 3D LUT from your color tool.`,
+    );
+  }
+
+  if (size === 0) {
+    throw new Error(
+      "CUBE LUT is missing the LUT_3D_SIZE header. The file does not look like a valid 3D CUBE LUT.",
+    );
+  }
+
+  const expected = size * size * size;
+  const got = Math.floor(triples.length / 3);
+  if (triples.length !== expected * 3) {
+    throw new Error(
+      `CUBE LUT incomplete: header declares LUT_3D_SIZE ${size} (expects ${expected} RGB triples) but the file has ${got}. The file is likely truncated or vendor-malformed; re-export from your color tool.`,
+    );
   }
 
   return { size, data: Float32Array.from(triples), title, domainMin, domainMax };

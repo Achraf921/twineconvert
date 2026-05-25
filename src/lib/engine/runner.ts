@@ -8,6 +8,41 @@ import {
   UnsupportedInputError,
 } from "./types";
 import { ConverterId, loadConverter } from "./registry";
+import { REGISTRY_META } from "./registry-meta";
+
+/**
+ * When a user uploads a file whose extension does not match what the
+ * current converter accepts, scan the meta catalog for another tool
+ * that DOES accept that extension and prefer the "reverse direction"
+ * if the current tool is `X-to-Y` and we find `Y-to-...`. Returns a
+ * short suggestion suitable for appending to the error message, or
+ * null when nothing reasonable matches.
+ */
+function suggestToolForExt(currentTool: string, ext: string): string | null {
+  const lower = ext.toLowerCase();
+  const matches: string[] = [];
+  for (const [id, meta] of Object.entries(REGISTRY_META)) {
+    if (id === currentTool) continue;
+    if (meta.accept.some((a) => a.toLowerCase() === lower)) matches.push(id);
+  }
+  if (matches.length === 0) return null;
+  const [, to] = currentTool.split("-to-");
+  // Best match: the user wanted output Y, just dropped wrong input. So
+  // for current "X-to-Y" + dropped ".Z" prefer "Z-to-Y" (same output).
+  if (to) {
+    const sameOutput = matches.find((id) => id.endsWith(`-to-${to}`));
+    if (sameOutput) return `the ${sameOutput} tool`;
+  }
+  // Otherwise the reverse-direction tool (current X-to-Y + dropped .Y
+  // → suggest Y-to-X) is the next-best inference.
+  const [from] = currentTool.split("-to-");
+  if (from && to) {
+    const reverse = `${to}-to-${from}`;
+    if (matches.includes(reverse)) return `the ${reverse} tool`;
+  }
+  // Otherwise fall back to whatever was found first.
+  return `the ${matches[0]} tool`;
+}
 
 /**
  * The runner is the only public entry point external code uses to convert
@@ -50,14 +85,31 @@ export async function run(
   const matchesExt = converter.accept.some(
     (ext) => ext === "*" || lowerName.endsWith(ext.toLowerCase()),
   );
-  const matchesMime =
-    !input.type ||
-    converter.fromMime.includes("*/*") ||
-    converter.fromMime.includes(input.type.toLowerCase());
+  // application/octet-stream is the generic fallback browsers report
+  // for any extension the OS has no MIME for (.jef, .pes, .nbib etc.).
+  // It carries zero signal, so it must NOT be treated as a positive
+  // mime match that overrides an explicit extension mismatch — that
+  // bypass was masking the wrong-direction-misuse case in production.
+  const lowerMime = input.type?.toLowerCase() ?? "";
+  const isGenericMime = !lowerMime || lowerMime === "application/octet-stream";
+  const matchesMime = isGenericMime
+    ? false
+    : converter.fromMime.includes("*/*") ||
+      converter.fromMime.includes(lowerMime);
 
   if (!matchesExt && !matchesMime) {
+    // Wrong-direction misuse is the dominant cause of these errors per
+    // PostHog (e.g. a user drops .ris on bibtex-to-csv when they meant
+    // ris-to-csv, or .jef on pes-to-jef when they meant jef-to-pes).
+    // Look up which OTHER tool actually accepts this extension and tell
+    // the user about it instead of just rejecting them.
+    const ext = lowerName.includes(".")
+      ? `.${lowerName.split(".").pop()}`
+      : "";
+    const suggestion = ext ? suggestToolForExt(converterId, ext) : null;
+    const base = `${converter.label} expects ${converter.accept.join(" / ")} but got "${input.name}"`;
     throw new UnsupportedInputError(
-      `${converter.label} expects ${converter.accept.join(" / ")} but got "${input.name}"`,
+      suggestion ? `${base}. Try ${suggestion} instead.` : base,
     );
   }
 
