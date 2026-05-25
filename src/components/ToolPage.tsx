@@ -17,7 +17,8 @@ import { HeroFlow } from "./HeroFlow";
 import type { ConverterMeta } from "@/lib/engine/registry-meta";
 import { listToolIds } from "@/lib/engine/registry-meta";
 import { getProfilesForToolId, type FormatProfile } from "@/lib/formats";
-import { getOtherInputsForOutput, getOtherOutputsForInput } from "@/lib/related-tools";
+import { getOtherInputsForOutput, getOtherOutputsForInput, getRelatedTools } from "@/lib/related-tools";
+import { getMeta } from "@/lib/engine/registry-meta";
 import { buildFormatGraph } from "@/lib/dropzone-routes";
 import { getExtendedCopy } from "@/lib/tool-extended-copy";
 import { EmbedSnippet } from "./EmbedSnippet";
@@ -37,6 +38,13 @@ export function ToolPage({ toolId, meta }: Props) {
   const outputProfile = profiles?.output;
   const otherInputs = getOtherInputsForOutput(toolId, 12);
   const otherOutputs = getOtherOutputsForInput(toolId, 12);
+  // Hand-curated cross-family recommendations (e.g. on /qbo-to-csv we
+  // surface /qfx-to-csv / /ofx-to-csv even though the auto-grid would
+  // not link them). Only render the section when actually curated, so
+  // 320+ non-curated pages do not show an empty heading.
+  const curatedRelated = getRelatedTools(toolId)
+    .map((id) => ({ id, label: getMeta(id)?.label }))
+    .filter((r): r is { id: string; label: string } => typeof r.label === "string");
   const extended = getExtendedCopy(toolId);
 
   return (
@@ -187,6 +195,16 @@ export function ToolPage({ toolId, meta }: Props) {
               <FormatCard profile={outputProfile} slug={toolId.split("-to-")[1]} />
             )}
           </div>
+        </section>
+      )}
+
+      {curatedRelated.length > 0 && (
+        <section className="mx-auto max-w-4xl px-6 py-12">
+          <SectionLabel>You may also need</SectionLabel>
+          <h2 className="text-2xl font-bold mt-2 mb-6">
+            More tools people use alongside this one
+          </h2>
+          <CrossLinkGrid items={curatedRelated} />
         </section>
       )}
 
