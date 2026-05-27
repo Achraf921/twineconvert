@@ -6,12 +6,12 @@ Generated 2026-05-27 from src/lib/engine/converters/.
 
 | Classification | Count |
 |---|---:|
-| Total converters | 343 |
+| Total converters | 350 |
 | **Bijective candidates** (lossless, same-kind, both directions exist) | 162 |
 | **Bijective candidates missing reverse converter** | 19 |
 | **Bijective candidates missing round-trip test** | 6 |
-| Lossy encoding (same kind, but lossy format) | 73 |
-| Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 36 |
+| Lossy encoding (same kind, but lossy format) | 79 |
+| Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 37 |
 | Single-action (no reverse possible) | 53 |
 | Unknown formats (need to add to FORMATS table) | 0 |
 | Compound id (irregular pattern) | 0 |
@@ -60,6 +60,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 |---|---|---|---|---|
 | `3dl-to-csp` | bijective-candidate | ✓ | ✓ | both lossless lut formats; should round-trip cleanly |
 | `3dl-to-cube` | bijective-candidate | ✓ | ✓ | both lossless lut formats; should round-trip cleanly |
+| `3gp-to-mp4` | lossy-encoding | (`mp4-to-3gp` missing) | n/a | 3gp or mp4 uses lossy encoding |
 | `3mf-to-obj` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
 | `3mf-to-stl` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
 | `aac-to-mp3` | lossy-encoding | ✓ | n/a | aac or mp3 uses lossy encoding |
@@ -174,6 +175,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `file-to-sha256` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
 | `file-to-sha512` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
 | `flac-to-mp3` | lossy-encoding | ✓ | ✓ | flac or mp3 uses lossy encoding |
+| `flv-to-mp4` | lossy-encoding | (`mp4-to-flv` missing) | n/a | flv or mp4 uses lossy encoding |
 | `gedcom-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `gedcom-to-html` | cross-kind | (`html-to-gedcom` missing) | n/a | data -> doc: cross-domain, inherently lossy |
 | `gedcom-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
@@ -264,6 +266,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `kml-to-gpx` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `lab-to-hex` | cross-kind | ✓ | ✓ | color -> palette: cross-domain, inherently lossy |
 | `m4a-to-mp3` | lossy-encoding | ✓ | ✓ | m4a or mp3 uses lossy encoding |
+| `m4v-to-mp4` | lossy-encoding | (`mp4-to-m4v` missing) | ✓ | m4v or mp4 uses lossy encoding |
 | `markdown-table-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `markdown-to-html` | lossy-encoding | ✓ | n/a | markdown or html uses lossy encoding |
 | `markdown-to-pdf` | lossy-encoding | (`pdf-to-markdown` missing) | n/a | markdown or pdf uses lossy encoding |
@@ -272,6 +275,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `mbox-to-pdf` | cross-kind | (`pdf-to-mbox` missing) | ✓ | data -> doc: cross-domain, inherently lossy |
 | `midi-to-musicxml` | lossy-encoding | ✓ | n/a | midi or musicxml uses lossy encoding |
 | `mkv-to-mp4` | lossy-encoding | ✓ | ✓ | mkv or mp4 uses lossy encoding |
+| `mov-to-gif` | cross-kind | (`gif-to-mov` missing) | ✓ | video -> raster: cross-domain, inherently lossy |
 | `mov-to-mp4` | lossy-encoding | ✓ | ✓ | mov or mp4 uses lossy encoding |
 | `mp3-to-aac` | lossy-encoding | ✓ | n/a | mp3 or aac uses lossy encoding |
 | `mp3-to-flac` | lossy-encoding | ✓ | ✓ | mp3 or flac uses lossy encoding |
@@ -284,6 +288,8 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `mp4-to-mkv` | lossy-encoding | ✓ | ✓ | mp4 or mkv uses lossy encoding |
 | `mp4-to-mov` | lossy-encoding | ✓ | ✓ | mp4 or mov uses lossy encoding |
 | `mp4-to-mp3` | cross-kind | (`mp3-to-mp4` missing) | ✓ | video -> audio: cross-domain, inherently lossy |
+| `mp4-to-webm` | lossy-encoding | ✓ | ✓ | mp4 or webm uses lossy encoding |
+| `mts-to-mp4` | lossy-encoding | (`mp4-to-mts` missing) | n/a | mts or mp4 uses lossy encoding |
 | `musicxml-to-midi` | lossy-encoding | ✓ | n/a | musicxml or midi uses lossy encoding |
 | `musicxml-to-mxl` | bijective-candidate | ✓ | ✓ | both lossless notation formats; should round-trip cleanly |
 | `mxl-to-musicxml` | bijective-candidate | ✓ | ✓ | both lossless notation formats; should round-trip cleanly |
@@ -380,7 +386,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `vtt-to-ass` | lossy-encoding | ✓ | ✓ | vtt or ass uses lossy encoding |
 | `vtt-to-srt` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `wav-to-mp3` | lossy-encoding | ✓ | ✓ | wav or mp3 uses lossy encoding |
-| `webm-to-mp4` | lossy-encoding | (`mp4-to-webm` missing) | ✓ | webm or mp4 uses lossy encoding |
+| `webm-to-mp4` | lossy-encoding | ✓ | ✓ | webm or mp4 uses lossy encoding |
 | `webp-to-avif` | lossy-encoding | ✓ | ✓ | webp or avif uses lossy encoding |
 | `webp-to-jpg` | lossy-encoding | ✓ | ✓ | webp or jpg uses lossy encoding |
 | `webp-to-pdf` | cross-kind | (`pdf-to-webp` missing) | ✓ | raster -> doc: cross-domain, inherently lossy |
@@ -390,6 +396,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `whatsapp-chat-to-json` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
 | `whatsapp-chat-to-pdf` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
 | `wma-to-mp3` | lossy-encoding | (`mp3-to-wma` missing) | n/a | wma or mp3 uses lossy encoding |
+| `wmv-to-mp4` | lossy-encoding | (`mp4-to-wmv` missing) | n/a | wmv or mp4 uses lossy encoding |
 | `woff-to-ttf` | bijective-candidate | ✓ | ✗ MISSING | both lossless font formats; should round-trip cleanly |
 | `xlsx-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `xlsx-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |

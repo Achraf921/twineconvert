@@ -87,6 +87,11 @@ const FORMATS = {
   mov: { kind: "video", lossless: false, family: "video" },
   webm: { kind: "video", lossless: false, family: "video" },
   avi: { kind: "video", lossless: false, family: "video" },
+  m4v: { kind: "video", lossless: false, family: "video" }, // Apple MP4 variant
+  "3gp": { kind: "video", lossless: false, family: "video" }, // mobile container
+  flv: { kind: "video", lossless: false, family: "video" }, // legacy Flash Video
+  wmv: { kind: "video", lossless: false, family: "video" }, // Windows Media Video
+  mts: { kind: "video", lossless: false, family: "video" }, // AVCHD camcorder
   mkv: { kind: "video", lossless: false, family: "video" },
   // ==== Ebook ====
   epub: { kind: "doc", lossless: false, family: "ebook" },

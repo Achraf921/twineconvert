@@ -494,6 +494,94 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "video/mp4",
     "maxFileSizeBytes": 524288000
   },
+  "m4v-to-mp4": {
+    "label": "M4V → MP4",
+    "accept": [
+      ".m4v"
+    ],
+    "fromMime": [
+      "video/x-m4v",
+      "video/mp4"
+    ],
+    "toMime": "video/mp4",
+    "maxFileSizeBytes": 524288000
+  },
+  "3gp-to-mp4": {
+    "label": "3GP → MP4",
+    "accept": [
+      ".3gp",
+      ".3gpp",
+      ".3g2"
+    ],
+    "fromMime": [
+      "video/3gpp",
+      "video/3gpp2"
+    ],
+    "toMime": "video/mp4",
+    "maxFileSizeBytes": 314572800
+  },
+  "flv-to-mp4": {
+    "label": "FLV → MP4",
+    "accept": [
+      ".flv"
+    ],
+    "fromMime": [
+      "video/x-flv",
+      "video/flv"
+    ],
+    "toMime": "video/mp4",
+    "maxFileSizeBytes": 524288000
+  },
+  "wmv-to-mp4": {
+    "label": "WMV → MP4",
+    "accept": [
+      ".wmv"
+    ],
+    "fromMime": [
+      "video/x-ms-wmv",
+      "video/wmv"
+    ],
+    "toMime": "video/mp4",
+    "maxFileSizeBytes": 524288000
+  },
+  "mts-to-mp4": {
+    "label": "MTS → MP4",
+    "accept": [
+      ".mts",
+      ".m2ts",
+      ".ts"
+    ],
+    "fromMime": [
+      "video/mp2t",
+      "video/MP2T"
+    ],
+    "toMime": "video/mp4",
+    "maxFileSizeBytes": 1073741824
+  },
+  "mp4-to-webm": {
+    "label": "MP4 → WebM",
+    "accept": [
+      ".mp4"
+    ],
+    "fromMime": [
+      "video/mp4"
+    ],
+    "toMime": "video/webm",
+    "maxFileSizeBytes": 524288000
+  },
+  "mov-to-gif": {
+    "label": "MOV → GIF",
+    "accept": [
+      ".mov"
+    ],
+    "fromMime": [
+      "video/quicktime",
+      "video/mov",
+      "video/mp4"
+    ],
+    "toMime": "image/gif",
+    "maxFileSizeBytes": 314572800
+  },
   "mp3-to-wav": {
     "label": "MP3 → WAV",
     "accept": [

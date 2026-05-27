@@ -260,4 +260,47 @@ describe("audio + video converters (browser, FFmpeg.wasm)", () => {
     const result = await run("webm-to-mp4", webmFile);
     expect(result.blob.size).toBeGreaterThan(0);
   }, 240000);
+
+  // ===== Tier 1 video batch real end-to-end (2026-05-27) =====
+  // Three of the seven new routes have direct fixtures via the existing
+  // mp4File or a one-step derivation through our own pipeline. The other
+  // four (3gp, flv, wmv, mts → mp4) need dedicated FFmpeg-encoded
+  // fixtures and are covered by the Node shape tests for now.
+
+  it("m4v-to-mp4 stream-copies and produces valid MP4", async () => {
+    // M4V is byte-compatible with MP4; rename the existing fixture and
+    // assert the converter still emits an MP4 ftyp box.
+    const m4vFile = new File([await mp4File.arrayBuffer()], "tiny.m4v", {
+      type: "video/x-m4v",
+    });
+    const result = await run("m4v-to-mp4", m4vFile);
+    const bytes = new Uint8Array(await result.blob.slice(0, 12).arrayBuffer());
+    // MP4 ftyp box magic at offset 4
+    expect(String.fromCharCode(bytes[4], bytes[5], bytes[6], bytes[7])).toBe(
+      "ftyp",
+    );
+    expect(result.blob.size).toBeGreaterThan(0);
+  }, 240000);
+
+  it("mp4-to-webm produces a valid WebM / EBML container", async () => {
+    const result = await run("mp4-to-webm", mp4File);
+    const head = new Uint8Array(await result.blob.slice(0, 4).arrayBuffer());
+    // EBML magic 0x1A 0x45 0xDF 0xA3 is the WebM/Matroska header
+    expect(head[0]).toBe(0x1a);
+    expect(head[1]).toBe(0x45);
+    expect(head[2]).toBe(0xdf);
+    expect(head[3]).toBe(0xa3);
+    expect(result.blob.size).toBeGreaterThan(0);
+  }, 240000);
+
+  it("mov-to-gif emits a real GIF (GIF8 magic) end-to-end through our pipeline", async () => {
+    // Derive a .mov via the existing mp4-to-mov converter, then feed
+    // through mov-to-gif. Tests both halves of our own pipeline.
+    const mov = await run("mp4-to-mov", mp4File);
+    const movFile = new File([mov.blob], "derived.mov", { type: "video/quicktime" });
+    const result = await run("mov-to-gif", movFile);
+    const head = new Uint8Array(await result.blob.slice(0, 4).arrayBuffer());
+    expect(String.fromCharCode(...head)).toBe("GIF8");
+    expect(result.blob.size).toBeGreaterThan(100);
+  }, 240000);
 });

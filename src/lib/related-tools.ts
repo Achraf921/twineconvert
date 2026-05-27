@@ -145,6 +145,15 @@ const HAND_CURATED_RELATED: Record<string, string[]> = {
   "xml-to-csv":  ["xml-to-json", "json-to-csv", "yaml-to-csv"],
   "csv-to-html": ["csv-to-markdown-table", "html-table-to-csv", "csv-to-json"],
 
+  // ===== Tier 1 video batch (2026-05-27) cross-direction =====
+  "m4v-to-mp4":  ["mp4-to-mov", "mov-to-mp4", "mp4-to-webm"],
+  "3gp-to-mp4":  ["mts-to-mp4", "flv-to-mp4", "wmv-to-mp4"],
+  "flv-to-mp4":  ["wmv-to-mp4", "mts-to-mp4", "3gp-to-mp4"],
+  "wmv-to-mp4":  ["flv-to-mp4", "mts-to-mp4", "3gp-to-mp4"],
+  "mts-to-mp4":  ["3gp-to-mp4", "flv-to-mp4", "wmv-to-mp4"],
+  "mp4-to-webm": ["webm-to-mp4", "mp4-to-mov", "mp4-to-gif"],
+  "mov-to-gif":  ["mp4-to-gif", "gif-to-mp4", "mov-to-mp4"],
+
   // ===== Chess (fen-to-png + pgn-to-fen rank well, sibling spread) =====
   "fen-to-pgn":  ["pgn-to-fen", "fen-to-png", "pgn-to-csv", "pgn-to-json"],
   "fen-to-png":  ["fen-to-pgn", "pgn-to-fen", "pgn-to-csv"],

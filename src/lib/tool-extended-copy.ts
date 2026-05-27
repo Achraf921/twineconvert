@@ -2583,6 +2583,99 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       },
     ],
   },
+
+  // ===== Tier 1 video batch (2026-05-27) =====
+  "m4v-to-mp4": {
+    whyConvert:
+      "M4V is Apple's MP4 variant from iTunes Store and old iOS recordings. The container is byte-compatible with MP4, but plenty of non-Apple editors and upload pipelines reject the extension on sight. Re-mux without re-encoding so it stays fast and lossless.",
+    example:
+      "You have a .m4v screen recording from an iPhone and your editor refuses it. Convert to .mp4 here, drop into the editor, no quality loss.",
+    troubleshooting: [
+      {
+        problem: "Is this a re-encode?",
+        solution:
+          "No. We stream-copy the audio + video tracks into an MP4 container. The bytes inside are identical, only the wrapper changes. Conversion is fast and lossless.",
+      },
+    ],
+  },
+  "3gp-to-mp4": {
+    whyConvert:
+      "3GP is the mobile-video container older phones recorded to. Modern editors and uploaders prefer MP4. Re-encoded to H.264 + AAC at a transparent quality so the result plays on anything.",
+    example:
+      "You found an old .3gp clip from a 2007 phone and need to send it to someone who only has VLC or Premiere. Convert to MP4 first.",
+    troubleshooting: [
+      {
+        problem: "Audio comes out quieter than the source.",
+        solution:
+          "AMR-NB audio inside 3GP is mono and low-bandwidth; the AAC re-encode preserves the level but the new container handles dynamics differently in some players. Normalize in your editor if needed.",
+      },
+    ],
+  },
+  "flv-to-mp4": {
+    whyConvert:
+      "FLV is the old Flash Video container. Browsers no longer play Flash, but the H.264 video inside legacy FLV files is fine once re-wrapped or re-encoded into an MP4. Old tutorials, screencasts, archived livestreams all live in FLV.",
+    example:
+      "You have a 2012 lecture recording in .flv and need to embed it in a modern LMS that only accepts MP4. Convert here, upload, embed.",
+    troubleshooting: [
+      {
+        problem: "Output is bigger than the source FLV.",
+        solution:
+          "FLV often used VP6 or low-bitrate H.264; re-encoding to MP4 H.264 at standard quality can push file size up. Tune the quality flags in a dedicated editor if you need tight size control.",
+      },
+    ],
+  },
+  "wmv-to-mp4": {
+    whyConvert:
+      "WMV is Windows Media Video, the Microsoft container that defined Windows Movie Maker exports. Nothing outside the Microsoft ecosystem plays it cleanly any more. Re-encode to H.264 + AAC in an MP4 wrapper for universal playback.",
+    example:
+      "You inherited a folder of family videos in .wmv from a Windows XP era and want them on your phone or modern editor. Convert each to MP4.",
+    troubleshooting: [
+      {
+        problem: "DRM-protected WMV fails.",
+        solution:
+          "Some WMV files from old subscription services (Zune Marketplace, PlaysForSure) were DRM-locked. Those cannot be decoded by anyone other than the original DRM authority. The file must be unprotected first.",
+      },
+    ],
+  },
+  "mts-to-mp4": {
+    whyConvert:
+      "MTS (and M2TS) is the AVCHD container Sony / Panasonic / Canon camcorders write to SD cards. Non-linear editors handle it but upload sites and most players prefer MP4. Re-encode to H.264 + AAC.",
+    example:
+      "You shot vacation footage on a camcorder; the SD card has .mts files. Convert each to .mp4 to upload to YouTube or send via cloud.",
+    troubleshooting: [
+      {
+        problem: "Long files take a while.",
+        solution:
+          "MTS files from cameras are often quite long (single-take sessions). Re-encoding is CPU-bound. You can split first with a video editor and convert each part separately if needed.",
+      },
+    ],
+  },
+  "mp4-to-webm": {
+    whyConvert:
+      "WebM (VP9 + Opus) is the open codec target the modern web prefers. Smaller files than equivalent H.264 MP4 for background autoplay videos, no patent worries, native Chrome / Firefox playback. The right format if you are publishing web video.",
+    example:
+      "You want a hero background video on your landing page. MP4 is 8 MB; the WebM equivalent at the same perceived quality lands around 3 MB. Convert here, ship the WebM.",
+    troubleshooting: [
+      {
+        problem: "Safari does not play the result on older iOS.",
+        solution:
+          "Safari only added VP9 / Opus in WebM support in iOS 14.5 (April 2021) and macOS Big Sur. For older Safari, serve MP4 as a fallback inside the same <video> tag.",
+      },
+    ],
+  },
+  "mov-to-gif": {
+    whyConvert:
+      "Apple screen recordings save as .mov. Turning them into GIFs is the standard 'demo loop for a README, tweet, or Slack' workflow. Uses FFmpeg's split + palettegen + paletteuse filter chain in one pass, which gives visibly cleaner colors than naive single-pass quantization.",
+    example:
+      "You recorded a 6-second app demo with Cmd+Shift+5 on Mac, saved as .mov. Convert here, paste the GIF into a Slack thread or a GitHub issue.",
+    troubleshooting: [
+      {
+        problem: "The output GIF is huge.",
+        solution:
+          "GIF is an inefficient format for video; even with palette optimisation, multi-second recordings can easily hit MB-size. We cap framerate at 10fps to keep things sane. For smaller demos, consider WebM or MP4 instead and host on a service that supports embedded video.",
+      },
+    ],
+  },
 };
 
 export function getExtendedCopy(toolId: string): ExtendedCopy | undefined {
