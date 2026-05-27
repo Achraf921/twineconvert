@@ -138,6 +138,12 @@ const HAND_CURATED_RELATED: Record<string, string[]> = {
   "ics-to-csv":  ["csv-to-ics", "ics-to-json", "vcf-to-csv"],
   "csv-to-ics":  ["ics-to-csv", "ics-to-json", "csv-to-vcf"],
   "ics-to-json": ["ics-to-csv", "csv-to-ics", "vcf-to-json"],
+  "vcf-to-xlsx": ["vcf-to-csv", "csv-to-vcf", "vcf-to-json"],
+  "ics-to-xlsx": ["ics-to-csv", "csv-to-ics", "ics-to-json"],
+
+  // ===== Generic data conversion (added 2026-05-27) =====
+  "xml-to-csv":  ["xml-to-json", "json-to-csv", "yaml-to-csv"],
+  "csv-to-html": ["csv-to-markdown-table", "html-table-to-csv", "csv-to-json"],
 
   // ===== Chess (fen-to-png + pgn-to-fen rank well, sibling spread) =====
   "fen-to-pgn":  ["pgn-to-fen", "fen-to-png", "pgn-to-csv", "pgn-to-json"],

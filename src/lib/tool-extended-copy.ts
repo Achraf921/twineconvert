@@ -2509,6 +2509,80 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       },
     ],
   },
+
+  // ===== Tier 1 data batch (2026-05-27) =====
+  "vcf-to-xlsx": {
+    whyConvert:
+      "CSV is the technical answer, XLSX is the answer non-technical people actually want. Same one-row-per-contact shape with proper Excel columns, opens in one click in Excel, Google Sheets, or Numbers, no import wizard, no encoding choices.",
+    example:
+      "You exported 400 contacts from your phone as a .vcf for a sales handoff. The new rep uses Excel, not a CRM. Convert here, send the .xlsx, they sort and filter immediately.",
+    troubleshooting: [
+      {
+        problem: "Phone numbers come in as 'number' format and lose a leading plus.",
+        solution:
+          "Excel is overzealous about typing phone columns. Select the phone column, right-click, Format Cells, choose Text, then re-paste from the .xlsx or re-convert. The data we write is plain text; Excel re-interprets on open.",
+      },
+      {
+        problem: "Some contacts are missing from the output.",
+        solution:
+          "We drop entries that fail to parse as valid vCards (no BEGIN:VCARD line, no FN, etc.). If your source is multiple .vcf files concatenated by hand, ensure each ends with END:VCARD before the next BEGIN:VCARD.",
+      },
+    ],
+  },
+  "ics-to-xlsx": {
+    whyConvert:
+      "Calendar apps render .ics natively, but billing tools, attendance trackers, and analytics templates speak Excel. Get every event with start, end, location, and summary as columns you can pivot, filter, and total.",
+    example:
+      "You billed by the meeting for last quarter. Export the project calendar as .ics, convert to XLSX, sum the duration column, send the invoice with line-by-line backup.",
+    troubleshooting: [
+      {
+        problem: "All-day events show a date but the timed column 'allDay' says true.",
+        solution:
+          "That is intentional: iCal DATE-valued events have no time component, so the start cell carries just the date and allDay flags it. Filter on allDay to separate the two event kinds.",
+      },
+      {
+        problem: "Recurring events appear only once.",
+        solution:
+          "We export each VEVENT as it appears in the file. Recurrence rules are not expanded. For billing, export the date range from your calendar app so instances are already materialised.",
+      },
+    ],
+  },
+  "xml-to-csv": {
+    whyConvert:
+      "Spreadsheets cannot open XML directly without a custom map. For the common 'list of records' shape (orders, products, transactions, RSS items) this converter finds the repeating element, treats each one as a row, and flattens scalar children plus attributes into columns. No XSLT needed.",
+    example:
+      "A vendor sends nightly product data as XML with <products><product>...</product></products>. You want to diff it against last week in a spreadsheet. Convert each night's file and use Excel's compare tools.",
+    troubleshooting: [
+      {
+        problem: '"Could not find a repeating element" error.',
+        solution:
+          "The XML has only one record (or no list at all). CSV needs a list of similar records, so the converter looks for the first set of repeated sibling elements. If your XML is deeply nested with a single object, pre-shape it to a flat list with an XSLT or extract the inner array.",
+      },
+      {
+        problem: "Nested objects appear as JSON strings in a cell.",
+        solution:
+          "Intentional. Truly nested data does not flatten cleanly to one row, so we JSON-stringify into a single cell to keep the row count honest. Open in Excel and parse with a formula if you need to split.",
+      },
+    ],
+  },
+  "csv-to-html": {
+    whyConvert:
+      "If you need to publish a small table on a webpage, in a CMS, or inside an email, HTML is the right format. Renders as a real styled table you can drop straight into a page or a rich-text editor, with HTML entities in cell values properly escaped so you cannot accidentally inject markup.",
+    example:
+      "You have a 30-row CSV pricing table and the marketing CMS only takes pasted HTML. Convert, copy the <table>...</table> from the output, paste into the CMS, done.",
+    troubleshooting: [
+      {
+        problem: "The styling does not match my site.",
+        solution:
+          "The output ships with minimal CSS for standalone viewing. To match your site, delete the <style> block from the head and your site's CSS will style the table.",
+      },
+      {
+        problem: "Special characters render literally (&lt; instead of <).",
+        solution:
+          "That is correct escaping. If your source CSV intentionally contains HTML you want rendered, you wanted a different tool, this one treats every cell as text.",
+      },
+    ],
+  },
 };
 
 export function getExtendedCopy(toolId: string): ExtendedCopy | undefined {

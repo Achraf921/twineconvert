@@ -216,6 +216,12 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "csv-to-ics":  { provider: () => text("test.csv", "summary,start,end,location\nKickoff,2024-01-15 13:00:00,2024-01-15 14:00:00,Room 4B\n", "text/csv"), env: "node" },
   "rtf-to-txt":  { provider: () => text("test.rtf", F.rtf, "application/rtf"), env: "node" },
   "rtf-to-html": { provider: () => text("test.rtf", F.rtf, "application/rtf"), env: "node" },
+
+  // Tier 1 data batch
+  "vcf-to-xlsx": { provider: () => text("test.vcf", F.vcard, "text/vcard"), env: "node" },
+  "ics-to-xlsx": { provider: () => text("test.ics", F.ics, "text/calendar"), env: "node" },
+  "xml-to-csv":  { provider: () => text("test.xml", "<orders><order><id>1</id><total>9.99</total></order><order><id>2</id><total>19.50</total></order></orders>", "application/xml"), env: "node" },
+  "csv-to-html": { provider: () => text("test.csv", "id,name\n1,Alice\n2,Bob\n", "text/csv"), env: "node" },
   "json-to-xlsx":  { provider: () => text("test.json", F.jsonArray, "application/json"), env: "node" },
 
   // YAML/TOML cross-conversions with the JSON pivot in both directions

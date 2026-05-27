@@ -843,6 +843,60 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "text/html",
     "maxFileSizeBytes": 26214400
   },
+  "vcf-to-xlsx": {
+    "label": "VCF → XLSX",
+    "accept": [
+      ".vcf",
+      ".vcard"
+    ],
+    "fromMime": [
+      "text/vcard",
+      "text/x-vcard",
+      "text/plain"
+    ],
+    "toMime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "maxFileSizeBytes": 26214400
+  },
+  "ics-to-xlsx": {
+    "label": "ICS → XLSX",
+    "accept": [
+      ".ics",
+      ".ical",
+      ".ifb"
+    ],
+    "fromMime": [
+      "text/calendar",
+      "text/plain"
+    ],
+    "toMime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "maxFileSizeBytes": 26214400
+  },
+  "xml-to-csv": {
+    "label": "XML → CSV",
+    "accept": [
+      ".xml"
+    ],
+    "fromMime": [
+      "application/xml",
+      "text/xml",
+      "text/plain"
+    ],
+    "toMime": "text/csv",
+    "maxFileSizeBytes": 52428800
+  },
+  "csv-to-html": {
+    "label": "CSV → HTML",
+    "accept": [
+      ".csv"
+    ],
+    "fromMime": [
+      "text/csv",
+      "application/csv",
+      "text/plain"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 52428800
+  },
   "json-to-xlsx": {
     "label": "JSON → XLSX",
     "accept": [

@@ -1,17 +1,17 @@
 # Bijectivity Audit
 
-Generated 2026-05-23 from src/lib/engine/converters/.
+Generated 2026-05-27 from src/lib/engine/converters/.
 
 ## Summary
 
 | Classification | Count |
 |---|---:|
-| Total converters | 339 |
+| Total converters | 343 |
 | **Bijective candidates** (lossless, same-kind, both directions exist) | 162 |
-| **Bijective candidates missing reverse converter** | 16 |
+| **Bijective candidates missing reverse converter** | 19 |
 | **Bijective candidates missing round-trip test** | 6 |
 | Lossy encoding (same kind, but lossy format) | 73 |
-| Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 35 |
+| Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 36 |
 | Single-action (no reverse possible) | 53 |
 | Unknown formats (need to add to FORMATS table) | 0 |
 | Compound id (irregular pattern) | 0 |
@@ -31,6 +31,7 @@ These converters are lossless and could round-trip, but the reverse converter is
 | `gedcom-to-xlsx` | `xlsx-to-gedcom` |
 | `hl7-to-csv` | `csv-to-hl7` |
 | `ics-to-json` | `json-to-ics` |
+| `ics-to-xlsx` | `xlsx-to-ics` |
 | `json-to-sql` | `sql-to-json` |
 | `json5-to-json` | `json-to-json5` |
 | `mbox-to-csv` | `csv-to-mbox` |
@@ -40,6 +41,8 @@ These converters are lossless and could round-trip, but the reverse converter is
 | `ris-to-xlsx` | `xlsx-to-ris` |
 | `tiff-to-png` | `png-to-tiff` |
 | `vcf-to-json` | `json-to-vcf` |
+| `vcf-to-xlsx` | `xlsx-to-vcf` |
+| `xml-to-csv` | `csv-to-xml` |
 
 ### 3. Bijective pairs MISSING a round-trip test
 
@@ -112,6 +115,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `csv-to-dat` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-fhir-bundle` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-gedcom` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `csv-to-html` | cross-kind | (`html-to-csv` missing) | n/a | data -> doc: cross-domain, inherently lossy |
 | `csv-to-html-table` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-ics` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
 | `csv-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
@@ -212,6 +216,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `ico-to-png` | bijective-candidate | ✓ | ✓ | both lossless raster formats; should round-trip cleanly |
 | `ics-to-csv` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
 | `ics-to-json` | bijective-candidate | (`json-to-ics` missing) | n/a | both lossless data formats; should round-trip cleanly |
+| `ics-to-xlsx` | bijective-candidate | (`xlsx-to-ics` missing) | n/a | both lossless data formats; should round-trip cleanly |
 | `ifc-to-csv` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
 | `ifc-to-gltf` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
 | `image-to-text` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
@@ -371,6 +376,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `url-encoded-to-text` | bijective-candidate | ✓ | ✓ | both lossless encoding formats; should round-trip cleanly |
 | `vcf-to-csv` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
 | `vcf-to-json` | bijective-candidate | (`json-to-vcf` missing) | n/a | both lossless data formats; should round-trip cleanly |
+| `vcf-to-xlsx` | bijective-candidate | (`xlsx-to-vcf` missing) | n/a | both lossless data formats; should round-trip cleanly |
 | `vtt-to-ass` | lossy-encoding | ✓ | ✓ | vtt or ass uses lossy encoding |
 | `vtt-to-srt` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `wav-to-mp3` | lossy-encoding | ✓ | ✓ | wav or mp3 uses lossy encoding |
@@ -389,6 +395,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `xlsx-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `xlsx-to-ods` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `xlsx-to-tsv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `xml-to-csv` | bijective-candidate | (`csv-to-xml` missing) | n/a | both lossless data formats; should round-trip cleanly |
 | `xml-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `yaml-to-bibtex` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `yaml-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |

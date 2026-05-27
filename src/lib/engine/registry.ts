@@ -186,6 +186,14 @@ export const registry: Record<string, ConverterLoader> = {
     import("./converters/rtf-to-txt").then((m) => m.default),
   "rtf-to-html": () =>
     import("./converters/rtf-to-html").then((m) => m.default),
+  "vcf-to-xlsx": () =>
+    import("./converters/vcf-to-xlsx").then((m) => m.default),
+  "ics-to-xlsx": () =>
+    import("./converters/ics-to-xlsx").then((m) => m.default),
+  "xml-to-csv": () =>
+    import("./converters/xml-to-csv").then((m) => m.default),
+  "csv-to-html": () =>
+    import("./converters/csv-to-html").then((m) => m.default),
   "json-to-xlsx": () =>
     import("./converters/json-to-xlsx").then((m) => m.default),
 
