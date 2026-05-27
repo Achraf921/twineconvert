@@ -84,3 +84,76 @@ describe("regression: cube-to-3dl actionable diagnosis for malformed CUBE", () =
     expect(lut.data.length).toBe(2 * 2 * 2 * 3);
   });
 });
+
+describe("regression: cloud-sync placeholder file reads (OneDrive/Dropbox/iCloud)", () => {
+  /** Mock File that throws the Win32 ERROR_FILE_NOT_FOUND message
+   *  the way a cloud-sync stub does when the bytes are not local. */
+  class CloudStubFile extends File {
+    constructor(name: string, mime: string) {
+      super([new Uint8Array(0)], name, { type: mime });
+    }
+    override async text(): Promise<string> {
+      throw new Error(
+        "A requested file or directory could not be found at the time an operation was processed.",
+      );
+    }
+    override async arrayBuffer(): Promise<ArrayBuffer> {
+      throw new Error(
+        "A requested file or directory could not be found at the time an operation was processed.",
+      );
+    }
+  }
+
+  it("runner translates the Win32-style file-not-found into actionable guidance", async () => {
+    const stub = new CloudStubFile("citations.csv", "text/csv");
+    await expect(run("csv-to-ris", stub)).rejects.toThrow(
+      /OneDrive, Dropbox, or iCloud.*download.*locally/i,
+    );
+  });
+
+  it("runner translates a DOMException-style NotFoundError the same way", async () => {
+    class NotFoundFile extends File {
+      constructor() {
+        super([new Uint8Array(0)], "refs.bib", { type: "application/x-bibtex" });
+      }
+      override async text(): Promise<string> {
+        const err = new Error("File not found.");
+        err.name = "NotFoundError";
+        throw err;
+      }
+    }
+    await expect(run("bibtex-to-csv", new NotFoundFile())).rejects.toThrow(
+      /OneDrive, Dropbox, or iCloud/i,
+    );
+  });
+});
+
+describe("regression: suppress noisy suggestion for ambiguous extensions", () => {
+  it(".zip on csv-to-ris does NOT suggest an apple-health/instagram/etc. tool", async () => {
+    // Real PostHog event: .zip suggested apple-health-to-csv which was
+    // unhelpful to a user who wanted RIS. With many tools accepting
+    // .zip and none matching the wanted output, no suggestion is
+    // better than the wrong one.
+    const fakeZip = new File([new Uint8Array(4)], "files.zip", {
+      type: "application/zip",
+    });
+    let caught: unknown;
+    try {
+      await run("csv-to-ris", fakeZip);
+    } catch (e) {
+      caught = e;
+    }
+    const msg = (caught as Error)?.message ?? "";
+    expect(msg).toMatch(/expects \.csv but got/i);
+    expect(msg).not.toMatch(/Try the .* tool instead/i);
+  });
+
+  it("a single unambiguous suggestion (.ris on bibtex-to-csv) still fires", async () => {
+    // Sanity guard: do not let the noise filter swallow the genuine
+    // wrong-direction cases the runner redirect was built for.
+    const input = fileFromText("refs.ris", "TY  - JOUR\nER  -\n", "application/x-research-info-systems");
+    await expect(run("bibtex-to-csv", input)).rejects.toThrow(
+      /Try the ris-to-csv tool instead/i,
+    );
+  });
+});

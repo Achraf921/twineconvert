@@ -40,8 +40,14 @@ function suggestToolForExt(currentTool: string, ext: string): string | null {
     const reverse = `${to}-to-${from}`;
     if (matches.includes(reverse)) return `the ${reverse} tool`;
   }
-  // Otherwise fall back to whatever was found first.
-  return `the ${matches[0]} tool`;
+  // No contextually good fit. For ambiguous extensions like .zip (which
+  // ~10 tools accept), naming any one of them is misleading more often
+  // than helpful (PostHog showed .zip on csv-to-ris suggesting
+  // apple-health-to-csv, which was wrong for the user's intent). Only
+  // surface a suggestion when there are 1-2 candidates, otherwise stay
+  // silent and let the base "expects X but got Y" message stand alone.
+  if (matches.length <= 2) return `the ${matches[0]} tool`;
+  return null;
 }
 
 /**
@@ -141,8 +147,32 @@ export async function run(
     if (opts.signal?.aborted) {
       throw new ConvertCancelledError("Cancelled mid-run");
     }
+    // Detect the cloud-sync placeholder failure: OneDrive Files-On-Demand,
+    // Dropbox Smart Sync and iCloud Drive let the file picker hand the
+    // browser a stub File whose actual bytes are not yet downloaded.
+    // The OS read fails with the literal Win32 ERROR_FILE_NOT_FOUND text
+    // (HRESULT 0x80070002) or a DOMException "NotFoundError". The user
+    // sees "could not convert: A requested file or directory..." with no
+    // idea how to fix it. Surface an actionable message instead.
+    const rawMsg = err instanceof Error ? err.message : String(err);
+    // Converters wrap inner errors with ConvertFailedError, which sets
+    // its own .name and hides the original DOMException name. Unwrap
+    // .cause once to find the real one (e.g. a NotFoundError thrown by
+    // input.text() before the converter ever got going).
+    const cause = (err as { cause?: unknown })?.cause;
+    const isCloudPlaceholder =
+      (err instanceof Error && err.name === "NotFoundError") ||
+      (cause instanceof Error && cause.name === "NotFoundError") ||
+      /requested file or directory could not be found/i.test(rawMsg) ||
+      /system cannot find the (file|path) specified/i.test(rawMsg);
+    if (isCloudPlaceholder) {
+      throw new ConvertFailedError(
+        `Could not read "${input.name}". This usually means the file is stored in OneDrive, Dropbox, or iCloud and has not been downloaded locally yet. Right-click the file in your file explorer, choose "Always keep on this device" (or equivalent), wait for it to sync, then try again.`,
+        err,
+      );
+    }
     throw new ConvertFailedError(
-      `${converter.label} failed: ${err instanceof Error ? err.message : String(err)}`,
+      `${converter.label} failed: ${rawMsg}`,
       err,
     );
   }
