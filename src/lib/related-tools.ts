@@ -166,6 +166,13 @@ const HAND_CURATED_RELATED: Record<string, string[]> = {
   "mpeg-to-mp4": ["mpg-to-mp4", "vob-to-mp4", "wmv-to-mp4"],
   "vob-to-mp4":  ["mpg-to-mp4", "mpeg-to-mp4", "mts-to-mp4"],
 
+  // ===== Industry batch (2026-05-27): lyrics + DICOM =====
+  "lrc-to-srt": ["lrc-to-vtt", "srt-to-lrc", "srt-to-vtt"],
+  "lrc-to-vtt": ["lrc-to-srt", "srt-to-vtt", "vtt-to-srt"],
+  "srt-to-lrc": ["lrc-to-srt", "vtt-to-srt", "srt-to-vtt"],
+  "dicom-to-jpg": ["dicom-to-png", "dicom-to-pdf", "dicom-to-json"],
+  "dicom-to-pdf": ["dicom-to-png", "dicom-to-jpg", "dicom-to-json"],
+
   // ===== Chess (fen-to-png + pgn-to-fen rank well, sibling spread) =====
   "fen-to-pgn":  ["pgn-to-fen", "fen-to-png", "pgn-to-csv", "pgn-to-json"],
   "fen-to-png":  ["fen-to-pgn", "pgn-to-fen", "pgn-to-csv"],

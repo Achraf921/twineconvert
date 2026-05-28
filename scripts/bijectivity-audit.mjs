@@ -97,6 +97,7 @@ const FORMATS = {
   mpg: { kind: "video", lossless: false, family: "video" }, // MPEG-1/2 program stream
   mpeg: { kind: "video", lossless: false, family: "video" }, // .mpeg alias
   vob: { kind: "video", lossless: false, family: "video" }, // DVD video object
+  lrc: { kind: "data", lossless: true, family: "subtitle" }, // LRC karaoke lyrics, timestamped
   mkv: { kind: "video", lossless: false, family: "video" },
   // ==== Ebook ====
   epub: { kind: "doc", lossless: false, family: "ebook" },

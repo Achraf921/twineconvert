@@ -146,6 +146,18 @@ export const registry: Record<string, ConverterLoader> = {
     import("./converters/mpeg-to-mp4").then((m) => m.default),
   "vob-to-mp4": () =>
     import("./converters/vob-to-mp4").then((m) => m.default),
+
+  // Industry batch: lyrics + DICOM extensions
+  "lrc-to-srt": () =>
+    import("./converters/lrc-to-srt").then((m) => m.default),
+  "lrc-to-vtt": () =>
+    import("./converters/lrc-to-vtt").then((m) => m.default),
+  "srt-to-lrc": () =>
+    import("./converters/srt-to-lrc").then((m) => m.default),
+  "dicom-to-jpg": () =>
+    import("./converters/dicom-to-jpg").then((m) => m.default),
+  "dicom-to-pdf": () =>
+    import("./converters/dicom-to-pdf").then((m) => m.default),
   "mp3-to-wav": () =>
     import("./converters/mp3-to-wav").then((m) => m.default),
   "wav-to-mp3": () =>

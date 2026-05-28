@@ -902,6 +902,7 @@ const BY_MIME: Record<string, Validator> = {
   "application/json": validateJson,
   "text/plain": validatePlainText,
   "application/x-chess-pgn": validatePlainText,
+  "application/x-lrc": validatePlainText,
   "text/vcard": validatePlainText,
   "text/calendar": validatePlainText,
   "text/markdown": validateMarkdown,

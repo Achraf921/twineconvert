@@ -2799,6 +2799,83 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       },
     ],
   },
+
+  // ===== Industry batch (2026-05-27): LRC lyrics + DICOM extensions =====
+  "lrc-to-srt": {
+    whyConvert:
+      "LRC is the karaoke / lyric-display format; SRT is the universal subtitle format every video editor, YouTube uploader, and offline player accepts. Convert when you want a lyric track in a video editor, baked into an upload as a caption track, or shared with collaborators using SRT.",
+    example:
+      "You have an .lrc file from a karaoke library and want to burn the lyrics into a music video in Premiere or DaVinci Resolve. Convert to .srt, drop into the editor's caption track, ship.",
+    troubleshooting: [
+      {
+        problem: "Repeated chorus shows up only once.",
+        solution:
+          "It should not. We expand multi-timestamp lines (like `[00:30.00][01:00.00]Refrain`) into one cue per timestamp. If you see only one, your LRC may have the chorus on separate lines with single timestamps each, which is also handled, just check the source.",
+      },
+      {
+        problem: "Cue end times look long.",
+        solution:
+          "LRC only marks the START of each line. We set the end to the next line's start (or +4s for the final line) so SRT players have something to display until the next lyric. Edit the .srt in any text editor if you want tighter end times.",
+      },
+    ],
+  },
+  "lrc-to-vtt": {
+    whyConvert:
+      "WebVTT is the captioning format browsers read via the HTML5 <track> element. If you are building a music site or hosting a music video on your own page, lyrics as VTT plug directly into the <video> element with no extra player code.",
+    example:
+      "You are publishing a song on your artist site and want synchronised lyrics as a toggle in the player. Convert the LRC to VTT, point the <track> element at the file, browsers handle the rest.",
+    troubleshooting: [
+      {
+        problem: "Lyrics do not show in my player.",
+        solution:
+          "Most browsers require the <track> element to have kind=\"captions\" or kind=\"subtitles\" plus the file served from the same origin (or with CORS headers). Check the network tab; the VTT should load with text/vtt MIME.",
+      },
+    ],
+  },
+  "srt-to-lrc": {
+    whyConvert:
+      "Reverse direction: if you already have subtitles for a music video as SRT and want to publish them as a karaoke-style LRC file (for use in Spotify lyric apps, karaoke players, or lyric databases), convert here. SRT end times are dropped (LRC only marks the start of each line) and multi-line cues are joined into one LRC line per timestamp.",
+    example:
+      "You captioned a music video in SRT for YouTube and now want to contribute the lyrics to a karaoke library that expects LRC. Convert and submit.",
+    troubleshooting: [
+      {
+        problem: "Multi-line SRT cues come out as one long LRC line.",
+        solution:
+          "Intentional. LRC is a one-line-per-timestamp format. If you need to split a long line for display, edit the .lrc in any text editor and add a second timestamp for the wrap point.",
+      },
+    ],
+  },
+  "dicom-to-jpg": {
+    whyConvert:
+      "DICOM is the medical-imaging standard but no email client, social platform, or generic image viewer renders it. JPG is the universally-shareable raster format. Conversion runs entirely in your browser, so patient data never leaves the device, important for HIPAA-bound workflows.",
+    example:
+      "A patient wants a copy of their MRI scan to email to a second-opinion clinician. The portal gave them a .dcm file. Convert here to JPG, attach to email, done.",
+    troubleshooting: [
+      {
+        problem: "Image looks too dark or too bright.",
+        solution:
+          "DICOM uses 12 to 16-bit grayscale with explicit window/level metadata. We use the metadata if present, otherwise auto-compute. If the result looks off, the source file may be missing the window/level tags; in that case open it in a real DICOM viewer to find the intended values.",
+      },
+      {
+        problem: "Only one image came out of a multi-frame study.",
+        solution:
+          "We render the first frame for now. Multi-frame DICOMs (CT slices, time-series MR) need a sequence export which is a different shape. If you need every frame, use a desktop DICOM tool.",
+      },
+    ],
+  },
+  "dicom-to-pdf": {
+    whyConvert:
+      "For patient handouts, clinical reports, or archival packets you often want the DICOM as a single PDF page rather than a raw image. PDFs print correctly at any DPI, embed cleanly in EHR uploads, and email/storage systems trust them. Same in-browser HIPAA story as the other DICOM tools.",
+    example:
+      "You are assembling a referral packet that needs to include the chest X-ray as a printable PDF. Drop the .dcm, get a single-page PDF, attach to the referral letter.",
+    troubleshooting: [
+      {
+        problem: "The image fills the page; can I add patient metadata as a header?",
+        solution:
+          "Not in v1, the PDF is image-only. If you need patient identifiers on the page, open the .dcm in your imaging viewer and use its built-in 'print with labels' export. A future route may add a sidecar metadata page.",
+      },
+    ],
+  },
 };
 
 export function getExtendedCopy(toolId: string): ExtendedCopy | undefined {

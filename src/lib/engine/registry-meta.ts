@@ -619,6 +619,68 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "video/mp4",
     "maxFileSizeBytes": 1073741824
   },
+  "lrc-to-srt": {
+    "label": "LRC → SRT",
+    "accept": [
+      ".lrc"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-lrc"
+    ],
+    "toMime": "application/x-subrip",
+    "maxFileSizeBytes": 5242880
+  },
+  "lrc-to-vtt": {
+    "label": "LRC → WebVTT",
+    "accept": [
+      ".lrc"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-lrc"
+    ],
+    "toMime": "text/vtt",
+    "maxFileSizeBytes": 5242880
+  },
+  "srt-to-lrc": {
+    "label": "SRT → LRC",
+    "accept": [
+      ".srt"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-subrip"
+    ],
+    "toMime": "application/x-lrc",
+    "maxFileSizeBytes": 5242880
+  },
+  "dicom-to-jpg": {
+    "label": "DICOM → JPG",
+    "accept": [
+      ".dcm",
+      ".dicom"
+    ],
+    "fromMime": [
+      "application/dicom",
+      "application/octet-stream"
+    ],
+    "toMime": "image/jpeg",
+    "maxFileSizeBytes": 104857600
+  },
+  "dicom-to-pdf": {
+    "label": "DICOM → PDF",
+    "accept": [
+      ".dcm",
+      ".dicom"
+    ],
+    "fromMime": [
+      "application/dicom",
+      "application/octet-stream"
+    ],
+    "toMime": "application/pdf",
+    "maxFileSizeBytes": 104857600
+  },
   "mp3-to-wav": {
     "label": "MP3 → WAV",
     "accept": [

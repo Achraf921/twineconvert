@@ -188,6 +188,13 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "mpg-to-mp4":  { provider: () => Promise.reject(new Error("mpg fixture pending")), env: "browser" },
   "mpeg-to-mp4": { provider: () => Promise.reject(new Error("mpeg fixture pending")), env: "browser" },
   "vob-to-mp4":  { provider: () => Promise.reject(new Error("vob fixture pending")), env: "browser" },
+
+  // Industry batch: lyrics + DICOM extensions
+  "lrc-to-srt":  { provider: () => text("test.lrc", "[ti:Demo]\n[00:01.00]First\n[00:05.00]Second\n", "text/plain"), env: "node" },
+  "lrc-to-vtt":  { provider: () => text("test.lrc", "[ti:Demo]\n[00:01.00]First\n[00:05.00]Second\n", "text/plain"), env: "node" },
+  "srt-to-lrc":  { provider: () => text("test.srt", F.srt, "application/x-subrip"), env: "node" },
+  "dicom-to-jpg": { provider: () => Promise.reject(new Error("dicom fixture pending")), env: "browser" },
+  "dicom-to-pdf": { provider: () => Promise.reject(new Error("dicom fixture pending")), env: "browser" },
   "mp3-to-wav":  { provider: () => Promise.reject(new Error("mp3 fixture pending")), env: "browser" },
   "mp3-to-m4a":  { provider: () => Promise.reject(new Error("mp3 fixture pending")), env: "browser" },
   "mp3-to-flac": { provider: () => Promise.reject(new Error("mp3 fixture pending")), env: "browser" },
