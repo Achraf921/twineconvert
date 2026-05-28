@@ -77,6 +77,28 @@ const EXPECTATIONS: ShapeExpectation[] = [
     toMime: "image/gif",
     rejects: { name: "wrong.csv", mime: "text/csv" },
   },
+  // Exotic batch 2: MPEG video
+  {
+    id: "mpg-to-mp4",
+    label: "MPG → MP4",
+    accept: [".mpg", ".mpeg"],
+    toMime: "video/mp4",
+    rejects: { name: "wrong.csv", mime: "text/csv" },
+  },
+  {
+    id: "mpeg-to-mp4",
+    label: "MPEG → MP4",
+    accept: [".mpeg", ".mpg"],
+    toMime: "video/mp4",
+    rejects: { name: "wrong.csv", mime: "text/csv" },
+  },
+  {
+    id: "vob-to-mp4",
+    label: "VOB → MP4",
+    accept: [".vob"],
+    toMime: "video/mp4",
+    rejects: { name: "wrong.csv", mime: "text/csv" },
+  },
 ];
 
 describe("video tier 1: registry shape", () => {

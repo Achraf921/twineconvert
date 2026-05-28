@@ -6,11 +6,11 @@ Generated 2026-05-28 from src/lib/engine/converters/.
 
 | Classification | Count |
 |---|---:|
-| Total converters | 355 |
+| Total converters | 358 |
 | **Bijective candidates** (lossless, same-kind, both directions exist) | 162 |
 | **Bijective candidates missing reverse converter** | 19 |
 | **Bijective candidates missing round-trip test** | 6 |
-| Lossy encoding (same kind, but lossy format) | 82 |
+| Lossy encoding (same kind, but lossy format) | 85 |
 | Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 39 |
 | Single-action (no reverse possible) | 53 |
 | Unknown formats (need to add to FORMATS table) | 0 |
@@ -289,6 +289,8 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `mp4-to-mov` | lossy-encoding | ✓ | ✓ | mp4 or mov uses lossy encoding |
 | `mp4-to-mp3` | cross-kind | (`mp3-to-mp4` missing) | ✓ | video -> audio: cross-domain, inherently lossy |
 | `mp4-to-webm` | lossy-encoding | ✓ | ✓ | mp4 or webm uses lossy encoding |
+| `mpeg-to-mp4` | lossy-encoding | (`mp4-to-mpeg` missing) | n/a | mpeg or mp4 uses lossy encoding |
+| `mpg-to-mp4` | lossy-encoding | (`mp4-to-mpg` missing) | n/a | mpg or mp4 uses lossy encoding |
 | `msg-to-csv` | cross-kind | (`csv-to-msg` missing) | n/a | doc -> data: cross-domain, inherently lossy |
 | `msg-to-eml` | cross-kind | (`eml-to-msg` missing) | n/a | doc -> data: cross-domain, inherently lossy |
 | `msg-to-pdf` | lossy-encoding | (`pdf-to-msg` missing) | n/a | msg or pdf uses lossy encoding |
@@ -388,6 +390,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `vcf-to-csv` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
 | `vcf-to-json` | bijective-candidate | (`json-to-vcf` missing) | n/a | both lossless data formats; should round-trip cleanly |
 | `vcf-to-xlsx` | bijective-candidate | (`xlsx-to-vcf` missing) | n/a | both lossless data formats; should round-trip cleanly |
+| `vob-to-mp4` | lossy-encoding | (`mp4-to-vob` missing) | n/a | vob or mp4 uses lossy encoding |
 | `vtt-to-ass` | lossy-encoding | ✓ | ✓ | vtt or ass uses lossy encoding |
 | `vtt-to-srt` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `wav-to-mp3` | lossy-encoding | ✓ | ✓ | wav or mp3 uses lossy encoding |

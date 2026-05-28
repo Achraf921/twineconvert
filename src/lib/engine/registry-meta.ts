@@ -582,6 +582,43 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "image/gif",
     "maxFileSizeBytes": 314572800
   },
+  "mpg-to-mp4": {
+    "label": "MPG → MP4",
+    "accept": [
+      ".mpg",
+      ".mpeg"
+    ],
+    "fromMime": [
+      "video/mpeg",
+      "video/mpg"
+    ],
+    "toMime": "video/mp4",
+    "maxFileSizeBytes": 1073741824
+  },
+  "mpeg-to-mp4": {
+    "label": "MPEG → MP4",
+    "accept": [
+      ".mpeg",
+      ".mpg"
+    ],
+    "fromMime": [
+      "video/mpeg"
+    ],
+    "toMime": "video/mp4",
+    "maxFileSizeBytes": 1073741824
+  },
+  "vob-to-mp4": {
+    "label": "VOB → MP4",
+    "accept": [
+      ".vob"
+    ],
+    "fromMime": [
+      "video/dvd",
+      "video/mpeg"
+    ],
+    "toMime": "video/mp4",
+    "maxFileSizeBytes": 1073741824
+  },
   "mp3-to-wav": {
     "label": "MP3 → WAV",
     "accept": [

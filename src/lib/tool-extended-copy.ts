@@ -2758,6 +2758,47 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       },
     ],
   },
+
+  // ===== Exotic batch 2 (2026-05-27): MPEG video =====
+  "mpg-to-mp4": {
+    whyConvert:
+      "MPG is the classic MPEG-1 / MPEG-2 program stream container, the format old digital cameras, capture cards, and 1990s/2000s DVD rips wrote to. Modern editors, phones, and browsers want MP4. Re-encode to H.264 + AAC so it plays everywhere without a legacy codec pack.",
+    example:
+      "You have a folder of family camcorder clips from 2003 saved as .mpg and want them on your phone. Convert each to MP4, AirDrop or sync to the phone.",
+    troubleshooting: [
+      {
+        problem: "Aspect ratio looks squashed in the output.",
+        solution:
+          "Older MPG often used non-square pixels (anamorphic 16:9 inside a 4:3 frame). FFmpeg preserves the input's pixel aspect ratio; if your player ignores PAR, re-encode in a desktop editor and set the display ratio explicitly.",
+      },
+    ],
+  },
+  "mpeg-to-mp4": {
+    whyConvert:
+      "The .mpeg extension is the same container as .mpg; people just write the filename differently. Same re-encode path: H.264 video + AAC audio in an MP4 wrapper, universal playback, no legacy codecs.",
+    example:
+      "A capture card saved a clip as .mpeg and your editor rejects the extension. Convert to MP4 and the editor accepts it immediately.",
+    troubleshooting: [
+      {
+        problem: "Is this different from mpg-to-mp4?",
+        solution:
+          "Only the file extension. The container, the FFmpeg path, and the output are identical. We ship both routes so the file picker and the search-result page match what you actually have.",
+      },
+    ],
+  },
+  "vob-to-mp4": {
+    whyConvert:
+      "VOB is the MPEG-2 program stream variant used on DVDs. Home-video rips and old DVDR backups are full of .vob files; modern players, phones, and editors want MP4. Re-encode to H.264 + AAC keeps the content and drops the legacy DVD container.",
+    example:
+      "You have a folder of .vob files from a backed-up family DVD and need them as MP4 to upload to a cloud video archive. Convert each, upload.",
+    troubleshooting: [
+      {
+        problem: "FFmpeg failed on a commercial-DVD .vob.",
+        solution:
+          "Commercial DVDs are CSS-encrypted. This converter cannot decrypt them; you need to decrypt the DVD with a dedicated tool (HandBrake, MakeMKV) first, then convert the resulting .vob or directly export to MP4.",
+      },
+    ],
+  },
 };
 
 export function getExtendedCopy(toolId: string): ExtendedCopy | undefined {

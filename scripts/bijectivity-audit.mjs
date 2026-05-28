@@ -94,6 +94,9 @@ const FORMATS = {
   mts: { kind: "video", lossless: false, family: "video" }, // AVCHD camcorder
   psd: { kind: "raster", lossless: false, family: "image" }, // Photoshop, layered, we flatten on read
   msg: { kind: "doc", lossless: false, family: "doc" }, // Outlook compound message
+  mpg: { kind: "video", lossless: false, family: "video" }, // MPEG-1/2 program stream
+  mpeg: { kind: "video", lossless: false, family: "video" }, // .mpeg alias
+  vob: { kind: "video", lossless: false, family: "video" }, // DVD video object
   mkv: { kind: "video", lossless: false, family: "video" },
   // ==== Ebook ====
   epub: { kind: "doc", lossless: false, family: "ebook" },
