@@ -92,6 +92,8 @@ const FORMATS = {
   flv: { kind: "video", lossless: false, family: "video" }, // legacy Flash Video
   wmv: { kind: "video", lossless: false, family: "video" }, // Windows Media Video
   mts: { kind: "video", lossless: false, family: "video" }, // AVCHD camcorder
+  psd: { kind: "raster", lossless: false, family: "image" }, // Photoshop, layered, we flatten on read
+  msg: { kind: "doc", lossless: false, family: "doc" }, // Outlook compound message
   mkv: { kind: "video", lossless: false, family: "video" },
   // ==== Ebook ====
   epub: { kind: "doc", lossless: false, family: "ebook" },

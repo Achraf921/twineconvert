@@ -229,6 +229,13 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "ics-to-xlsx": { provider: () => text("test.ics", F.ics, "text/calendar"), env: "node" },
   "xml-to-csv":  { provider: () => text("test.xml", "<orders><order><id>1</id><total>9.99</total></order><order><id>2</id><total>19.50</total></order></orders>", "application/xml"), env: "node" },
   "csv-to-html": { provider: () => text("test.csv", "id,name\n1,Alice\n2,Bob\n", "text/csv"), env: "node" },
+
+  // PSD + MSG (external research batch)
+  "psd-to-png":  { provider: () => Promise.reject(new Error("psd fixture pending")), env: "browser" },
+  "psd-to-jpg":  { provider: () => Promise.reject(new Error("psd fixture pending")), env: "browser" },
+  "msg-to-eml":  { provider: () => Promise.reject(new Error("msg fixture pending")), env: "browser" },
+  "msg-to-csv":  { provider: () => Promise.reject(new Error("msg fixture pending")), env: "browser" },
+  "msg-to-pdf":  { provider: () => Promise.reject(new Error("msg fixture pending")), env: "browser" },
   "json-to-xlsx":  { provider: () => text("test.json", F.jsonArray, "application/json"), env: "node" },
 
   // YAML/TOML cross-conversions with the JSON pivot in both directions

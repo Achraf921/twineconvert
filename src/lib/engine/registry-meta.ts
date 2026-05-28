@@ -985,6 +985,71 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "text/html",
     "maxFileSizeBytes": 52428800
   },
+  "psd-to-png": {
+    "label": "PSD → PNG",
+    "accept": [
+      ".psd"
+    ],
+    "fromMime": [
+      "image/vnd.adobe.photoshop",
+      "application/x-photoshop",
+      "application/octet-stream"
+    ],
+    "toMime": "image/png",
+    "maxFileSizeBytes": 209715200
+  },
+  "psd-to-jpg": {
+    "label": "PSD → JPG",
+    "accept": [
+      ".psd"
+    ],
+    "fromMime": [
+      "image/vnd.adobe.photoshop",
+      "application/x-photoshop",
+      "application/octet-stream"
+    ],
+    "toMime": "image/jpeg",
+    "maxFileSizeBytes": 209715200
+  },
+  "msg-to-eml": {
+    "label": "MSG → EML",
+    "accept": [
+      ".msg"
+    ],
+    "fromMime": [
+      "application/vnd.ms-outlook",
+      "application/x-msg",
+      "application/octet-stream"
+    ],
+    "toMime": "message/rfc822",
+    "maxFileSizeBytes": 52428800
+  },
+  "msg-to-csv": {
+    "label": "MSG → CSV",
+    "accept": [
+      ".msg"
+    ],
+    "fromMime": [
+      "application/vnd.ms-outlook",
+      "application/x-msg",
+      "application/octet-stream"
+    ],
+    "toMime": "text/csv",
+    "maxFileSizeBytes": 52428800
+  },
+  "msg-to-pdf": {
+    "label": "MSG → PDF",
+    "accept": [
+      ".msg"
+    ],
+    "fromMime": [
+      "application/vnd.ms-outlook",
+      "application/x-msg",
+      "application/octet-stream"
+    ],
+    "toMime": "application/pdf",
+    "maxFileSizeBytes": 52428800
+  },
   "json-to-xlsx": {
     "label": "JSON → XLSX",
     "accept": [

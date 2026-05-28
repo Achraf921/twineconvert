@@ -208,6 +208,18 @@ export const registry: Record<string, ConverterLoader> = {
     import("./converters/xml-to-csv").then((m) => m.default),
   "csv-to-html": () =>
     import("./converters/csv-to-html").then((m) => m.default),
+
+  // PSD + MSG (external research batch)
+  "psd-to-png": () =>
+    import("./converters/psd-to-png").then((m) => m.default),
+  "psd-to-jpg": () =>
+    import("./converters/psd-to-jpg").then((m) => m.default),
+  "msg-to-eml": () =>
+    import("./converters/msg-to-eml").then((m) => m.default),
+  "msg-to-csv": () =>
+    import("./converters/msg-to-csv").then((m) => m.default),
+  "msg-to-pdf": () =>
+    import("./converters/msg-to-pdf").then((m) => m.default),
   "json-to-xlsx": () =>
     import("./converters/json-to-xlsx").then((m) => m.default),
 

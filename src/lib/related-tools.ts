@@ -154,6 +154,13 @@ const HAND_CURATED_RELATED: Record<string, string[]> = {
   "mp4-to-webm": ["webm-to-mp4", "mp4-to-mov", "mp4-to-gif"],
   "mov-to-gif":  ["mp4-to-gif", "gif-to-mp4", "mov-to-mp4"],
 
+  // ===== Exotic batch 1 (2026-05-27): PSD + MSG =====
+  "psd-to-png": ["psd-to-jpg", "png-to-jpg", "heic-to-png"],
+  "psd-to-jpg": ["psd-to-png", "png-to-jpg", "heic-to-jpg"],
+  "msg-to-eml": ["msg-to-csv", "msg-to-pdf", "eml-to-pdf"],
+  "msg-to-csv": ["msg-to-eml", "msg-to-pdf", "mbox-to-csv"],
+  "msg-to-pdf": ["msg-to-eml", "msg-to-csv", "eml-to-pdf"],
+
   // ===== Chess (fen-to-png + pgn-to-fen rank well, sibling spread) =====
   "fen-to-pgn":  ["pgn-to-fen", "fen-to-png", "pgn-to-csv", "pgn-to-json"],
   "fen-to-png":  ["fen-to-pgn", "pgn-to-fen", "pgn-to-csv"],

@@ -2676,6 +2676,88 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       },
     ],
   },
+
+  // ===== Exotic batch 1: PSD + MSG (2026-05-27) =====
+  "psd-to-png": {
+    whyConvert:
+      "Need to share a Photoshop comp with someone who does not have Photoshop, or post it on the web. PNG is the lossless raster format every browser, CMS, and design tool reads, and unlike JPG it keeps the transparency from your PSD intact.",
+    example:
+      "A client asks you to send the latest design comp by email. You have it as a 40 MB .psd. Convert to PNG, the client opens it in any browser or Preview, no Adobe license needed.",
+    troubleshooting: [
+      {
+        problem: '"PSD has no composite image" error.',
+        solution:
+          "Photoshop only writes the flattened composite if 'Maximize Compatibility' is enabled at save time. Open the PSD in Photoshop, Save As, ensure that checkbox is on, then reconvert. Without it the PSD is layer-only and there is no rendered preview to extract.",
+      },
+      {
+        problem: "Transparent areas come out black.",
+        solution:
+          "That happens with PNG only when the source layer had black with zero alpha; the alpha channel should still be correct. If you wanted a solid background, use psd-to-jpg, which flattens onto white.",
+      },
+    ],
+  },
+  "psd-to-jpg": {
+    whyConvert:
+      "JPG is the smallest, most-compatible raster format for sharing a Photoshop design when transparency does not matter. Email attachments, image galleries, social previews all want JPG. We flatten onto a white background since JPEG has no alpha channel.",
+    example:
+      "You have a finished poster as a .psd and want to upload a preview to a print-on-demand site that only accepts JPG. Convert and upload.",
+    troubleshooting: [
+      {
+        problem: "The output looks slightly less crisp than the PSD preview in Photoshop.",
+        solution:
+          "JPG is lossy by definition. We use quality 0.92 which is visually transparent in most cases; if you need sharper text or fine detail, use psd-to-png instead.",
+      },
+      {
+        problem: "Why is the background white, not transparent?",
+        solution:
+          "JPEG does not support an alpha channel. Any transparent pixel has to flatten onto a solid color, and white is the safe default. Use psd-to-png if you need transparency preserved.",
+      },
+    ],
+  },
+  "msg-to-eml": {
+    whyConvert:
+      "Outlook saves emails as .msg, a proprietary Microsoft compound-document format only Outlook reads cleanly. EML is the RFC 5322 standard every other mail client (Apple Mail, Thunderbird, Gmail import, Mac Mail) accepts. This is how you escape Outlook lock-in.",
+    example:
+      "You are migrating away from Outlook to Apple Mail or Thunderbird and need to keep important threads. Convert each .msg to .eml here, drag the result into your new client's inbox.",
+    troubleshooting: [
+      {
+        problem: "Attachments are not in the EML.",
+        solution:
+          "By design in v1. The original attachment filenames are surfaced in an X-Original-Attachments header so nothing is silently lost. Full multipart MIME packaging of binary attachments is a separate route. For now extract attachments inside Outlook before converting if you need them transferred.",
+      },
+      {
+        problem: '"MSG had no readable subject, sender, or body" error.',
+        solution:
+          "The .msg may be a calendar invitation or a task rather than an email, both of which use a different property layout. msg-to-eml currently targets email messages only.",
+      },
+    ],
+  },
+  "msg-to-csv": {
+    whyConvert:
+      "If you are processing a folder of Outlook messages for e-discovery, archival indexing, or just to log who emailed whom, CSV is the format any spreadsheet or analysis tool reads. Same column shape as mbox-to-csv so multi-file workflows stay consistent.",
+    example:
+      "You exported 500 .msg files from an Outlook PST and need a single index spreadsheet. Convert each, concatenate the CSV rows, open in Excel, filter and sort.",
+    troubleshooting: [
+      {
+        problem: "Output is just one row.",
+        solution:
+          "Each .msg is one email and the converter emits one row per file. For a batch of .msg files, drop them all at once and the tool zips up per-file CSVs; concatenate in your spreadsheet.",
+      },
+    ],
+  },
+  "msg-to-pdf": {
+    whyConvert:
+      "For archiving or legal disclosure you often need an email as a single, fixed-layout PDF rather than a re-editable .msg. Renders the Outlook headers (From/To/Subject/Date) and body cleanly, attachments listed by filename.",
+    example:
+      "A discovery request asks for a specific Outlook thread as PDF. Drop the .msg, convert, hand over the PDF.",
+    troubleshooting: [
+      {
+        problem: "Inline images do not appear.",
+        solution:
+          "We render the text body and headers, not embedded image attachments. If you need the visual fidelity of inline images, open the .msg in Outlook and use Print, Save as PDF instead.",
+      },
+    ],
+  },
 };
 
 export function getExtendedCopy(toolId: string): ExtendedCopy | undefined {

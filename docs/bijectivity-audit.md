@@ -1,17 +1,17 @@
 # Bijectivity Audit
 
-Generated 2026-05-27 from src/lib/engine/converters/.
+Generated 2026-05-28 from src/lib/engine/converters/.
 
 ## Summary
 
 | Classification | Count |
 |---|---:|
-| Total converters | 350 |
+| Total converters | 355 |
 | **Bijective candidates** (lossless, same-kind, both directions exist) | 162 |
 | **Bijective candidates missing reverse converter** | 19 |
 | **Bijective candidates missing round-trip test** | 6 |
-| Lossy encoding (same kind, but lossy format) | 79 |
-| Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 37 |
+| Lossy encoding (same kind, but lossy format) | 82 |
+| Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 39 |
 | Single-action (no reverse possible) | 53 |
 | Unknown formats (need to add to FORMATS table) | 0 |
 | Compound id (irregular pattern) | 0 |
@@ -289,6 +289,9 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `mp4-to-mov` | lossy-encoding | ✓ | ✓ | mp4 or mov uses lossy encoding |
 | `mp4-to-mp3` | cross-kind | (`mp3-to-mp4` missing) | ✓ | video -> audio: cross-domain, inherently lossy |
 | `mp4-to-webm` | lossy-encoding | ✓ | ✓ | mp4 or webm uses lossy encoding |
+| `msg-to-csv` | cross-kind | (`csv-to-msg` missing) | n/a | doc -> data: cross-domain, inherently lossy |
+| `msg-to-eml` | cross-kind | (`eml-to-msg` missing) | n/a | doc -> data: cross-domain, inherently lossy |
+| `msg-to-pdf` | lossy-encoding | (`pdf-to-msg` missing) | n/a | msg or pdf uses lossy encoding |
 | `mts-to-mp4` | lossy-encoding | (`mp4-to-mts` missing) | n/a | mts or mp4 uses lossy encoding |
 | `musicxml-to-midi` | lossy-encoding | ✓ | n/a | musicxml or midi uses lossy encoding |
 | `musicxml-to-mxl` | bijective-candidate | ✓ | ✓ | both lossless notation formats; should round-trip cleanly |
@@ -334,6 +337,8 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `po-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `po-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `properties-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `psd-to-jpg` | lossy-encoding | (`jpg-to-psd` missing) | ✓ | psd or jpg uses lossy encoding |
+| `psd-to-png` | lossy-encoding | (`png-to-psd` missing) | ✓ | psd or png uses lossy encoding |
 | `qbo-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `qfx-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `qif-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
