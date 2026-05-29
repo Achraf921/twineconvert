@@ -1,17 +1,17 @@
 # Bijectivity Audit
 
-Generated 2026-05-28 from src/lib/engine/converters/.
+Generated 2026-05-29 from src/lib/engine/converters/.
 
 ## Summary
 
 | Classification | Count |
 |---|---:|
-| Total converters | 363 |
+| Total converters | 366 |
 | **Bijective candidates** (lossless, same-kind, both directions exist) | 164 |
 | **Bijective candidates missing reverse converter** | 20 |
 | **Bijective candidates missing round-trip test** | 8 |
 | Lossy encoding (same kind, but lossy format) | 85 |
-| Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 41 |
+| Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 44 |
 | Single-action (no reverse possible) | 53 |
 | Unknown formats (need to add to FORMATS table) | 0 |
 | Compound id (irregular pattern) | 0 |
@@ -303,7 +303,10 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `mts-to-mp4` | lossy-encoding | (`mp4-to-mts` missing) | n/a | mts or mp4 uses lossy encoding |
 | `musicxml-to-midi` | lossy-encoding | ✓ | n/a | musicxml or midi uses lossy encoding |
 | `musicxml-to-mxl` | bijective-candidate | ✓ | ✓ | both lossless notation formats; should round-trip cleanly |
+| `musicxml-to-pdf` | cross-kind | (`pdf-to-musicxml` missing) | n/a | notation -> doc: cross-domain, inherently lossy |
+| `musicxml-to-svg` | cross-kind | (`svg-to-musicxml` missing) | n/a | notation -> vector: cross-domain, inherently lossy |
 | `mxl-to-musicxml` | bijective-candidate | ✓ | ✓ | both lossless notation formats; should round-trip cleanly |
+| `mxl-to-svg` | cross-kind | (`svg-to-mxl` missing) | n/a | notation -> vector: cross-domain, inherently lossy |
 | `nbib-to-bibtex` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `nbib-to-ris` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `nbib-to-xlsx` | bijective-candidate | (`xlsx-to-nbib` missing) | n/a | both lossless data formats; should round-trip cleanly |

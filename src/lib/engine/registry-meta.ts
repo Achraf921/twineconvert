@@ -629,7 +629,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "application/x-lrc"
     ],
     "toMime": "application/x-subrip",
-    "maxFileSizeBytes": 5242880
+    "maxFileSizeBytes": 52428800
   },
   "lrc-to-vtt": {
     "label": "LRC → WebVTT",
@@ -641,7 +641,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "application/x-lrc"
     ],
     "toMime": "text/vtt",
-    "maxFileSizeBytes": 5242880
+    "maxFileSizeBytes": 52428800
   },
   "srt-to-lrc": {
     "label": "SRT → LRC",
@@ -653,7 +653,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "application/x-subrip"
     ],
     "toMime": "application/x-lrc",
-    "maxFileSizeBytes": 5242880
+    "maxFileSizeBytes": 52428800
   },
   "dicom-to-jpg": {
     "label": "DICOM → JPG",
@@ -679,6 +679,48 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "application/octet-stream"
     ],
     "toMime": "application/pdf",
+    "maxFileSizeBytes": 104857600
+  },
+  "musicxml-to-svg": {
+    "label": "MusicXML → SVG",
+    "accept": [
+      ".musicxml",
+      ".xml"
+    ],
+    "fromMime": [
+      "application/vnd.recordare.musicxml+xml",
+      "application/vnd.recordare.musicxml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "image/svg+xml",
+    "maxFileSizeBytes": 104857600
+  },
+  "musicxml-to-pdf": {
+    "label": "MusicXML → PDF",
+    "accept": [
+      ".musicxml",
+      ".xml"
+    ],
+    "fromMime": [
+      "application/vnd.recordare.musicxml+xml",
+      "application/vnd.recordare.musicxml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "application/pdf",
+    "maxFileSizeBytes": 104857600
+  },
+  "mxl-to-svg": {
+    "label": "MXL → SVG",
+    "accept": [
+      ".mxl"
+    ],
+    "fromMime": [
+      "application/vnd.recordare.musicxml",
+      "application/zip"
+    ],
+    "toMime": "image/svg+xml",
     "maxFileSizeBytes": 104857600
   },
   "mp3-to-wav": {
@@ -1725,7 +1767,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "text/plain"
     ],
     "toMime": "application/x-research-info-systems",
-    "maxFileSizeBytes": 10485760
+    "maxFileSizeBytes": 104857600
   },
   "ris-to-bibtex": {
     "label": "RIS → BibTeX",
@@ -1737,7 +1779,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "text/plain"
     ],
     "toMime": "application/x-bibtex",
-    "maxFileSizeBytes": 10485760
+    "maxFileSizeBytes": 104857600
   },
   "nbib-to-bibtex": {
     "label": "NBIB → BibTeX",
@@ -1749,7 +1791,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "text/plain"
     ],
     "toMime": "application/x-bibtex",
-    "maxFileSizeBytes": 10485760
+    "maxFileSizeBytes": 104857600
   },
   "nbib-to-ris": {
     "label": "NBIB → RIS",
@@ -1761,7 +1803,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "text/plain"
     ],
     "toMime": "application/x-research-info-systems",
-    "maxFileSizeBytes": 10485760
+    "maxFileSizeBytes": 104857600
   },
   "endnote-xml-to-bibtex": {
     "label": "EndNote XML → BibTeX",
@@ -1773,7 +1815,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "text/xml"
     ],
     "toMime": "application/x-bibtex",
-    "maxFileSizeBytes": 20971520
+    "maxFileSizeBytes": 104857600
   },
   "endnote-xml-to-ris": {
     "label": "EndNote XML → RIS",
@@ -1785,7 +1827,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "text/xml"
     ],
     "toMime": "application/x-research-info-systems",
-    "maxFileSizeBytes": 20971520
+    "maxFileSizeBytes": 104857600
   },
   "bibtex-to-csv": {
     "label": "BibTeX → CSV",
@@ -1799,7 +1841,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "text/plain"
     ],
     "toMime": "text/csv",
-    "maxFileSizeBytes": 10485760
+    "maxFileSizeBytes": 104857600
   },
   "ris-to-csv": {
     "label": "RIS → CSV",
@@ -1811,7 +1853,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "text/plain"
     ],
     "toMime": "text/csv",
-    "maxFileSizeBytes": 10485760
+    "maxFileSizeBytes": 104857600
   },
   "bibtex-to-xlsx": {
     "label": "BibTeX → XLSX",
@@ -1825,7 +1867,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "text/plain"
     ],
     "toMime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    "maxFileSizeBytes": 10485760
+    "maxFileSizeBytes": 104857600
   },
   "ris-to-xlsx": {
     "label": "RIS → XLSX",
@@ -1837,7 +1879,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "text/plain"
     ],
     "toMime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    "maxFileSizeBytes": 10485760
+    "maxFileSizeBytes": 104857600
   },
   "nbib-to-xlsx": {
     "label": "NBIB → XLSX",
@@ -1849,7 +1891,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "text/plain"
     ],
     "toMime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    "maxFileSizeBytes": 10485760
+    "maxFileSizeBytes": 104857600
   },
   "adif-to-csv": {
     "label": "ADIF → CSV",
@@ -1975,7 +2017,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "application/zip"
     ],
     "toMime": "text/csv",
-    "maxFileSizeBytes": 209715200
+    "maxFileSizeBytes": 1073741824
   },
   "whatsapp-chat-to-json": {
     "label": "WhatsApp Chat → JSON",
@@ -1988,7 +2030,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "application/zip"
     ],
     "toMime": "application/json",
-    "maxFileSizeBytes": 209715200
+    "maxFileSizeBytes": 1073741824
   },
   "whatsapp-chat-to-html": {
     "label": "WhatsApp Chat → HTML",
@@ -2001,7 +2043,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "application/zip"
     ],
     "toMime": "text/html",
-    "maxFileSizeBytes": 209715200
+    "maxFileSizeBytes": 1073741824
   },
   "whatsapp-chat-to-pdf": {
     "label": "WhatsApp Chat → PDF",
@@ -2014,7 +2056,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "application/zip"
     ],
     "toMime": "application/pdf",
-    "maxFileSizeBytes": 209715200
+    "maxFileSizeBytes": 1073741824
   },
   "eml-to-pdf": {
     "label": "EML → PDF",
@@ -3036,7 +3078,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "application/csv"
     ],
     "toMime": "application/x-bibtex",
-    "maxFileSizeBytes": 10485760
+    "maxFileSizeBytes": 104857600
   },
   "csv-to-ris": {
     "label": "CSV → RIS",
@@ -3048,7 +3090,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "application/csv"
     ],
     "toMime": "application/x-research-info-systems",
-    "maxFileSizeBytes": 10485760
+    "maxFileSizeBytes": 104857600
   },
   "bibtex-to-nbib": {
     "label": "BibTeX → NBIB",
@@ -3062,7 +3104,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "text/plain"
     ],
     "toMime": "application/x-research-info-systems",
-    "maxFileSizeBytes": 10485760
+    "maxFileSizeBytes": 104857600
   },
   "ris-to-nbib": {
     "label": "RIS → NBIB",
@@ -3074,7 +3116,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "text/plain"
     ],
     "toMime": "application/x-research-info-systems",
-    "maxFileSizeBytes": 10485760
+    "maxFileSizeBytes": 104857600
   },
   "bibtex-to-endnote-xml": {
     "label": "BibTeX → EndNote XML",
@@ -3088,7 +3130,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "text/plain"
     ],
     "toMime": "application/xml",
-    "maxFileSizeBytes": 10485760
+    "maxFileSizeBytes": 104857600
   },
   "ris-to-endnote-xml": {
     "label": "RIS → EndNote XML",
@@ -3100,7 +3142,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "text/plain"
     ],
     "toMime": "application/xml",
-    "maxFileSizeBytes": 10485760
+    "maxFileSizeBytes": 104857600
   },
   "html-to-docx": {
     "label": "HTML → DOCX",
@@ -3624,7 +3666,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "text/plain"
     ],
     "toMime": "application/x-subrip",
-    "maxFileSizeBytes": 10485760
+    "maxFileSizeBytes": 52428800
   },
   "vtt-to-ass": {
     "label": "VTT → ASS",
@@ -3649,7 +3691,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "text/plain"
     ],
     "toMime": "text/vtt",
-    "maxFileSizeBytes": 10485760
+    "maxFileSizeBytes": 52428800
   },
   "dxf-to-svg": {
     "label": "DXF → SVG",
@@ -3992,7 +4034,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "text/plain"
     ],
     "toMime": "text/x-gettext-translation",
-    "maxFileSizeBytes": 10485760
+    "maxFileSizeBytes": 104857600
   },
   "po-to-json": {
     "label": "PO → JSON",
@@ -4405,7 +4447,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "text/plain"
     ],
     "toMime": "application/vnd.citationstyles.csl+json",
-    "maxFileSizeBytes": 10485760
+    "maxFileSizeBytes": 104857600
   },
   "csl-json-to-bibtex": {
     "label": "CSL-JSON → BibTeX",
@@ -4418,7 +4460,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "text/plain"
     ],
     "toMime": "application/x-bibtex",
-    "maxFileSizeBytes": 10485760
+    "maxFileSizeBytes": 104857600
   },
   "bibtex-to-yaml": {
     "label": "BibTeX → YAML (CSL)",
@@ -4432,7 +4474,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "text/plain"
     ],
     "toMime": "application/x-yaml",
-    "maxFileSizeBytes": 10485760
+    "maxFileSizeBytes": 104857600
   },
   "yaml-to-bibtex": {
     "label": "YAML (CSL) → BibTeX",
@@ -4460,7 +4502,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "text/plain"
     ],
     "toMime": "text/markdown",
-    "maxFileSizeBytes": 10485760
+    "maxFileSizeBytes": 104857600
   },
   "bibtex-to-html": {
     "label": "BibTeX → HTML bibliography",
@@ -4474,7 +4516,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "text/plain"
     ],
     "toMime": "text/html",
-    "maxFileSizeBytes": 10485760
+    "maxFileSizeBytes": 104857600
   }
 };
 

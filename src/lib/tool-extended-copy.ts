@@ -2876,6 +2876,52 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       },
     ],
   },
+
+  // ===== Music sheet rendering batch (2026-05-28) =====
+  "musicxml-to-svg": {
+    whyConvert:
+      "MusicXML is the universal interchange format every notation editor reads (Sibelius, Finale, MuseScore, Dorico). To embed the engraved sheet music on a webpage, in a blog post, or inside a presentation, you want SVG, the vector format that scales cleanly at any zoom. Rendered with Verovio, the same engraver IMSLP uses.",
+    example:
+      "You write an arrangement in MuseScore, export the .musicxml, and want to put the sheet music on your composer website. Convert here, drop the SVG into your CMS, it scales perfectly on retina screens with no rasterisation.",
+    troubleshooting: [
+      {
+        problem: "Some symbols are missing or misaligned compared to MuseScore.",
+        solution:
+          "Verovio targets the SMuFL standard and engraves to a slightly different aesthetic than commercial notation editors. Cross-staff beams, complex articulations, and lyrics with specific font choices may render differently. For one-to-one fidelity to Finale or Sibelius output, export PDF from there instead.",
+      },
+      {
+        problem: '"Verovio failed to load the MusicXML" error.',
+        solution:
+          "The file may use MusicXML 4.0 features Verovio does not support, or contain XML errors. Open in MuseScore (free), re-save as MusicXML 3.1, then reconvert.",
+      },
+    ],
+  },
+  "musicxml-to-pdf": {
+    whyConvert:
+      "PDF is what you print, hand to a musician, or distribute to an ensemble. Renders the MusicXML through Verovio to engraved SVG, then rasterises into a PDF page sized to fit a sheet of paper. Same in-browser story, no upload, no signup.",
+    example:
+      "You arranged a piece for a brass quintet and need to hand each player a printable part. Convert each part's MusicXML to PDF here, print, distribute.",
+    troubleshooting: [
+      {
+        problem: "Print quality is fuzzy.",
+        solution:
+          "We rasterise the SVG to PNG at Verovio's native page size before embedding in the PDF. For sharper output at larger paper sizes, use musicxml-to-svg and convert to PDF in a tool that can preserve vector data (Inkscape: File, Save As, PDF).",
+      },
+    ],
+  },
+  "mxl-to-svg": {
+    whyConvert:
+      "MXL is the compressed MusicXML format most notation editors actually export (smaller files, single download). Same Verovio engraving as musicxml-to-svg, just with the unzip step inlined so you do not have to manually extract before converting.",
+    example:
+      "MuseScore exported your arrangement as .mxl, not .musicxml. Drop the .mxl directly, get the engraved SVG, no manual unzip step.",
+    troubleshooting: [
+      {
+        problem: '"no inner MusicXML file found".',
+        solution:
+          "The .mxl container is missing or hiding the inner score file. Open in MuseScore and re-save (or save as uncompressed .musicxml and use musicxml-to-svg instead).",
+      },
+    ],
+  },
 };
 
 export function getExtendedCopy(toolId: string): ExtendedCopy | undefined {

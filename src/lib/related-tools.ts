@@ -173,6 +173,11 @@ const HAND_CURATED_RELATED: Record<string, string[]> = {
   "dicom-to-jpg": ["dicom-to-png", "dicom-to-pdf", "dicom-to-json"],
   "dicom-to-pdf": ["dicom-to-png", "dicom-to-jpg", "dicom-to-json"],
 
+  // ===== Music sheet batch (2026-05-28) =====
+  "musicxml-to-svg": ["musicxml-to-pdf", "musicxml-to-midi", "mxl-to-svg"],
+  "musicxml-to-pdf": ["musicxml-to-svg", "musicxml-to-midi", "mxl-to-svg"],
+  "mxl-to-svg":      ["mxl-to-musicxml", "musicxml-to-svg", "musicxml-to-pdf"],
+
   // ===== Chess (fen-to-png + pgn-to-fen rank well, sibling spread) =====
   "fen-to-pgn":  ["pgn-to-fen", "fen-to-png", "pgn-to-csv", "pgn-to-json"],
   "fen-to-png":  ["fen-to-pgn", "pgn-to-fen", "pgn-to-csv"],

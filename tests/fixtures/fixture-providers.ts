@@ -195,6 +195,11 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "srt-to-lrc":  { provider: () => text("test.srt", F.srt, "application/x-subrip"), env: "node" },
   "dicom-to-jpg": { provider: () => Promise.reject(new Error("dicom fixture pending")), env: "browser" },
   "dicom-to-pdf": { provider: () => Promise.reject(new Error("dicom fixture pending")), env: "browser" },
+
+  // Music sheet rendering via Verovio
+  "musicxml-to-svg": { provider: () => text("test.musicxml", F.musicXml, "application/vnd.recordare.musicxml+xml"), env: "node" },
+  "musicxml-to-pdf": { provider: () => text("test.musicxml", F.musicXml, "application/vnd.recordare.musicxml+xml"), env: "browser" },
+  "mxl-to-svg":      { provider: () => Promise.reject(new Error("mxl fixture pending")), env: "browser" },
   "mp3-to-wav":  { provider: () => Promise.reject(new Error("mp3 fixture pending")), env: "browser" },
   "mp3-to-m4a":  { provider: () => Promise.reject(new Error("mp3 fixture pending")), env: "browser" },
   "mp3-to-flac": { provider: () => Promise.reject(new Error("mp3 fixture pending")), env: "browser" },

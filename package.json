@@ -26,6 +26,7 @@
     "@types/dompurify": "^3.0.5",
     "@types/three": "^0.184.1",
     "@vercel/analytics": "^2.0.1",
+    "abcjs": "^6.6.3",
     "ag-psd": "^30.1.1",
     "chess.js": "^1.4.0",
     "culori": "^4.0.2",
@@ -65,6 +66,7 @@
     "turndown": "^7.2.4",
     "twitter-archive-reader": "^7.3.3",
     "utif": "^3.1.0",
+    "verovio": "^6.2.0",
     "web-ifc": "^0.0.77",
     "xlsx": "^0.18.5"
   },
@@ -83,6 +85,7 @@
     "@types/spark-md5": "^3.0.5",
     "@types/turndown": "^5.0.6",
     "@types/utif": "^3.0.6",
+    "@types/verovio": "^5.1.0",
     "@vitest/browser": "^4.1.5",
     "@vitest/browser-playwright": "^4.1.5",
     "@vitest/coverage-v8": "^4.1.5",

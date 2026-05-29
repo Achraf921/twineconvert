@@ -158,6 +158,14 @@ export const registry: Record<string, ConverterLoader> = {
     import("./converters/dicom-to-jpg").then((m) => m.default),
   "dicom-to-pdf": () =>
     import("./converters/dicom-to-pdf").then((m) => m.default),
+
+  // Music sheet rendering via Verovio
+  "musicxml-to-svg": () =>
+    import("./converters/musicxml-to-svg").then((m) => m.default),
+  "musicxml-to-pdf": () =>
+    import("./converters/musicxml-to-pdf").then((m) => m.default),
+  "mxl-to-svg": () =>
+    import("./converters/mxl-to-svg").then((m) => m.default),
   "mp3-to-wav": () =>
     import("./converters/mp3-to-wav").then((m) => m.default),
   "wav-to-mp3": () =>
