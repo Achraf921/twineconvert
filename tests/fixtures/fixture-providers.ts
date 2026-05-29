@@ -45,6 +45,7 @@ import {
   makeTinyIworkPages,
   makeTinyMsgpack,
   makeTinyCbor,
+  makeTinyBencode,
 } from "./binary-fixtures";
 
 export type FixtureProvider = () => Promise<File>;
@@ -214,6 +215,14 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "msgpack-to-json": { provider: async () => fileFromBytes("test.msgpack", await makeTinyMsgpack(), "application/msgpack"), env: "node" },
   "json-to-cbor":    { provider: () => text("test.json", F.jsonArray, "application/json"), env: "node" },
   "cbor-to-json":    { provider: async () => fileFromBytes("test.cbor", await makeTinyCbor(), "application/cbor"), env: "node" },
+
+  // Bioinformatics + BitTorrent
+  "fasta-to-json":   { provider: () => text("test.fasta", ">seq1 hemoglobin\nMVHLTPEEKSAVTALWGKVNVD\n>seq2\nGGTAACAGTC\n", "text/x-fasta"), env: "node" },
+  "json-to-fasta":   { provider: () => text("test.json", JSON.stringify([{id:"seq1",description:"demo",sequence:"ACGTACGT"}]), "application/json"), env: "node" },
+  "fastq-to-json":   { provider: () => text("test.fastq", "@read1\nACGT\n+\n!!!!\n@read2\nTTGC\n+\nIIII\n", "text/plain"), env: "node" },
+  "json-to-fastq":   { provider: () => text("test.json", JSON.stringify([{id:"r1",description:"",sequence:"ACGT",quality:"!!!!"}]), "application/json"), env: "node" },
+  "bencode-to-json": { provider: async () => fileFromBytes("test.torrent", await makeTinyBencode(), "application/x-bittorrent"), env: "node" },
+  "json-to-bencode": { provider: () => text("test.json", JSON.stringify({announce:"http://t.example.com/announce", info:{name:"x", "piece length":16384, length:1024}}), "application/json"), env: "node" },
   "mp3-to-wav":  { provider: () => Promise.reject(new Error("mp3 fixture pending")), env: "browser" },
   "mp3-to-m4a":  { provider: () => Promise.reject(new Error("mp3 fixture pending")), env: "browser" },
   "mp3-to-flac": { provider: () => Promise.reject(new Error("mp3 fixture pending")), env: "browser" },

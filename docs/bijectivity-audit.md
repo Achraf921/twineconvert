@@ -6,8 +6,8 @@ Generated 2026-05-29 from src/lib/engine/converters/.
 
 | Classification | Count |
 |---|---:|
-| Total converters | 374 |
-| **Bijective candidates** (lossless, same-kind, both directions exist) | 172 |
+| Total converters | 380 |
+| **Bijective candidates** (lossless, same-kind, both directions exist) | 178 |
 | **Bijective candidates missing reverse converter** | 20 |
 | **Bijective candidates missing round-trip test** | 8 |
 | Lossy encoding (same kind, but lossy format) | 85 |
@@ -91,6 +91,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `avif-to-png` | lossy-encoding | ✓ | ✓ | avif or png uses lossy encoding |
 | `avif-to-webp` | lossy-encoding | ✓ | ✓ | avif or webp uses lossy encoding |
 | `base64-to-text` | bijective-candidate | ✓ | ✓ | both lossless encoding formats; should round-trip cleanly |
+| `bencode-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `bibtex-to-csl-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `bibtex-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `bibtex-to-endnote-xml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
@@ -172,6 +173,8 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `exp-to-jef` | bijective-candidate | ✓ | ✓ | both lossless embroidery formats; should round-trip cleanly |
 | `exp-to-pes` | bijective-candidate | ✓ | ✓ | both lossless embroidery formats; should round-trip cleanly |
 | `facebook-archive-to-html` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
+| `fasta-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `fastq-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `fen-to-pgn` | lossy-encoding | ✓ | n/a | fen or pgn uses lossy encoding |
 | `fen-to-png` | cross-kind | (`png-to-fen` missing) | ✓ | data -> raster: cross-domain, inherently lossy |
 | `fhir-bundle-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
@@ -244,9 +247,12 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `jpg-to-png` | lossy-encoding | ✓ | ✓ | jpg or png uses lossy encoding |
 | `jpg-to-text` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
 | `jpg-to-webp` | lossy-encoding | ✓ | ✓ | jpg or webp uses lossy encoding |
+| `json-to-bencode` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `json-to-cbor` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `json-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `json-to-env` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `json-to-fasta` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `json-to-fastq` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `json-to-gedcom` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `json-to-hl7` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `json-to-ini` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |

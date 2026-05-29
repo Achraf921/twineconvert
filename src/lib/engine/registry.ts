@@ -186,6 +186,22 @@ export const registry: Record<string, ConverterLoader> = {
     import("./converters/cbor-to-json").then((m) => m.default),
   "json-to-cbor": () =>
     import("./converters/json-to-cbor").then((m) => m.default),
+
+  // Bioinformatics: FASTA / FASTQ <-> JSON
+  "fasta-to-json": () =>
+    import("./converters/fasta-to-json").then((m) => m.default),
+  "json-to-fasta": () =>
+    import("./converters/json-to-fasta").then((m) => m.default),
+  "fastq-to-json": () =>
+    import("./converters/fastq-to-json").then((m) => m.default),
+  "json-to-fastq": () =>
+    import("./converters/json-to-fastq").then((m) => m.default),
+
+  // BitTorrent: Bencode <-> JSON
+  "bencode-to-json": () =>
+    import("./converters/bencode-to-json").then((m) => m.default),
+  "json-to-bencode": () =>
+    import("./converters/json-to-bencode").then((m) => m.default),
   "mp3-to-wav": () =>
     import("./converters/mp3-to-wav").then((m) => m.default),
   "wav-to-mp3": () =>

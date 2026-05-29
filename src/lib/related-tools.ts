@@ -190,6 +190,16 @@ const HAND_CURATED_RELATED: Record<string, string[]> = {
   "cbor-to-json":    ["json-to-cbor", "msgpack-to-json", "json-to-yaml"],
   "json-to-cbor":    ["cbor-to-json", "json-to-msgpack", "yaml-to-json"],
 
+  // ===== Bioinformatics (FASTA / FASTQ) =====
+  "fasta-to-json": ["json-to-fasta", "fastq-to-json", "csv-to-json"],
+  "json-to-fasta": ["fasta-to-json", "json-to-fastq", "json-to-csv"],
+  "fastq-to-json": ["json-to-fastq", "fasta-to-json", "csv-to-json"],
+  "json-to-fastq": ["fastq-to-json", "json-to-fasta", "json-to-csv"],
+
+  // ===== BitTorrent (Bencode) =====
+  "bencode-to-json": ["json-to-bencode", "json-to-msgpack", "cbor-to-json"],
+  "json-to-bencode": ["bencode-to-json", "msgpack-to-json", "json-to-cbor"],
+
   // ===== Chess (fen-to-png + pgn-to-fen rank well, sibling spread) =====
   "fen-to-pgn":  ["pgn-to-fen", "fen-to-png", "pgn-to-csv", "pgn-to-json"],
   "fen-to-png":  ["fen-to-pgn", "pgn-to-fen", "pgn-to-csv"],

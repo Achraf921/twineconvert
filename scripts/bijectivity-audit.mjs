@@ -174,6 +174,10 @@ const FORMATS = {
   // ==== Binary serialization ====
   msgpack: { kind: "data", lossless: true, family: "data" },
   cbor: { kind: "data", lossless: true, family: "data" },
+  bencode: { kind: "data", lossless: true, family: "data" },
+  // ==== Bioinformatics ====
+  fasta: { kind: "data", lossless: true, family: "bio" },
+  fastq: { kind: "data", lossless: true, family: "bio" },
   // ==== Checksums (single-action; declared so audit doesn't flag them) ====
   md5: { kind: "checksum", lossless: false, family: "integrity" },
   sha1: { kind: "checksum", lossless: false, family: "integrity" },
@@ -442,6 +446,7 @@ const TEST_FILE_GLOBS = [
   "tests/converters-comprehensive.test.ts",
   "tests/converters-music-sheet.test.ts",
   "tests/converters-gis-binary.test.ts",
+  "tests/converters-bio-bencode.test.ts",
 ];
 const browserTestFiles = (() => {
   try {

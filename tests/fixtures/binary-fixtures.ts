@@ -692,6 +692,17 @@ export async function makeTinyCbor(): Promise<Uint8Array> {
   return encode({ hello: "world", n: 42 });
 }
 
+/** Real bencode-encoded fixture mimicking a minimal .torrent. */
+export async function makeTinyBencode(): Promise<Uint8Array> {
+  const bencode = await import("bencode");
+  const enc = (bencode.default ?? bencode).encode as (v: unknown) => Uint8Array | Buffer;
+  const out = enc({
+    announce: "http://tracker.example.com/announce",
+    info: { name: "demo", "piece length": 16384, length: 1024 },
+  });
+  return out instanceof Uint8Array ? out : new Uint8Array(out);
+}
+
 /** Minimal iWork .pages document, zip with embedded preview.pdf. */
 export async function makeTinyIworkPages(): Promise<Uint8Array> {
   const JSZip = (await import("jszip")).default;

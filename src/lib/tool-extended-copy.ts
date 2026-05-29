@@ -3014,6 +3014,78 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       "You are testing a CoAP-over-CBOR endpoint on an ESP32 firmware. Hand-author the payload as JSON, convert here, send the resulting bytes with curl --data-binary.",
     troubleshooting: [],
   },
+  "fasta-to-json": {
+    whyConvert:
+      "FASTA is the bioinformatics text format every sequence database (NCBI, UniProt, Ensembl) exports. Modern pipelines (pandas, BigQuery, Node tooling, REST APIs) all want JSON. This parses every FASTA record into a flat array of { id, description, sequence } objects so you can pivot, filter, or upload without writing a parser.",
+    example:
+      "You downloaded a multi-FASTA from NCBI containing 100 ribosomal sequences and want to load them into a Pandas DataFrame. Convert here, then pd.read_json gets you a typed frame in one line.",
+    troubleshooting: [
+      {
+        problem: '"No FASTA records found" error.',
+        solution:
+          'Each record must start with ">" on its own line. If your file uses an unusual header marker (e.g. ";" for legacy PIR format), rewrite the headers to use ">" first.',
+      },
+    ],
+  },
+  "json-to-fasta": {
+    whyConvert:
+      "If you generated sequences (e.g. via a notebook, a primer design tool, or a downstream filtering step), you usually need them back in FASTA for the next tool in the pipeline (BLAST, BWA, samtools). This takes the same { id, description, sequence } JSON shape and emits a properly wrapped FASTA at 70 chars per line (NCBI convention).",
+    example:
+      "You filtered a list of 1000 contigs in a Pandas notebook and need to BLAST the survivors. df.to_json(orient='records'), convert here, paste the FASTA into BLAST.",
+    troubleshooting: [],
+  },
+  "fastq-to-json": {
+    whyConvert:
+      "FASTQ is the standard short-read sequencing output (Illumina, MGI, PacBio HiFi). Every record carries a Phred quality string we usually want as a column in our downstream dataframe. This parses each 4-line record into { id, description, sequence, quality } so you can compute base-call quality stats, filter on average quality, or chunk for batching.",
+    example:
+      "You have a 500 MB FASTQ from an Illumina run and want to compute the per-read mean Phred quality before deciding what to trim. Convert here, then pandas + a string-to-quality decoder gets you a histogram in two lines.",
+    troubleshooting: [
+      {
+        problem: '"FASTQ has N non-empty lines but records require exactly 4 lines each."',
+        solution:
+          "The file is truncated or contains extra blank lines inside records. FASTQ does NOT allow blank lines inside records. Validate the file with seqkit or fastqc first.",
+      },
+    ],
+  },
+  "json-to-fastq": {
+    whyConvert:
+      "If you generated synthetic reads (e.g. wgsim, dwgsim, or a custom simulator) or you re-quality-scored an existing run, you need FASTQ output so the rest of the alignment pipeline (BWA, minimap2, bowtie2) accepts the data. This takes the canonical { id, description, sequence, quality } JSON shape and emits a valid 4-line-per-record FASTQ.",
+    example:
+      "You simulated 10K paired-end reads in a notebook and want to align them with BWA. Export as JSON, convert here, pipe to BWA-MEM.",
+    troubleshooting: [
+      {
+        problem: '"Record N: sequence and quality length mismatch."',
+        solution:
+          "FASTQ requires the quality string to be exactly as long as the sequence (one Phred char per base). Pad or trim your quality field to match before re-converting.",
+      },
+    ],
+  },
+  "bencode-to-json": {
+    whyConvert:
+      "Bencode is the dictionary format inside every .torrent file. The fields you actually want (announce URL, comment, name, file list, piece length) are buried under a binary wrapper. This decodes the whole structure to pretty JSON so you can inspect a torrent before downloading, audit a private tracker payload, or extract the file list programmatically.",
+    example:
+      "You received a .torrent file from a private tracker and want to confirm what files it claims to seed (and from which announce URL) before clicking. Convert here, read the JSON, decide.",
+    troubleshooting: [
+      {
+        problem: 'I see lots of "$binary" wrappers in the output.',
+        solution:
+          'Bencode fields that contain non-text bytes (the "pieces" SHA1 blob is the big one) get wrapped as { "$binary": "<base64>" } to keep the output round-trippable through json-to-bencode. The wrappers are expected; just ignore them or post-process if you want raw hex.',
+      },
+    ],
+  },
+  "json-to-bencode": {
+    whyConvert:
+      "If you authored or modified a torrent structure as JSON (changed the announce URL, edited file paths, added a custom field), you need it back in bencode so a BitTorrent client will accept it. This re-encodes a fasta-to-json-shaped JSON back into the bencode dictionary format and writes a .torrent file you can hand to qBittorrent or Transmission.",
+    example:
+      "You wanted to add a custom comment to a torrent. Decode with bencode-to-json, edit the JSON, convert back here, replace the original .torrent.",
+    troubleshooting: [
+      {
+        problem: "The resulting .torrent is rejected by my client.",
+        solution:
+          "Bencode is strict about types: the info dictionary keys must be byte strings in sorted order, and integer fields (piece length, length) must be JSON integers, not strings. If you stringified an integer field by accident during editing, the BitTorrent client will reject the info-hash. Verify the integer types in the JSON before re-encoding.",
+      },
+    ],
+  },
 };
 
 export function getExtendedCopy(toolId: string): ExtendedCopy | undefined {

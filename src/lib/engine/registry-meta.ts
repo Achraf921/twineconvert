@@ -833,6 +833,91 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "application/cbor",
     "maxFileSizeBytes": 52428800
   },
+  "fasta-to-json": {
+    "label": "FASTA → JSON",
+    "accept": [
+      ".fasta",
+      ".fa",
+      ".fna",
+      ".faa",
+      ".ffn",
+      ".frn",
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain",
+      "text/x-fasta",
+      "application/x-fasta",
+      "chemical/x-fasta"
+    ],
+    "toMime": "application/json",
+    "maxFileSizeBytes": 209715200
+  },
+  "json-to-fasta": {
+    "label": "JSON → FASTA",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "text/x-fasta",
+    "maxFileSizeBytes": 209715200
+  },
+  "fastq-to-json": {
+    "label": "FASTQ → JSON",
+    "accept": [
+      ".fastq",
+      ".fq",
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-fastq",
+      "chemical/x-fastq"
+    ],
+    "toMime": "application/json",
+    "maxFileSizeBytes": 524288000
+  },
+  "json-to-fastq": {
+    "label": "JSON → FASTQ",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 524288000
+  },
+  "bencode-to-json": {
+    "label": "Bencode → JSON",
+    "accept": [
+      ".torrent",
+      ".bencode",
+      ".bin"
+    ],
+    "fromMime": [
+      "application/x-bittorrent",
+      "application/octet-stream"
+    ],
+    "toMime": "application/json",
+    "maxFileSizeBytes": 52428800
+  },
+  "json-to-bencode": {
+    "label": "JSON → Bencode",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "application/x-bittorrent",
+    "maxFileSizeBytes": 52428800
+  },
   "mp3-to-wav": {
     "label": "MP3 → WAV",
     "accept": [

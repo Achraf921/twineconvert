@@ -747,6 +747,60 @@ export const validateCbor: Validator = async ({ blob, minSize = 1 }) => {
   }
 };
 
+export const validateFasta: Validator = async ({ blob, minSize = 5 }) => {
+  assertMinSize(blob, minSize, "FASTA");
+  const text = await readText(blob);
+  if (!/^>\S/m.test(text)) {
+    throw new Error('FASTA missing any record header line (">id ...")');
+  }
+  // At least one non-header non-empty line must exist as sequence content.
+  const lines = text.split(/\r?\n/);
+  let sawSeq = false;
+  for (const l of lines) {
+    if (l.length > 0 && !l.startsWith(">")) {
+      sawSeq = true;
+      break;
+    }
+  }
+  if (!sawSeq) throw new Error("FASTA has headers but no sequence content");
+};
+
+export const validateFastq: Validator = async ({ blob, minSize = 8 }) => {
+  assertMinSize(blob, minSize, "FASTQ");
+  const text = await readText(blob);
+  const lines = text.split(/\r?\n/).filter((l) => l.length > 0);
+  if (lines.length % 4 !== 0) {
+    throw new Error(
+      `FASTQ has ${lines.length} non-empty lines, must be multiple of 4`,
+    );
+  }
+  if (!lines[0].startsWith("@")) {
+    throw new Error('FASTQ first record header must start with "@"');
+  }
+  if (!lines[2].startsWith("+")) {
+    throw new Error('FASTQ first record separator must start with "+"');
+  }
+  if (lines[1].length !== lines[3].length) {
+    throw new Error(
+      `FASTQ first record sequence (${lines[1].length}) and quality (${lines[3].length}) length mismatch`,
+    );
+  }
+};
+
+export const validateBencode: Validator = async ({ blob, minSize = 2 }) => {
+  assertMinSize(blob, minSize, "Bencode");
+  const bytes = new Uint8Array(await blob.arrayBuffer());
+  const bencode = await import("bencode");
+  const decode = (bencode.default ?? bencode).decode as (b: Uint8Array) => unknown;
+  try {
+    decode(bytes);
+  } catch (e) {
+    throw new Error(
+      `Bencode failed to decode: ${e instanceof Error ? e.message : String(e)}`,
+    );
+  }
+};
+
 export const validateDer: Validator = async ({ blob, minSize = 4 }) => {
   // ASN.1 DER always starts with a SEQUENCE tag (0x30) followed by a length.
   // A DER cert / key / CSR is a SEQUENCE at the top level.
@@ -1075,6 +1129,14 @@ const BY_MIME: Record<string, Validator> = {
   // GIS WKT (text plain output but recognised when filename ends .wkt)
   "application/wkt": validateWkt,
   "text/wkt": validateWkt,
+
+  // Bioinformatics + BitTorrent
+  "text/x-fasta": validateFasta,
+  "application/x-fasta": validateFasta,
+  "chemical/x-fasta": validateFasta,
+  "application/x-fastq": validateFastq,
+  "chemical/x-fastq": validateFastq,
+  "application/x-bittorrent": validateBencode,
 };
 
 // Extension-keyed fallback, used when toMime is generic (octet-stream)
@@ -1124,6 +1186,14 @@ const BY_EXT: Record<string, Validator> = {
   wkb: validateWkb,
   msgpack: validateMsgpack,
   cbor: validateCbor,
+  fasta: validateFasta,
+  fa: validateFasta,
+  fna: validateFasta,
+  faa: validateFasta,
+  fastq: validateFastq,
+  fq: validateFastq,
+  torrent: validateBencode,
+  bencode: validateBencode,
 };
 
 /**
