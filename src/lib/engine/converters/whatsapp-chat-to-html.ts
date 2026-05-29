@@ -21,7 +21,7 @@ const whatsappChatToHtml: Converter = {
   fromMime: ["text/plain", "application/zip"],
   accept: [".txt", ".zip"],
   toMime: "text/html",
-  maxFileSizeBytes: 200 * 1024 * 1024,
+  maxFileSizeBytes: 1024 * 1024 * 1024,
 
   async convert(input, opts) {
     opts?.onProgress?.(0.1);

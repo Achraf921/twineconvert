@@ -9,7 +9,7 @@ const assToVtt: Converter = {
   fromMime: ["text/x-ssa", "text/plain"],
   accept: [".ass", ".ssa"],
   toMime: "text/vtt",
-  maxFileSizeBytes: 10 * 1024 * 1024,
+  maxFileSizeBytes: 50 * 1024 * 1024,
 
   async convert(input, opts) {
     opts?.onProgress?.(0.1);

@@ -10,7 +10,7 @@ const endnoteXmlToRis: Converter = {
   fromMime: ["application/xml", "text/xml"],
   accept: [".xml"],
   toMime: "application/x-research-info-systems",
-  maxFileSizeBytes: 20 * 1024 * 1024,
+  maxFileSizeBytes: 100 * 1024 * 1024,
 
   async convert(input, opts) {
     opts?.onProgress?.(0.1);

@@ -9,7 +9,7 @@ const assToSrt: Converter = {
   fromMime: ["text/x-ssa", "text/plain"],
   accept: [".ass", ".ssa"],
   toMime: "application/x-subrip",
-  maxFileSizeBytes: 10 * 1024 * 1024,
+  maxFileSizeBytes: 50 * 1024 * 1024,
 
   async convert(input, opts) {
     opts?.onProgress?.(0.1);

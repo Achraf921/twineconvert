@@ -9,7 +9,7 @@ const nbibToRis: Converter = {
   fromMime: ["application/x-research-info-systems", "text/plain"],
   accept: [".nbib"],
   toMime: "application/x-research-info-systems",
-  maxFileSizeBytes: 10 * 1024 * 1024,
+  maxFileSizeBytes: 100 * 1024 * 1024,
 
   async convert(input, opts) {
     opts?.onProgress?.(0.1);

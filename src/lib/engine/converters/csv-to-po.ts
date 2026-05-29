@@ -16,7 +16,7 @@ const csvToPo: Converter = {
   fromMime: ["text/csv", "text/plain"],
   accept: [".csv"],
   toMime: "text/x-gettext-translation",
-  maxFileSizeBytes: 10 * 1024 * 1024,
+  maxFileSizeBytes: 100 * 1024 * 1024,
 
   async convert(input, opts) {
     opts?.onProgress?.(0.1);

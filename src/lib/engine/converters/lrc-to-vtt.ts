@@ -16,7 +16,7 @@ const lrcToVtt: Converter = {
   fromMime: ["text/plain", "application/x-lrc"],
   accept: [".lrc"],
   toMime: "text/vtt",
-  maxFileSizeBytes: 5 * 1024 * 1024,
+  maxFileSizeBytes: 50 * 1024 * 1024,
 
   async convert(input, opts) {
     opts?.onProgress?.(0.1);

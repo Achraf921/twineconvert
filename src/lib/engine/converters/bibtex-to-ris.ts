@@ -10,7 +10,7 @@ const bibtexToRis: Converter = {
   fromMime: ["application/x-bibtex", "text/x-bibtex", "text/plain"],
   accept: [".bib", ".bibtex"],
   toMime: "application/x-research-info-systems",
-  maxFileSizeBytes: 10 * 1024 * 1024,
+  maxFileSizeBytes: 100 * 1024 * 1024,
 
   async convert(input, opts) {
     opts?.onProgress?.(0.1);

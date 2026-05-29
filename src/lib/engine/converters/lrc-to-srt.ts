@@ -20,7 +20,7 @@ const lrcToSrt: Converter = {
   fromMime: ["text/plain", "application/x-lrc"],
   accept: [".lrc"],
   toMime: "application/x-subrip",
-  maxFileSizeBytes: 5 * 1024 * 1024,
+  maxFileSizeBytes: 50 * 1024 * 1024,
 
   async convert(input, opts) {
     opts?.onProgress?.(0.1);

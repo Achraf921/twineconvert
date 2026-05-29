@@ -11,7 +11,7 @@ const bibtexToXlsx: Converter = {
   fromMime: ["application/x-bibtex", "text/x-bibtex", "text/plain"],
   accept: [".bib", ".bibtex"],
   toMime: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-  maxFileSizeBytes: 10 * 1024 * 1024,
+  maxFileSizeBytes: 100 * 1024 * 1024,
 
   async convert(input, opts) {
     opts?.onProgress?.(0.1);
