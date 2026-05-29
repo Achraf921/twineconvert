@@ -166,6 +166,26 @@ export const registry: Record<string, ConverterLoader> = {
     import("./converters/musicxml-to-pdf").then((m) => m.default),
   "mxl-to-svg": () =>
     import("./converters/mxl-to-svg").then((m) => m.default),
+
+  // GIS: WKT / WKB <-> GeoJSON (PostGIS / Mapbox interop)
+  "wkt-to-geojson": () =>
+    import("./converters/wkt-to-geojson").then((m) => m.default),
+  "geojson-to-wkt": () =>
+    import("./converters/geojson-to-wkt").then((m) => m.default),
+  "wkb-to-geojson": () =>
+    import("./converters/wkb-to-geojson").then((m) => m.default),
+  "geojson-to-wkb": () =>
+    import("./converters/geojson-to-wkb").then((m) => m.default),
+
+  // Binary serialization: MessagePack + CBOR <-> JSON
+  "msgpack-to-json": () =>
+    import("./converters/msgpack-to-json").then((m) => m.default),
+  "json-to-msgpack": () =>
+    import("./converters/json-to-msgpack").then((m) => m.default),
+  "cbor-to-json": () =>
+    import("./converters/cbor-to-json").then((m) => m.default),
+  "json-to-cbor": () =>
+    import("./converters/json-to-cbor").then((m) => m.default),
   "mp3-to-wav": () =>
     import("./converters/mp3-to-wav").then((m) => m.default),
   "wav-to-mp3": () =>

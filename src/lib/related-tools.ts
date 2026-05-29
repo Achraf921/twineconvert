@@ -178,6 +178,18 @@ const HAND_CURATED_RELATED: Record<string, string[]> = {
   "musicxml-to-pdf": ["musicxml-to-svg", "musicxml-to-midi", "mxl-to-svg"],
   "mxl-to-svg":      ["mxl-to-musicxml", "musicxml-to-svg", "musicxml-to-pdf"],
 
+  // ===== GIS WKT / WKB <-> GeoJSON (PostGIS / spatial DB interop) =====
+  "wkt-to-geojson":  ["geojson-to-wkt", "wkb-to-geojson", "kml-to-geojson"],
+  "geojson-to-wkt":  ["wkt-to-geojson", "geojson-to-wkb", "geojson-to-kml"],
+  "wkb-to-geojson":  ["geojson-to-wkb", "wkt-to-geojson", "kml-to-geojson"],
+  "geojson-to-wkb":  ["wkb-to-geojson", "geojson-to-wkt", "geojson-to-kml"],
+
+  // ===== Binary serialization (MessagePack + CBOR) =====
+  "msgpack-to-json": ["json-to-msgpack", "cbor-to-json", "json-to-yaml"],
+  "json-to-msgpack": ["msgpack-to-json", "json-to-cbor", "yaml-to-json"],
+  "cbor-to-json":    ["json-to-cbor", "msgpack-to-json", "json-to-yaml"],
+  "json-to-cbor":    ["cbor-to-json", "json-to-msgpack", "yaml-to-json"],
+
   // ===== Chess (fen-to-png + pgn-to-fen rank well, sibling spread) =====
   "fen-to-pgn":  ["pgn-to-fen", "fen-to-png", "pgn-to-csv", "pgn-to-json"],
   "fen-to-png":  ["fen-to-pgn", "pgn-to-fen", "pgn-to-csv"],

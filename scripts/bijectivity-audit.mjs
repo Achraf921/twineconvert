@@ -169,6 +169,11 @@ const FORMATS = {
   // ==== Geographic ====
   gpx: { kind: "data", lossless: true, family: "geo" },
   geojson: { kind: "data", lossless: true, family: "geo" },
+  wkt: { kind: "data", lossless: true, family: "geo" },
+  wkb: { kind: "data", lossless: true, family: "geo" },
+  // ==== Binary serialization ====
+  msgpack: { kind: "data", lossless: true, family: "data" },
+  cbor: { kind: "data", lossless: true, family: "data" },
   // ==== Checksums (single-action; declared so audit doesn't flag them) ====
   md5: { kind: "checksum", lossless: false, family: "integrity" },
   sha1: { kind: "checksum", lossless: false, family: "integrity" },
@@ -435,6 +440,8 @@ const TEST_FILE_GLOBS = [
   "tests/round-trip.test.ts",
   "tests/converters-text.test.ts",
   "tests/converters-comprehensive.test.ts",
+  "tests/converters-music-sheet.test.ts",
+  "tests/converters-gis-binary.test.ts",
 ];
 const browserTestFiles = (() => {
   try {

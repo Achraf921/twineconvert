@@ -43,6 +43,8 @@ import {
   makeTinyInstagramZip,
   makeTinyFacebookZip,
   makeTinyIworkPages,
+  makeTinyMsgpack,
+  makeTinyCbor,
 } from "./binary-fixtures";
 
 export type FixtureProvider = () => Promise<File>;
@@ -200,6 +202,18 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "musicxml-to-svg": { provider: () => text("test.musicxml", F.musicXml, "application/vnd.recordare.musicxml+xml"), env: "node" },
   "musicxml-to-pdf": { provider: () => text("test.musicxml", F.musicXml, "application/vnd.recordare.musicxml+xml"), env: "browser" },
   "mxl-to-svg":      { provider: () => Promise.reject(new Error("mxl fixture pending")), env: "browser" },
+
+  // GIS: WKT / WKB <-> GeoJSON
+  "wkt-to-geojson":  { provider: () => text("test.wkt", "POINT(30 10)", "text/plain"), env: "node" },
+  "geojson-to-wkt":  { provider: () => text("test.geojson", F.geojson, "application/geo+json"), env: "node" },
+  "wkb-to-geojson":  { provider: () => text("test.wkb", "0101000000000000000000f03f0000000000000040", "text/plain"), env: "node" },
+  "geojson-to-wkb":  { provider: () => text("test.geojson", F.geojson, "application/geo+json"), env: "node" },
+
+  // Binary serialization: MessagePack + CBOR <-> JSON
+  "json-to-msgpack": { provider: () => text("test.json", F.jsonArray, "application/json"), env: "node" },
+  "msgpack-to-json": { provider: async () => fileFromBytes("test.msgpack", await makeTinyMsgpack(), "application/msgpack"), env: "node" },
+  "json-to-cbor":    { provider: () => text("test.json", F.jsonArray, "application/json"), env: "node" },
+  "cbor-to-json":    { provider: async () => fileFromBytes("test.cbor", await makeTinyCbor(), "application/cbor"), env: "node" },
   "mp3-to-wav":  { provider: () => Promise.reject(new Error("mp3 fixture pending")), env: "browser" },
   "mp3-to-m4a":  { provider: () => Promise.reject(new Error("mp3 fixture pending")), env: "browser" },
   "mp3-to-flac": { provider: () => Promise.reject(new Error("mp3 fixture pending")), env: "browser" },

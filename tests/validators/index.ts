@@ -680,6 +680,73 @@ export const validateGeoJson: Validator = async ({ blob, minSize = 20 }) => {
   }
 };
 
+export const validateWkt: Validator = async ({ blob, minSize = 7 }) => {
+  assertMinSize(blob, minSize, "WKT");
+  const text = (await readText(blob)).trim();
+  const firstLine = text.split("\n")[0].trim().toUpperCase();
+  if (
+    !/^(POINT|LINESTRING|POLYGON|MULTIPOINT|MULTILINESTRING|MULTIPOLYGON|GEOMETRYCOLLECTION)\s*[(Z]/i.test(
+      firstLine,
+    )
+  ) {
+    throw new Error(
+      `WKT missing recognised geometry type keyword (got: ${firstLine.slice(0, 30)})`,
+    );
+  }
+};
+
+export const validateWkb: Validator = async ({ blob, minSize = 9 }) => {
+  assertMinSize(blob, minSize, "WKB");
+  const head = await readBytes(blob, 5);
+  // First byte: endian marker (0x00 big, 0x01 little).
+  if (head[0] !== 0x00 && head[0] !== 0x01) {
+    throw new Error(
+      `WKB invalid endian byte (expected 0x00 or 0x01, got 0x${head[0].toString(16)})`,
+    );
+  }
+  // Type read as the configured endian; valid types 1..7 (basic) up to
+  // 2D/Z/M/ZM variants and EWKB SRID-prefixed (0x20000000+type).
+  const le = head[0] === 0x01;
+  const t0 = le ? head[1] : head[4];
+  if (t0 === 0 || t0 > 7) {
+    // Allow EWKB which sets high bits; check at least one of the low byte
+    // is in the geometry-type range.
+    const typeWord = le
+      ? head[1] | (head[2] << 8) | (head[3] << 16) | (head[4] << 24)
+      : head[4] | (head[3] << 8) | (head[2] << 16) | (head[1] << 24);
+    const baseType = typeWord & 0xff;
+    if (baseType === 0 || baseType > 7) {
+      throw new Error(`WKB unrecognised geometry type byte 0x${t0.toString(16)}`);
+    }
+  }
+};
+
+export const validateMsgpack: Validator = async ({ blob, minSize = 1 }) => {
+  assertMinSize(blob, minSize, "MessagePack");
+  const bytes = new Uint8Array(await blob.arrayBuffer());
+  const { decode } = await import("@msgpack/msgpack");
+  try {
+    decode(bytes);
+  } catch (e) {
+    throw new Error(
+      `MessagePack failed to decode: ${e instanceof Error ? e.message : String(e)}`,
+    );
+  }
+};
+
+export const validateCbor: Validator = async ({ blob, minSize = 1 }) => {
+  assertMinSize(blob, minSize, "CBOR");
+  const bytes = new Uint8Array(await blob.arrayBuffer());
+  const { decode } = await import("cbor-x");
+  try {
+    decode(bytes);
+  } catch (e) {
+    throw new Error(
+      `CBOR failed to decode: ${e instanceof Error ? e.message : String(e)}`,
+    );
+  }
+};
+
 export const validateDer: Validator = async ({ blob, minSize = 4 }) => {
   // ASN.1 DER always starts with a SEQUENCE tag (0x30) followed by a length.
   // A DER cert / key / CSR is a SEQUENCE at the top level.
@@ -999,6 +1066,15 @@ const BY_MIME: Record<string, Validator> = {
   // TSV: validate as a plain-text file with at least one tab character
   // somewhere (otherwise it's degenerate single-column data).
   "text/tab-separated-values": validatePlainText,
+
+  // Binary serialization
+  "application/msgpack": validateMsgpack,
+  "application/x-msgpack": validateMsgpack,
+  "application/cbor": validateCbor,
+
+  // GIS WKT (text plain output but recognised when filename ends .wkt)
+  "application/wkt": validateWkt,
+  "text/wkt": validateWkt,
 };
 
 // Extension-keyed fallback, used when toMime is generic (octet-stream)
@@ -1044,6 +1120,10 @@ const BY_EXT: Record<string, Validator> = {
   cda: validateCcdaXml,
   dat: validateDat,
   opt: validateOpt,
+  wkt: validateWkt,
+  wkb: validateWkb,
+  msgpack: validateMsgpack,
+  cbor: validateCbor,
 };
 
 /**

@@ -2922,6 +2922,98 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       },
     ],
   },
+  "wkt-to-geojson": {
+    whyConvert:
+      "WKT (Well-Known Text) is the OGC standard text encoding for geometry, used by PostGIS, Oracle Spatial, SQL Server, and GeoPandas. GeoJSON is what every web map (Leaflet, Mapbox, OpenLayers) actually consumes. This converts one to the other so you can take a literal pulled from a database column and plot it on a map.",
+    example:
+      "You copied a POLYGON((...)) literal out of a PostGIS query and want to verify it visually. Paste it into a .wkt file, convert here, drop the resulting GeoJSON into geojson.io or your Leaflet build.",
+    troubleshooting: [
+      {
+        problem: '"Could not parse the input as WKT" error.',
+        solution:
+          "WKT must start with a geometry type keyword (POINT, LINESTRING, POLYGON, MULTIPOINT, MULTILINESTRING, MULTIPOLYGON, GEOMETRYCOLLECTION). EWKT prefixes like SRID=4326; are not part of WKT proper, strip them first.",
+      },
+    ],
+  },
+  "geojson-to-wkt": {
+    whyConvert:
+      "Every spatial database (PostGIS, Oracle Spatial, SQL Server, SQLite/SpatiaLite) takes WKT in its INSERT and UPDATE statements. If your data is GeoJSON (the format Mapbox, Leaflet, and most web APIs emit), you need to convert it to WKT before loading. Output is one WKT literal per line so you can paste it straight into a SQL editor or feed it into a script.",
+    example:
+      "You exported features from QGIS as GeoJSON and want to bulk-insert them into a PostGIS table. Convert here, then use the WKT in INSERT INTO geom_table (geom) VALUES (ST_GeomFromText('...')).",
+    troubleshooting: [
+      {
+        problem: "Output is empty.",
+        solution:
+          "The input may be a FeatureCollection with no geometries (every Feature has geometry: null). Check the GeoJSON in a text editor and confirm the geometry objects are populated.",
+      },
+    ],
+  },
+  "wkb-to-geojson": {
+    whyConvert:
+      "WKB (Well-Known Binary) is what PostGIS stores internally and what ST_AsBinary emits. When you SELECT a geometry column raw from psql, you get a hex string. This converter accepts either the raw binary file or the hex string and outputs GeoJSON you can plot on any web map.",
+    example:
+      "You ran SELECT ST_AsBinary(geom) FROM parcels LIMIT 1 in psql and got back a hex string. Save it to a file, drop it here, get back the parcel polygon as GeoJSON.",
+    troubleshooting: [
+      {
+        problem: '"Could not parse WKB" on a hex string.',
+        solution:
+          "PostGIS columns sometimes emit EWKB (extended WKB) with an SRID prefix. The first 4 bytes will look like 0x20000000 instead of 0x01. wkx auto-detects EWKB; if it still fails, the byte stream may be truncated, re-export from psql with proper escaping.",
+      },
+    ],
+  },
+  "geojson-to-wkb": {
+    whyConvert:
+      "WKB is the compact binary encoding spatial databases use natively. If you want to bulk-load geometries into PostGIS via COPY (the fast path), you need WKB hex strings, not text WKT. This converts GeoJSON to raw binary WKB; pipe the output through xxd if you want hex.",
+    example:
+      "You have a parcels.geojson and want to populate a PostGIS table at maximum speed. Convert to WKB and use COPY parcels (geom) FROM stdin (FORMAT binary).",
+    troubleshooting: [
+      {
+        problem: "Output is one geometry but my input had hundreds.",
+        solution:
+          "WKB is a single-geometry encoding. For batch loads, iterate the input FeatureCollection in your script and convert each geometry separately, or use the WKT export and ST_GeomFromText.",
+      },
+    ],
+  },
+  "msgpack-to-json": {
+    whyConvert:
+      "MessagePack is the compact binary JSON used by Redis pipelines, the Aerospike client, lots of game-server protocols, and OpenAPI's binary preset. To inspect or edit a captured payload you need plain JSON; this decodes it. Binary blobs inside the document are emitted as base64 strings (matching msgpack-cli's convention).",
+    example:
+      "You captured a redis-cli MSGPACK frame on the wire and want to inspect the user state it carries. Save the bytes, drop here, get pretty JSON.",
+    troubleshooting: [
+      {
+        problem: '"Could not decode MessagePack" error.',
+        solution:
+          "The byte stream may be truncated or be a sequence of multiple MessagePack messages concatenated. This converter expects a single root document. For streams, split them in your script first.",
+      },
+    ],
+  },
+  "json-to-msgpack": {
+    whyConvert:
+      "MessagePack is roughly 20–40 percent smaller than the same JSON, more if your data is integer-heavy. This converts a JSON payload to MessagePack so you can drop it into a Redis pipeline, hand it to a MessagePack-speaking microservice, or test client decode against a known-good encoding.",
+    example:
+      "You are writing a Unity game client that expects MessagePack-encoded server config. Author the config as JSON, convert here, ship the .msgpack to the client build.",
+    troubleshooting: [],
+  },
+  "cbor-to-json": {
+    whyConvert:
+      "CBOR (RFC 8949) is the IETF-standard binary JSON, the encoding underneath COSE, WebAuthn attestation, and most modern IoT protocols on CoAP / LwM2M. To audit or modify a captured payload you usually want plain JSON; this decodes it with base64 for embedded byte strings.",
+    example:
+      "You captured a WebAuthn attestation statement and want to read the authenticatorData fields. Save the CBOR bytes, drop here, inspect the decoded JSON.",
+    troubleshooting: [
+      {
+        problem: "Decoded JSON shows $binary wrappers everywhere.",
+        solution:
+          "CBOR distinguishes byte strings from text strings (JSON does not). We wrap byte strings as { \"$binary\": \"<base64>\" } so you can round-trip cleanly. If you only need the text view, post-process to decode the base64 back to the original strings.",
+      },
+    ],
+  },
+  "json-to-cbor": {
+    whyConvert:
+      "CBOR is the binary encoding behind COSE / WebAuthn / IoT stacks; to integration-test against a CBOR endpoint, you need a deterministic encoder. This takes hand-authored JSON, encodes it via cbor-x (the same implementation used by Node's @ipld/dag-cbor), and gives you a binary you can POST directly.",
+    example:
+      "You are testing a CoAP-over-CBOR endpoint on an ESP32 firmware. Hand-author the payload as JSON, convert here, send the resulting bytes with curl --data-binary.",
+    troubleshooting: [],
+  },
 };
 
 export function getExtendedCopy(toolId: string): ExtendedCopy | undefined {

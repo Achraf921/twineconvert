@@ -6,8 +6,8 @@ Generated 2026-05-29 from src/lib/engine/converters/.
 
 | Classification | Count |
 |---|---:|
-| Total converters | 366 |
-| **Bijective candidates** (lossless, same-kind, both directions exist) | 164 |
+| Total converters | 374 |
+| **Bijective candidates** (lossless, same-kind, both directions exist) | 172 |
 | **Bijective candidates missing reverse converter** | 20 |
 | **Bijective candidates missing round-trip test** | 8 |
 | Lossy encoding (same kind, but lossy format) | 85 |
@@ -103,6 +103,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `bmp-to-jpg` | lossy-encoding | ✓ | ✓ | bmp or jpg uses lossy encoding |
 | `bmp-to-png` | bijective-candidate | ✓ | ✓ | both lossless raster formats; should round-trip cleanly |
 | `cabrillo-to-adif` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `cbor-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `ccda-to-html` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
 | `ccda-to-json` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
 | `cmyk-to-hex` | cross-kind | ✓ | ✓ | color -> palette: cross-domain, inherently lossy |
@@ -187,6 +188,8 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `gedcom-to-xlsx` | bijective-candidate | (`xlsx-to-gedcom` missing) | n/a | both lossless data formats; should round-trip cleanly |
 | `geojson-to-gpx` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `geojson-to-kml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `geojson-to-wkb` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `geojson-to-wkt` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `gif-to-jpg` | lossy-encoding | ✓ | ✓ | gif or jpg uses lossy encoding |
 | `gif-to-mp4` | cross-kind | ✓ | ✓ | raster -> video: cross-domain, inherently lossy |
 | `gif-to-png` | bijective-candidate | ✓ | ✓ | both lossless raster formats; should round-trip cleanly |
@@ -241,12 +244,14 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `jpg-to-png` | lossy-encoding | ✓ | ✓ | jpg or png uses lossy encoding |
 | `jpg-to-text` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
 | `jpg-to-webp` | lossy-encoding | ✓ | ✓ | jpg or webp uses lossy encoding |
+| `json-to-cbor` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `json-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `json-to-env` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `json-to-gedcom` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `json-to-hl7` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `json-to-ini` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `json-to-jsonl` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `json-to-msgpack` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `json-to-po` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `json-to-properties` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `json-to-sql` | bijective-candidate | (`sql-to-json` missing) | n/a | both lossless data formats; should round-trip cleanly |
@@ -300,13 +305,14 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `msg-to-csv` | cross-kind | (`csv-to-msg` missing) | n/a | doc -> data: cross-domain, inherently lossy |
 | `msg-to-eml` | cross-kind | (`eml-to-msg` missing) | n/a | doc -> data: cross-domain, inherently lossy |
 | `msg-to-pdf` | lossy-encoding | (`pdf-to-msg` missing) | n/a | msg or pdf uses lossy encoding |
+| `msgpack-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `mts-to-mp4` | lossy-encoding | (`mp4-to-mts` missing) | n/a | mts or mp4 uses lossy encoding |
 | `musicxml-to-midi` | lossy-encoding | ✓ | n/a | musicxml or midi uses lossy encoding |
 | `musicxml-to-mxl` | bijective-candidate | ✓ | ✓ | both lossless notation formats; should round-trip cleanly |
-| `musicxml-to-pdf` | cross-kind | (`pdf-to-musicxml` missing) | n/a | notation -> doc: cross-domain, inherently lossy |
-| `musicxml-to-svg` | cross-kind | (`svg-to-musicxml` missing) | n/a | notation -> vector: cross-domain, inherently lossy |
+| `musicxml-to-pdf` | cross-kind | (`pdf-to-musicxml` missing) | ✓ | notation -> doc: cross-domain, inherently lossy |
+| `musicxml-to-svg` | cross-kind | (`svg-to-musicxml` missing) | ✓ | notation -> vector: cross-domain, inherently lossy |
 | `mxl-to-musicxml` | bijective-candidate | ✓ | ✓ | both lossless notation formats; should round-trip cleanly |
-| `mxl-to-svg` | cross-kind | (`svg-to-mxl` missing) | n/a | notation -> vector: cross-domain, inherently lossy |
+| `mxl-to-svg` | cross-kind | (`svg-to-mxl` missing) | ✓ | notation -> vector: cross-domain, inherently lossy |
 | `nbib-to-bibtex` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `nbib-to-ris` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `nbib-to-xlsx` | bijective-candidate | (`xlsx-to-nbib` missing) | n/a | both lossless data formats; should round-trip cleanly |
@@ -413,6 +419,8 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `whatsapp-chat-to-html` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
 | `whatsapp-chat-to-json` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
 | `whatsapp-chat-to-pdf` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
+| `wkb-to-geojson` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `wkt-to-geojson` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `wma-to-mp3` | lossy-encoding | (`mp3-to-wma` missing) | n/a | wma or mp3 uses lossy encoding |
 | `wmv-to-mp4` | lossy-encoding | (`mp4-to-wmv` missing) | n/a | wmv or mp4 uses lossy encoding |
 | `woff-to-ttf` | bijective-candidate | ✓ | ✗ MISSING | both lossless font formats; should round-trip cleanly |

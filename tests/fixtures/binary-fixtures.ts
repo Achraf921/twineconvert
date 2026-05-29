@@ -680,6 +680,18 @@ export async function makeTinyFacebookZip(): Promise<Uint8Array> {
   return zip.generateAsync({ type: "uint8array" });
 }
 
+/** Real MessagePack-encoded fixture: { hello: "world", n: 42 }. */
+export async function makeTinyMsgpack(): Promise<Uint8Array> {
+  const { encode } = await import("@msgpack/msgpack");
+  return encode({ hello: "world", n: 42 });
+}
+
+/** Real CBOR-encoded fixture: { hello: "world", n: 42 }. */
+export async function makeTinyCbor(): Promise<Uint8Array> {
+  const { encode } = await import("cbor-x");
+  return encode({ hello: "world", n: 42 });
+}
+
 /** Minimal iWork .pages document, zip with embedded preview.pdf. */
 export async function makeTinyIworkPages(): Promise<Uint8Array> {
   const JSZip = (await import("jszip")).default;

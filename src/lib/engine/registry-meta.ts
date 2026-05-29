@@ -723,6 +723,116 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "image/svg+xml",
     "maxFileSizeBytes": 104857600
   },
+  "wkt-to-geojson": {
+    "label": "WKT → GeoJSON",
+    "accept": [
+      ".wkt",
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/wkt",
+      "text/wkt"
+    ],
+    "toMime": "application/geo+json",
+    "maxFileSizeBytes": 52428800
+  },
+  "geojson-to-wkt": {
+    "label": "GeoJSON → WKT",
+    "accept": [
+      ".geojson",
+      ".json"
+    ],
+    "fromMime": [
+      "application/geo+json",
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 52428800
+  },
+  "wkb-to-geojson": {
+    "label": "WKB → GeoJSON",
+    "accept": [
+      ".wkb",
+      ".bin",
+      ".hex",
+      ".txt"
+    ],
+    "fromMime": [
+      "application/octet-stream",
+      "application/wkb",
+      "text/plain"
+    ],
+    "toMime": "application/geo+json",
+    "maxFileSizeBytes": 52428800
+  },
+  "geojson-to-wkb": {
+    "label": "GeoJSON → WKB",
+    "accept": [
+      ".geojson",
+      ".json"
+    ],
+    "fromMime": [
+      "application/geo+json",
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "application/octet-stream",
+    "maxFileSizeBytes": 52428800
+  },
+  "msgpack-to-json": {
+    "label": "MessagePack → JSON",
+    "accept": [
+      ".msgpack",
+      ".mp",
+      ".bin"
+    ],
+    "fromMime": [
+      "application/msgpack",
+      "application/x-msgpack",
+      "application/octet-stream"
+    ],
+    "toMime": "application/json",
+    "maxFileSizeBytes": 104857600
+  },
+  "json-to-msgpack": {
+    "label": "JSON → MessagePack",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "application/msgpack",
+    "maxFileSizeBytes": 52428800
+  },
+  "cbor-to-json": {
+    "label": "CBOR → JSON",
+    "accept": [
+      ".cbor",
+      ".bin"
+    ],
+    "fromMime": [
+      "application/cbor",
+      "application/octet-stream"
+    ],
+    "toMime": "application/json",
+    "maxFileSizeBytes": 104857600
+  },
+  "json-to-cbor": {
+    "label": "JSON → CBOR",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "application/cbor",
+    "maxFileSizeBytes": 52428800
+  },
   "mp3-to-wav": {
     "label": "MP3 → WAV",
     "accept": [
