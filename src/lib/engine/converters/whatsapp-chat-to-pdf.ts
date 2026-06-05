@@ -16,7 +16,7 @@ const whatsappChatToPdf: Converter = {
   fromMime: ["text/plain", "application/zip"],
   accept: [".txt", ".zip"],
   toMime: "application/pdf",
-  maxFileSizeBytes: 1024 * 1024 * 1024,
+  maxFileSizeBytes: 4 * 1024 * 1024 * 1024,
 
   async convert(input, opts) {
     opts?.onProgress?.(0.05);
