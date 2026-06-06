@@ -200,6 +200,15 @@ const HAND_CURATED_RELATED: Record<string, string[]> = {
   "bencode-to-json": ["json-to-bencode", "json-to-msgpack", "cbor-to-json"],
   "json-to-bencode": ["bencode-to-json", "msgpack-to-json", "json-to-cbor"],
 
+  // ===== Technical docs + diagrams =====
+  "asciidoc-to-html": ["markdown-to-html", "html-to-markdown", "rtf-to-html"],
+  "dot-to-svg":      ["dot-to-png", "musicxml-to-svg", "dxf-to-svg"],
+  "dot-to-png":      ["dot-to-svg", "fen-to-png", "musicxml-to-svg"],
+
+  // ===== HTTP archive (HAR) <-> curl =====
+  "har-to-curl": ["curl-to-har", "json-to-yaml", "yaml-to-json"],
+  "curl-to-har": ["har-to-curl", "json-to-yaml", "yaml-to-json"],
+
   // ===== Chess (fen-to-png + pgn-to-fen rank well, sibling spread) =====
   "fen-to-pgn":  ["pgn-to-fen", "fen-to-png", "pgn-to-csv", "pgn-to-json"],
   "fen-to-png":  ["fen-to-pgn", "pgn-to-fen", "pgn-to-csv"],

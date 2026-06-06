@@ -918,6 +918,85 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "application/x-bittorrent",
     "maxFileSizeBytes": 52428800
   },
+  "asciidoc-to-html": {
+    "label": "AsciiDoc → HTML",
+    "accept": [
+      ".adoc",
+      ".asciidoc",
+      ".asc",
+      ".txt"
+    ],
+    "fromMime": [
+      "text/x-asciidoc",
+      "text/plain",
+      "text/asciidoc"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 52428800
+  },
+  "dot-to-svg": {
+    "label": "DOT → SVG",
+    "accept": [
+      ".dot",
+      ".gv",
+      ".graphviz",
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain",
+      "text/x-graphviz",
+      "text/vnd.graphviz",
+      "application/x-graphviz"
+    ],
+    "toMime": "image/svg+xml",
+    "maxFileSizeBytes": 20971520
+  },
+  "dot-to-png": {
+    "label": "DOT → PNG",
+    "accept": [
+      ".dot",
+      ".gv",
+      ".graphviz",
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain",
+      "text/x-graphviz",
+      "text/vnd.graphviz",
+      "application/x-graphviz"
+    ],
+    "toMime": "image/png",
+    "maxFileSizeBytes": 20971520
+  },
+  "har-to-curl": {
+    "label": "HAR → curl",
+    "accept": [
+      ".har",
+      ".json"
+    ],
+    "fromMime": [
+      "application/json",
+      "application/har+json",
+      "text/plain"
+    ],
+    "toMime": "application/x-sh",
+    "maxFileSizeBytes": 209715200
+  },
+  "curl-to-har": {
+    "label": "curl → HAR",
+    "accept": [
+      ".sh",
+      ".txt",
+      ".curl"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-sh",
+      "text/x-shellscript"
+    ],
+    "toMime": "application/har+json",
+    "maxFileSizeBytes": 52428800
+  },
   "mp3-to-wav": {
     "label": "MP3 → WAV",
     "accept": [
@@ -2212,7 +2291,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "application/zip"
     ],
     "toMime": "text/csv",
-    "maxFileSizeBytes": 1073741824
+    "maxFileSizeBytes": 4294967296
   },
   "whatsapp-chat-to-json": {
     "label": "WhatsApp Chat → JSON",
@@ -2225,7 +2304,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "application/zip"
     ],
     "toMime": "application/json",
-    "maxFileSizeBytes": 1073741824
+    "maxFileSizeBytes": 4294967296
   },
   "whatsapp-chat-to-html": {
     "label": "WhatsApp Chat → HTML",
@@ -2238,7 +2317,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "application/zip"
     ],
     "toMime": "text/html",
-    "maxFileSizeBytes": 1073741824
+    "maxFileSizeBytes": 4294967296
   },
   "whatsapp-chat-to-pdf": {
     "label": "WhatsApp Chat → PDF",
@@ -2251,7 +2330,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "application/zip"
     ],
     "toMime": "application/pdf",
-    "maxFileSizeBytes": 1073741824
+    "maxFileSizeBytes": 4294967296
   },
   "eml-to-pdf": {
     "label": "EML → PDF",

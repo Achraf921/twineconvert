@@ -223,6 +223,15 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "json-to-fastq":   { provider: () => text("test.json", JSON.stringify([{id:"r1",description:"",sequence:"ACGT",quality:"!!!!"}]), "application/json"), env: "node" },
   "bencode-to-json": { provider: async () => fileFromBytes("test.torrent", await makeTinyBencode(), "application/x-bittorrent"), env: "node" },
   "json-to-bencode": { provider: () => text("test.json", JSON.stringify({announce:"http://t.example.com/announce", info:{name:"x", "piece length":16384, length:1024}}), "application/json"), env: "node" },
+
+  // Technical docs + diagrams
+  "asciidoc-to-html": { provider: () => text("test.adoc", "= Hello\n\nThis is *AsciiDoc*.\n", "text/x-asciidoc"), env: "browser" },
+  "dot-to-svg":       { provider: () => text("test.dot", "digraph G { a -> b -> c; }", "text/vnd.graphviz"), env: "node" },
+  "dot-to-png":       { provider: () => text("test.dot", "digraph G { a -> b; }", "text/vnd.graphviz"), env: "browser" },
+
+  // HAR <-> curl
+  "har-to-curl": { provider: () => text("test.har", JSON.stringify({log:{version:"1.2",entries:[{request:{method:"GET",url:"https://api.example.com/x",headers:[{name:"Accept",value:"application/json"}]}}]}}), "application/har+json"), env: "node" },
+  "curl-to-har": { provider: () => text("test.sh", "curl https://api.example.com/users\ncurl -X POST 'https://api.example.com/x' -H 'Content-Type: application/json' -d '{\"a\":1}'\n", "text/plain"), env: "node" },
   "mp3-to-wav":  { provider: () => Promise.reject(new Error("mp3 fixture pending")), env: "browser" },
   "mp3-to-m4a":  { provider: () => Promise.reject(new Error("mp3 fixture pending")), env: "browser" },
   "mp3-to-flac": { provider: () => Promise.reject(new Error("mp3 fixture pending")), env: "browser" },

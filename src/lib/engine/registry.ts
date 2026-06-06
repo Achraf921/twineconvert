@@ -202,6 +202,20 @@ export const registry: Record<string, ConverterLoader> = {
     import("./converters/bencode-to-json").then((m) => m.default),
   "json-to-bencode": () =>
     import("./converters/json-to-bencode").then((m) => m.default),
+
+  // Technical docs + diagrams
+  "asciidoc-to-html": () =>
+    import("./converters/asciidoc-to-html").then((m) => m.default),
+  "dot-to-svg": () =>
+    import("./converters/dot-to-svg").then((m) => m.default),
+  "dot-to-png": () =>
+    import("./converters/dot-to-png").then((m) => m.default),
+
+  // HTTP archive (HAR) <-> curl
+  "har-to-curl": () =>
+    import("./converters/har-to-curl").then((m) => m.default),
+  "curl-to-har": () =>
+    import("./converters/curl-to-har").then((m) => m.default),
   "mp3-to-wav": () =>
     import("./converters/mp3-to-wav").then((m) => m.default),
   "wav-to-mp3": () =>

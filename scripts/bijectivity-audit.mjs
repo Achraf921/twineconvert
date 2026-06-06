@@ -178,6 +178,13 @@ const FORMATS = {
   // ==== Bioinformatics ====
   fasta: { kind: "data", lossless: true, family: "bio" },
   fastq: { kind: "data", lossless: true, family: "bio" },
+  // ==== Technical docs ====
+  asciidoc: { kind: "markup", lossless: false, family: "docs" },
+  // ==== Diagrams ====
+  dot: { kind: "markup", lossless: false, family: "diagram" },
+  // ==== HTTP archive ====
+  har: { kind: "data", lossless: false, family: "network" },
+  curl: { kind: "markup", lossless: false, family: "network" },
   // ==== Checksums (single-action; declared so audit doesn't flag them) ====
   md5: { kind: "checksum", lossless: false, family: "integrity" },
   sha1: { kind: "checksum", lossless: false, family: "integrity" },
@@ -447,6 +454,7 @@ const TEST_FILE_GLOBS = [
   "tests/converters-music-sheet.test.ts",
   "tests/converters-gis-binary.test.ts",
   "tests/converters-bio-bencode.test.ts",
+  "tests/converters-docs-network.test.ts",
 ];
 const browserTestFiles = (() => {
   try {

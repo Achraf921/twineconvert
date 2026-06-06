@@ -1,17 +1,17 @@
 # Bijectivity Audit
 
-Generated 2026-05-29 from src/lib/engine/converters/.
+Generated 2026-06-06 from src/lib/engine/converters/.
 
 ## Summary
 
 | Classification | Count |
 |---|---:|
-| Total converters | 380 |
+| Total converters | 385 |
 | **Bijective candidates** (lossless, same-kind, both directions exist) | 178 |
 | **Bijective candidates missing reverse converter** | 20 |
 | **Bijective candidates missing round-trip test** | 8 |
 | Lossy encoding (same kind, but lossy format) | 85 |
-| Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 44 |
+| Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 49 |
 | Single-action (no reverse possible) | 53 |
 | Unknown formats (need to add to FORMATS table) | 0 |
 | Compound id (irregular pattern) | 0 |
@@ -79,6 +79,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `apple-health-to-csv` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
 | `apple-health-to-json` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
 | `apple-health-workouts-to-csv` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
+| `asciidoc-to-html` | cross-kind | (`html-to-asciidoc` missing) | ✓ | markup -> doc: cross-domain, inherently lossy |
 | `ase-to-aco` | bijective-candidate | ✓ | ✓ | both lossless palette formats; should round-trip cleanly |
 | `ase-to-css` | bijective-candidate | ✓ | ✓ | both lossless palette formats; should round-trip cleanly |
 | `ase-to-gpl` | bijective-candidate | ✓ | ✓ | both lossless palette formats; should round-trip cleanly |
@@ -140,6 +141,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `csv-to-yaml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `cube-to-3dl` | bijective-candidate | ✓ | ✓ | both lossless lut formats; should round-trip cleanly |
 | `cube-to-csp` | bijective-candidate | ✓ | ✓ | both lossless lut formats; should round-trip cleanly |
+| `curl-to-har` | cross-kind | ✓ | ✓ | markup -> data: cross-domain, inherently lossy |
 | `dat-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `der-to-pem` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `dicom-to-jpg` | cross-kind | (`jpg-to-dicom` missing) | n/a | data -> raster: cross-domain, inherently lossy |
@@ -152,6 +154,8 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `docx-to-html` | lossy-encoding | ✓ | n/a | docx or html uses lossy encoding |
 | `docx-to-pdf` | lossy-encoding | ✓ | ✓ | docx or pdf uses lossy encoding |
 | `docx-to-txt` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
+| `dot-to-png` | cross-kind | (`png-to-dot` missing) | ✓ | markup -> raster: cross-domain, inherently lossy |
+| `dot-to-svg` | cross-kind | (`svg-to-dot` missing) | ✓ | markup -> vector: cross-domain, inherently lossy |
 | `dst-to-exp` | bijective-candidate | ✓ | ✓ | both lossless embroidery formats; should round-trip cleanly |
 | `dst-to-jef` | bijective-candidate | ✓ | ✓ | both lossless embroidery formats; should round-trip cleanly |
 | `dst-to-pes` | bijective-candidate | ✓ | ✓ | both lossless embroidery formats; should round-trip cleanly |
@@ -203,6 +207,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `gpl-to-hex` | bijective-candidate | ✓ | ✓ | both lossless palette formats; should round-trip cleanly |
 | `gpx-to-geojson` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `gpx-to-kml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `har-to-curl` | cross-kind | ✓ | ✓ | data -> markup: cross-domain, inherently lossy |
 | `hcl-to-json` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
 | `heic-to-jpg` | lossy-encoding | (`jpg-to-heic` missing) | ✓ | heic or jpg uses lossy encoding |
 | `heic-to-pdf` | cross-kind | (`pdf-to-heic` missing) | ✓ | raster -> doc: cross-domain, inherently lossy |

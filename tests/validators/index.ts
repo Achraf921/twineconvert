@@ -801,6 +801,32 @@ export const validateBencode: Validator = async ({ blob, minSize = 2 }) => {
   }
 };
 
+export const validateHarJson: Validator = async ({ blob, minSize = 20 }) => {
+  assertMinSize(blob, minSize, "HAR");
+  const text = await readText(blob);
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(text);
+  } catch (e) {
+    throw new Error(`HAR JSON failed to parse: ${e instanceof Error ? e.message : String(e)}`);
+  }
+  const log = (parsed as { log?: { version?: string; entries?: unknown[] } })?.log;
+  if (!log || typeof log !== "object") {
+    throw new Error("HAR missing required top-level `log` object");
+  }
+  if (!Array.isArray(log.entries)) {
+    throw new Error("HAR missing required `log.entries` array");
+  }
+};
+
+export const validateCurlScript: Validator = async ({ blob, minSize = 5 }) => {
+  assertMinSize(blob, minSize, "curl script");
+  const text = await readText(blob);
+  if (!/^\s*curl\b/m.test(text)) {
+    throw new Error("curl script has no line starting with `curl `");
+  }
+};
+
 export const validateDer: Validator = async ({ blob, minSize = 4 }) => {
   // ASN.1 DER always starts with a SEQUENCE tag (0x30) followed by a length.
   // A DER cert / key / CSR is a SEQUENCE at the top level.
@@ -1137,6 +1163,9 @@ const BY_MIME: Record<string, Validator> = {
   "application/x-fastq": validateFastq,
   "chemical/x-fastq": validateFastq,
   "application/x-bittorrent": validateBencode,
+
+  // HAR (HTTP archive)
+  "application/har+json": validateHarJson,
 };
 
 // Extension-keyed fallback, used when toMime is generic (octet-stream)
@@ -1194,6 +1223,8 @@ const BY_EXT: Record<string, Validator> = {
   fq: validateFastq,
   torrent: validateBencode,
   bencode: validateBencode,
+  har: validateHarJson,
+  sh: validateCurlScript,
 };
 
 /**

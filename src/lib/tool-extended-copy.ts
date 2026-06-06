@@ -3086,6 +3086,71 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       },
     ],
   },
+  "asciidoc-to-html": {
+    whyConvert:
+      "AsciiDoc is the technical-writing source format behind Pro Git, the Spring reference docs, Eclipse, and many open-source project handbooks. To publish or preview the output you need HTML. This renders via Asciidoctor.js, the official reference implementation, so the output matches what readthedocs and AsciidoctorJ would produce.",
+    example:
+      "You write your project's handbook in .adoc and want a quick preview before committing. Drop the file here, get a self-contained HTML page you can open in any browser.",
+    troubleshooting: [
+      {
+        problem: "My include::[] directives are not expanded.",
+        solution:
+          "Browser conversion has no filesystem access, so include::otherfile.adoc[] cannot resolve other files. Inline the includes before conversion, or use the Asciidoctor CLI locally.",
+      },
+    ],
+  },
+  "dot-to-svg": {
+    whyConvert:
+      "DOT is the Graphviz source language for directed and undirected graphs (CS textbooks, RFC diagrams, dependency graphs, state machines). To publish or embed the result you need SVG, the vector format that scales cleanly. Runs the upstream Graphviz dot engine compiled to WebAssembly, so the layout exactly matches what dot -Tsvg produces on the command line.",
+    example:
+      "You drafted a microservice dependency graph in DOT and want to drop it into a Notion doc as a scalable image. Convert here, the SVG is self-contained.",
+    troubleshooting: [
+      {
+        problem: '"Graphviz failed to render the DOT source" error.',
+        solution:
+          "DOT is strict about syntax. Common gotchas: a missing closing brace, a node label that contains a hyphen without quotes, or a typo on the graph keyword (digraph vs graph). Validate locally with dot -Tsvg input.dot first if you have it installed.",
+      },
+    ],
+  },
+  "dot-to-png": {
+    whyConvert:
+      "Same Graphviz rendering as dot-to-svg, but rasterised to PNG for embed targets that only accept bitmaps (Slack message previews, Notion image blocks, legacy CMS image-only widgets). For docs sites and anywhere SVG works, prefer dot-to-svg, the output is smaller and stays sharp on retina screens.",
+    example:
+      "You want to share a quick state-machine diagram in a Slack thread. Convert to PNG here, drag into the channel, instant inline preview.",
+    troubleshooting: [
+      {
+        problem: "The PNG is fuzzy when printed at full size.",
+        solution:
+          "PNG output is rasterised at the SVG's native pixel dimensions. For high-DPI printing use dot-to-svg and print from a vector tool (Inkscape, Illustrator), or open the SVG in your browser and use the browser's print-to-PDF.",
+      },
+    ],
+  },
+  "har-to-curl": {
+    whyConvert:
+      "HAR is what every browser DevTools (Chrome, Firefox, Safari, Edge) exports when you save a captured Network tab. To reproduce a failing API call against a different environment, replay a sequence in a bash script, or paste a captured request into Postman, you need it as curl commands. This emits one properly POSIX-quoted curl per HAR entry, ready to run.",
+    example:
+      'You are debugging why an API call works in your browser but not from your server. Capture the working request as HAR (DevTools → Network → right-click → "Save all as HAR with content"), convert here, run the curl against your dev environment.',
+    troubleshooting: [
+      {
+        problem: "Some requests are missing from the output.",
+        solution:
+          'HAR entries without a "request.url" field are skipped (rare, but happens for some failed-to-start requests). All entries with a URL are included.',
+      },
+    ],
+  },
+  "curl-to-har": {
+    whyConvert:
+      "If you have a script of curl commands (from a colleague, a Stack Overflow answer, a CLI tool that emits them) and want to import them into a HAR-aware tool, you need them in HAR format. This parses each curl command (supports -X, -H, --data variants, --url, positional URL) and emits a HAR 1.2 document with one entry per command. The HAR can then be imported by mitmproxy, Charles, Insomnia, or any inspection tool.",
+    example:
+      "A teammate shared 5 curl commands for testing your new API. Paste them into a .sh file, convert here, drop the HAR into mitmproxy to replay them in batch.",
+    troubleshooting: [
+      {
+        problem: '"All curl commands failed to parse" error.',
+        solution:
+          "Each command must start with curl at the beginning of a line. Line continuations with \\ work, but commands separated only by ; on the same line will be treated as one. Split them onto separate lines first.",
+      },
+    ],
+  },
 };
 
 export function getExtendedCopy(toolId: string): ExtendedCopy | undefined {
