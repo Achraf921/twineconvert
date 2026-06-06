@@ -14,7 +14,7 @@ const mp4ToMov: Converter = {
   fromMime: ["video/mp4"],
   toMime: "video/quicktime",
   accept: [".mp4", ".m4v"],
-  maxFileSizeBytes: 500 * 1024 * 1024,
+  maxFileSizeBytes: 4 * 1024 * 1024 * 1024,
 
   async convert(input, opts) {
     opts?.onProgress?.(0.02);

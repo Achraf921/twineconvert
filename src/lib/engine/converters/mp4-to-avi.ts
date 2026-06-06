@@ -9,7 +9,7 @@ const mp4ToAvi: Converter = {
   fromMime: ["video/mp4"],
   toMime: "video/x-msvideo",
   accept: [".mp4", ".m4v"],
-  maxFileSizeBytes: 500 * 1024 * 1024,
+  maxFileSizeBytes: 4 * 1024 * 1024 * 1024,
 
   async convert(input, opts) {
     opts?.onProgress?.(0.02);

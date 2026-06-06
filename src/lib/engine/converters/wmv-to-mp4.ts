@@ -15,7 +15,7 @@ const wmvToMp4: Converter = {
   fromMime: ["video/x-ms-wmv", "video/wmv"],
   toMime: "video/mp4",
   accept: [".wmv"],
-  maxFileSizeBytes: 500 * 1024 * 1024,
+  maxFileSizeBytes: 4 * 1024 * 1024 * 1024,
 
   async convert(input, opts) {
     opts?.onProgress?.(0.02);

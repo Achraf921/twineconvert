@@ -15,7 +15,7 @@ const mp4ToWebm: Converter = {
   fromMime: ["video/mp4"],
   toMime: "video/webm",
   accept: [".mp4"],
-  maxFileSizeBytes: 500 * 1024 * 1024,
+  maxFileSizeBytes: 4 * 1024 * 1024 * 1024,
 
   async convert(input, opts) {
     opts?.onProgress?.(0.02);

@@ -16,7 +16,7 @@ const mkvToMp4: Converter = {
   fromMime: ["video/x-matroska", "video/mkv"],
   toMime: "video/mp4",
   accept: [".mkv"],
-  maxFileSizeBytes: 500 * 1024 * 1024,
+  maxFileSizeBytes: 4 * 1024 * 1024 * 1024,
 
   async convert(input, opts) {
     opts?.onProgress?.(0.02);
