@@ -9,7 +9,7 @@ const epubToText: Converter = {
   fromMime: ["application/epub+zip"],
   toMime: "text/plain",
   accept: [".epub"],
-  maxFileSizeBytes: 100 * 1024 * 1024,
+  maxFileSizeBytes: 1024 * 1024 * 1024,
 
   async convert(input, opts) {
     opts?.onProgress?.(0.1);

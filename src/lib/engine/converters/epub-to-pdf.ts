@@ -19,7 +19,7 @@ const epubToPdf: Converter = {
   fromMime: ["application/epub+zip"],
   toMime: "application/pdf",
   accept: [".epub"],
-  maxFileSizeBytes: 100 * 1024 * 1024,
+  maxFileSizeBytes: 1024 * 1024 * 1024,
 
   async convert(input, opts) {
     opts?.onProgress?.(0.05);
