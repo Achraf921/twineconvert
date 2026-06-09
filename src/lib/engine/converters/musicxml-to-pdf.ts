@@ -1,17 +1,18 @@
 import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { renderMusicXmlToSvg } from "../util/verovio";
-import { imagesToPdf, pdfFilename } from "../util/image-to-pdf";
-import { svgToPngBlob } from "../util/svg-raster";
+import { pdfFilename } from "../util/image-to-pdf";
+import { svgToPdfBlob } from "../util/svg-to-pdf";
 
 /**
  * MusicXML → PDF. Renders the score to SVG via Verovio (same path as
- * musicxml-to-svg), then rasterises the SVG to PNG via canvas and
- * wraps that PNG into a PDF using our shared imagesToPdf helper.
+ * musicxml-to-svg), then writes the SVG directly to a vector PDF via
+ * svg2pdf.js + jsPDF. No raster pass: the output stays vector inside
+ * the PDF, sharp at any zoom and much smaller than the prior
+ * canvas/PNG approach.
  *
- * Browser-only: the canvas rasterisation step needs DOM. End result
- * is a one-page-per-Verovio-page PDF you can hand to a musician or
- * print on letter paper.
+ * Browser-only: svg2pdf.js needs a live DOM tree to read computed
+ * styles, so the conversion runs against document.body.
  */
 const musicxmlToPdf: Converter = {
   id: "musicxml-to-pdf",
@@ -34,9 +35,8 @@ const musicxmlToPdf: Converter = {
       const svg = await renderMusicXmlToSvg(text);
       opts?.onProgress?.(0.5);
 
-      const pngBlob = await svgToPngBlob(svg);
-      opts?.onProgress?.(0.85);
-      pdfBlob = await imagesToPdf([pngBlob], { embedType: "image/png" });
+      pdfBlob = await svgToPdfBlob(svg);
+      opts?.onProgress?.(0.95);
     } catch (err) {
       throw new ConvertFailedError(
         err instanceof Error ? err.message : "Could not render MusicXML to PDF",
