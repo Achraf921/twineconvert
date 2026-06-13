@@ -706,6 +706,18 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
 
   // ===== Config formats: INI, .env, YAML↔TOML direct, JSON5 =====
   "ini-to-json":   { provider: () => text("config.ini", F.ini, "application/x-ini"), env: "node" },
+
+  // Config serialization cross-matrix (yaml/toml/json5/ini <-> xml + to yaml/toml)
+  "yaml-to-xml":   { provider: () => text("test.yaml", F.yaml, "application/x-yaml"), env: "node" },
+  "xml-to-yaml":   { provider: () => text("test.xml", F.xml, "application/xml"), env: "node" },
+  "toml-to-xml":   { provider: () => text("test.toml", F.toml, "application/toml"), env: "node" },
+  "xml-to-toml":   { provider: () => text("test.xml", F.xml, "application/xml"), env: "node" },
+  "json5-to-yaml": { provider: () => text("config.json5", F.json5, "application/json5"), env: "node" },
+  "json5-to-xml":  { provider: () => text("config.json5", F.json5, "application/json5"), env: "node" },
+  "json5-to-toml": { provider: () => text("config.json5", F.json5, "application/json5"), env: "node" },
+  "ini-to-yaml":   { provider: () => text("config.ini", F.ini, "application/x-ini"), env: "node" },
+  "ini-to-xml":    { provider: () => text("config.ini", F.ini, "application/x-ini"), env: "node" },
+  "ini-to-toml":   { provider: () => text("config.ini", F.ini, "application/x-ini"), env: "node" },
   "json-to-ini":   { provider: () => text("config.json", `{"database":{"host":"localhost","port":5432},"server":{"port":8080}}`, "application/json"), env: "node" },
   "env-to-json":   { provider: () => text(".env", F.env, "text/plain"), env: "node" },
   "json-to-env":   { provider: () => text("config.json", `{"DATABASE_URL":"postgres://localhost:5432/db","API_KEY":"sk_test_abc","NODE_ENV":"production"}`, "application/json"), env: "node" },

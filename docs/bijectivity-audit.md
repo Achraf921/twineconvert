@@ -6,9 +6,9 @@ Generated 2026-06-13 from src/lib/engine/converters/.
 
 | Classification | Count |
 |---|---:|
-| Total converters | 529 |
-| **Bijective candidates** (lossless, same-kind, both directions exist) | 252 |
-| **Bijective candidates missing reverse converter** | 34 |
+| Total converters | 539 |
+| **Bijective candidates** (lossless, same-kind, both directions exist) | 256 |
+| **Bijective candidates missing reverse converter** | 40 |
 | **Bijective candidates missing round-trip test** | 27 |
 | Lossy encoding (same kind, but lossy format) | 114 |
 | Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 76 |
@@ -37,8 +37,14 @@ These converters are lossless and could round-trip, but the reverse converter is
 | `ico-to-gif` | `gif-to-ico` |
 | `ics-to-json` | `json-to-ics` |
 | `ics-to-xlsx` | `xlsx-to-ics` |
+| `ini-to-toml` | `toml-to-ini` |
+| `ini-to-xml` | `xml-to-ini` |
+| `ini-to-yaml` | `yaml-to-ini` |
 | `json-to-sql` | `sql-to-json` |
 | `json5-to-json` | `json-to-json5` |
+| `json5-to-toml` | `toml-to-json5` |
+| `json5-to-xml` | `xml-to-json5` |
+| `json5-to-yaml` | `yaml-to-json5` |
 | `lrc-to-vtt` | `vtt-to-lrc` |
 | `mbox-to-csv` | `csv-to-mbox` |
 | `mods-to-xlsx` | `xlsx-to-mods` |
@@ -322,6 +328,9 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `ifc-to-gltf` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
 | `image-to-text` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
 | `ini-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `ini-to-toml` | bijective-candidate | (`toml-to-ini` missing) | ✓ | both lossless data formats; should round-trip cleanly |
+| `ini-to-xml` | bijective-candidate | (`xml-to-ini` missing) | ✓ | both lossless data formats; should round-trip cleanly |
+| `ini-to-yaml` | bijective-candidate | (`yaml-to-ini` missing) | ✓ | both lossless data formats; should round-trip cleanly |
 | `instagram-data-to-csv` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
 | `instagram-data-to-html` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
 | `iso-to-unix` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
@@ -358,6 +367,9 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `json-to-xml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `json-to-yaml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `json5-to-json` | bijective-candidate | (`json-to-json5` missing) | ✓ | both lossless data formats; should round-trip cleanly |
+| `json5-to-toml` | bijective-candidate | (`toml-to-json5` missing) | ✓ | both lossless data formats; should round-trip cleanly |
+| `json5-to-xml` | bijective-candidate | (`xml-to-json5` missing) | ✓ | both lossless data formats; should round-trip cleanly |
+| `json5-to-yaml` | bijective-candidate | (`yaml-to-json5` missing) | ✓ | both lossless data formats; should round-trip cleanly |
 | `jsonl-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `jsonl-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `jwt-to-json` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
@@ -554,6 +566,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `tiff-to-webp` | lossy-encoding | (`webp-to-tiff` missing) | ✓ | tiff or webp uses lossy encoding |
 | `timestamp-to-readable` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
 | `toml-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `toml-to-xml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `toml-to-yaml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `tsv-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `tsv-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
@@ -612,7 +625,10 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `xlsx-to-tsv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `xml-to-csv` | bijective-candidate | (`csv-to-xml` missing) | n/a | both lossless data formats; should round-trip cleanly |
 | `xml-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `xml-to-toml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `xml-to-yaml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `yaml-to-bibtex` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `yaml-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `yaml-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `yaml-to-toml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `yaml-to-xml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |

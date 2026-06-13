@@ -125,6 +125,18 @@ export const registry: Record<string, ConverterLoader> = {
   "ods-to-endnote-xml": () => import("./converters/ods-to-endnote-xml").then((m) => m.default),
   "ods-to-nbib": () => import("./converters/ods-to-nbib").then((m) => m.default),
 
+  // Config serialization cross-matrix (yaml/toml/json5/ini <-> xml + to yaml/toml)
+  "yaml-to-xml": () => import("./converters/yaml-to-xml").then((m) => m.default),
+  "xml-to-yaml": () => import("./converters/xml-to-yaml").then((m) => m.default),
+  "toml-to-xml": () => import("./converters/toml-to-xml").then((m) => m.default),
+  "xml-to-toml": () => import("./converters/xml-to-toml").then((m) => m.default),
+  "json5-to-yaml": () => import("./converters/json5-to-yaml").then((m) => m.default),
+  "json5-to-xml": () => import("./converters/json5-to-xml").then((m) => m.default),
+  "json5-to-toml": () => import("./converters/json5-to-toml").then((m) => m.default),
+  "ini-to-yaml": () => import("./converters/ini-to-yaml").then((m) => m.default),
+  "ini-to-xml": () => import("./converters/ini-to-xml").then((m) => m.default),
+  "ini-to-toml": () => import("./converters/ini-to-toml").then((m) => m.default),
+
   // PDF family, pdfjs-dist for rendering, pdf-lib for assembly + manipulation
   "pdf-to-jpg": () =>
     import("./converters/pdf-to-jpg").then((m) => m.default),

@@ -4447,6 +4447,96 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       { problem: "No references found, or fields are missing.", solution: "The first row must be headers naming the fields (title, author/authors, year, journal, doi, ...). If a column is missing from the output, rename its header to one of those names. Only the first sheet is read." },
     ],
   },
+  "yaml-to-xml": {
+    whyConvert:
+      "YAML and XML are both configuration/serialization formats. This parses the YAML into a plain key/value document and re-serialises it as XML, preserving keys, nesting, scalars, and arrays. Use it to move config into a legacy system, SOAP API, or XML-configured app. Runs in your browser, nothing is uploaded; YAML-only niceties like comments and anchors are not carried over.",
+    example:
+      "You have a YAML config and a tool that expects XML. Drop the YAML here and get equivalent XML back.",
+    troubleshooting: [
+      { problem: "Arrays produced repeated elements.", solution: "XML has no native array type, so a list becomes repeated sibling elements with the same tag. That is standard and parses back correctly with xml-to-yaml." },
+    ],
+  },
+  "xml-to-yaml": {
+    whyConvert:
+      "XML and YAML are both configuration/serialization formats. This parses the XML into a plain key/value document and re-serialises it as YAML, preserving keys, nesting, scalars, and arrays. Use it to move config into a Kubernetes manifest, CI config, or Docker Compose file. Runs in your browser, nothing is uploaded; XML-only niceties like comments are not carried over.",
+    example:
+      "You have a XML config and a tool that expects YAML. Drop the XML here and get equivalent YAML back.",
+    troubleshooting: [
+      { problem: "A value looks wrong-typed.", solution: "XML scalars are mapped to native YAML types where possible. Quote a value in the source if it must stay a string (e.g. a version like 1.10)." },
+    ],
+  },
+  "toml-to-xml": {
+    whyConvert:
+      "TOML and XML are both configuration/serialization formats. This parses the TOML into a plain key/value document and re-serialises it as XML, preserving keys, nesting, scalars, and arrays. Use it to move config into a legacy system, SOAP API, or XML-configured app. Runs in your browser, nothing is uploaded; TOML-only niceties like comments are not carried over.",
+    example:
+      "You have a TOML config and a tool that expects XML. Drop the TOML here and get equivalent XML back.",
+    troubleshooting: [
+      { problem: "Arrays produced repeated elements.", solution: "XML has no native array type, so a list becomes repeated sibling elements with the same tag. That is standard and parses back correctly with xml-to-toml." },
+    ],
+  },
+  "xml-to-toml": {
+    whyConvert:
+      "XML and TOML are both configuration/serialization formats. This parses the XML into a plain key/value document and re-serialises it as TOML, preserving keys, nesting, scalars, and arrays. Use it to move config into a Cargo.toml, pyproject.toml, or Rust/Python config. Runs in your browser, nothing is uploaded; XML-only niceties like comments are not carried over.",
+    example:
+      "You have a XML config and a tool that expects TOML. Drop the XML here and get equivalent TOML back.",
+    troubleshooting: [
+      { problem: "TOML conversion failed.", solution: "TOML 1.0 cannot represent every shape (e.g. null values, or arrays mixing types). Remove or normalise those fields in the source, then reconvert." },
+    ],
+  },
+  "json5-to-yaml": {
+    whyConvert:
+      "JSON5 and YAML are both configuration/serialization formats. This parses the JSON5 into a plain key/value document and re-serialises it as YAML, preserving keys, nesting, scalars, and arrays. Use it to move config into a Kubernetes manifest, CI config, or Docker Compose file. Runs in your browser, nothing is uploaded; JSON5-only niceties like comments are not carried over.",
+    example:
+      "You have a JSON5 config and a tool that expects YAML. Drop the JSON5 here and get equivalent YAML back.",
+    troubleshooting: [
+      { problem: "A value looks wrong-typed.", solution: "JSON5 scalars are mapped to native YAML types where possible. Quote a value in the source if it must stay a string (e.g. a version like 1.10)." },
+    ],
+  },
+  "json5-to-xml": {
+    whyConvert:
+      "JSON5 and XML are both configuration/serialization formats. This parses the JSON5 into a plain key/value document and re-serialises it as XML, preserving keys, nesting, scalars, and arrays. Use it to move config into a legacy system, SOAP API, or XML-configured app. Runs in your browser, nothing is uploaded; JSON5-only niceties like comments are not carried over.",
+    example:
+      "You have a JSON5 config and a tool that expects XML. Drop the JSON5 here and get equivalent XML back.",
+    troubleshooting: [
+      { problem: "Arrays produced repeated elements.", solution: "XML has no native array type, so a list becomes repeated sibling elements with the same tag. That is standard and parses back correctly with xml-to-json5." },
+    ],
+  },
+  "json5-to-toml": {
+    whyConvert:
+      "JSON5 and TOML are both configuration/serialization formats. This parses the JSON5 into a plain key/value document and re-serialises it as TOML, preserving keys, nesting, scalars, and arrays. Use it to move config into a Cargo.toml, pyproject.toml, or Rust/Python config. Runs in your browser, nothing is uploaded; JSON5-only niceties like comments are not carried over.",
+    example:
+      "You have a JSON5 config and a tool that expects TOML. Drop the JSON5 here and get equivalent TOML back.",
+    troubleshooting: [
+      { problem: "TOML conversion failed.", solution: "TOML 1.0 cannot represent every shape (e.g. null values, or arrays mixing types). Remove or normalise those fields in the source, then reconvert." },
+    ],
+  },
+  "ini-to-yaml": {
+    whyConvert:
+      "INI and YAML are both configuration/serialization formats. This parses the INI into a plain key/value document and re-serialises it as YAML, preserving keys, nesting, scalars, and arrays. Use it to move config into a Kubernetes manifest, CI config, or Docker Compose file. Runs in your browser, nothing is uploaded; INI-only niceties like comments are not carried over.",
+    example:
+      "You have a INI config and a tool that expects YAML. Drop the INI here and get equivalent YAML back.",
+    troubleshooting: [
+      { problem: "A value looks wrong-typed.", solution: "INI scalars are mapped to native YAML types where possible. Quote a value in the source if it must stay a string (e.g. a version like 1.10)." },
+    ],
+  },
+  "ini-to-xml": {
+    whyConvert:
+      "INI and XML are both configuration/serialization formats. This parses the INI into a plain key/value document and re-serialises it as XML, preserving keys, nesting, scalars, and arrays. Use it to move config into a legacy system, SOAP API, or XML-configured app. Runs in your browser, nothing is uploaded; INI-only niceties like comments are not carried over.",
+    example:
+      "You have a INI config and a tool that expects XML. Drop the INI here and get equivalent XML back.",
+    troubleshooting: [
+      { problem: "Arrays produced repeated elements.", solution: "XML has no native array type, so a list becomes repeated sibling elements with the same tag. That is standard and parses back correctly with xml-to-ini." },
+    ],
+  },
+  "ini-to-toml": {
+    whyConvert:
+      "INI and TOML are both configuration/serialization formats. This parses the INI into a plain key/value document and re-serialises it as TOML, preserving keys, nesting, scalars, and arrays. Use it to move config into a Cargo.toml, pyproject.toml, or Rust/Python config. Runs in your browser, nothing is uploaded; INI-only niceties like comments are not carried over.",
+    example:
+      "You have a INI config and a tool that expects TOML. Drop the INI here and get equivalent TOML back.",
+    troubleshooting: [
+      { problem: "TOML conversion failed.", solution: "TOML 1.0 cannot represent every shape (e.g. null values, or arrays mixing types). Remove or normalise those fields in the source, then reconvert." },
+    ],
+  },
 };
 
 export function getExtendedCopy(toolId: string): ExtendedCopy | undefined {

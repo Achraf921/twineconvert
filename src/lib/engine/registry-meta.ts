@@ -659,6 +659,139 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "application/x-research-info-systems",
     "maxFileSizeBytes": 104857600
   },
+  "yaml-to-xml": {
+    "label": "YAML → XML",
+    "accept": [
+      ".yaml",
+      ".yml"
+    ],
+    "fromMime": [
+      "application/x-yaml",
+      "text/yaml",
+      "text/plain"
+    ],
+    "toMime": "application/xml",
+    "maxFileSizeBytes": 20971520
+  },
+  "xml-to-yaml": {
+    "label": "XML → YAML",
+    "accept": [
+      ".xml"
+    ],
+    "fromMime": [
+      "application/xml",
+      "text/xml",
+      "text/plain"
+    ],
+    "toMime": "application/x-yaml",
+    "maxFileSizeBytes": 20971520
+  },
+  "toml-to-xml": {
+    "label": "TOML → XML",
+    "accept": [
+      ".toml"
+    ],
+    "fromMime": [
+      "application/toml",
+      "text/plain"
+    ],
+    "toMime": "application/xml",
+    "maxFileSizeBytes": 20971520
+  },
+  "xml-to-toml": {
+    "label": "XML → TOML",
+    "accept": [
+      ".xml"
+    ],
+    "fromMime": [
+      "application/xml",
+      "text/xml",
+      "text/plain"
+    ],
+    "toMime": "application/toml",
+    "maxFileSizeBytes": 20971520
+  },
+  "json5-to-yaml": {
+    "label": "JSON5 → YAML",
+    "accept": [
+      ".json5"
+    ],
+    "fromMime": [
+      "application/json5",
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "application/x-yaml",
+    "maxFileSizeBytes": 20971520
+  },
+  "json5-to-xml": {
+    "label": "JSON5 → XML",
+    "accept": [
+      ".json5"
+    ],
+    "fromMime": [
+      "application/json5",
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "application/xml",
+    "maxFileSizeBytes": 20971520
+  },
+  "json5-to-toml": {
+    "label": "JSON5 → TOML",
+    "accept": [
+      ".json5"
+    ],
+    "fromMime": [
+      "application/json5",
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "application/toml",
+    "maxFileSizeBytes": 20971520
+  },
+  "ini-to-yaml": {
+    "label": "INI → YAML",
+    "accept": [
+      ".ini",
+      ".cfg",
+      ".conf"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-ini"
+    ],
+    "toMime": "application/x-yaml",
+    "maxFileSizeBytes": 20971520
+  },
+  "ini-to-xml": {
+    "label": "INI → XML",
+    "accept": [
+      ".ini",
+      ".cfg",
+      ".conf"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-ini"
+    ],
+    "toMime": "application/xml",
+    "maxFileSizeBytes": 20971520
+  },
+  "ini-to-toml": {
+    "label": "INI → TOML",
+    "accept": [
+      ".ini",
+      ".cfg",
+      ".conf"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-ini"
+    ],
+    "toMime": "application/toml",
+    "maxFileSizeBytes": 20971520
+  },
   "pdf-to-jpg": {
     "label": "PDF → JPG",
     "accept": [

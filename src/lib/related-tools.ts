@@ -364,6 +364,18 @@ const HAND_CURATED_RELATED: Record<string, string[]> = {
   "ods-to-endnote-xml": ["ods-to-ris","ods-to-bibtex","xlsx-to-endnote-xml"],
   "ods-to-nbib": ["ods-to-ris","ods-to-bibtex","xlsx-to-nbib"],
 
+  // ===== Config serialization cross-matrix =====
+  "yaml-to-xml": ["xml-to-yaml","yaml-to-json","yaml-to-toml"],
+  "xml-to-yaml": ["yaml-to-xml","xml-to-json","xml-to-toml"],
+  "toml-to-xml": ["xml-to-toml","toml-to-json","toml-to-yaml"],
+  "xml-to-toml": ["toml-to-xml","xml-to-json","xml-to-yaml"],
+  "json5-to-yaml": ["json5-to-json","json5-to-xml","json5-to-toml"],
+  "json5-to-xml": ["json5-to-json","json5-to-yaml","json5-to-toml"],
+  "json5-to-toml": ["json5-to-json","json5-to-yaml","json5-to-xml"],
+  "ini-to-yaml": ["ini-to-json","ini-to-xml","ini-to-toml"],
+  "ini-to-xml": ["ini-to-json","ini-to-yaml","ini-to-toml"],
+  "ini-to-toml": ["ini-to-json","ini-to-yaml","ini-to-xml"],
+
   // ===== Subtitle transcripts + matrix gaps =====
   "srt-to-txt": ["vtt-to-txt", "srt-to-vtt", "srt-to-ass"],
   "vtt-to-txt": ["srt-to-txt", "vtt-to-srt", "vtt-to-ass"],
