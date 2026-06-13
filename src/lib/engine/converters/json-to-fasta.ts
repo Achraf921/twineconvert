@@ -2,6 +2,7 @@ import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
 import { formatFasta, type FastaRecord } from "../util/fasta";
+import { parseJsonInput } from "../util/parse-json-input";
 
 /**
  * JSON → FASTA. Accepts a flat array of { id, description, sequence }
@@ -20,7 +21,7 @@ const jsonToFasta: Converter = {
     opts?.onProgress?.(0.1);
     let out: string;
     try {
-      const parsed: unknown = JSON.parse(await input.text());
+      const parsed: unknown = parseJsonInput(await input.text());
       if (!Array.isArray(parsed)) {
         throw new Error(
           "JSON must be an array of { id, description, sequence } records.",

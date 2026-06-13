@@ -1,6 +1,7 @@
 import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
+import { parseJsonInput } from "../util/parse-json-input";
 
 /**
  * GeoJSON → WKT. Accepts a Feature, FeatureCollection, or bare Geometry.
@@ -24,7 +25,7 @@ const geojsonToWkt: Converter = {
       const stringify = (
         "default" in wk ? wk.default : wk
       ) as { stringify: (g: unknown) => string };
-      const parsed: unknown = JSON.parse(await input.text());
+      const parsed: unknown = parseJsonInput(await input.text());
       const geoms = extractGeometries(parsed);
       if (geoms.length === 0) {
         throw new Error(

@@ -1,6 +1,7 @@
 import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
+import { parseJsonInput } from "../util/parse-json-input";
 
 /**
  * GeoJSON → WKB. Emits a single binary WKB blob for the first geometry
@@ -26,7 +27,7 @@ const geojsonToWkb: Converter = {
           ? (wkx.default as { Geometry: unknown }).Geometry
           : (wkx as { Geometry: unknown }).Geometry
       ) as { parseGeoJSON: (g: unknown) => { toWkb: () => Buffer } };
-      const parsed: unknown = JSON.parse(await input.text());
+      const parsed: unknown = parseJsonInput(await input.text());
       const geom = extractFirstGeometry(parsed);
       if (!geom) {
         throw new Error(

@@ -1,6 +1,7 @@
 import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
+import { parseJsonInput } from "../util/parse-json-input";
 
 /**
  * JSON → CBOR (RFC 8949). Encodes the input document to compact
@@ -21,7 +22,7 @@ const jsonToCbor: Converter = {
     let blob: Blob;
     try {
       const { encode } = await import("cbor-x");
-      const parsed: unknown = JSON.parse(await input.text());
+      const parsed: unknown = parseJsonInput(await input.text());
       const out = encode(parsed);
       const ab = new ArrayBuffer(out.length);
       new Uint8Array(ab).set(out);

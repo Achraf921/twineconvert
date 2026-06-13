@@ -2,6 +2,7 @@ import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
 import { extractResources, resourcesToRows } from "../util/fhir";
+import { parseJsonInput } from "../util/parse-json-input";
 
 /**
  * FHIR R4 Bundle → CSV. Flattens every resource in the Bundle into one
@@ -22,7 +23,7 @@ const fhirBundleToCsv: Converter = {
     let csv: string;
     try {
       const Papa = (await import("papaparse")).default;
-      const parsed: unknown = JSON.parse(await input.text());
+      const parsed: unknown = parseJsonInput(await input.text());
       const resources = extractResources(parsed);
       if (resources.length === 0) {
         throw new Error(

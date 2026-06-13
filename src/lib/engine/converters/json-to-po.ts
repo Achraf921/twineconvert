@@ -2,6 +2,7 @@ import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
 import { buildPo, type PoEntry } from "../util/po";
+import { parseJsonInput } from "../util/parse-json-input";
 
 const jsonToPo: Converter = {
   id: "json-to-po",
@@ -15,7 +16,7 @@ const jsonToPo: Converter = {
     opts?.onProgress?.(0.1);
     let out: string;
     try {
-      const parsed: unknown = JSON.parse(await input.text());
+      const parsed: unknown = parseJsonInput(await input.text());
       if (!Array.isArray(parsed)) {
         throw new Error(
           "Top-level value must be a JSON array of translation entries (objects with `msgid` and `msgstr`).",

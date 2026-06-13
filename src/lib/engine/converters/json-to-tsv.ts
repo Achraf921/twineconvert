@@ -1,6 +1,7 @@
 import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
+import { parseJsonInput } from "../util/parse-json-input";
 
 const jsonToTsv: Converter = {
   id: "json-to-tsv",
@@ -15,7 +16,7 @@ const jsonToTsv: Converter = {
     let tsv: string;
     try {
       const Papa = (await import("papaparse")).default;
-      const parsed: unknown = JSON.parse(await input.text());
+      const parsed: unknown = parseJsonInput(await input.text());
       const arr = Array.isArray(parsed) ? parsed : [parsed];
       const records = arr.filter(
         (v): v is Record<string, unknown> =>

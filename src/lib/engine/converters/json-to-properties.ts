@@ -2,6 +2,7 @@ import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
 import { buildProperties } from "../util/properties";
+import { parseJsonInput } from "../util/parse-json-input";
 
 const jsonToProperties: Converter = {
   id: "json-to-properties",
@@ -15,7 +16,7 @@ const jsonToProperties: Converter = {
     opts?.onProgress?.(0.1);
     let out: string;
     try {
-      const parsed: unknown = JSON.parse(await input.text());
+      const parsed: unknown = parseJsonInput(await input.text());
       if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
         throw new Error(".properties requires a flat object of key/value pairs");
       }

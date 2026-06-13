@@ -2,6 +2,7 @@ import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
 import { objectsToTable, buildMarkdownTable } from "../util/tables";
+import { parseJsonInput } from "../util/parse-json-input";
 
 /**
  * JSON → Markdown Table. Converts through the shared table model (headers + rows), so
@@ -19,7 +20,7 @@ const jsonToMarkdownTable: Converter = {
     opts?.onProgress?.(0.1);
     let out: string;
     try {
-      const parsed: unknown = JSON.parse(await input.text());
+      const parsed: unknown = parseJsonInput(await input.text());
       const table = objectsToTable(parsed);
       out = buildMarkdownTable(table);
     } catch (err) {

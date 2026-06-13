@@ -2,6 +2,7 @@ import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
 import { buildHl7, treeToHl7 } from "../util/hl7";
+import { parseJsonInput } from "../util/parse-json-input";
 
 const jsonToHl7: Converter = {
   id: "json-to-hl7",
@@ -15,7 +16,7 @@ const jsonToHl7: Converter = {
     opts?.onProgress?.(0.1);
     let out: string;
     try {
-      const parsed: unknown = JSON.parse(await input.text());
+      const parsed: unknown = parseJsonInput(await input.text());
       if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
         throw new Error("HL7 JSON must be an object keyed by segment type (MSH, PID, ...)");
       }

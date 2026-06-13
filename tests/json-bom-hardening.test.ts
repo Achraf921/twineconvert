@@ -66,3 +66,47 @@ describe("json-to-* tools accept a BOM-prefixed file", () => {
     expect([buf[0], buf[1], buf[2], buf[3]]).toEqual([0x50, 0x4b, 0x03, 0x04]);
   });
 });
+
+describe("remaining json-readers: a BOM produces identical output to no BOM", () => {
+  // Shape-agnostic: stripping the BOM must make the BOM'd input convert
+  // exactly like the clean input. Covers the bulk-migrated tools.
+  const arrCases = [
+    "json-to-tsv",
+    "json-to-markdown-table",
+    "json-to-html-table",
+  ];
+  const objCases = [
+    "json-to-env",
+    "json-to-properties",
+    "json-to-bencode",
+    "json-to-cbor",
+    "json-to-msgpack",
+  ];
+  for (const id of arrCases) {
+    it(`${id} (array)`, async () => {
+      const clean = await (await run(id, j("a.json", ARR.slice(1)))).blob.text();
+      const bommed = await (await run(id, j("a.json", ARR))).blob.text();
+      expect(bommed).toBe(clean);
+      expect(bommed).not.toContain(BOM);
+    });
+  }
+  for (const id of objCases) {
+    it(`${id} (object)`, async () => {
+      const clean = await (await run(id, j("o.json", OBJ.slice(1)))).blob.text();
+      const bommed = await (await run(id, j("o.json", OBJ))).blob.text();
+      expect(bommed).toBe(clean);
+    });
+  }
+  it("geojson-to-wkt strips a BOM on a GeoJSON geometry", async () => {
+    const geo = '{"type":"Point","coordinates":[1,2]}';
+    const wkt = await (await run("geojson-to-wkt", j("p.geojson", BOM + geo))).blob.text();
+    expect(wkt).toMatch(/POINT/i);
+  });
+  it("json-to-po strips a BOM on PO-shaped entries", async () => {
+    const po = JSON.stringify([{ msgid: "hello", msgstr: "bonjour" }]);
+    const clean = await (await run("json-to-po", j("m.json", po))).blob.text();
+    const bommed = await (await run("json-to-po", j("m.json", BOM + po))).blob.text();
+    expect(bommed).toBe(clean);
+    expect(bommed).toMatch(/bonjour/);
+  });
+});

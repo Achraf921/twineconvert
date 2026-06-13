@@ -1,6 +1,7 @@
 import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
+import { parseJsonInput } from "../util/parse-json-input";
 
 /**
  * JSON → Bencode. Encodes the input document into the BitTorrent .torrent
@@ -26,7 +27,7 @@ const jsonToBencode: Converter = {
       const encode = (bencode.default ?? bencode).encode as (
         v: unknown,
       ) => Uint8Array | Buffer;
-      const parsed: unknown = JSON.parse(await input.text());
+      const parsed: unknown = parseJsonInput(await input.text());
       const restored = restoreBinaries(parsed);
       const out = encode(restored);
       const ab = new ArrayBuffer(out.length);

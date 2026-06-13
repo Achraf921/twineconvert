@@ -3,6 +3,7 @@ import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
 import { buildGedcom } from "../util/gedcom-build";
 import type { ParsedGedcom } from "../util/gedcom-parse";
+import { parseJsonInput } from "../util/parse-json-input";
 
 const jsonToGedcom: Converter = {
   id: "json-to-gedcom",
@@ -16,7 +17,7 @@ const jsonToGedcom: Converter = {
     opts?.onProgress?.(0.1);
     let gedcom: string;
     try {
-      const data = JSON.parse(await input.text()) as ParsedGedcom;
+      const data = parseJsonInput(await input.text()) as ParsedGedcom;
       if (!data.individuals || !Array.isArray(data.individuals)) {
         throw new Error("JSON must contain an 'individuals' array");
       }

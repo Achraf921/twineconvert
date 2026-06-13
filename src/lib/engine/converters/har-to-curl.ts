@@ -1,6 +1,7 @@
 import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
+import { parseJsonInput } from "../util/parse-json-input";
 
 /**
  * HAR → curl commands. HAR is the HTTP Archive JSON format every
@@ -26,7 +27,7 @@ const harToCurl: Converter = {
     opts?.onProgress?.(0.1);
     let out: string;
     try {
-      const parsed = JSON.parse(await input.text());
+      const parsed = parseJsonInput<{ log?: { entries?: unknown } }>(await input.text());
       const entries = parsed?.log?.entries;
       if (!Array.isArray(entries)) {
         throw new Error(

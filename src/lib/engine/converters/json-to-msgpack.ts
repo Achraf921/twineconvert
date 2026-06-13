@@ -1,6 +1,7 @@
 import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
+import { parseJsonInput } from "../util/parse-json-input";
 
 /**
  * JSON → MessagePack. Encodes the input document to compact binary.
@@ -21,7 +22,7 @@ const jsonToMsgpack: Converter = {
     let blob: Blob;
     try {
       const { encode } = await import("@msgpack/msgpack");
-      const parsed: unknown = JSON.parse(await input.text());
+      const parsed: unknown = parseJsonInput(await input.text());
       const out = encode(parsed);
       const ab = new ArrayBuffer(out.length);
       new Uint8Array(ab).set(out);
