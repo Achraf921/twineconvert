@@ -651,3 +651,37 @@ describe("csv-to-ris: real-world Excel export hardening", () => {
     expect(ris).toMatch(/PY\s+-\s+2021/);
   });
 });
+
+describe("csv-to-ris: smart redirect when the input is not really a CSV", () => {
+  // PostHog's #1 fresh error: users paste a plain-text reference list (or
+  // a PubMed export) into csv-to-ris because the .csv extension passes the
+  // gate. Now that dedicated tools exist, point them there.
+  it("redirects a pasted reference list to references-to-ris", async () => {
+    const reflist =
+      '[1] L. Tan and T. Zrnic, "Valid Inference with Synthetic Data," JMLR, 2024.\n' +
+      '[2] K. Brown, "A Single Author Study," Nature, 2019.';
+    await expect(run("csv-to-ris", f("refs.csv", reflist, "text/csv"))).rejects.toThrow(
+      /references-to-ris/,
+    );
+  });
+
+  it("redirects a pasted PubMed/MEDLINE export to pubmed-to-ris", async () => {
+    const pubmed = "PMID- 30429114\nTI  - Vestibular function in older adults.\nAU  - Smith JK\nDP  - 2019\n";
+    await expect(run("csv-to-ris", f("pubmed.csv", pubmed, "text/csv"))).rejects.toThrow(
+      /pubmed-to-ris/,
+    );
+  });
+
+  it("csv-to-bibtex redirects a reference list to references-to-bibtex", async () => {
+    const reflist = '[1] A. Author, "Some Paper Title," Journal, 2022.';
+    await expect(run("csv-to-bibtex", f("refs.csv", reflist, "text/csv"))).rejects.toThrow(
+      /references-to-bibtex/,
+    );
+  });
+
+  it("does NOT redirect a normal citation CSV (no false positive)", async () => {
+    const csv = "title,authors,year\nReal Paper,Smith,2020\n";
+    const ris = await (await run("csv-to-ris", f("ok.csv", csv, "text/csv"))).blob.text();
+    expect(ris).toMatch(/TI\s+-\s+Real Paper/);
+  });
+});

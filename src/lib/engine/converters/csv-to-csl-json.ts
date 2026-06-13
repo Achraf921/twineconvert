@@ -2,6 +2,7 @@ import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
 import { citationsFromCsv } from "../util/citation-csv";
+import { citationInputHint } from "../util/citation-input-hint";
 import { buildCslJson } from "../util/csl-json";
 
 /**
@@ -20,18 +21,22 @@ const csvToCslJson: Converter = {
 
   async convert(input, opts) {
     opts?.onProgress?.(0.1);
-    let out: string;
+    const text = await input.text();
+    let citations;
     try {
-      const text = await input.text();
-      const citations = await citationsFromCsv(text);
-      if (citations.length === 0) throw new Error("No references found in the CSV file");
-      out = buildCslJson(citations);
+      citations = await citationsFromCsv(text);
     } catch (err) {
+      const hint = citationInputHint(text, "references-to-csl-json", "pubmed-to-ris");
       throw new ConvertFailedError(
-        err instanceof Error ? err.message : "Could not convert CSV to CSL-JSON",
+        hint ?? (err instanceof Error ? err.message : "Could not convert CSV to CSL-JSON"),
         err,
       );
     }
+    if (citations.length === 0) {
+      const hint = citationInputHint(text, "references-to-csl-json", "pubmed-to-ris");
+      throw new ConvertFailedError(hint ?? "No references found in the CSV file");
+    }
+    const out = buildCslJson(citations);
     opts?.onProgress?.(1);
     return {
       blob: new Blob([out], { type: "application/vnd.citationstyles.csl+json;charset=utf-8" }),

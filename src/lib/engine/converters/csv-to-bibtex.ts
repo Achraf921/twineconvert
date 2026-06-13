@@ -3,6 +3,7 @@ import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
 import { buildBibtex } from "../util/bibtex";
 import { citationsFromCsv } from "../util/citation-csv";
+import { citationInputHint } from "../util/citation-input-hint";
 
 const csvToBibtex: Converter = {
   id: "csv-to-bibtex",
@@ -14,17 +15,22 @@ const csvToBibtex: Converter = {
 
   async convert(input, opts) {
     opts?.onProgress?.(0.1);
-    let bibtex: string;
+    const text = await input.text();
+    let citations;
     try {
-      const citations = await citationsFromCsv(await input.text());
-      if (citations.length === 0) throw new Error("No citations found in CSV");
-      bibtex = buildBibtex(citations);
+      citations = await citationsFromCsv(text);
     } catch (err) {
+      const hint = citationInputHint(text, "references-to-bibtex", "pubmed-to-bibtex");
       throw new ConvertFailedError(
-        err instanceof Error ? err.message : "Could not convert CSV to BibTeX",
+        hint ?? (err instanceof Error ? err.message : "Could not convert CSV to BibTeX"),
         err,
       );
     }
+    if (citations.length === 0) {
+      const hint = citationInputHint(text, "references-to-bibtex", "pubmed-to-bibtex");
+      throw new ConvertFailedError(hint ?? "No citations found in CSV");
+    }
+    const bibtex = buildBibtex(citations);
     opts?.onProgress?.(1);
     return {
       blob: new Blob([bibtex], { type: "application/x-bibtex" }),
