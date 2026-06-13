@@ -107,6 +107,12 @@ const CITATION_CSV =
   "id,type,title,authors,year,journal,volume,issue,pages,doi\n" +
   'smith2021,article,"A Study of Things","Smith, John; Doe, Jane","2021","Nature","12","3","45-67","10.1000/xyz"';
 
+// A real-shaped EndNote ENW (Refer/tagged) export for the enw -> X routes.
+const ENW_SAMPLE =
+  "%0 Journal Article\n%A Smith, John\n%A Doe, Jane\n%T Vestibular function in aging adults\n" +
+  "%J Journal of Neurology\n%D 2006\n%V 253\n%N 11\n%P 1499-1508\n%@ 1432-1459\n" +
+  "%R 10.1007/s00415-006-0001-x\n%K balance\n%X We measured vestibular thresholds.\n%F smith2006\n";
+
 // ============================================================================
 // Registry: converter id → fixture spec
 //
@@ -270,6 +276,24 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "endnote-xml-to-markdown": { provider: () => text("test.xml", F.endnoteXml, "application/xml"), env: "node" },
   "endnote-xml-to-html": { provider: () => text("test.xml", F.endnoteXml, "application/xml"), env: "node" },
   "endnote-xml-to-yaml": { provider: () => text("test.xml", F.endnoteXml, "application/xml"), env: "node" },
+
+  // EndNote ENW (Refer/tagged) <-> citation hub
+  "enw-to-bibtex": { provider: () => text("test.enw", ENW_SAMPLE, "application/x-endnote-refer"), env: "node" },
+  "enw-to-ris": { provider: () => text("test.enw", ENW_SAMPLE, "application/x-endnote-refer"), env: "node" },
+  "enw-to-nbib": { provider: () => text("test.enw", ENW_SAMPLE, "application/x-endnote-refer"), env: "node" },
+  "enw-to-endnote-xml": { provider: () => text("test.enw", ENW_SAMPLE, "application/x-endnote-refer"), env: "node" },
+  "enw-to-csl-json": { provider: () => text("test.enw", ENW_SAMPLE, "application/x-endnote-refer"), env: "node" },
+  "enw-to-csv": { provider: () => text("test.enw", ENW_SAMPLE, "application/x-endnote-refer"), env: "node" },
+  "enw-to-xlsx": { provider: () => text("test.enw", ENW_SAMPLE, "application/x-endnote-refer"), env: "node" },
+  "enw-to-markdown": { provider: () => text("test.enw", ENW_SAMPLE, "application/x-endnote-refer"), env: "node" },
+  "enw-to-html": { provider: () => text("test.enw", ENW_SAMPLE, "application/x-endnote-refer"), env: "node" },
+  "enw-to-yaml": { provider: () => text("test.enw", ENW_SAMPLE, "application/x-endnote-refer"), env: "node" },
+  "bibtex-to-enw": { provider: () => text("test.bib", F.bibtex, "application/x-bibtex"), env: "node" },
+  "ris-to-enw": { provider: () => text("test.ris", F.ris, "application/x-research-info-systems"), env: "node" },
+  "nbib-to-enw": { provider: () => text("test.nbib", F.nbibRealPubMed, "application/x-research-info-systems"), env: "node" },
+  "endnote-xml-to-enw": { provider: () => text("test.xml", F.endnoteXml, "application/xml"), env: "node" },
+  "csl-json-to-enw": { provider: () => text("test.json", F.cslJson, "application/json"), env: "node" },
+  "csv-to-enw": { provider: () => text("test.csv", CITATION_CSV, "text/csv"), env: "node" },
   "mp3-to-wav":  { provider: () => Promise.reject(new Error("mp3 fixture pending")), env: "browser" },
   "mp3-to-m4a":  { provider: () => Promise.reject(new Error("mp3 fixture pending")), env: "browser" },
   "mp3-to-flac": { provider: () => Promise.reject(new Error("mp3 fixture pending")), env: "browser" },

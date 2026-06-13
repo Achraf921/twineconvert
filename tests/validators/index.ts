@@ -801,6 +801,15 @@ export const validateBencode: Validator = async ({ blob, minSize = 2 }) => {
   }
 };
 
+export const validateEnw: Validator = async ({ blob, minSize = 6 }) => {
+  assertMinSize(blob, minSize, "ENW");
+  const text = await readText(blob);
+  // Every ENW record opens with a %0 reference-type line; a real export
+  // also carries at least a title (%T) or author (%A).
+  if (!/^%0 /m.test(text)) throw new Error("ENW missing a %0 reference-type line");
+  if (!/^%[TA] /m.test(text)) throw new Error("ENW has no %T title or %A author line");
+};
+
 export const validateHarJson: Validator = async ({ blob, minSize = 20 }) => {
   assertMinSize(blob, minSize, "HAR");
   const text = await readText(blob);
@@ -1166,6 +1175,9 @@ const BY_MIME: Record<string, Validator> = {
 
   // HAR (HTTP archive)
   "application/har+json": validateHarJson,
+
+  // EndNote ENW (Refer/tagged)
+  "application/x-endnote-refer": validateEnw,
 };
 
 // Extension-keyed fallback, used when toMime is generic (octet-stream)
@@ -1224,6 +1236,7 @@ const BY_EXT: Record<string, Validator> = {
   torrent: validateBencode,
   bencode: validateBencode,
   har: validateHarJson,
+  enw: validateEnw,
   sh: validateCurlScript,
 };
 

@@ -118,6 +118,7 @@ const FORMATS = {
   ris: { kind: "data", lossless: true, family: "citation" },
   nbib: { kind: "data", lossless: true, family: "citation" },
   "endnote-xml": { kind: "data", lossless: true, family: "citation" },
+  enw: { kind: "data", lossless: true, family: "citation" },
   // ==== Color palettes ====
   ase: { kind: "palette", lossless: true, family: "design" },
   gpl: { kind: "palette", lossless: true, family: "design" },

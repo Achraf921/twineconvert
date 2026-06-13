@@ -1344,6 +1344,202 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "application/x-yaml",
     "maxFileSizeBytes": 104857600
   },
+  "enw-to-bibtex": {
+    "label": "EndNote ENW → BibTeX",
+    "accept": [
+      ".enw"
+    ],
+    "fromMime": [
+      "application/x-endnote-refer",
+      "text/plain"
+    ],
+    "toMime": "application/x-bibtex",
+    "maxFileSizeBytes": 104857600
+  },
+  "enw-to-ris": {
+    "label": "EndNote ENW → RIS",
+    "accept": [
+      ".enw"
+    ],
+    "fromMime": [
+      "application/x-endnote-refer",
+      "text/plain"
+    ],
+    "toMime": "application/x-research-info-systems",
+    "maxFileSizeBytes": 104857600
+  },
+  "enw-to-nbib": {
+    "label": "EndNote ENW → NBIB",
+    "accept": [
+      ".enw"
+    ],
+    "fromMime": [
+      "application/x-endnote-refer",
+      "text/plain"
+    ],
+    "toMime": "application/x-research-info-systems",
+    "maxFileSizeBytes": 104857600
+  },
+  "enw-to-endnote-xml": {
+    "label": "EndNote ENW → EndNote XML",
+    "accept": [
+      ".enw"
+    ],
+    "fromMime": [
+      "application/x-endnote-refer",
+      "text/plain"
+    ],
+    "toMime": "application/xml",
+    "maxFileSizeBytes": 104857600
+  },
+  "enw-to-csl-json": {
+    "label": "EndNote ENW → CSL-JSON",
+    "accept": [
+      ".enw"
+    ],
+    "fromMime": [
+      "application/x-endnote-refer",
+      "text/plain"
+    ],
+    "toMime": "application/vnd.citationstyles.csl+json",
+    "maxFileSizeBytes": 104857600
+  },
+  "enw-to-csv": {
+    "label": "EndNote ENW → CSV",
+    "accept": [
+      ".enw"
+    ],
+    "fromMime": [
+      "application/x-endnote-refer",
+      "text/plain"
+    ],
+    "toMime": "text/csv",
+    "maxFileSizeBytes": 104857600
+  },
+  "enw-to-xlsx": {
+    "label": "EndNote ENW → XLSX",
+    "accept": [
+      ".enw"
+    ],
+    "fromMime": [
+      "application/x-endnote-refer",
+      "text/plain"
+    ],
+    "toMime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "maxFileSizeBytes": 104857600
+  },
+  "enw-to-markdown": {
+    "label": "EndNote ENW → Markdown",
+    "accept": [
+      ".enw"
+    ],
+    "fromMime": [
+      "application/x-endnote-refer",
+      "text/plain"
+    ],
+    "toMime": "text/markdown",
+    "maxFileSizeBytes": 104857600
+  },
+  "enw-to-html": {
+    "label": "EndNote ENW → HTML",
+    "accept": [
+      ".enw"
+    ],
+    "fromMime": [
+      "application/x-endnote-refer",
+      "text/plain"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 104857600
+  },
+  "enw-to-yaml": {
+    "label": "EndNote ENW → YAML (CSL)",
+    "accept": [
+      ".enw"
+    ],
+    "fromMime": [
+      "application/x-endnote-refer",
+      "text/plain"
+    ],
+    "toMime": "application/x-yaml",
+    "maxFileSizeBytes": 104857600
+  },
+  "bibtex-to-enw": {
+    "label": "BibTeX → EndNote ENW",
+    "accept": [
+      ".bib",
+      ".bibtex"
+    ],
+    "fromMime": [
+      "application/x-bibtex",
+      "text/x-bibtex",
+      "text/plain"
+    ],
+    "toMime": "application/x-endnote-refer",
+    "maxFileSizeBytes": 104857600
+  },
+  "ris-to-enw": {
+    "label": "RIS → EndNote ENW",
+    "accept": [
+      ".ris"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "application/x-endnote-refer",
+    "maxFileSizeBytes": 104857600
+  },
+  "nbib-to-enw": {
+    "label": "NBIB → EndNote ENW",
+    "accept": [
+      ".nbib"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "application/x-endnote-refer",
+    "maxFileSizeBytes": 104857600
+  },
+  "endnote-xml-to-enw": {
+    "label": "EndNote XML → EndNote ENW",
+    "accept": [
+      ".xml"
+    ],
+    "fromMime": [
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "application/x-endnote-refer",
+    "maxFileSizeBytes": 104857600
+  },
+  "csl-json-to-enw": {
+    "label": "CSL-JSON → EndNote ENW",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/vnd.citationstyles.csl+json",
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "application/x-endnote-refer",
+    "maxFileSizeBytes": 104857600
+  },
+  "csv-to-enw": {
+    "label": "CSV → EndNote ENW",
+    "accept": [
+      ".csv"
+    ],
+    "fromMime": [
+      "text/csv",
+      "application/csv",
+      "text/plain"
+    ],
+    "toMime": "application/x-endnote-refer",
+    "maxFileSizeBytes": 104857600
+  },
   "mp3-to-wav": {
     "label": "MP3 → WAV",
     "accept": [

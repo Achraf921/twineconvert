@@ -241,6 +241,24 @@ const HAND_CURATED_RELATED: Record<string, string[]> = {
   "endnote-xml-to-html": ["endnote-xml-to-markdown","endnote-xml-to-yaml","endnote-xml-to-bibtex"],
   "endnote-xml-to-yaml": ["endnote-xml-to-markdown","endnote-xml-to-html","endnote-xml-to-bibtex"],
 
+  // ===== EndNote ENW (Refer/tagged) =====
+  "enw-to-bibtex": ["bibtex-to-enw","enw-to-ris","enw-to-csv"],
+  "enw-to-ris": ["ris-to-enw","enw-to-bibtex","enw-to-csv"],
+  "enw-to-nbib": ["nbib-to-enw","enw-to-ris","enw-to-bibtex"],
+  "enw-to-endnote-xml": ["endnote-xml-to-enw","enw-to-ris","enw-to-bibtex"],
+  "enw-to-csl-json": ["csl-json-to-enw","enw-to-ris","enw-to-bibtex"],
+  "enw-to-csv": ["csv-to-enw","enw-to-bibtex","enw-to-xlsx"],
+  "enw-to-xlsx": ["enw-to-csv","enw-to-bibtex","ris-to-xlsx"],
+  "enw-to-markdown": ["enw-to-html","enw-to-yaml","enw-to-bibtex"],
+  "enw-to-html": ["enw-to-markdown","enw-to-yaml","enw-to-bibtex"],
+  "enw-to-yaml": ["enw-to-markdown","enw-to-html","enw-to-bibtex"],
+  "bibtex-to-enw": ["enw-to-bibtex","bibtex-to-ris","bibtex-to-csv"],
+  "ris-to-enw": ["enw-to-ris","ris-to-bibtex","ris-to-csv"],
+  "nbib-to-enw": ["enw-to-nbib","nbib-to-bibtex","nbib-to-ris"],
+  "endnote-xml-to-enw": ["enw-to-endnote-xml","endnote-xml-to-bibtex","endnote-xml-to-ris"],
+  "csl-json-to-enw": ["enw-to-csl-json","csl-json-to-bibtex","csl-json-to-ris"],
+  "csv-to-enw": ["enw-to-csv","csv-to-bibtex","csv-to-ris"],
+
   // ===== Chess (fen-to-png + pgn-to-fen rank well, sibling spread) =====
   "fen-to-pgn":  ["pgn-to-fen", "fen-to-png", "pgn-to-csv", "pgn-to-json"],
   "fen-to-png":  ["fen-to-pgn", "pgn-to-fen", "pgn-to-csv"],

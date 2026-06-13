@@ -3403,6 +3403,150 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       { problem: "Pandoc does not pick up the references.", solution: "Pass the file with --bibliography refs.yaml, or paste the list (without the top-level references: key) into your document's YAML frontmatter under a references: block." },
     ],
   },
+  "enw-to-bibtex": {
+    whyConvert:
+      "EndNote ENW is the tagged \"Refer\" format behind the \"Download .enw\" or \"Export to EndNote\" link on journal sites, library catalogs, and databases. This converts it to BibTeX so you can use the references in a LaTeX/Overleaf bibliography. Goes through the unified Citation model, so title, authors, year, journal, volume, pages, and DOI all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You clicked \"Download .enw\" on a journal article and need it in BibTeX for a LaTeX/Overleaf bibliography. Drop the .enw here and get BibTeX back.",
+    troubleshooting: [
+      { problem: "An author or the DOI is missing.", solution: "Check the .enw source has the matching tag (%A author, %R DOI, %T title). The converter carries across only what the export contained." },
+    ],
+  },
+  "enw-to-ris": {
+    whyConvert:
+      "EndNote ENW is the tagged \"Refer\" format behind the \"Download .enw\" or \"Export to EndNote\" link on journal sites, library catalogs, and databases. This converts it to RIS so you can use the references in EndNote, Mendeley, or Zotero. Goes through the unified Citation model, so title, authors, year, journal, volume, pages, and DOI all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You clicked \"Download .enw\" on a journal article and need it in RIS for EndNote, Mendeley, or Zotero. Drop the .enw here and get RIS back.",
+    troubleshooting: [
+      { problem: "An author or the DOI is missing.", solution: "Check the .enw source has the matching tag (%A author, %R DOI, %T title). The converter carries across only what the export contained." },
+    ],
+  },
+  "enw-to-nbib": {
+    whyConvert:
+      "EndNote ENW is the tagged \"Refer\" format behind the \"Download .enw\" or \"Export to EndNote\" link on journal sites, library catalogs, and databases. This converts it to NBIB so you can use the references in a PubMed-style record. Goes through the unified Citation model, so title, authors, year, journal, volume, pages, and DOI all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You clicked \"Download .enw\" on a journal article and need it in NBIB for a PubMed-style record. Drop the .enw here and get NBIB back.",
+    troubleshooting: [
+      { problem: "An author or the DOI is missing.", solution: "Check the .enw source has the matching tag (%A author, %R DOI, %T title). The converter carries across only what the export contained." },
+    ],
+  },
+  "enw-to-endnote-xml": {
+    whyConvert:
+      "EndNote ENW is the tagged \"Refer\" format behind the \"Download .enw\" or \"Export to EndNote\" link on journal sites, library catalogs, and databases. This converts it to EndNote XML so you can use the references in an EndNote XML library. Goes through the unified Citation model, so title, authors, year, journal, volume, pages, and DOI all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You clicked \"Download .enw\" on a journal article and need it in EndNote XML for an EndNote XML library. Drop the .enw here and get EndNote XML back.",
+    troubleshooting: [
+      { problem: "An author or the DOI is missing.", solution: "Check the .enw source has the matching tag (%A author, %R DOI, %T title). The converter carries across only what the export contained." },
+    ],
+  },
+  "enw-to-csl-json": {
+    whyConvert:
+      "EndNote ENW is the tagged \"Refer\" format behind the \"Download .enw\" or \"Export to EndNote\" link on journal sites, library catalogs, and databases. This converts it to CSL-JSON so you can use the references in Zotero or pandoc. Goes through the unified Citation model, so title, authors, year, journal, volume, pages, and DOI all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You clicked \"Download .enw\" on a journal article and need it in CSL-JSON for Zotero or pandoc. Drop the .enw here and get CSL-JSON back.",
+    troubleshooting: [
+      { problem: "An author or the DOI is missing.", solution: "Check the .enw source has the matching tag (%A author, %R DOI, %T title). The converter carries across only what the export contained." },
+    ],
+  },
+  "enw-to-csv": {
+    whyConvert:
+      "EndNote ENW is the tagged \"Refer\" format behind the \"Download .enw\" or \"Export to EndNote\" link on journal sites, library catalogs, and databases. This converts it to CSV so you can use the references in a spreadsheet. Goes through the unified Citation model, so title, authors, year, journal, volume, pages, and DOI all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You clicked \"Download .enw\" on a journal article and need it in CSV for a spreadsheet. Drop the .enw here and get CSV back.",
+    troubleshooting: [
+      { problem: "An author or the DOI is missing.", solution: "Check the .enw source has the matching tag (%A author, %R DOI, %T title). The converter carries across only what the export contained." },
+    ],
+  },
+  "enw-to-xlsx": {
+    whyConvert:
+      "EndNote ENW is the tagged \"Refer\" format behind the \"Download .enw\" or \"Export to EndNote\" link on journal sites, library catalogs, and databases. This converts it to Excel (XLSX) so you can use the references in Excel. Goes through the unified Citation model, so title, authors, year, journal, volume, pages, and DOI all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You clicked \"Download .enw\" on a journal article and need it in Excel (XLSX) for Excel. Drop the .enw here and get Excel (XLSX) back.",
+    troubleshooting: [
+      { problem: "A column is blank.", solution: "ENW only fills fields the export actually included; a missing %V or %R leaves that cell empty." },
+    ],
+  },
+  "enw-to-markdown": {
+    whyConvert:
+      "EndNote ENW is the tagged \"Refer\" format behind the \"Download .enw\" or \"Export to EndNote\" link on journal sites, library catalogs, and databases. This converts it to Markdown so you can use the references in an Obsidian note or README. Goes through the unified Citation model, so title, authors, year, journal, volume, pages, and DOI all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You clicked \"Download .enw\" on a journal article and need it in Markdown for an Obsidian note or README. Drop the .enw here and get Markdown back.",
+    troubleshooting: [
+      { problem: "An author or the DOI is missing.", solution: "Check the .enw source has the matching tag (%A author, %R DOI, %T title). The converter carries across only what the export contained." },
+    ],
+  },
+  "enw-to-html": {
+    whyConvert:
+      "EndNote ENW is the tagged \"Refer\" format behind the \"Download .enw\" or \"Export to EndNote\" link on journal sites, library catalogs, and databases. This converts it to HTML so you can use the references in a webpage. Goes through the unified Citation model, so title, authors, year, journal, volume, pages, and DOI all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You clicked \"Download .enw\" on a journal article and need it in HTML for a webpage. Drop the .enw here and get HTML back.",
+    troubleshooting: [
+      { problem: "An author or the DOI is missing.", solution: "Check the .enw source has the matching tag (%A author, %R DOI, %T title). The converter carries across only what the export contained." },
+    ],
+  },
+  "enw-to-yaml": {
+    whyConvert:
+      "EndNote ENW is the tagged \"Refer\" format behind the \"Download .enw\" or \"Export to EndNote\" link on journal sites, library catalogs, and databases. This converts it to YAML (CSL) so you can use the references in a Pandoc bibliography. Goes through the unified Citation model, so title, authors, year, journal, volume, pages, and DOI all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You clicked \"Download .enw\" on a journal article and need it in YAML (CSL) for a Pandoc bibliography. Drop the .enw here and get YAML (CSL) back.",
+    troubleshooting: [
+      { problem: "An author or the DOI is missing.", solution: "Check the .enw source has the matching tag (%A author, %R DOI, %T title). The converter carries across only what the export contained." },
+    ],
+  },
+  "bibtex-to-enw": {
+    whyConvert:
+      "BibTeX is a LaTeX/Overleaf bibliography data; this rewrites it as the tagged \"Refer\" format behind the \"Download .enw\" or \"Export to EndNote\" link on journal sites, library catalogs, and databases. Use it when a tool or a colleague specifically wants a .enw file to import into EndNote. Goes through the unified Citation model so every field carries across.",
+    example:
+      "You have BibTeX references and need to hand someone a .enw to import into EndNote. Convert here and send the .enw.",
+    troubleshooting: [
+      { problem: "EndNote will not import the file.", solution: "EndNote expects the .enw extension and a %0 reference-type line per record, which this produces. If import still fails, open EndNote's import filter and pick \"EndNote Import\" or \"Refer/BibIX\"." },
+    ],
+  },
+  "ris-to-enw": {
+    whyConvert:
+      "RIS is EndNote, Mendeley, or Zotero data; this rewrites it as the tagged \"Refer\" format behind the \"Download .enw\" or \"Export to EndNote\" link on journal sites, library catalogs, and databases. Use it when a tool or a colleague specifically wants a .enw file to import into EndNote. Goes through the unified Citation model so every field carries across.",
+    example:
+      "You have RIS references and need to hand someone a .enw to import into EndNote. Convert here and send the .enw.",
+    troubleshooting: [
+      { problem: "EndNote will not import the file.", solution: "EndNote expects the .enw extension and a %0 reference-type line per record, which this produces. If import still fails, open EndNote's import filter and pick \"EndNote Import\" or \"Refer/BibIX\"." },
+    ],
+  },
+  "nbib-to-enw": {
+    whyConvert:
+      "NBIB is a PubMed-style record data; this rewrites it as the tagged \"Refer\" format behind the \"Download .enw\" or \"Export to EndNote\" link on journal sites, library catalogs, and databases. Use it when a tool or a colleague specifically wants a .enw file to import into EndNote. Goes through the unified Citation model so every field carries across.",
+    example:
+      "You have NBIB references and need to hand someone a .enw to import into EndNote. Convert here and send the .enw.",
+    troubleshooting: [
+      { problem: "EndNote will not import the file.", solution: "EndNote expects the .enw extension and a %0 reference-type line per record, which this produces. If import still fails, open EndNote's import filter and pick \"EndNote Import\" or \"Refer/BibIX\"." },
+    ],
+  },
+  "endnote-xml-to-enw": {
+    whyConvert:
+      "EndNote XML is an EndNote XML library data; this rewrites it as the tagged \"Refer\" format behind the \"Download .enw\" or \"Export to EndNote\" link on journal sites, library catalogs, and databases. Use it when a tool or a colleague specifically wants a .enw file to import into EndNote. Goes through the unified Citation model so every field carries across.",
+    example:
+      "You have EndNote XML references and need to hand someone a .enw to import into EndNote. Convert here and send the .enw.",
+    troubleshooting: [
+      { problem: "EndNote will not import the file.", solution: "EndNote expects the .enw extension and a %0 reference-type line per record, which this produces. If import still fails, open EndNote's import filter and pick \"EndNote Import\" or \"Refer/BibIX\"." },
+    ],
+  },
+  "csl-json-to-enw": {
+    whyConvert:
+      "CSL-JSON is Zotero or pandoc data; this rewrites it as the tagged \"Refer\" format behind the \"Download .enw\" or \"Export to EndNote\" link on journal sites, library catalogs, and databases. Use it when a tool or a colleague specifically wants a .enw file to import into EndNote. Goes through the unified Citation model so every field carries across.",
+    example:
+      "You have CSL-JSON references and need to hand someone a .enw to import into EndNote. Convert here and send the .enw.",
+    troubleshooting: [
+      { problem: "EndNote will not import the file.", solution: "EndNote expects the .enw extension and a %0 reference-type line per record, which this produces. If import still fails, open EndNote's import filter and pick \"EndNote Import\" or \"Refer/BibIX\"." },
+    ],
+  },
+  "csv-to-enw": {
+    whyConvert:
+      "CSV is a spreadsheet of references; this rewrites it as the tagged \"Refer\" format behind the \"Download .enw\" or \"Export to EndNote\" link on journal sites, library catalogs, and databases. Use it when a tool or a colleague specifically wants a .enw file to import into EndNote. Goes through the unified Citation model so every field carries across.",
+    example:
+      "You have CSV references and need to hand someone a .enw to import into EndNote. Convert here and send the .enw.",
+    troubleshooting: [
+      { problem: "EndNote will not import the file.", solution: "EndNote expects the .enw extension and a %0 reference-type line per record, which this produces. If import still fails, open EndNote's import filter and pick \"EndNote Import\" or \"Refer/BibIX\"." },
+    ],
+  },
 };
 
 export function getExtendedCopy(toolId: string): ExtendedCopy | undefined {

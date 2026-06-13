@@ -184,6 +184,71 @@ describe("citation hub: bibliography renders carry the real titles", () => {
   }
 });
 
+const ENW_SAMPLE =
+  "%0 Journal Article\n%A Smith, John\n%A Doe, Jane\n%T Vestibular function in aging adults\n" +
+  "%J Journal of Neurology\n%D 2006\n%V 253\n%N 11\n%P 1499-1508\n%@ 1432-1459\n" +
+  "%R 10.1007/s00415-006-0001-x\n%K balance\n%X We measured vestibular thresholds.\n%F smith2006\n";
+
+describe("citation hub: EndNote ENW carries real data", () => {
+  it("enw-to-bibtex keeps title + DOI", async () => {
+    const r = await run("enw-to-bibtex", f("a.enw", ENW_SAMPLE, "application/x-endnote-refer"));
+    const bib = await r.blob.text();
+    expect(bib).toContain("Vestibular function in aging adults");
+    expect(bib).toContain("10.1007/s00415-006-0001-x");
+  });
+
+  it("enw-to-ris keeps title, both authors, year", async () => {
+    const r = await run("enw-to-ris", f("a.enw", ENW_SAMPLE, "application/x-endnote-refer"));
+    const ris = await r.blob.text();
+    expect(ris).toMatch(/TI\s+-\s+Vestibular function in aging adults/);
+    expect(ris).toMatch(/AU\s+-\s+Smith, John/);
+    expect(ris).toMatch(/AU\s+-\s+Doe, Jane/);
+    expect(ris).toMatch(/PY\s+-\s+2006/);
+  });
+
+  it("enw-to-csv carries the title", async () => {
+    const r = await run("enw-to-csv", f("a.enw", ENW_SAMPLE, "application/x-endnote-refer"));
+    expect(await r.blob.text()).toContain("Vestibular function in aging adults");
+  });
+
+  it("ris-to-enw emits ENW with %0, %T and the RIS title", async () => {
+    const r = await run("ris-to-enw", f("a.ris", F.ris, "application/x-research-info-systems"));
+    const enw = await r.blob.text();
+    expect(r.blob.type).toContain("endnote-refer");
+    expect(enw).toMatch(/^%0 /m);
+    expect(enw).toMatch(/^%T A Sample Paper/m);
+    expect(enw).toMatch(/^%A Smith, John/m);
+  });
+
+  it("csv-to-enw emits ENW carrying the CSV title", async () => {
+    const r = await run("csv-to-enw", f("a.csv", CITATION_CSV, "text/csv"));
+    const enw = await r.blob.text();
+    expect(enw).toContain("A Study of Things");
+    expect(enw).toMatch(/^%0 /m);
+  });
+
+  it("round-trip ENW -> RIS -> ENW preserves title + DOI", async () => {
+    const r1 = await run("enw-to-ris", f("a.enw", ENW_SAMPLE, "application/x-endnote-refer"));
+    const r2 = await run("ris-to-enw", reFile(await r1.blob.text(), "b.ris", "application/x-research-info-systems"));
+    const enw = await r2.blob.text();
+    expect(enw).toContain("Vestibular function in aging adults");
+    expect(enw).toContain("10.1007/s00415-006-0001-x");
+  });
+
+  it("enw-to-xlsx is a zip-backed spreadsheet", async () => {
+    const r = await run("enw-to-xlsx", f("a.enw", ENW_SAMPLE, "application/x-endnote-refer"));
+    const bytes = new Uint8Array(await r.blob.arrayBuffer());
+    expect(bytes[0]).toBe(0x50);
+    expect(bytes[1]).toBe(0x4b);
+  });
+
+  it("enw-to-bibtex throws on input with no records", async () => {
+    await expect(
+      run("enw-to-bibtex", f("e.enw", "not an enw file\n", "application/x-endnote-refer")),
+    ).rejects.toThrow(/No references found/);
+  });
+});
+
 describe("citation hub: empty / invalid inputs fail loudly", () => {
   it("csl-json-to-ris throws on an empty CSL array", async () => {
     await expect(
