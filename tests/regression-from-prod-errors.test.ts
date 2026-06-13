@@ -157,3 +157,58 @@ describe("regression: suppress noisy suggestion for ambiguous extensions", () =>
     );
   });
 });
+
+describe("regression: csv-to-ris reads real-world citation CSV headers", () => {
+  // PostHog (2026-06): csv-to-ris was the #1 tool yet several users hit
+  // "No citations found in CSV" or got silent empty RIS. Root cause: the
+  // reader matched ONLY exact-lowercase headers (title, authors, year),
+  // so PubMed CSV exports (Title, Authors, Publication Year, Journal/Book,
+  // DOI), Zotero, and Excel exports produced empty records with no error.
+
+  it("PubMed CSV (capitalised + Journal/Book + Publication Year) yields real RIS data", async () => {
+    const csv =
+      'PMID,Title,Authors,Journal/Book,Publication Year,DOI\n' +
+      '12345,"Vestibular function in aging","Smith J; Doe A","Journal of Neurology","2006","10.1000/xyz"';
+    const result = await run("csv-to-ris", fileFromText("pubmed_2006_2007.csv", csv, "text/csv"));
+    const ris = await result.blob.text();
+    // Real fields must appear, not an empty TY/ER skeleton.
+    expect(ris).toMatch(/TI\s+-\s+Vestibular function in aging/);
+    expect(ris).toMatch(/(AU|A1)\s+-\s+Smith J/);
+    expect(ris).toMatch(/(PY|Y1)\s+-\s+2006/);
+    expect(ris).toMatch(/DO\s+-\s+10\.1000\/xyz/);
+  });
+
+  it("Excel/Zotero capitalised headers (Title, Author, Year) yield real RIS data", async () => {
+    const csv = 'Title,Author,Year,DOI,Journal\n"A Study of Things","Jane Roe","2020","10.1/abc","Nature"';
+    const result = await run("csv-to-ris", fileFromText("zotero.csv", csv, "text/csv"));
+    const ris = await result.blob.text();
+    expect(ris).toMatch(/TI\s+-\s+A Study of Things/);
+    expect(ris).toMatch(/(AU|A1)\s+-\s+Jane Roe/);
+    expect(ris).toMatch(/(PY|Y1)\s+-\s+2020/);
+  });
+
+  it("a date-only column backfills the year (Date 2019-04-01 -> 2019)", async () => {
+    const csv = 'Title,Author,Date,Publication Title\n"Late binding","Roe J","2019-04-01","ACM Queue"';
+    const result = await run("csv-to-ris", fileFromText("date.csv", csv, "text/csv"));
+    const ris = await result.blob.text();
+    expect(ris).toMatch(/(PY|Y1)\s+-\s+2019/);
+    expect(ris).toMatch(/(JO|JF|T2)\s+-\s+ACM Queue/);
+  });
+
+  it("our own lowercase round-trip format still parses (no regression)", async () => {
+    const csv = 'id,type,title,authors,year,doi,journal\nc1,article,"Known Good","Smith, John; Doe, Jane","2021","10.2/d","Cell"';
+    const result = await run("csv-to-ris", fileFromText("ours.csv", csv, "text/csv"));
+    const ris = await result.blob.text();
+    expect(ris).toMatch(/TI\s+-\s+Known Good/);
+    // "Last, First" author names must survive the semicolon split intact.
+    expect(ris).toMatch(/(AU|A1)\s+-\s+Smith, John/);
+    expect(ris).toMatch(/(AU|A1)\s+-\s+Doe, Jane/);
+  });
+
+  it("a non-citation CSV (name,email,phone) fails loudly instead of empty output", async () => {
+    const csv = 'name,email,phone\n"Bob","b@x.com","555-1234"';
+    await expect(
+      run("csv-to-ris", fileFromText("contacts.csv", csv, "text/csv")),
+    ).rejects.toThrow(/no recognizable citation columns/i);
+  });
+});
