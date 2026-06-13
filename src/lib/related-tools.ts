@@ -319,6 +319,17 @@ const HAND_CURATED_RELATED: Record<string, string[]> = {
   "marcxml-to-html": ["marcxml-to-markdown","marcxml-to-yaml","marcxml-to-bibtex"],
   "marcxml-to-yaml": ["marcxml-to-markdown","marcxml-to-html","marcxml-to-bibtex"],
 
+  // ===== Subtitle transcripts + matrix gaps =====
+  "srt-to-txt": ["vtt-to-txt", "srt-to-vtt", "srt-to-ass"],
+  "vtt-to-txt": ["srt-to-txt", "vtt-to-srt", "vtt-to-ass"],
+  "ass-to-txt": ["ass-to-srt", "ass-to-vtt", "srt-to-txt"],
+  "sbv-to-txt": ["sbv-to-srt", "sbv-to-vtt", "srt-to-txt"],
+  "lrc-to-txt": ["lrc-to-srt", "lrc-to-vtt", "srt-to-txt"],
+  "vtt-to-sbv": ["sbv-to-vtt", "vtt-to-srt", "vtt-to-ass"],
+  "ass-to-sbv": ["sbv-to-ass", "ass-to-srt", "ass-to-vtt"],
+  "sbv-to-vtt": ["vtt-to-sbv", "sbv-to-srt", "sbv-to-ass"],
+  "sbv-to-ass": ["ass-to-sbv", "sbv-to-srt", "sbv-to-vtt"],
+
   // ===== Chess (fen-to-png + pgn-to-fen rank well, sibling spread) =====
   "fen-to-pgn":  ["pgn-to-fen", "fen-to-png", "pgn-to-csv", "pgn-to-json"],
   "fen-to-png":  ["fen-to-pgn", "pgn-to-fen", "pgn-to-csv"],

@@ -738,6 +738,17 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "ass-to-srt": { provider: () => text("captions.ass", F.ass, "text/x-ssa"), env: "node" },
   "ass-to-vtt": { provider: () => text("captions.ass", F.ass, "text/x-ssa"), env: "node" },
 
+  // Subtitle transcripts (plain-text) + matrix gap fills
+  "srt-to-txt": { provider: () => text("captions.srt", F.srt, "application/x-subrip"), env: "node" },
+  "vtt-to-txt": { provider: () => text("captions.vtt", F.vtt, "text/vtt"), env: "node" },
+  "ass-to-txt": { provider: () => text("captions.ass", F.ass, "text/x-ssa"), env: "node" },
+  "sbv-to-txt": { provider: () => text("captions.sbv", F.sbv, "text/sbv"), env: "node" },
+  "lrc-to-txt": { provider: () => text("song.lrc", "[ti:Demo]\n[00:01.00]First line\n[00:05.00]Second line\n", "text/plain"), env: "node" },
+  "vtt-to-sbv": { provider: () => text("captions.vtt", F.vtt, "text/vtt"), env: "node" },
+  "ass-to-sbv": { provider: () => text("captions.ass", F.ass, "text/x-ssa"), env: "node" },
+  "sbv-to-vtt": { provider: () => text("captions.sbv", F.sbv, "text/sbv"), env: "node" },
+  "sbv-to-ass": { provider: () => text("captions.sbv", F.sbv, "text/sbv"), env: "node" },
+
   // ===== CAD (DXF) =====
   "dxf-to-svg":  { provider: () => text("drawing.dxf", F.dxf, "image/vnd.dxf"), env: "node" },
   "dxf-to-json": { provider: () => text("drawing.dxf", F.dxf, "image/vnd.dxf"), env: "node" },

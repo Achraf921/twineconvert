@@ -1,0 +1,45 @@
+import type { Converter } from "../types";
+import { ConvertFailedError } from "../types";
+import { swapExtension } from "../util/canvas-encode";
+import { parseLrc } from "../util/lrc";
+import { buildPlainText } from "../util/subtitle";
+
+/**
+ * LRC → Text. Extracts the plain-text transcript (timestamps,
+ * indices, and inline markup removed; repeated auto-caption lines
+ * de-duplicated).
+ */
+const lrcToTxt: Converter = {
+  id: "lrc-to-txt",
+  label: "LRC → Text",
+  fromMime: ["application/x-lrc", "text/plain"],
+  accept: [".lrc"],
+  toMime: "text/plain",
+  maxFileSizeBytes: 50 * 1024 * 1024,
+
+  async convert(input, opts) {
+    opts?.onProgress?.(0.1);
+    let out: string;
+    try {
+      const { cues } = parseLrc(await input.text());
+      if (cues.length === 0) {
+        throw new Error(
+          "No timestamped lines found in the LRC file. LRC needs lines of the form '[mm:ss.xx]Lyric text'.",
+        );
+      }
+      out = buildPlainText(cues);
+    } catch (err) {
+      throw new ConvertFailedError(
+        err instanceof Error ? err.message : "Could not convert LRC to Text",
+        err,
+      );
+    }
+    opts?.onProgress?.(1);
+    return {
+      blob: new Blob([out], { type: "text/plain;charset=utf-8" }),
+      filename: swapExtension(input.name, "txt"),
+    };
+  },
+};
+
+export default lrcToTxt;

@@ -5222,6 +5222,116 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "text/vtt",
     "maxFileSizeBytes": 52428800
   },
+  "srt-to-txt": {
+    "label": "SRT → Text",
+    "accept": [
+      ".srt"
+    ],
+    "fromMime": [
+      "application/x-subrip",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 52428800
+  },
+  "vtt-to-txt": {
+    "label": "VTT → Text",
+    "accept": [
+      ".vtt"
+    ],
+    "fromMime": [
+      "text/vtt",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 52428800
+  },
+  "ass-to-txt": {
+    "label": "ASS → Text",
+    "accept": [
+      ".ass",
+      ".ssa"
+    ],
+    "fromMime": [
+      "text/x-ssa",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 52428800
+  },
+  "sbv-to-txt": {
+    "label": "SBV → Text",
+    "accept": [
+      ".sbv"
+    ],
+    "fromMime": [
+      "text/sbv",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 52428800
+  },
+  "lrc-to-txt": {
+    "label": "LRC → Text",
+    "accept": [
+      ".lrc"
+    ],
+    "fromMime": [
+      "application/x-lrc",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 52428800
+  },
+  "vtt-to-sbv": {
+    "label": "VTT → SBV",
+    "accept": [
+      ".vtt"
+    ],
+    "fromMime": [
+      "text/vtt",
+      "text/plain"
+    ],
+    "toMime": "text/sbv",
+    "maxFileSizeBytes": 52428800
+  },
+  "ass-to-sbv": {
+    "label": "ASS → SBV",
+    "accept": [
+      ".ass",
+      ".ssa"
+    ],
+    "fromMime": [
+      "text/x-ssa",
+      "text/plain"
+    ],
+    "toMime": "text/sbv",
+    "maxFileSizeBytes": 52428800
+  },
+  "sbv-to-vtt": {
+    "label": "SBV → VTT",
+    "accept": [
+      ".sbv"
+    ],
+    "fromMime": [
+      "text/sbv",
+      "text/plain"
+    ],
+    "toMime": "text/vtt",
+    "maxFileSizeBytes": 52428800
+  },
+  "sbv-to-ass": {
+    "label": "SBV → ASS",
+    "accept": [
+      ".sbv"
+    ],
+    "fromMime": [
+      "text/sbv",
+      "text/plain"
+    ],
+    "toMime": "text/x-ssa",
+    "maxFileSizeBytes": 52428800
+  },
   "dxf-to-svg": {
     "label": "DXF → SVG",
     "accept": [

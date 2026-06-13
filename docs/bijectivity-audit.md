@@ -6,12 +6,12 @@ Generated 2026-06-13 from src/lib/engine/converters/.
 
 | Classification | Count |
 |---|---:|
-| Total converters | 481 |
-| **Bijective candidates** (lossless, same-kind, both directions exist) | 228 |
+| Total converters | 490 |
+| **Bijective candidates** (lossless, same-kind, both directions exist) | 230 |
 | **Bijective candidates missing reverse converter** | 32 |
 | **Bijective candidates missing round-trip test** | 24 |
-| Lossy encoding (same kind, but lossy format) | 101 |
-| Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 67 |
+| Lossy encoding (same kind, but lossy format) | 103 |
+| Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 72 |
 | Single-action (no reverse possible) | 53 |
 | Unknown formats (need to add to FORMATS table) | 0 |
 | Compound id (irregular pattern) | 0 |
@@ -107,7 +107,9 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `ase-to-gpl` | bijective-candidate | ✓ | ✓ | both lossless palette formats; should round-trip cleanly |
 | `ase-to-hex` | bijective-candidate | ✓ | ✓ | both lossless palette formats; should round-trip cleanly |
 | `ase-to-json` | cross-kind | (`json-to-ase` missing) | n/a | palette -> data: cross-domain, inherently lossy |
+| `ass-to-sbv` | lossy-encoding | ✓ | ✓ | ass or sbv uses lossy encoding |
 | `ass-to-srt` | lossy-encoding | ✓ | ✓ | ass or srt uses lossy encoding |
+| `ass-to-txt` | cross-kind | (`txt-to-ass` missing) | ✓ | data -> doc: cross-domain, inherently lossy |
 | `ass-to-vtt` | lossy-encoding | ✓ | ✓ | ass or vtt uses lossy encoding |
 | `avi-to-mp4` | lossy-encoding | ✓ | ✓ | avi or mp4 uses lossy encoding |
 | `avif-to-jpg` | lossy-encoding | ✓ | ✓ | avif or jpg uses lossy encoding |
@@ -348,6 +350,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `kml-to-gpx` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `lab-to-hex` | cross-kind | ✓ | ✓ | color -> palette: cross-domain, inherently lossy |
 | `lrc-to-srt` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
+| `lrc-to-txt` | cross-kind | (`txt-to-lrc` missing) | ✓ | data -> doc: cross-domain, inherently lossy |
 | `lrc-to-vtt` | bijective-candidate | (`vtt-to-lrc` missing) | n/a | both lossless data formats; should round-trip cleanly |
 | `m4a-to-mp3` | lossy-encoding | ✓ | ✓ | m4a or mp3 uses lossy encoding |
 | `m4v-to-mp4` | lossy-encoding | (`mp4-to-m4v` missing) | ✓ | m4v or mp4 uses lossy encoding |
@@ -493,11 +496,15 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `rtf-to-txt` | lossy-encoding | (`txt-to-rtf` missing) | n/a | rtf or txt uses lossy encoding |
 | `sarif-to-csv` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
 | `sarif-to-html` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
+| `sbv-to-ass` | lossy-encoding | ✓ | ✓ | sbv or ass uses lossy encoding |
 | `sbv-to-srt` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `sbv-to-txt` | cross-kind | (`txt-to-sbv` missing) | ✓ | data -> doc: cross-domain, inherently lossy |
+| `sbv-to-vtt` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `sql-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `srt-to-ass` | lossy-encoding | ✓ | ✓ | srt or ass uses lossy encoding |
 | `srt-to-lrc` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
 | `srt-to-sbv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `srt-to-txt` | cross-kind | (`txt-to-srt` missing) | ✓ | data -> doc: cross-domain, inherently lossy |
 | `srt-to-vtt` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `stl-to-3mf` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
 | `stl-to-glb` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
@@ -527,7 +534,9 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `vcf-to-xlsx` | bijective-candidate | (`xlsx-to-vcf` missing) | n/a | both lossless data formats; should round-trip cleanly |
 | `vob-to-mp4` | lossy-encoding | (`mp4-to-vob` missing) | n/a | vob or mp4 uses lossy encoding |
 | `vtt-to-ass` | lossy-encoding | ✓ | ✓ | vtt or ass uses lossy encoding |
+| `vtt-to-sbv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `vtt-to-srt` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `vtt-to-txt` | cross-kind | (`txt-to-vtt` missing) | ✓ | data -> doc: cross-domain, inherently lossy |
 | `wav-to-mp3` | lossy-encoding | ✓ | ✓ | wav or mp3 uses lossy encoding |
 | `webm-to-mp4` | lossy-encoding | ✓ | ✓ | webm or mp4 uses lossy encoding |
 | `webp-to-avif` | lossy-encoding | ✓ | ✓ | webp or avif uses lossy encoding |

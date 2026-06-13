@@ -138,6 +138,29 @@ function msToVttTimestamp(ms: number): string {
   return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}.${String(millis).padStart(3, "0")}`;
 }
 
+/**
+ * Plain-text transcript from cues: drop timestamps and indices, keep
+ * the spoken text. Internal line breaks inside a cue are collapsed to a
+ * single space (a cue is one utterance), and consecutive identical lines
+ * are de-duplicated (rolling auto-captions repeat the same line across
+ * overlapping cues). Each cue becomes one line.
+ */
+export function buildPlainText(cues: Cue[]): string {
+  const lines: string[] = [];
+  let prev: string | null = null;
+  for (const c of cues) {
+    const line = c.text
+      .replace(/<[^>]+>/g, "") // strip any inline markup (VTT <i>, <c>, etc.)
+      .replace(/\s*\n\s*/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (!line || line === prev) continue;
+    lines.push(line);
+    prev = line;
+  }
+  return lines.join("\n") + "\n";
+}
+
 export function buildSrt(cues: Cue[]): string {
   const blocks: string[] = [];
   for (let i = 0; i < cues.length; i++) {

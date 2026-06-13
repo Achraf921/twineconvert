@@ -4015,6 +4015,87 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       { problem: "The DOI or year is missing.", solution: "DOIs must be in an 024 field with first indicator 7 and a $2 of doi. For journal articles the year is read from the 773 host-item string; records without a 773 fall back to the 260/264 publication date." },
     ],
   },
+  "srt-to-txt": {
+    whyConvert:
+      "SRT is a timed caption format; this strips the timestamps, cue numbers, and inline markup to give you a clean plain-text transcript of what is said. Repeated lines from rolling auto-captions are collapsed, and each caption becomes one line. Runs in your browser, nothing is uploaded.",
+    example:
+      "You have a SRT caption file from a video and just want the words, e.g. to paste into a doc, summarize, or feed to an LLM. Drop the SRT here and get the transcript text back.",
+    troubleshooting: [
+      { problem: "Lines are split oddly or a caption is on two lines.", solution: "Each cue becomes one transcript line; a caption that was wrapped across two screen lines is joined with a space. If you need sentence-level paragraphs, the source captions did not encode sentence boundaries, so re-flow the text in your editor." },
+    ],
+  },
+  "vtt-to-txt": {
+    whyConvert:
+      "VTT is a timed caption format; this strips the timestamps, cue numbers, and inline markup to give you a clean plain-text transcript of what is said. Repeated lines from rolling auto-captions are collapsed, and each caption becomes one line. Runs in your browser, nothing is uploaded.",
+    example:
+      "You have a VTT caption file from a video and just want the words, e.g. to paste into a doc, summarize, or feed to an LLM. Drop the VTT here and get the transcript text back.",
+    troubleshooting: [
+      { problem: "Lines are split oddly or a caption is on two lines.", solution: "Each cue becomes one transcript line; a caption that was wrapped across two screen lines is joined with a space. If you need sentence-level paragraphs, the source captions did not encode sentence boundaries, so re-flow the text in your editor." },
+    ],
+  },
+  "ass-to-txt": {
+    whyConvert:
+      "ASS is a timed caption format; this strips the timestamps, cue numbers, and inline markup to give you a clean plain-text transcript of what is said. Repeated lines from rolling auto-captions are collapsed, and each caption becomes one line. Runs in your browser, nothing is uploaded.",
+    example:
+      "You have a ASS caption file from a video and just want the words, e.g. to paste into a doc, summarize, or feed to an LLM. Drop the ASS here and get the transcript text back.",
+    troubleshooting: [
+      { problem: "Lines are split oddly or a caption is on two lines.", solution: "Each cue becomes one transcript line; a caption that was wrapped across two screen lines is joined with a space. If you need sentence-level paragraphs, the source captions did not encode sentence boundaries, so re-flow the text in your editor." },
+    ],
+  },
+  "sbv-to-txt": {
+    whyConvert:
+      "SBV is a timed caption format; this strips the timestamps, cue numbers, and inline markup to give you a clean plain-text transcript of what is said. Repeated lines from rolling auto-captions are collapsed, and each caption becomes one line. Runs in your browser, nothing is uploaded.",
+    example:
+      "You have a SBV caption file from a video and just want the words, e.g. to paste into a doc, summarize, or feed to an LLM. Drop the SBV here and get the transcript text back.",
+    troubleshooting: [
+      { problem: "Lines are split oddly or a caption is on two lines.", solution: "Each cue becomes one transcript line; a caption that was wrapped across two screen lines is joined with a space. If you need sentence-level paragraphs, the source captions did not encode sentence boundaries, so re-flow the text in your editor." },
+    ],
+  },
+  "lrc-to-txt": {
+    whyConvert:
+      "LRC is a timed caption format; this strips the timestamps, cue numbers, and inline markup to give you a clean plain-text transcript of what is said. Repeated lines from rolling auto-captions are collapsed, and each caption becomes one line. Runs in your browser, nothing is uploaded.",
+    example:
+      "You have a LRC caption file from a video and just want the words, e.g. to paste into a doc, summarize, or feed to an LLM. Drop the LRC here and get the transcript text back.",
+    troubleshooting: [
+      { problem: "Lines are split oddly or a caption is on two lines.", solution: "Each cue becomes one transcript line; a caption that was wrapped across two screen lines is joined with a space. If you need sentence-level paragraphs, the source captions did not encode sentence boundaries, so re-flow the text in your editor." },
+    ],
+  },
+  "vtt-to-sbv": {
+    whyConvert:
+      "Both VTT and SBV are subtitle formats; this re-times the cues from one into the other through a shared cue model, so the text and timing carry across exactly. Useful when a player, editor, or platform only accepts SBV. Runs in your browser, nothing is uploaded.",
+    example:
+      "You have VTT captions but your tool needs SBV. Drop the VTT here and get a SBV file with the same lines and timing.",
+    troubleshooting: [
+      { problem: "Styling or positioning is lost.", solution: "Plain timing and text always carry across. SBV and the plain formats do not carry ASS styling (fonts, colors, positioning), so only the text and timing convert." },
+    ],
+  },
+  "ass-to-sbv": {
+    whyConvert:
+      "Both ASS and SBV are subtitle formats; this re-times the cues from one into the other through a shared cue model, so the text and timing carry across exactly. Useful when a player, editor, or platform only accepts SBV. Runs in your browser, nothing is uploaded.",
+    example:
+      "You have ASS captions but your tool needs SBV. Drop the ASS here and get a SBV file with the same lines and timing.",
+    troubleshooting: [
+      { problem: "Styling or positioning is lost.", solution: "Plain timing and text always carry across. SBV and the plain formats do not carry ASS styling (fonts, colors, positioning), so only the text and timing convert." },
+    ],
+  },
+  "sbv-to-vtt": {
+    whyConvert:
+      "Both SBV and VTT are subtitle formats; this re-times the cues from one into the other through a shared cue model, so the text and timing carry across exactly. Useful when a player, editor, or platform only accepts VTT. Runs in your browser, nothing is uploaded.",
+    example:
+      "You have SBV captions but your tool needs VTT. Drop the SBV here and get a VTT file with the same lines and timing.",
+    troubleshooting: [
+      { problem: "Styling or positioning is lost.", solution: "Plain timing and text always carry across. SBV and the plain formats do not carry ASS styling (fonts, colors, positioning), so only the text and timing convert." },
+    ],
+  },
+  "sbv-to-ass": {
+    whyConvert:
+      "Both SBV and ASS are subtitle formats; this re-times the cues from one into the other through a shared cue model, so the text and timing carry across exactly. Useful when a player, editor, or platform only accepts ASS. Runs in your browser, nothing is uploaded.",
+    example:
+      "You have SBV captions but your tool needs ASS. Drop the SBV here and get a ASS file with the same lines and timing.",
+    troubleshooting: [
+      { problem: "Styling or positioning is lost.", solution: "Plain timing and text always carry across. ASS styling tags are added with defaults since SBV/plain formats do not carry them." },
+    ],
+  },
 };
 
 export function getExtendedCopy(toolId: string): ExtendedCopy | undefined {

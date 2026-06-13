@@ -1000,6 +1000,17 @@ export const registry: Record<string, ConverterLoader> = {
   "vtt-to-ass": () => import("./converters/vtt-to-ass").then((m) => m.default),
   "ass-to-vtt": () => import("./converters/ass-to-vtt").then((m) => m.default),
 
+  // Subtitle transcripts (plain-text extraction) + matrix gap fills.
+  "srt-to-txt": () => import("./converters/srt-to-txt").then((m) => m.default),
+  "vtt-to-txt": () => import("./converters/vtt-to-txt").then((m) => m.default),
+  "ass-to-txt": () => import("./converters/ass-to-txt").then((m) => m.default),
+  "sbv-to-txt": () => import("./converters/sbv-to-txt").then((m) => m.default),
+  "lrc-to-txt": () => import("./converters/lrc-to-txt").then((m) => m.default),
+  "vtt-to-sbv": () => import("./converters/vtt-to-sbv").then((m) => m.default),
+  "ass-to-sbv": () => import("./converters/ass-to-sbv").then((m) => m.default),
+  "sbv-to-vtt": () => import("./converters/sbv-to-vtt").then((m) => m.default),
+  "sbv-to-ass": () => import("./converters/sbv-to-ass").then((m) => m.default),
+
   // CAD: AutoCAD ASCII DXF. Universal 2D-CAD interchange format read by
   // AutoCAD, LibreCAD, QCAD, BricsCAD, FreeCAD, OnShape, Fusion 360,
   // TinkerCAD, KiCad, EAGLE, laser-cutter control software, etc.
