@@ -1,6 +1,7 @@
 import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
+import { parseJsonInput } from "../util/parse-json-input";
 
 /**
  * JSON → TOML. Reverse of toml-to-json. Note that TOML's type system
@@ -22,7 +23,7 @@ const jsonToToml: Converter = {
     let toml: string;
     try {
       const TOML = await import("@iarna/toml");
-      const parsed: unknown = JSON.parse(await input.text());
+      const parsed: unknown = parseJsonInput(await input.text());
       if (
         typeof parsed !== "object" ||
         parsed === null ||

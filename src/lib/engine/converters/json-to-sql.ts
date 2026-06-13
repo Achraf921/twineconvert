@@ -2,6 +2,7 @@ import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
 import { buildSqlDump, type SqlTable } from "../util/sql";
+import { parseJsonInput } from "../util/parse-json-input";
 
 /**
  * JSON array of objects → SQL CREATE TABLE + INSERT statements. Column set
@@ -20,7 +21,7 @@ const jsonToSql: Converter = {
     opts?.onProgress?.(0.1);
     let sql: string;
     try {
-      const parsed: unknown = JSON.parse(await input.text());
+      const parsed: unknown = parseJsonInput(await input.text());
       const arr = Array.isArray(parsed) ? parsed : [parsed];
       const records = arr.filter(
         (v): v is Record<string, unknown> =>

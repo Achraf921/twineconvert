@@ -1,6 +1,7 @@
 import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
+import { parseJsonInput } from "../util/parse-json-input";
 
 /**
  * JSON → XML via fast-xml-parser's builder. Uses the same `@` prefix
@@ -37,7 +38,7 @@ const jsonToXml: Converter = {
         indentBy: "  ",
         suppressEmptyNode: false,
       });
-      const parsed: unknown = JSON.parse(await input.text());
+      const parsed: unknown = parseJsonInput(await input.text());
       const xmlBody = builder.build(parsed);
       xml = `<?xml version="1.0" encoding="UTF-8"?>\n${xmlBody}`;
     } catch (err) {

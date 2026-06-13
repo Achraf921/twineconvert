@@ -1,6 +1,7 @@
 import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
+import { parseJsonInput } from "../util/parse-json-input";
 
 const jsonToIni: Converter = {
   id: "json-to-ini",
@@ -15,7 +16,7 @@ const jsonToIni: Converter = {
     let out: string;
     try {
       const ini = await import("ini");
-      const parsed: unknown = JSON.parse(await input.text());
+      const parsed: unknown = parseJsonInput(await input.text());
       // INI doesn't support arrays as top-level values (only [section] -> key=val)
       if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
         throw new Error("INI requires a top-level object (sections + key/value pairs)");

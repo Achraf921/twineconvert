@@ -1,6 +1,7 @@
 import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
+import { parseJsonInput } from "../util/parse-json-input";
 
 /**
  * JSON → YAML. Output uses the safe YAML schema (no arbitrary type
@@ -21,7 +22,7 @@ const jsonToYaml: Converter = {
     let yamlText: string;
     try {
       const yaml = await import("js-yaml");
-      const parsed: unknown = JSON.parse(await input.text());
+      const parsed: unknown = parseJsonInput(await input.text());
       yamlText = yaml.dump(parsed, {
         indent: 2,
         // Force standard line width so long arrays don't fold

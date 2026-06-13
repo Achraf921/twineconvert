@@ -1,6 +1,7 @@
 import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
+import { parseJsonInput } from "../util/parse-json-input";
 
 /**
  * JSON → XLSX. Reverse of xlsx-to-json. Accepts a JSON array of flat
@@ -24,7 +25,7 @@ const jsonToXlsx: Converter = {
     try {
       const XLSX = await import("xlsx");
       const text = await input.text();
-      const parsed: unknown = JSON.parse(text);
+      const parsed: unknown = parseJsonInput(text);
       const rows = normalizeToRows(parsed);
       if (rows.length === 0) {
         throw new Error("JSON contains no data rows to write to a sheet");

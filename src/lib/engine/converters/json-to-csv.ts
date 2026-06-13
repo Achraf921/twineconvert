@@ -1,6 +1,7 @@
 import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
+import { parseJsonInput } from "../util/parse-json-input";
 
 /**
  * JSON → CSV. Expects the JSON to be an array of objects (the standard
@@ -22,7 +23,7 @@ const jsonToCsv: Converter = {
     try {
       const Papa = (await import("papaparse")).default;
       const text = await input.text();
-      const data = JSON.parse(text);
+      const data = parseJsonInput(text);
       if (!Array.isArray(data)) {
         throw new Error("JSON must be an array of objects to convert to CSV");
       }

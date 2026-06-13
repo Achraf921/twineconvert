@@ -2,6 +2,7 @@ import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
 import { buildJsonl } from "../util/jsonl";
+import { parseJsonInput } from "../util/parse-json-input";
 
 const jsonToJsonl: Converter = {
   id: "json-to-jsonl",
@@ -15,7 +16,7 @@ const jsonToJsonl: Converter = {
     opts?.onProgress?.(0.1);
     let out: string;
     try {
-      const parsed: unknown = JSON.parse(await input.text());
+      const parsed: unknown = parseJsonInput(await input.text());
       // JSONL only makes sense for arrays. If a top-level value isn't an
       // array, wrap it as a single-item one — the caller probably meant
       // "convert this object to a 1-line JSONL file", which is valid.
