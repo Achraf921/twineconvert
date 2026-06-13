@@ -31,7 +31,16 @@ import { execFile } from "node:child_process";
 
 const CLIENT_FILE = resolvePath(homedir(), ".config/twineconvert-oauth-client.json");
 const TOKEN_FILE = resolvePath(homedir(), ".config/twineconvert-oauth-token.json");
-const SCOPE = "https://www.googleapis.com/auth/indexing";
+// Two scopes the twineconvert tooling needs:
+//   - Indexing API: bulk-submit URLs to Google for crawl (submit-urls-to-google.mjs)
+//   - Search Console (webmasters.readonly): query rankings, top queries, top
+//     pages, coverage issues, etc. (query-gsc.mjs)
+// Re-running this script with the new scope list forces re-consent; the
+// resulting refresh token is valid for BOTH APIs in one credential.
+const SCOPES = [
+  "https://www.googleapis.com/auth/indexing",
+  "https://www.googleapis.com/auth/webmasters.readonly",
+];
 
 if (!existsSync(CLIENT_FILE)) {
   console.error(`missing ${CLIENT_FILE} — paste the OAuth client JSON there first`);
@@ -53,7 +62,7 @@ const oauth = new google.auth.OAuth2(client_id, client_secret, redirectUri);
 const authUrl = oauth.generateAuthUrl({
   access_type: "offline", // forces refresh_token in response
   prompt: "consent",       // forces re-consent so refresh_token is always returned (Google omits it on re-auth otherwise)
-  scope: [SCOPE],
+  scope: SCOPES,
 });
 
 console.log("Opening your browser to authorize...");

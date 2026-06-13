@@ -200,6 +200,13 @@ const HAND_CURATED_RELATED: Record<string, string[]> = {
   "bencode-to-json": ["json-to-bencode", "json-to-msgpack", "cbor-to-json"],
   "json-to-bencode": ["bencode-to-json", "msgpack-to-json", "json-to-cbor"],
 
+  // ===== Document conversions (Markdown / DOCX / HTML / text) =====
+  "markdown-to-docx": ["docx-to-markdown", "markdown-to-pdf", "markdown-to-html"],
+  "docx-to-markdown": ["markdown-to-docx", "docx-to-html", "docx-to-txt"],
+  "markdown-to-txt":  ["markdown-to-html", "markdown-to-docx", "html-to-txt"],
+  "html-to-txt":      ["txt-to-html", "html-to-markdown", "html-to-docx"],
+  "txt-to-html":      ["html-to-txt", "txt-to-docx", "markdown-to-html"],
+
   // ===== Technical docs + diagrams =====
   "asciidoc-to-html": ["markdown-to-html", "html-to-markdown", "rtf-to-html"],
   "dot-to-svg":      ["dot-to-png", "musicxml-to-svg", "dxf-to-svg"],

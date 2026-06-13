@@ -63,8 +63,13 @@ if (USE_OAUTH) {
 }
 
 // Pull the URL list from the live sitemap so we never drift.
+// SITEMAP_URL env override lets you fetch from a different host (e.g., the
+// twine-convert.vercel.app preview URL) when the canonical domain is
+// unreachable from your network — the sitemap itself still emits URLs
+// using the canonical hostname, so the submitted URLs stay correct.
+const SITEMAP_URL = process.env.SITEMAP_URL ?? "https://twineconvert.com/sitemap.xml";
 async function fetchSitemapUrls() {
-  const res = await fetch("https://twineconvert.com/sitemap.xml");
+  const res = await fetch(SITEMAP_URL);
   if (!res.ok) throw new Error(`sitemap fetch failed: ${res.status}`);
   const xml = await res.text();
   return [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)]

@@ -3477,6 +3477,71 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "application/pdf",
     "maxFileSizeBytes": 10485760
   },
+  "markdown-to-docx": {
+    "label": "Markdown → DOCX",
+    "accept": [
+      ".md",
+      ".markdown"
+    ],
+    "fromMime": [
+      "text/markdown",
+      "text/x-markdown",
+      "text/plain"
+    ],
+    "toMime": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "maxFileSizeBytes": 10485760
+  },
+  "docx-to-markdown": {
+    "label": "DOCX → Markdown",
+    "accept": [
+      ".docx"
+    ],
+    "fromMime": [
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "application/zip"
+    ],
+    "toMime": "text/markdown",
+    "maxFileSizeBytes": 52428800
+  },
+  "markdown-to-txt": {
+    "label": "Markdown → Text",
+    "accept": [
+      ".md",
+      ".markdown"
+    ],
+    "fromMime": [
+      "text/markdown",
+      "text/x-markdown"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 10485760
+  },
+  "html-to-txt": {
+    "label": "HTML → Text",
+    "accept": [
+      ".html",
+      ".htm",
+      ".xhtml"
+    ],
+    "fromMime": [
+      "text/html",
+      "application/xhtml+xml"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 26214400
+  },
+  "txt-to-html": {
+    "label": "Text → HTML",
+    "accept": [
+      ".txt",
+      ".text"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 26214400
+  },
   "epub-to-text": {
     "label": "EPUB → Text",
     "accept": [

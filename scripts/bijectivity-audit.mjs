@@ -467,6 +467,7 @@ const TEST_FILE_GLOBS = [
   "tests/converters-subtitle-transcript.test.ts",
   "tests/converters-tabular-hub.test.ts",
   "tests/converters-config-matrix.test.ts",
+  "tests/converters-document-hub.test.ts",
 ];
 const browserTestFiles = (() => {
   try {

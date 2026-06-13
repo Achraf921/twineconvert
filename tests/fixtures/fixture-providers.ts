@@ -512,6 +512,11 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "docx-to-pdf":   { provider: async () => fileFromBytes("test.docx", await makeTinyDocx(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document"), env: "browser" },
   "html-to-docx":  { provider: () => text("test.html", "<html><body><h1>Hi</h1><p>Hello world.</p></body></html>", "text/html"), env: "node" },
   "txt-to-docx":   { provider: () => text("test.txt", "Line one\nLine two\nLine three", "text/plain"), env: "node" },
+  "markdown-to-docx": { provider: () => text("test.md", "# Title\n\nHello **world** with *emphasis*.\n\n- one\n- two\n", "text/markdown"), env: "node" },
+  "docx-to-markdown": { provider: async () => fileFromBytes("test.docx", await makeTinyDocx(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document"), env: "node" },
+  "markdown-to-txt": { provider: () => text("test.md", "# Title\n\nHello **world** with a [link](https://example.com).\n", "text/markdown"), env: "node" },
+  "html-to-txt":   { provider: () => text("test.html", "<html><body><h1>Title</h1><p>Hello world.</p><p>Second.</p></body></html>", "text/html"), env: "node" },
+  "txt-to-html":   { provider: () => text("test.txt", "First paragraph here.\n\nSecond paragraph here.", "text/plain"), env: "node" },
 
   // ===== EPUB =====
   "epub-to-text": { provider: async () => fileFromBytes("test.epub", await makeTinyEpub(), "application/epub+zip"), env: "node" },

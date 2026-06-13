@@ -1854,6 +1854,81 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       },
     ],
   },
+  "markdown-to-docx": {
+    whyConvert:
+      "You wrote in Markdown but the people reviewing it live in Word. A client, a professor, a legal team, a manager who track-changes everything. Convert your README, spec, or draft to a real .docx they can open and edit.",
+    example:
+      "You drafted a proposal in Markdown in your editor. The client only accepts Word. Convert to DOCX here, send the .docx, they redline it in Word and send it back. Your headings, bold, italics, and lists carry over as Word styles.",
+    troubleshooting: [
+      {
+        problem: "Code blocks or tables look plain in Word.",
+        solution:
+          "Headings, paragraphs, bold/italic, and list items map to native Word paragraphs. Fenced code and complex tables flatten to plain text paragraphs. If you need syntax-highlighted code or styled tables, paste those sections and style them in Word, or use a Markdown to PDF route for a fixed look.",
+      },
+      {
+        problem: "Images referenced in the Markdown didn't embed.",
+        solution:
+          "Image links point at files that aren't part of the .md upload, so they can't be bundled into the DOCX here. Add the images in Word after converting, or convert via a route that takes a self-contained HTML file with inlined images.",
+      },
+    ],
+  },
+  "docx-to-markdown": {
+    whyConvert:
+      "You're pulling Word content into a Markdown world: a static site, a wiki, a README, an Obsidian vault, or a clean LLM context file. Markdown is portable, diffable in git, and free of Word's markup noise.",
+    example:
+      "A writer hands you 30 articles as .docx and your docs site is Markdown. Convert each to .md here, drop them in your content folder, commit. Headings, lists, links, and emphasis come through as clean Markdown instead of Word XML.",
+    troubleshooting: [
+      {
+        problem: "Some formatting (text boxes, SmartArt, columns) is missing.",
+        solution:
+          "Markdown has no equivalent for floating text boxes, SmartArt, or multi-column layout, so those drop out. Body text, headings, lists, links, and bold/italic convert reliably. For visually complex docs, convert to HTML or PDF instead.",
+      },
+      {
+        problem: "Tables came out as inline HTML.",
+        solution:
+          "Word tables map to Markdown tables when simple; merged cells or nested content fall back to inline HTML, which most Markdown renderers (GitHub, MDX) display fine. Leave them as-is or simplify the table in Word first.",
+      },
+    ],
+  },
+  "markdown-to-txt": {
+    whyConvert:
+      "You want the words without the syntax: feeding prose to a tool that chokes on Markdown, pasting into a plain-text-only field, counting words, or producing a clean reading copy with the #, *, and link brackets gone.",
+    example:
+      "Your release notes are in Markdown but the email system wants plain text. Convert to TXT here and the headings, bullets, and emphasis become readable plain prose with the markup stripped, link text kept.",
+    troubleshooting: [
+      {
+        problem: "I wanted the literal Markdown source, not stripped text.",
+        solution:
+          "This route renders the Markdown the way a reader sees it and then removes the formatting, so #, **, and link syntax are gone. If you want the raw Markdown characters, just rename your .md file to .txt instead of converting.",
+      },
+    ],
+  },
+  "html-to-txt": {
+    whyConvert:
+      "Pull the readable text out of a web page or HTML email and leave every tag, script, and style behind. Useful for word counts, feeding an LLM, archiving content as plain text, or grepping prose without markup in the way.",
+    example:
+      "You saved a long article as HTML and want just the prose for notes. Convert to TXT here. Scripts, styles, and navigation chrome are dropped; paragraphs and headings stay on their own lines as clean text.",
+    troubleshooting: [
+      {
+        problem: "Layout (columns, tables) collapsed into one stream of text.",
+        solution:
+          "Plain text has no layout, so multi-column and table structure linearizes into reading order. That's expected. If you need the tabular data preserved, convert the HTML table to CSV instead; TXT is for prose.",
+      },
+    ],
+  },
+  "txt-to-html": {
+    whyConvert:
+      "Turn a plain-text file into a valid HTML document so it renders in a browser, drops into a CMS, or becomes the body of an email. Special characters are escaped and blank-line-separated blocks become paragraphs.",
+    example:
+      "You have a plain-text notice and need it on a web page. Convert to HTML here. Each paragraph is wrapped in a tag, ampersands and angle brackets are escaped so they show correctly, and you get a complete HTML5 document ready to publish.",
+    troubleshooting: [
+      {
+        problem: "My text had Markdown and I expected formatting.",
+        solution:
+          "This route treats input as literal plain text, so #, *, and [] are escaped and shown verbatim, not rendered. If your source is actually Markdown, use the Markdown to HTML route to get real headings, lists, and links.",
+      },
+    ],
+  },
   "epub-to-pdf": {
     whyConvert:
       "EPUB is reflowable e-reader format; PDF is fixed-page for printing, annotating in a PDF app, or reading on something that doesn't do EPUB well. Convert when you want to print a book/sample or mark it up with a PDF tool.",

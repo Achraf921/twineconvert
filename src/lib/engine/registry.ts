@@ -612,6 +612,16 @@ export const registry: Record<string, ConverterLoader> = {
     import("./converters/html-to-markdown").then((m) => m.default),
   "markdown-to-pdf": () =>
     import("./converters/markdown-to-pdf").then((m) => m.default),
+  "markdown-to-docx": () =>
+    import("./converters/markdown-to-docx").then((m) => m.default),
+  "docx-to-markdown": () =>
+    import("./converters/docx-to-markdown").then((m) => m.default),
+  "markdown-to-txt": () =>
+    import("./converters/markdown-to-txt").then((m) => m.default),
+  "html-to-txt": () =>
+    import("./converters/html-to-txt").then((m) => m.default),
+  "txt-to-html": () =>
+    import("./converters/txt-to-html").then((m) => m.default),
 
   // EPUB, JSZip + DOMParser (lighter than epubjs for headless extraction)
   "epub-to-text": () =>
