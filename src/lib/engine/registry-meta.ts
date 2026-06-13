@@ -5329,6 +5329,39 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "application/x-research-info-systems",
     "maxFileSizeBytes": 104857600
   },
+  "references-to-ris": {
+    "label": "Reference List → RIS",
+    "accept": [
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "application/x-research-info-systems",
+    "maxFileSizeBytes": 10485760
+  },
+  "references-to-bibtex": {
+    "label": "Reference List → BibTeX",
+    "accept": [
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "application/x-bibtex",
+    "maxFileSizeBytes": 10485760
+  },
+  "references-to-csl-json": {
+    "label": "Reference List → CSL-JSON",
+    "accept": [
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "application/vnd.citationstyles.csl+json",
+    "maxFileSizeBytes": 10485760
+  },
   "bibtex-to-nbib": {
     "label": "BibTeX → NBIB",
     "accept": [

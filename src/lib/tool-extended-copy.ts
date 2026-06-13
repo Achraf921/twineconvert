@@ -1854,6 +1854,55 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       },
     ],
   },
+  "references-to-ris": {
+    whyConvert:
+      "You have a paper's References section or a pasted bibliography as plain text and want it in Zotero, Mendeley, or EndNote without retyping every entry. This reads a numbered IEEE or APA reference list and produces RIS you can import.",
+    example:
+      "You are writing a related-work section and copied 40 references out of a PDF. Paste them into a .txt, convert to RIS here, and import the file into Zotero so every paper becomes a library item with title, authors, and year.",
+    troubleshooting: [
+      {
+        problem: "Some entries were skipped or fields are incomplete.",
+        solution:
+          "Free-text references vary wildly, so extraction is best-effort: it reliably pulls title, year, and DOI, and makes a good attempt at authors. Entries with no clear title or year are skipped rather than guessed. After importing, spot-check and fix any that came from unusual formatting. For a DOI list, a DOI lookup tool gives perfect metadata.",
+      },
+      {
+        problem: "Authors split oddly.",
+        solution:
+          "The parser handles the two common styles (IEEE \"A. Smith, B. Jones\" and APA \"Smith, J., & Jones, B.\"). Mixed or non-standard author formatting can split imperfectly; correct those few in your reference manager after import.",
+      },
+    ],
+  },
+  "references-to-bibtex": {
+    whyConvert:
+      "You are writing in LaTeX or Overleaf and need a .bib file, but your sources are a plain-text reference list copied from a paper or a colleague. Convert the list to BibTeX entries you can drop straight into your bibliography.",
+    example:
+      "A co-author sends their references as a numbered text list. Convert to BibTeX here, paste into your references.bib, and cite with \\cite{} keys instead of re-entering each paper by hand.",
+    troubleshooting: [
+      {
+        problem: "Citation keys are generic.",
+        solution:
+          "Keys are generated from a simple counter when the reference has no obvious key. Rename them to your preferred scheme (authorYear) after import; the title, author, and year fields are what matter for the entry.",
+      },
+      {
+        problem: "An entry was skipped.",
+        solution:
+          "Lines with no recognizable title or author+year are skipped instead of producing a broken entry. Reformat that reference (give it a clear title and year) and convert again.",
+      },
+    ],
+  },
+  "references-to-csl-json": {
+    whyConvert:
+      "CSL-JSON is the native format Zotero and many web-based citation tools ingest. If you have a plain-text reference list, this turns it into a clean CSL-JSON array you can import or feed to a citation processor.",
+    example:
+      "You are building a citations feature and need structured data from a pasted bibliography. Convert to CSL-JSON here and you get an array of items with title, author, and issued date ready for citeproc or a Zotero import.",
+    troubleshooting: [
+      {
+        problem: "Fields are missing on some items.",
+        solution:
+          "Extraction from free text is best-effort: title, year, and DOI are reliable, authors are a good attempt. Items without a clear title or author+year are omitted. Enrich the result with a DOI lookup when you need complete metadata.",
+      },
+    ],
+  },
   "rtf-to-docx": {
     whyConvert:
       "RTF is the lowest-common-denominator rich-text format that opens anywhere, but most people actually want a real Word document to edit, comment on, or drop into a Word-based workflow. Convert the .rtf to a modern .docx.",

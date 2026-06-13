@@ -200,6 +200,11 @@ const HAND_CURATED_RELATED: Record<string, string[]> = {
   "bencode-to-json": ["json-to-bencode", "json-to-msgpack", "cbor-to-json"],
   "json-to-bencode": ["bencode-to-json", "msgpack-to-json", "json-to-cbor"],
 
+  // ===== Reference-list parsing (pasted bibliography -> citation formats) =====
+  "references-to-ris":      ["references-to-bibtex", "references-to-csl-json", "csv-to-ris"],
+  "references-to-bibtex":   ["references-to-ris", "references-to-csl-json", "csv-to-bibtex"],
+  "references-to-csl-json": ["references-to-ris", "references-to-bibtex", "csv-to-csl-json"],
+
   // ===== Office + table conversions (RTF / XLSX / HTML table / CSV) =====
   "rtf-to-docx":     ["rtf-to-html", "rtf-to-markdown", "rtf-to-txt"],
   "rtf-to-markdown": ["rtf-to-html", "rtf-to-docx", "html-to-markdown"],

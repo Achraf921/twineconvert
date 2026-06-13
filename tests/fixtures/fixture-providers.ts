@@ -522,6 +522,9 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "xlsx-to-html":  { provider: async () => fileFromBytes("test.xlsx", await makeTinyXlsx(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"), env: "node" },
   "html-to-xlsx":  { provider: () => text("test.html", "<table><tr><th>City</th><th>Pop</th></tr><tr><td>Paris</td><td>2161000</td></tr></table>", "text/html"), env: "node" },
   "html-to-csv":   { provider: () => text("test.html", "<table><tr><th>Name</th><th>Age</th></tr><tr><td>Alice</td><td>30</td></tr></table>", "text/html"), env: "node" },
+  "references-to-ris":      { provider: () => text("refs.txt", "[1] L. Tan and T. Zrnic, \"Valid Inference with Synthetic Data,\" JMLR, vol. 25, 2024.\n[2] K. Brown, \"A Study,\" Nature, 2019.", "text/plain"), env: "node" },
+  "references-to-bibtex":   { provider: () => text("refs.txt", "[1] L. Tan and T. Zrnic, \"Valid Inference with Synthetic Data,\" JMLR, vol. 25, 2024.\n[2] K. Brown, \"A Study,\" Nature, 2019.", "text/plain"), env: "node" },
+  "references-to-csl-json": { provider: () => text("refs.txt", "[1] L. Tan and T. Zrnic, \"Valid Inference with Synthetic Data,\" JMLR, vol. 25, 2024.\n[2] K. Brown, \"A Study,\" Nature, 2019.", "text/plain"), env: "node" },
 
   // ===== EPUB =====
   "epub-to-text": { provider: async () => fileFromBytes("test.epub", await makeTinyEpub(), "application/epub+zip"), env: "node" },

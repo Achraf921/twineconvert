@@ -6,17 +6,25 @@ Generated 2026-06-13 from src/lib/engine/converters/.
 
 | Classification | Count |
 |---|---:|
-| Total converters | 549 |
+| Total converters | 552 |
 | **Bijective candidates** (lossless, same-kind, both directions exist) | 256 |
 | **Bijective candidates missing reverse converter** | 40 |
 | **Bijective candidates missing round-trip test** | 27 |
 | Lossy encoding (same kind, but lossy format) | 121 |
 | Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 79 |
 | Single-action (no reverse possible) | 53 |
-| Unknown formats (need to add to FORMATS table) | 0 |
+| Unknown formats (need to add to FORMATS table) | 3 |
 | Compound id (irregular pattern) | 0 |
 
 ## Action Items
+
+### 1. Unknown formats to classify
+
+The audit script doesn't know about these formats; add them to the FORMATS table in scripts/bijectivity-audit.mjs:
+
+- `references-to-bibtex` (unknown format: references)
+- `references-to-csl-json` (unknown format: references)
+- `references-to-ris` (unknown format: references)
 
 ### 2. Bijective converters MISSING their reverse pair
 
@@ -513,6 +521,9 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `qfx-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `qif-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `qif-to-ofx` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `references-to-bibtex` | unknown-format | (`bibtex-to-references` missing) | ✓ | unknown format: references |
+| `references-to-csl-json` | unknown-format | (`csl-json-to-references` missing) | ✓ | unknown format: references |
+| `references-to-ris` | unknown-format | (`ris-to-references` missing) | ✓ | unknown format: references |
 | `refworks-to-bibtex` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `refworks-to-csl-json` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
 | `refworks-to-csv` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
