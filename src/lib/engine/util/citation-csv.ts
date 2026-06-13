@@ -91,9 +91,25 @@ function normaliseHeader(h: string): string {
 
 export async function citationsFromCsv(text: string): Promise<Citation[]> {
   const Papa = (await import("papaparse")).default;
-  const parsed = Papa.parse<Record<string, string>>(text, {
+
+  // Strip a UTF-8 BOM and, critically, the Excel locale hint line that
+  // many "Save as CSV" exports (especially non-US Excel) prepend:
+  // `sep=;` or `sep=,` on the very first line. Left in place, papaparse
+  // reads `sep=;` AS the header row, so every real column becomes
+  // unrecognised and the conversion silently fails. We detect that line,
+  // use its character as the delimiter, and drop it before parsing.
+  let body = text.replace(/^﻿/, "");
+  let delimiter: string | undefined;
+  const sepMatch = body.match(/^sep=(.)\r?\n/i);
+  if (sepMatch) {
+    delimiter = sepMatch[1] === "\\t" ? "\t" : sepMatch[1];
+    body = body.slice(sepMatch[0].length);
+  }
+
+  const parsed = Papa.parse<Record<string, string>>(body, {
     header: true,
     skipEmptyLines: true,
+    ...(delimiter ? { delimiter } : {}),
   });
 
   // Resolve each canonical field to the FIRST CSV column that maps to

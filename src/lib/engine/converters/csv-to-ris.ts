@@ -17,7 +17,11 @@ const csvToRis: Converter = {
     let ris: string;
     try {
       const citations = await citationsFromCsv(await input.text());
-      if (citations.length === 0) throw new Error("No citations found in CSV");
+      if (citations.length === 0) {
+        throw new Error(
+          "No citation rows found: the CSV has a header but no data rows beneath it. Check the file is not empty and uses a comma, semicolon, or tab delimiter.",
+        );
+      }
       ris = buildRis(citations);
     } catch (err) {
       throw new ConvertFailedError(

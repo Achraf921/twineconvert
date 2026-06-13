@@ -604,3 +604,50 @@ describe("citation hub: empty / invalid inputs fail loudly", () => {
     ).rejects.toThrow(/No references found/);
   });
 });
+
+describe("csv-to-ris: real-world Excel export hardening", () => {
+  // Excel "Save as CSV" (especially non-US locales) prepends a `sep=`
+  // locale-hint line. Left in, papaparse reads it AS the header row and
+  // the whole conversion silently yields no citations. Regression guard
+  // driven by a real PostHog failure on the flagship csv-to-ris tool.
+  it("handles the Excel `sep=,` locale-hint prefix line", async () => {
+    const csv = "sep=,\nTitle,Authors,Year,DOI\nDeep Learning,LeCun; Bengio,2015,10.1038/nature14539\n";
+    const ris = await (await run("csv-to-ris", f("excel.csv", csv, "text/csv"))).blob.text();
+    expect(ris).toMatch(/TI\s+-\s+Deep Learning/);
+    expect(ris).toMatch(/PY\s+-\s+2015/);
+    expect(ris).toContain("10.1038/nature14539");
+    expect(ris).toMatch(/AU\s+-\s+LeCun/);
+  });
+
+  it("handles a `sep=;` prefix with semicolon-delimited data (EU/Turkish Excel)", async () => {
+    const csv = "sep=;\nTitle;Authors;Year\nVestibüler fonksiyon;Yılmaz, Deniz;2019\n";
+    const ris = await (await run("csv-to-ris", f("tez.csv", csv, "text/csv"))).blob.text();
+    expect(ris).toMatch(/TI\s+-\s+Vestibüler fonksiyon/);
+    expect(ris).toMatch(/PY\s+-\s+2019/);
+  });
+
+  it("strips a UTF-8 BOM before the header so the first column still maps", async () => {
+    const csv = "﻿Title,Authors,Year\nA Study,Smith,2020\n";
+    const ris = await (await run("csv-to-ris", f("bom.csv", csv, "text/csv"))).blob.text();
+    expect(ris).toMatch(/TI\s+-\s+A Study/);
+  });
+
+  it("auto-detects a plain semicolon delimiter with no sep= hint", async () => {
+    const csv = "Title;Authors;Year\nQuantum Notes;Bohr;1925\n";
+    const ris = await (await run("csv-to-ris", f("semi.csv", csv, "text/csv"))).blob.text();
+    expect(ris).toMatch(/TI\s+-\s+Quantum Notes/);
+  });
+
+  it("gives a diagnostic error when the CSV has a header but no data rows", async () => {
+    await expect(
+      run("csv-to-ris", f("headeronly.csv", "Title,Authors,Year\n", "text/csv")),
+    ).rejects.toThrow(/no data rows|header but no/i);
+  });
+
+  it("still does not regress a normal comma CSV", async () => {
+    const csv = "Title,Authors,Year\nNormal Paper,Doe,2021\n";
+    const ris = await (await run("csv-to-ris", f("n.csv", csv, "text/csv"))).blob.text();
+    expect(ris).toMatch(/TI\s+-\s+Normal Paper/);
+    expect(ris).toMatch(/PY\s+-\s+2021/);
+  });
+});
