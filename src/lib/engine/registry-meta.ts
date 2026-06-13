@@ -1197,6 +1197,153 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     "maxFileSizeBytes": 104857600
   },
+  "ris-to-markdown": {
+    "label": "RIS → Markdown",
+    "accept": [
+      ".ris"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "text/markdown",
+    "maxFileSizeBytes": 104857600
+  },
+  "ris-to-html": {
+    "label": "RIS → HTML",
+    "accept": [
+      ".ris"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 104857600
+  },
+  "ris-to-yaml": {
+    "label": "RIS → YAML (CSL)",
+    "accept": [
+      ".ris"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "application/x-yaml",
+    "maxFileSizeBytes": 104857600
+  },
+  "nbib-to-markdown": {
+    "label": "NBIB → Markdown",
+    "accept": [
+      ".nbib"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "text/markdown",
+    "maxFileSizeBytes": 104857600
+  },
+  "nbib-to-html": {
+    "label": "NBIB → HTML",
+    "accept": [
+      ".nbib"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 104857600
+  },
+  "nbib-to-yaml": {
+    "label": "NBIB → YAML (CSL)",
+    "accept": [
+      ".nbib"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "application/x-yaml",
+    "maxFileSizeBytes": 104857600
+  },
+  "csl-json-to-markdown": {
+    "label": "CSL-JSON → Markdown",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/vnd.citationstyles.csl+json",
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "text/markdown",
+    "maxFileSizeBytes": 104857600
+  },
+  "csl-json-to-html": {
+    "label": "CSL-JSON → HTML",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/vnd.citationstyles.csl+json",
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 104857600
+  },
+  "csl-json-to-yaml": {
+    "label": "CSL-JSON → YAML (CSL)",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/vnd.citationstyles.csl+json",
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "application/x-yaml",
+    "maxFileSizeBytes": 104857600
+  },
+  "endnote-xml-to-markdown": {
+    "label": "EndNote XML → Markdown",
+    "accept": [
+      ".xml"
+    ],
+    "fromMime": [
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "text/markdown",
+    "maxFileSizeBytes": 104857600
+  },
+  "endnote-xml-to-html": {
+    "label": "EndNote XML → HTML",
+    "accept": [
+      ".xml"
+    ],
+    "fromMime": [
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 104857600
+  },
+  "endnote-xml-to-yaml": {
+    "label": "EndNote XML → YAML (CSL)",
+    "accept": [
+      ".xml"
+    ],
+    "fromMime": [
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "application/x-yaml",
+    "maxFileSizeBytes": 104857600
+  },
   "mp3-to-wav": {
     "label": "MP3 → WAV",
     "accept": [

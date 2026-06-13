@@ -155,6 +155,35 @@ describe("citation hub: remaining cross-pairs carry real data", () => {
   });
 });
 
+describe("citation hub: bibliography renders carry the real titles", () => {
+  const SOURCES = [
+    { fmt: "ris", file: () => f("a.ris", F.ris, "application/x-research-info-systems"), title: "A Sample Paper" },
+    { fmt: "nbib", file: () => f("a.nbib", F.nbibRealPubMed, "application/x-research-info-systems"), title: "Synaptic plasticity in the mouse hippocampus" },
+    { fmt: "csl-json", file: () => f("a.json", F.cslJson, "application/json"), title: "A Sample Paper" },
+    { fmt: "endnote-xml", file: () => f("a.xml", F.endnoteXml, "application/xml"), title: "EndNote Sample Article" },
+  ] as const;
+
+  for (const s of SOURCES) {
+    it(`${s.fmt}-to-markdown renders the title`, async () => {
+      const r = await run(`${s.fmt}-to-markdown`, s.file());
+      expect(r.blob.type).toContain("markdown");
+      expect(await r.blob.text()).toContain(s.title);
+    });
+    it(`${s.fmt}-to-html renders the title in HTML`, async () => {
+      const r = await run(`${s.fmt}-to-html`, s.file());
+      const html = await r.blob.text();
+      expect(html).toContain(s.title);
+      expect(html).toMatch(/<\w+/); // real markup, not bare text
+    });
+    it(`${s.fmt}-to-yaml emits a CSL-YAML references list with the title`, async () => {
+      const r = await run(`${s.fmt}-to-yaml`, s.file());
+      const yaml = await r.blob.text();
+      expect(yaml).toMatch(/references:/);
+      expect(yaml).toContain(s.title);
+    });
+  }
+});
+
 describe("citation hub: empty / invalid inputs fail loudly", () => {
   it("csl-json-to-ris throws on an empty CSL array", async () => {
     await expect(

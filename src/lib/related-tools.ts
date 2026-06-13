@@ -227,6 +227,20 @@ const HAND_CURATED_RELATED: Record<string, string[]> = {
   "endnote-xml-to-xlsx": ["endnote-xml-to-csv","ris-to-xlsx","bibtex-to-xlsx"],
   "csl-json-to-xlsx": ["csl-json-to-csv","ris-to-xlsx","bibtex-to-xlsx"],
 
+  // ===== Citation bibliography renders (markdown / html / yaml) =====
+  "ris-to-markdown": ["ris-to-html","ris-to-yaml","ris-to-bibtex"],
+  "ris-to-html": ["ris-to-markdown","ris-to-yaml","ris-to-bibtex"],
+  "ris-to-yaml": ["ris-to-markdown","ris-to-html","ris-to-bibtex"],
+  "nbib-to-markdown": ["nbib-to-html","nbib-to-yaml","nbib-to-bibtex"],
+  "nbib-to-html": ["nbib-to-markdown","nbib-to-yaml","nbib-to-bibtex"],
+  "nbib-to-yaml": ["nbib-to-markdown","nbib-to-html","nbib-to-bibtex"],
+  "csl-json-to-markdown": ["csl-json-to-html","csl-json-to-yaml","csl-json-to-bibtex"],
+  "csl-json-to-html": ["csl-json-to-markdown","csl-json-to-yaml","csl-json-to-bibtex"],
+  "csl-json-to-yaml": ["csl-json-to-markdown","csl-json-to-html","csl-json-to-bibtex"],
+  "endnote-xml-to-markdown": ["endnote-xml-to-html","endnote-xml-to-yaml","endnote-xml-to-bibtex"],
+  "endnote-xml-to-html": ["endnote-xml-to-markdown","endnote-xml-to-yaml","endnote-xml-to-bibtex"],
+  "endnote-xml-to-yaml": ["endnote-xml-to-markdown","endnote-xml-to-html","endnote-xml-to-bibtex"],
+
   // ===== Chess (fen-to-png + pgn-to-fen rank well, sibling spread) =====
   "fen-to-pgn":  ["pgn-to-fen", "fen-to-png", "pgn-to-csv", "pgn-to-json"],
   "fen-to-png":  ["fen-to-pgn", "pgn-to-fen", "pgn-to-csv"],

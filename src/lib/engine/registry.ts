@@ -251,6 +251,32 @@ export const registry: Record<string, ConverterLoader> = {
   "csl-json-to-xlsx": () =>
     import("./converters/csl-json-to-xlsx").then((m) => m.default),
 
+  // Citation bibliography renders: {ris,nbib,csl-json,endnote-xml} -> {markdown,html,yaml}
+  "ris-to-markdown": () =>
+    import("./converters/ris-to-markdown").then((m) => m.default),
+  "ris-to-html": () =>
+    import("./converters/ris-to-html").then((m) => m.default),
+  "ris-to-yaml": () =>
+    import("./converters/ris-to-yaml").then((m) => m.default),
+  "nbib-to-markdown": () =>
+    import("./converters/nbib-to-markdown").then((m) => m.default),
+  "nbib-to-html": () =>
+    import("./converters/nbib-to-html").then((m) => m.default),
+  "nbib-to-yaml": () =>
+    import("./converters/nbib-to-yaml").then((m) => m.default),
+  "csl-json-to-markdown": () =>
+    import("./converters/csl-json-to-markdown").then((m) => m.default),
+  "csl-json-to-html": () =>
+    import("./converters/csl-json-to-html").then((m) => m.default),
+  "csl-json-to-yaml": () =>
+    import("./converters/csl-json-to-yaml").then((m) => m.default),
+  "endnote-xml-to-markdown": () =>
+    import("./converters/endnote-xml-to-markdown").then((m) => m.default),
+  "endnote-xml-to-html": () =>
+    import("./converters/endnote-xml-to-html").then((m) => m.default),
+  "endnote-xml-to-yaml": () =>
+    import("./converters/endnote-xml-to-yaml").then((m) => m.default),
+
   "mp3-to-wav": () =>
     import("./converters/mp3-to-wav").then((m) => m.default),
   "wav-to-mp3": () =>

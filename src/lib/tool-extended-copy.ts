@@ -3295,6 +3295,114 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       { problem: "A column I expected is empty.", solution: "Only fields present in the source records are filled. If the source CSL-JSON omits a field (no DOI, no pages), that cell stays blank; there is nothing to invent." },
     ],
   },
+  "ris-to-markdown": {
+    whyConvert:
+      "RIS is a structured citation format; this turns it into a formatted Markdown reference list you can paste into Obsidian, a README, a GitHub wiki, or any Markdown note. Parses a .ris export from a journal or reference manager into a shared bibliographic model, then renders each entry. Everything runs in your browser, no upload.",
+    example:
+      "You have a .ris export from a journal or reference manager and want to paste the reference list straight into your Obsidian vault or project README. Drop the file here and get the Markdown back in one step.",
+    troubleshooting: [
+      { problem: "A reference is missing its author or year.", solution: "The render only shows fields the source RIS actually contained. Open the source and confirm the field is populated before converting." },
+    ],
+  },
+  "ris-to-html": {
+    whyConvert:
+      "RIS is a structured citation format; this turns it into a formatted HTML reference list you can drop into a webpage, a blog post, or a course page. Parses a .ris export from a journal or reference manager into a shared bibliographic model, then renders each entry. Everything runs in your browser, no upload.",
+    example:
+      "You have a .ris export from a journal or reference manager and want to drop the formatted reference list into your webpage or blog post. Drop the file here and get the HTML back in one step.",
+    troubleshooting: [
+      { problem: "A reference is missing its author or year.", solution: "The render only shows fields the source RIS actually contained. Open the source and confirm the field is populated before converting." },
+    ],
+  },
+  "ris-to-yaml": {
+    whyConvert:
+      "RIS is a structured citation format; this turns it into CSL-YAML, the bibliography format Pandoc reads via --bibliography refs.yaml when you build a document from Markdown. Parses a .ris export from a journal or reference manager into a shared bibliographic model, then renders each entry. Everything runs in your browser, no upload.",
+    example:
+      "You have a .ris export from a journal or reference manager and want to point Pandoc at the YAML with --bibliography to auto-format every citation in your paper. Drop the file here and get the YAML (CSL) back in one step.",
+    troubleshooting: [
+      { problem: "Pandoc does not pick up the references.", solution: "Pass the file with --bibliography refs.yaml, or paste the list (without the top-level references: key) into your document's YAML frontmatter under a references: block." },
+    ],
+  },
+  "nbib-to-markdown": {
+    whyConvert:
+      "NBIB is a structured citation format; this turns it into a formatted Markdown reference list you can paste into Obsidian, a README, a GitHub wiki, or any Markdown note. Parses a PubMed/MEDLINE export into a shared bibliographic model, then renders each entry. Everything runs in your browser, no upload.",
+    example:
+      "You have a PubMed/MEDLINE export and want to paste the reference list straight into your Obsidian vault or project README. Drop the file here and get the Markdown back in one step.",
+    troubleshooting: [
+      { problem: "A reference is missing its author or year.", solution: "The render only shows fields the source NBIB actually contained. Open the source and confirm the field is populated before converting." },
+    ],
+  },
+  "nbib-to-html": {
+    whyConvert:
+      "NBIB is a structured citation format; this turns it into a formatted HTML reference list you can drop into a webpage, a blog post, or a course page. Parses a PubMed/MEDLINE export into a shared bibliographic model, then renders each entry. Everything runs in your browser, no upload.",
+    example:
+      "You have a PubMed/MEDLINE export and want to drop the formatted reference list into your webpage or blog post. Drop the file here and get the HTML back in one step.",
+    troubleshooting: [
+      { problem: "A reference is missing its author or year.", solution: "The render only shows fields the source NBIB actually contained. Open the source and confirm the field is populated before converting." },
+    ],
+  },
+  "nbib-to-yaml": {
+    whyConvert:
+      "NBIB is a structured citation format; this turns it into CSL-YAML, the bibliography format Pandoc reads via --bibliography refs.yaml when you build a document from Markdown. Parses a PubMed/MEDLINE export into a shared bibliographic model, then renders each entry. Everything runs in your browser, no upload.",
+    example:
+      "You have a PubMed/MEDLINE export and want to point Pandoc at the YAML with --bibliography to auto-format every citation in your paper. Drop the file here and get the YAML (CSL) back in one step.",
+    troubleshooting: [
+      { problem: "Pandoc does not pick up the references.", solution: "Pass the file with --bibliography refs.yaml, or paste the list (without the top-level references: key) into your document's YAML frontmatter under a references: block." },
+    ],
+  },
+  "csl-json-to-markdown": {
+    whyConvert:
+      "CSL-JSON is a structured citation format; this turns it into a formatted Markdown reference list you can paste into Obsidian, a README, a GitHub wiki, or any Markdown note. Parses a Zotero or pandoc CSL-JSON file into a shared bibliographic model, then renders each entry. Everything runs in your browser, no upload.",
+    example:
+      "You have a Zotero or pandoc CSL-JSON file and want to paste the reference list straight into your Obsidian vault or project README. Drop the file here and get the Markdown back in one step.",
+    troubleshooting: [
+      { problem: "A reference is missing its author or year.", solution: "The render only shows fields the source CSL-JSON actually contained. Open the source and confirm the field is populated before converting." },
+    ],
+  },
+  "csl-json-to-html": {
+    whyConvert:
+      "CSL-JSON is a structured citation format; this turns it into a formatted HTML reference list you can drop into a webpage, a blog post, or a course page. Parses a Zotero or pandoc CSL-JSON file into a shared bibliographic model, then renders each entry. Everything runs in your browser, no upload.",
+    example:
+      "You have a Zotero or pandoc CSL-JSON file and want to drop the formatted reference list into your webpage or blog post. Drop the file here and get the HTML back in one step.",
+    troubleshooting: [
+      { problem: "A reference is missing its author or year.", solution: "The render only shows fields the source CSL-JSON actually contained. Open the source and confirm the field is populated before converting." },
+    ],
+  },
+  "csl-json-to-yaml": {
+    whyConvert:
+      "CSL-JSON is a structured citation format; this turns it into CSL-YAML, the bibliography format Pandoc reads via --bibliography refs.yaml when you build a document from Markdown. Parses a Zotero or pandoc CSL-JSON file into a shared bibliographic model, then renders each entry. Everything runs in your browser, no upload.",
+    example:
+      "You have a Zotero or pandoc CSL-JSON file and want to point Pandoc at the YAML with --bibliography to auto-format every citation in your paper. Drop the file here and get the YAML (CSL) back in one step.",
+    troubleshooting: [
+      { problem: "Pandoc does not pick up the references.", solution: "Pass the file with --bibliography refs.yaml, or paste the list (without the top-level references: key) into your document's YAML frontmatter under a references: block." },
+    ],
+  },
+  "endnote-xml-to-markdown": {
+    whyConvert:
+      "EndNote XML is a structured citation format; this turns it into a formatted Markdown reference list you can paste into Obsidian, a README, a GitHub wiki, or any Markdown note. Parses an EndNote XML library into a shared bibliographic model, then renders each entry. Everything runs in your browser, no upload.",
+    example:
+      "You have an EndNote XML library and want to paste the reference list straight into your Obsidian vault or project README. Drop the file here and get the Markdown back in one step.",
+    troubleshooting: [
+      { problem: "A reference is missing its author or year.", solution: "The render only shows fields the source EndNote XML actually contained. Open the source and confirm the field is populated before converting." },
+    ],
+  },
+  "endnote-xml-to-html": {
+    whyConvert:
+      "EndNote XML is a structured citation format; this turns it into a formatted HTML reference list you can drop into a webpage, a blog post, or a course page. Parses an EndNote XML library into a shared bibliographic model, then renders each entry. Everything runs in your browser, no upload.",
+    example:
+      "You have an EndNote XML library and want to drop the formatted reference list into your webpage or blog post. Drop the file here and get the HTML back in one step.",
+    troubleshooting: [
+      { problem: "A reference is missing its author or year.", solution: "The render only shows fields the source EndNote XML actually contained. Open the source and confirm the field is populated before converting." },
+    ],
+  },
+  "endnote-xml-to-yaml": {
+    whyConvert:
+      "EndNote XML is a structured citation format; this turns it into CSL-YAML, the bibliography format Pandoc reads via --bibliography refs.yaml when you build a document from Markdown. Parses an EndNote XML library into a shared bibliographic model, then renders each entry. Everything runs in your browser, no upload.",
+    example:
+      "You have an EndNote XML library and want to point Pandoc at the YAML with --bibliography to auto-format every citation in your paper. Drop the file here and get the YAML (CSL) back in one step.",
+    troubleshooting: [
+      { problem: "Pandoc does not pick up the references.", solution: "Pass the file with --bibliography refs.yaml, or paste the list (without the top-level references: key) into your document's YAML frontmatter under a references: block." },
+    ],
+  },
 };
 
 export function getExtendedCopy(toolId: string): ExtendedCopy | undefined {
