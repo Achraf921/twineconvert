@@ -113,6 +113,22 @@ const ENW_SAMPLE =
   "%J Journal of Neurology\n%D 2006\n%V 253\n%N 11\n%P 1499-1508\n%@ 1432-1459\n" +
   "%R 10.1007/s00415-006-0001-x\n%K balance\n%X We measured vestibular thresholds.\n%F smith2006\n";
 
+// A real-shaped MARCXML (MARC21 slim) catalog record for marcxml -> X.
+const MARC_SAMPLE =
+  '<?xml version="1.0" encoding="UTF-8"?>\n' +
+  '<collection xmlns="http://www.loc.gov/MARC21/slim">\n' +
+  '  <record>\n' +
+  '    <leader>00000nab a2200000 a 4500</leader>\n' +
+  '    <datafield tag="100" ind1="1" ind2=" "><subfield code="a">Smith, John,</subfield><subfield code="d">1970-</subfield></datafield>\n' +
+  '    <datafield tag="245" ind1="1" ind2="0"><subfield code="a">Vestibular function in aging adults /</subfield><subfield code="c">John Smith and Jane Doe.</subfield></datafield>\n' +
+  '    <datafield tag="700" ind1="1" ind2=" "><subfield code="a">Doe, Jane.</subfield></datafield>\n' +
+  '    <datafield tag="022" ind1=" " ind2=" "><subfield code="a">1432-1459</subfield></datafield>\n' +
+  '    <datafield tag="024" ind1="7" ind2=" "><subfield code="a">10.1007/s00415-006-0001-x</subfield><subfield code="2">doi</subfield></datafield>\n' +
+  '    <datafield tag="773" ind1="0" ind2=" "><subfield code="t">Journal of Neurology</subfield><subfield code="g">Vol. 253, no. 11 (2006), p. 1499-1508</subfield></datafield>\n' +
+  '    <datafield tag="650" ind1=" " ind2="0"><subfield code="a">Balance</subfield></datafield>\n' +
+  '  </record>\n' +
+  '</collection>\n';
+
 // A real-shaped MODS XML (Library of Congress) document for mods -> X.
 const MODS_SAMPLE =
   '<?xml version="1.0" encoding="UTF-8"?>\n' +
@@ -379,6 +395,18 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "endnote-xml-to-mods": { provider: () => text("test.xml", F.endnoteXml, "application/xml"), env: "node" },
   "csl-json-to-mods": { provider: () => text("test.json", F.cslJson, "application/json"), env: "node" },
   "csv-to-mods": { provider: () => text("test.csv", CITATION_CSV, "text/csv"), env: "node" },
+
+  // MARCXML (MARC21 slim, library catalogs; import-only)
+  "marcxml-to-bibtex": { provider: () => text("catalog.marcxml", MARC_SAMPLE, "application/marcxml+xml"), env: "node" },
+  "marcxml-to-ris": { provider: () => text("catalog.marcxml", MARC_SAMPLE, "application/marcxml+xml"), env: "node" },
+  "marcxml-to-nbib": { provider: () => text("catalog.marcxml", MARC_SAMPLE, "application/marcxml+xml"), env: "node" },
+  "marcxml-to-endnote-xml": { provider: () => text("catalog.marcxml", MARC_SAMPLE, "application/marcxml+xml"), env: "node" },
+  "marcxml-to-csl-json": { provider: () => text("catalog.marcxml", MARC_SAMPLE, "application/marcxml+xml"), env: "node" },
+  "marcxml-to-csv": { provider: () => text("catalog.marcxml", MARC_SAMPLE, "application/marcxml+xml"), env: "node" },
+  "marcxml-to-xlsx": { provider: () => text("catalog.marcxml", MARC_SAMPLE, "application/marcxml+xml"), env: "node" },
+  "marcxml-to-markdown": { provider: () => text("catalog.marcxml", MARC_SAMPLE, "application/marcxml+xml"), env: "node" },
+  "marcxml-to-html": { provider: () => text("catalog.marcxml", MARC_SAMPLE, "application/marcxml+xml"), env: "node" },
+  "marcxml-to-yaml": { provider: () => text("catalog.marcxml", MARC_SAMPLE, "application/marcxml+xml"), env: "node" },
   "mp3-to-wav":  { provider: () => Promise.reject(new Error("mp3 fixture pending")), env: "browser" },
   "mp3-to-m4a":  { provider: () => Promise.reject(new Error("mp3 fixture pending")), env: "browser" },
   "mp3-to-flac": { provider: () => Promise.reject(new Error("mp3 fixture pending")), env: "browser" },

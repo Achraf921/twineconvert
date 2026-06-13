@@ -2102,6 +2102,156 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "application/mods+xml",
     "maxFileSizeBytes": 104857600
   },
+  "marcxml-to-bibtex": {
+    "label": "MARCXML → BibTeX",
+    "accept": [
+      ".xml",
+      ".marcxml",
+      ".mrcx"
+    ],
+    "fromMime": [
+      "application/marcxml+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "application/x-bibtex",
+    "maxFileSizeBytes": 104857600
+  },
+  "marcxml-to-ris": {
+    "label": "MARCXML → RIS",
+    "accept": [
+      ".xml",
+      ".marcxml",
+      ".mrcx"
+    ],
+    "fromMime": [
+      "application/marcxml+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "application/x-research-info-systems",
+    "maxFileSizeBytes": 104857600
+  },
+  "marcxml-to-nbib": {
+    "label": "MARCXML → NBIB",
+    "accept": [
+      ".xml",
+      ".marcxml",
+      ".mrcx"
+    ],
+    "fromMime": [
+      "application/marcxml+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "application/x-research-info-systems",
+    "maxFileSizeBytes": 104857600
+  },
+  "marcxml-to-endnote-xml": {
+    "label": "MARCXML → EndNote XML",
+    "accept": [
+      ".xml",
+      ".marcxml",
+      ".mrcx"
+    ],
+    "fromMime": [
+      "application/marcxml+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "application/xml",
+    "maxFileSizeBytes": 104857600
+  },
+  "marcxml-to-csl-json": {
+    "label": "MARCXML → CSL-JSON",
+    "accept": [
+      ".xml",
+      ".marcxml",
+      ".mrcx"
+    ],
+    "fromMime": [
+      "application/marcxml+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "application/vnd.citationstyles.csl+json",
+    "maxFileSizeBytes": 104857600
+  },
+  "marcxml-to-csv": {
+    "label": "MARCXML → CSV",
+    "accept": [
+      ".xml",
+      ".marcxml",
+      ".mrcx"
+    ],
+    "fromMime": [
+      "application/marcxml+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "text/csv",
+    "maxFileSizeBytes": 104857600
+  },
+  "marcxml-to-xlsx": {
+    "label": "MARCXML → XLSX",
+    "accept": [
+      ".xml",
+      ".marcxml",
+      ".mrcx"
+    ],
+    "fromMime": [
+      "application/marcxml+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "maxFileSizeBytes": 104857600
+  },
+  "marcxml-to-markdown": {
+    "label": "MARCXML → Markdown",
+    "accept": [
+      ".xml",
+      ".marcxml",
+      ".mrcx"
+    ],
+    "fromMime": [
+      "application/marcxml+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "text/markdown",
+    "maxFileSizeBytes": 104857600
+  },
+  "marcxml-to-html": {
+    "label": "MARCXML → HTML",
+    "accept": [
+      ".xml",
+      ".marcxml",
+      ".mrcx"
+    ],
+    "fromMime": [
+      "application/marcxml+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 104857600
+  },
+  "marcxml-to-yaml": {
+    "label": "MARCXML → YAML (CSL)",
+    "accept": [
+      ".xml",
+      ".marcxml",
+      ".mrcx"
+    ],
+    "fromMime": [
+      "application/marcxml+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "application/x-yaml",
+    "maxFileSizeBytes": 104857600
+  },
   "mp3-to-wav": {
     "label": "MP3 → WAV",
     "accept": [

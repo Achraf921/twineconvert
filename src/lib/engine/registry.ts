@@ -401,6 +401,28 @@ export const registry: Record<string, ConverterLoader> = {
   "csv-to-mods": () =>
     import("./converters/csv-to-mods").then((m) => m.default),
 
+  // MARCXML (MARC21 slim, library catalogs; import-only) -> citation hub
+  "marcxml-to-bibtex": () =>
+    import("./converters/marcxml-to-bibtex").then((m) => m.default),
+  "marcxml-to-ris": () =>
+    import("./converters/marcxml-to-ris").then((m) => m.default),
+  "marcxml-to-nbib": () =>
+    import("./converters/marcxml-to-nbib").then((m) => m.default),
+  "marcxml-to-endnote-xml": () =>
+    import("./converters/marcxml-to-endnote-xml").then((m) => m.default),
+  "marcxml-to-csl-json": () =>
+    import("./converters/marcxml-to-csl-json").then((m) => m.default),
+  "marcxml-to-csv": () =>
+    import("./converters/marcxml-to-csv").then((m) => m.default),
+  "marcxml-to-xlsx": () =>
+    import("./converters/marcxml-to-xlsx").then((m) => m.default),
+  "marcxml-to-markdown": () =>
+    import("./converters/marcxml-to-markdown").then((m) => m.default),
+  "marcxml-to-html": () =>
+    import("./converters/marcxml-to-html").then((m) => m.default),
+  "marcxml-to-yaml": () =>
+    import("./converters/marcxml-to-yaml").then((m) => m.default),
+
   "mp3-to-wav": () =>
     import("./converters/mp3-to-wav").then((m) => m.default),
   "wav-to-mp3": () =>

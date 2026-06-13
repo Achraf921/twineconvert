@@ -6,12 +6,12 @@ Generated 2026-06-13 from src/lib/engine/converters/.
 
 | Classification | Count |
 |---|---:|
-| Total converters | 471 |
+| Total converters | 481 |
 | **Bijective candidates** (lossless, same-kind, both directions exist) | 228 |
 | **Bijective candidates missing reverse converter** | 32 |
 | **Bijective candidates missing round-trip test** | 24 |
-| Lossy encoding (same kind, but lossy format) | 93 |
-| Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 65 |
+| Lossy encoding (same kind, but lossy format) | 101 |
+| Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 67 |
 | Single-action (no reverse possible) | 53 |
 | Unknown formats (need to add to FORMATS table) | 0 |
 | Compound id (irregular pattern) | 0 |
@@ -351,6 +351,16 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `lrc-to-vtt` | bijective-candidate | (`vtt-to-lrc` missing) | n/a | both lossless data formats; should round-trip cleanly |
 | `m4a-to-mp3` | lossy-encoding | ✓ | ✓ | m4a or mp3 uses lossy encoding |
 | `m4v-to-mp4` | lossy-encoding | (`mp4-to-m4v` missing) | ✓ | m4v or mp4 uses lossy encoding |
+| `marcxml-to-bibtex` | lossy-encoding | (`bibtex-to-marcxml` missing) | ✓ | marcxml or bibtex uses lossy encoding |
+| `marcxml-to-csl-json` | lossy-encoding | (`csl-json-to-marcxml` missing) | ✓ | marcxml or csl-json uses lossy encoding |
+| `marcxml-to-csv` | lossy-encoding | (`csv-to-marcxml` missing) | ✓ | marcxml or csv uses lossy encoding |
+| `marcxml-to-endnote-xml` | lossy-encoding | (`endnote-xml-to-marcxml` missing) | n/a | marcxml or endnote-xml uses lossy encoding |
+| `marcxml-to-html` | cross-kind | (`html-to-marcxml` missing) | n/a | data -> doc: cross-domain, inherently lossy |
+| `marcxml-to-markdown` | cross-kind | (`markdown-to-marcxml` missing) | n/a | data -> doc: cross-domain, inherently lossy |
+| `marcxml-to-nbib` | lossy-encoding | (`nbib-to-marcxml` missing) | n/a | marcxml or nbib uses lossy encoding |
+| `marcxml-to-ris` | lossy-encoding | (`ris-to-marcxml` missing) | ✓ | marcxml or ris uses lossy encoding |
+| `marcxml-to-xlsx` | lossy-encoding | (`xlsx-to-marcxml` missing) | ✓ | marcxml or xlsx uses lossy encoding |
+| `marcxml-to-yaml` | lossy-encoding | (`yaml-to-marcxml` missing) | n/a | marcxml or yaml uses lossy encoding |
 | `markdown-table-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `markdown-to-html` | lossy-encoding | ✓ | n/a | markdown or html uses lossy encoding |
 | `markdown-to-pdf` | lossy-encoding | (`pdf-to-markdown` missing) | n/a | markdown or pdf uses lossy encoding |

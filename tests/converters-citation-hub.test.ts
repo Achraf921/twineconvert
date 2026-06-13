@@ -466,6 +466,67 @@ describe("citation hub: MODS XML carries real data", () => {
   });
 });
 
+const MARC_SAMPLE =
+  '<?xml version="1.0" encoding="UTF-8"?>\n' +
+  '<collection xmlns="http://www.loc.gov/MARC21/slim">\n' +
+  '  <record>\n' +
+  '    <leader>00000nab a2200000 a 4500</leader>\n' +
+  '    <datafield tag="100" ind1="1" ind2=" "><subfield code="a">Smith, John,</subfield><subfield code="d">1970-</subfield></datafield>\n' +
+  '    <datafield tag="245" ind1="1" ind2="0"><subfield code="a">Vestibular function in aging adults /</subfield><subfield code="c">John Smith and Jane Doe.</subfield></datafield>\n' +
+  '    <datafield tag="700" ind1="1" ind2=" "><subfield code="a">Doe, Jane.</subfield></datafield>\n' +
+  '    <datafield tag="022" ind1=" " ind2=" "><subfield code="a">1432-1459</subfield></datafield>\n' +
+  '    <datafield tag="024" ind1="7" ind2=" "><subfield code="a">10.1007/s00415-006-0001-x</subfield><subfield code="2">doi</subfield></datafield>\n' +
+  '    <datafield tag="773" ind1="0" ind2=" "><subfield code="t">Journal of Neurology</subfield><subfield code="g">Vol. 253, no. 11 (2006), p. 1499-1508</subfield></datafield>\n' +
+  '    <datafield tag="650" ind1=" " ind2="0"><subfield code="a">Balance</subfield></datafield>\n' +
+  '  </record>\n' +
+  '</collection>\n';
+
+describe("citation hub: MARCXML carries real data", () => {
+  const marc = () => f("catalog.marcxml", MARC_SAMPLE, "application/marcxml+xml");
+
+  it("marcxml-to-bibtex keeps title + DOI (024 ind1=7 $2=doi)", async () => {
+    const bib = await (await run("marcxml-to-bibtex", marc())).blob.text();
+    expect(bib).toContain("Vestibular function in aging adults");
+    expect(bib).toContain("10.1007/s00415-006-0001-x");
+  });
+
+  it("marcxml-to-ris keeps title, both authors (dates stripped), year, journal", async () => {
+    const ris = await (await run("marcxml-to-ris", marc())).blob.text();
+    expect(ris).toMatch(/TI\s+-\s+Vestibular function in aging adults/);
+    expect(ris).toMatch(/AU\s+-\s+Smith, John/);
+    expect(ris).toMatch(/AU\s+-\s+Doe, Jane/);
+    expect(ris).toMatch(/PY\s+-\s+2006/); // year recovered from the 773 host string
+    expect(ris).toMatch(/(JO|JF|T2)\s+-\s+Journal of Neurology/);
+  });
+
+  it("marcxml-to-csl-json emits title + DOI + container + volume/pages", async () => {
+    const arr = JSON.parse(await (await run("marcxml-to-csl-json", marc())).blob.text());
+    expect(arr[0].title).toBe("Vestibular function in aging adults");
+    expect(arr[0].DOI).toBe("10.1007/s00415-006-0001-x");
+    expect(arr[0]["container-title"]).toBe("Journal of Neurology");
+    expect(arr[0].volume).toBe("253");
+    expect(arr[0].page).toBe("1499-1508");
+  });
+
+  it("marcxml-to-csv carries the title and a subject keyword", async () => {
+    const csv = await (await run("marcxml-to-csv", marc())).blob.text();
+    expect(csv).toContain("Vestibular function in aging adults");
+    expect(csv).toContain("Balance");
+  });
+
+  it("marcxml-to-xlsx is a zip-backed spreadsheet", async () => {
+    const bytes = new Uint8Array(await (await run("marcxml-to-xlsx", marc())).blob.arrayBuffer());
+    expect(bytes[0]).toBe(0x50);
+    expect(bytes[1]).toBe(0x4b);
+  });
+
+  it("marcxml-to-bibtex throws on a collection with no records", async () => {
+    await expect(
+      run("marcxml-to-bibtex", f("e.xml", '<collection xmlns="http://www.loc.gov/MARC21/slim"></collection>', "application/marcxml+xml")),
+    ).rejects.toThrow(/No records found/);
+  });
+});
+
 describe("citation hub: empty / invalid inputs fail loudly", () => {
   it("csl-json-to-ris throws on an empty CSL array", async () => {
     await expect(

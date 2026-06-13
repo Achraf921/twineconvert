@@ -307,6 +307,18 @@ const HAND_CURATED_RELATED: Record<string, string[]> = {
   "csl-json-to-mods": ["mods-to-csl-json","csl-json-to-bibtex","csl-json-to-ris"],
   "csv-to-mods": ["mods-to-csv","csv-to-bibtex","csv-to-ris"],
 
+  // ===== MARCXML (MARC21 slim, library catalogs; import-only) =====
+  "marcxml-to-bibtex": ["marcxml-to-ris","marcxml-to-csv","marcxml-to-endnote-xml"],
+  "marcxml-to-ris": ["marcxml-to-bibtex","marcxml-to-csv","marcxml-to-endnote-xml"],
+  "marcxml-to-nbib": ["marcxml-to-ris","marcxml-to-bibtex","marcxml-to-csv"],
+  "marcxml-to-endnote-xml": ["marcxml-to-ris","marcxml-to-bibtex","marcxml-to-csv"],
+  "marcxml-to-csl-json": ["marcxml-to-ris","marcxml-to-bibtex","marcxml-to-csv"],
+  "marcxml-to-csv": ["marcxml-to-xlsx","marcxml-to-bibtex","marcxml-to-ris"],
+  "marcxml-to-xlsx": ["marcxml-to-csv","marcxml-to-bibtex","marcxml-to-ris"],
+  "marcxml-to-markdown": ["marcxml-to-html","marcxml-to-yaml","marcxml-to-bibtex"],
+  "marcxml-to-html": ["marcxml-to-markdown","marcxml-to-yaml","marcxml-to-bibtex"],
+  "marcxml-to-yaml": ["marcxml-to-markdown","marcxml-to-html","marcxml-to-bibtex"],
+
   // ===== Chess (fen-to-png + pgn-to-fen rank well, sibling spread) =====
   "fen-to-pgn":  ["pgn-to-fen", "fen-to-png", "pgn-to-csv", "pgn-to-json"],
   "fen-to-png":  ["fen-to-pgn", "pgn-to-fen", "pgn-to-csv"],

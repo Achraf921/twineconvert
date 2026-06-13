@@ -3925,6 +3925,96 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       { problem: "The repository rejects the MODS.", solution: "The output is MODS v3.7 in the http://www.loc.gov/mods/v3 namespace. If your repository expects a single mods root rather than a modsCollection, extract one mods element, or configure the ingest to accept modsCollection." },
     ],
   },
+  "marcxml-to-bibtex": {
+    whyConvert:
+      "MARCXML is MARC21 catalog records in XML, the format library systems (Koha, Alma, Sierra) and the Library of Congress export. This converts a MARCXML record to BibTeX so you can reuse the bibliographic data in a LaTeX or Overleaf bibliography. Title (245), authors (100/700), year, host journal (773), volume, issue, pages, DOI (024), ISSN (022), and ISBN (020) are extracted. Runs in your browser, nothing is uploaded.",
+    example:
+      "You exported records from your library catalog as MARCXML and need them in BibTeX for a LaTeX or Overleaf bibliography. Drop the .xml here and get BibTeX back.",
+    troubleshooting: [
+      { problem: "The DOI or year is missing.", solution: "DOIs must be in an 024 field with first indicator 7 and a $2 of doi. For journal articles the year is read from the 773 host-item string; records without a 773 fall back to the 260/264 publication date." },
+    ],
+  },
+  "marcxml-to-ris": {
+    whyConvert:
+      "MARCXML is MARC21 catalog records in XML, the format library systems (Koha, Alma, Sierra) and the Library of Congress export. This converts a MARCXML record to RIS so you can reuse the bibliographic data in EndNote, Mendeley, or Zotero. Title (245), authors (100/700), year, host journal (773), volume, issue, pages, DOI (024), ISSN (022), and ISBN (020) are extracted. Runs in your browser, nothing is uploaded.",
+    example:
+      "You exported records from your library catalog as MARCXML and need them in RIS for EndNote, Mendeley, or Zotero. Drop the .xml here and get RIS back.",
+    troubleshooting: [
+      { problem: "The DOI or year is missing.", solution: "DOIs must be in an 024 field with first indicator 7 and a $2 of doi. For journal articles the year is read from the 773 host-item string; records without a 773 fall back to the 260/264 publication date." },
+    ],
+  },
+  "marcxml-to-nbib": {
+    whyConvert:
+      "MARCXML is MARC21 catalog records in XML, the format library systems (Koha, Alma, Sierra) and the Library of Congress export. This converts a MARCXML record to NBIB so you can reuse the bibliographic data in a PubMed-style manager. Title (245), authors (100/700), year, host journal (773), volume, issue, pages, DOI (024), ISSN (022), and ISBN (020) are extracted. Runs in your browser, nothing is uploaded.",
+    example:
+      "You exported records from your library catalog as MARCXML and need them in NBIB for a PubMed-style manager. Drop the .xml here and get NBIB back.",
+    troubleshooting: [
+      { problem: "The DOI or year is missing.", solution: "DOIs must be in an 024 field with first indicator 7 and a $2 of doi. For journal articles the year is read from the 773 host-item string; records without a 773 fall back to the 260/264 publication date." },
+    ],
+  },
+  "marcxml-to-endnote-xml": {
+    whyConvert:
+      "MARCXML is MARC21 catalog records in XML, the format library systems (Koha, Alma, Sierra) and the Library of Congress export. This converts a MARCXML record to EndNote XML so you can reuse the bibliographic data in an EndNote XML library. Title (245), authors (100/700), year, host journal (773), volume, issue, pages, DOI (024), ISSN (022), and ISBN (020) are extracted. Runs in your browser, nothing is uploaded.",
+    example:
+      "You exported records from your library catalog as MARCXML and need them in EndNote XML for an EndNote XML library. Drop the .xml here and get EndNote XML back.",
+    troubleshooting: [
+      { problem: "The DOI or year is missing.", solution: "DOIs must be in an 024 field with first indicator 7 and a $2 of doi. For journal articles the year is read from the 773 host-item string; records without a 773 fall back to the 260/264 publication date." },
+    ],
+  },
+  "marcxml-to-csl-json": {
+    whyConvert:
+      "MARCXML is MARC21 catalog records in XML, the format library systems (Koha, Alma, Sierra) and the Library of Congress export. This converts a MARCXML record to CSL-JSON so you can reuse the bibliographic data in Zotero or a pandoc workflow. Title (245), authors (100/700), year, host journal (773), volume, issue, pages, DOI (024), ISSN (022), and ISBN (020) are extracted. Runs in your browser, nothing is uploaded.",
+    example:
+      "You exported records from your library catalog as MARCXML and need them in CSL-JSON for Zotero or a pandoc workflow. Drop the .xml here and get CSL-JSON back.",
+    troubleshooting: [
+      { problem: "The DOI or year is missing.", solution: "DOIs must be in an 024 field with first indicator 7 and a $2 of doi. For journal articles the year is read from the 773 host-item string; records without a 773 fall back to the 260/264 publication date." },
+    ],
+  },
+  "marcxml-to-csv": {
+    whyConvert:
+      "MARCXML is MARC21 catalog records in XML, the format library systems (Koha, Alma, Sierra) and the Library of Congress export. This converts a MARCXML record to CSV so you can reuse the bibliographic data in a spreadsheet for cataloging or analysis. Title (245), authors (100/700), year, host journal (773), volume, issue, pages, DOI (024), ISSN (022), and ISBN (020) are extracted. Runs in your browser, nothing is uploaded.",
+    example:
+      "You exported records from your library catalog as MARCXML and need them in CSV for a spreadsheet for cataloging or analysis. Drop the .xml here and get CSV back.",
+    troubleshooting: [
+      { problem: "The DOI or year is missing.", solution: "DOIs must be in an 024 field with first indicator 7 and a $2 of doi. For journal articles the year is read from the 773 host-item string; records without a 773 fall back to the 260/264 publication date." },
+    ],
+  },
+  "marcxml-to-xlsx": {
+    whyConvert:
+      "MARCXML is MARC21 catalog records in XML, the format library systems (Koha, Alma, Sierra) and the Library of Congress export. This converts a MARCXML record to Excel (XLSX) so you can reuse the bibliographic data in Excel. Title (245), authors (100/700), year, host journal (773), volume, issue, pages, DOI (024), ISSN (022), and ISBN (020) are extracted. Runs in your browser, nothing is uploaded.",
+    example:
+      "You exported records from your library catalog as MARCXML and need them in Excel (XLSX) for Excel. Drop the .xml here and get Excel (XLSX) back.",
+    troubleshooting: [
+      { problem: "A column is blank for some rows.", solution: "MARC records vary in completeness; the converter fills only the fields present. Article-level data (volume, pages) comes from the 773 host-item field, which not every record carries." },
+    ],
+  },
+  "marcxml-to-markdown": {
+    whyConvert:
+      "MARCXML is MARC21 catalog records in XML, the format library systems (Koha, Alma, Sierra) and the Library of Congress export. This converts a MARCXML record to Markdown so you can reuse the bibliographic data in an Obsidian note or README. Title (245), authors (100/700), year, host journal (773), volume, issue, pages, DOI (024), ISSN (022), and ISBN (020) are extracted. Runs in your browser, nothing is uploaded.",
+    example:
+      "You exported records from your library catalog as MARCXML and need them in Markdown for an Obsidian note or README. Drop the .xml here and get Markdown back.",
+    troubleshooting: [
+      { problem: "The DOI or year is missing.", solution: "DOIs must be in an 024 field with first indicator 7 and a $2 of doi. For journal articles the year is read from the 773 host-item string; records without a 773 fall back to the 260/264 publication date." },
+    ],
+  },
+  "marcxml-to-html": {
+    whyConvert:
+      "MARCXML is MARC21 catalog records in XML, the format library systems (Koha, Alma, Sierra) and the Library of Congress export. This converts a MARCXML record to HTML so you can reuse the bibliographic data in a webpage or finding aid. Title (245), authors (100/700), year, host journal (773), volume, issue, pages, DOI (024), ISSN (022), and ISBN (020) are extracted. Runs in your browser, nothing is uploaded.",
+    example:
+      "You exported records from your library catalog as MARCXML and need them in HTML for a webpage or finding aid. Drop the .xml here and get HTML back.",
+    troubleshooting: [
+      { problem: "The DOI or year is missing.", solution: "DOIs must be in an 024 field with first indicator 7 and a $2 of doi. For journal articles the year is read from the 773 host-item string; records without a 773 fall back to the 260/264 publication date." },
+    ],
+  },
+  "marcxml-to-yaml": {
+    whyConvert:
+      "MARCXML is MARC21 catalog records in XML, the format library systems (Koha, Alma, Sierra) and the Library of Congress export. This converts a MARCXML record to YAML (CSL) so you can reuse the bibliographic data in a Pandoc bibliography. Title (245), authors (100/700), year, host journal (773), volume, issue, pages, DOI (024), ISSN (022), and ISBN (020) are extracted. Runs in your browser, nothing is uploaded.",
+    example:
+      "You exported records from your library catalog as MARCXML and need them in YAML (CSL) for a Pandoc bibliography. Drop the .xml here and get YAML (CSL) back.",
+    troubleshooting: [
+      { problem: "The DOI or year is missing.", solution: "DOIs must be in an 024 field with first indicator 7 and a $2 of doi. For journal articles the year is read from the 773 host-item string; records without a 773 fall back to the 260/264 publication date." },
+    ],
+  },
 };
 
 export function getExtendedCopy(toolId: string): ExtendedCopy | undefined {
