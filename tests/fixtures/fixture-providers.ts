@@ -525,6 +525,9 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "references-to-ris":      { provider: () => text("refs.txt", "[1] L. Tan and T. Zrnic, \"Valid Inference with Synthetic Data,\" JMLR, vol. 25, 2024.\n[2] K. Brown, \"A Study,\" Nature, 2019.", "text/plain"), env: "node" },
   "references-to-bibtex":   { provider: () => text("refs.txt", "[1] L. Tan and T. Zrnic, \"Valid Inference with Synthetic Data,\" JMLR, vol. 25, 2024.\n[2] K. Brown, \"A Study,\" Nature, 2019.", "text/plain"), env: "node" },
   "references-to-csl-json": { provider: () => text("refs.txt", "[1] L. Tan and T. Zrnic, \"Valid Inference with Synthetic Data,\" JMLR, vol. 25, 2024.\n[2] K. Brown, \"A Study,\" Nature, 2019.", "text/plain"), env: "node" },
+  "pubmed-to-ris":    { provider: () => text("pubmed.txt", "PMID- 30429114\nTI  - Vestibular function in older adults.\nAU  - Smith JK\nDP  - 2019\nJT  - J Vestib Res\nAID - 10.3233/VES-190001 [doi]\n", "text/plain"), env: "node" },
+  "pubmed-to-bibtex": { provider: () => text("pubmed.txt", "PMID- 30429114\nTI  - Vestibular function in older adults.\nAU  - Smith JK\nDP  - 2019\nJT  - J Vestib Res\nAID - 10.3233/VES-190001 [doi]\n", "text/plain"), env: "node" },
+  "pubmed-to-csv":    { provider: () => text("pubmed.txt", "PMID- 30429114\nTI  - Vestibular function in older adults.\nAU  - Smith JK\nDP  - 2019\nJT  - J Vestib Res\nAID - 10.3233/VES-190001 [doi]\n", "text/plain"), env: "node" },
 
   // ===== EPUB =====
   "epub-to-text": { provider: async () => fileFromBytes("test.epub", await makeTinyEpub(), "application/epub+zip"), env: "node" },

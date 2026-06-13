@@ -470,6 +470,7 @@ const TEST_FILE_GLOBS = [
   "tests/converters-document-hub.test.ts",
   "tests/converters-office-table.test.ts",
   "tests/converters-references.test.ts",
+  "tests/converters-pubmed.test.ts",
 ];
 const browserTestFiles = (() => {
   try {

@@ -6,14 +6,14 @@ Generated 2026-06-13 from src/lib/engine/converters/.
 
 | Classification | Count |
 |---|---:|
-| Total converters | 552 |
+| Total converters | 555 |
 | **Bijective candidates** (lossless, same-kind, both directions exist) | 256 |
 | **Bijective candidates missing reverse converter** | 40 |
 | **Bijective candidates missing round-trip test** | 27 |
 | Lossy encoding (same kind, but lossy format) | 121 |
 | Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 79 |
 | Single-action (no reverse possible) | 53 |
-| Unknown formats (need to add to FORMATS table) | 3 |
+| Unknown formats (need to add to FORMATS table) | 6 |
 | Compound id (irregular pattern) | 0 |
 
 ## Action Items
@@ -22,6 +22,9 @@ Generated 2026-06-13 from src/lib/engine/converters/.
 
 The audit script doesn't know about these formats; add them to the FORMATS table in scripts/bijectivity-audit.mjs:
 
+- `pubmed-to-bibtex` (unknown format: pubmed)
+- `pubmed-to-csv` (unknown format: pubmed)
+- `pubmed-to-ris` (unknown format: pubmed)
 - `references-to-bibtex` (unknown format: references)
 - `references-to-csl-json` (unknown format: references)
 - `references-to-ris` (unknown format: references)
@@ -517,6 +520,9 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `properties-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `psd-to-jpg` | lossy-encoding | (`jpg-to-psd` missing) | ✓ | psd or jpg uses lossy encoding |
 | `psd-to-png` | lossy-encoding | (`png-to-psd` missing) | ✓ | psd or png uses lossy encoding |
+| `pubmed-to-bibtex` | unknown-format | (`bibtex-to-pubmed` missing) | ✓ | unknown format: pubmed |
+| `pubmed-to-csv` | unknown-format | (`csv-to-pubmed` missing) | ✓ | unknown format: pubmed |
+| `pubmed-to-ris` | unknown-format | (`ris-to-pubmed` missing) | ✓ | unknown format: pubmed |
 | `qbo-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `qfx-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `qif-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |

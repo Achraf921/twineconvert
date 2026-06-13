@@ -1854,6 +1854,45 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       },
     ],
   },
+  "pubmed-to-ris": {
+    whyConvert:
+      "You exported citations from PubMed using Save with Format: PubMed and got a .txt file your reference manager will not import. This reads that PubMed/MEDLINE text and produces RIS for Zotero, Mendeley, or EndNote.",
+    example:
+      "You ran a literature search on PubMed, selected 50 results, and chose Save → Format: PubMed → a .txt download. Convert it to RIS here and import the file so every article lands in your library with title, authors, journal, year, and DOI.",
+    troubleshooting: [
+      {
+        problem: "It says no PubMed records were found.",
+        solution:
+          "The file must be the PubMed/MEDLINE tagged format (lines like PMID-, TI-, AU-). If you downloaded the CSV format instead, use the csv-to-ris tool. If you used Send to → Citation manager, that .nbib file also works here.",
+      },
+    ],
+  },
+  "pubmed-to-bibtex": {
+    whyConvert:
+      "PubMed does not offer a BibTeX export, but LaTeX and Overleaf need .bib. Save your PubMed results as Format: PubMed (.txt) and convert here to get BibTeX entries with PMID, title, authors, journal, and DOI.",
+    example:
+      "You are writing a paper in Overleaf and your sources are a PubMed search. Export as PubMed format, convert to BibTeX here, paste into references.bib, and cite with \\cite{} keys.",
+    troubleshooting: [
+      {
+        problem: "No records found.",
+        solution:
+          "Use PubMed's Save → Format: PubMed (or Send to → Citation manager for .nbib). The CSV export is a different shape; for that use a csv-to-bibtex route instead.",
+      },
+    ],
+  },
+  "pubmed-to-csv": {
+    whyConvert:
+      "Get your PubMed search results into a spreadsheet for screening, a systematic review, or sharing with co-authors. This turns the PubMed/MEDLINE .txt export into a CSV with one row per article.",
+    example:
+      "For a systematic review you exported 200 PubMed hits as Format: PubMed. Convert to CSV here, open in Excel or Sheets, and screen titles and abstracts in columns with the DOI handy for retrieval.",
+    troubleshooting: [
+      {
+        problem: "Some columns are empty.",
+        solution:
+          "Only the fields present in the export are filled. PubMed records vary in completeness (some lack volume or pages); the title, authors, year, journal, and DOI come through whenever PubMed included them.",
+      },
+    ],
+  },
   "references-to-ris": {
     whyConvert:
       "You have a paper's References section or a pasted bibliography as plain text and want it in Zotero, Mendeley, or EndNote without retyping every entry. This reads a numbered IEEE or APA reference list and produces RIS you can import.",

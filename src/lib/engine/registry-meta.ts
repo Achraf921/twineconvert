@@ -5362,6 +5362,45 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "application/vnd.citationstyles.csl+json",
     "maxFileSizeBytes": 10485760
   },
+  "pubmed-to-ris": {
+    "label": "PubMed → RIS",
+    "accept": [
+      ".txt",
+      ".nbib"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-research-info-systems"
+    ],
+    "toMime": "application/x-research-info-systems",
+    "maxFileSizeBytes": 26214400
+  },
+  "pubmed-to-bibtex": {
+    "label": "PubMed → BibTeX",
+    "accept": [
+      ".txt",
+      ".nbib"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-research-info-systems"
+    ],
+    "toMime": "application/x-bibtex",
+    "maxFileSizeBytes": 26214400
+  },
+  "pubmed-to-csv": {
+    "label": "PubMed → CSV",
+    "accept": [
+      ".txt",
+      ".nbib"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-research-info-systems"
+    ],
+    "toMime": "text/csv",
+    "maxFileSizeBytes": 26214400
+  },
   "bibtex-to-nbib": {
     "label": "BibTeX → NBIB",
     "accept": [

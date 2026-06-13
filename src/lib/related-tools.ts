@@ -200,6 +200,11 @@ const HAND_CURATED_RELATED: Record<string, string[]> = {
   "bencode-to-json": ["json-to-bencode", "json-to-msgpack", "cbor-to-json"],
   "json-to-bencode": ["bencode-to-json", "msgpack-to-json", "json-to-cbor"],
 
+  // ===== PubMed / MEDLINE export parsing =====
+  "pubmed-to-ris":    ["pubmed-to-bibtex", "pubmed-to-csv", "nbib-to-ris"],
+  "pubmed-to-bibtex": ["pubmed-to-ris", "pubmed-to-csv", "nbib-to-bibtex"],
+  "pubmed-to-csv":    ["pubmed-to-ris", "pubmed-to-bibtex", "nbib-to-csv"],
+
   // ===== Reference-list parsing (pasted bibliography -> citation formats) =====
   "references-to-ris":      ["references-to-bibtex", "references-to-csl-json", "csv-to-ris"],
   "references-to-bibtex":   ["references-to-ris", "references-to-csl-json", "csv-to-bibtex"],
