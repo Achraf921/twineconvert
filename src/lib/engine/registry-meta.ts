@@ -1886,6 +1886,222 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "text/x-refworks",
     "maxFileSizeBytes": 104857600
   },
+  "mods-to-bibtex": {
+    "label": "MODS → BibTeX",
+    "accept": [
+      ".xml",
+      ".mods"
+    ],
+    "fromMime": [
+      "application/mods+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "application/x-bibtex",
+    "maxFileSizeBytes": 104857600
+  },
+  "mods-to-ris": {
+    "label": "MODS → RIS",
+    "accept": [
+      ".xml",
+      ".mods"
+    ],
+    "fromMime": [
+      "application/mods+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "application/x-research-info-systems",
+    "maxFileSizeBytes": 104857600
+  },
+  "mods-to-nbib": {
+    "label": "MODS → NBIB",
+    "accept": [
+      ".xml",
+      ".mods"
+    ],
+    "fromMime": [
+      "application/mods+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "application/x-research-info-systems",
+    "maxFileSizeBytes": 104857600
+  },
+  "mods-to-endnote-xml": {
+    "label": "MODS → EndNote XML",
+    "accept": [
+      ".xml",
+      ".mods"
+    ],
+    "fromMime": [
+      "application/mods+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "application/xml",
+    "maxFileSizeBytes": 104857600
+  },
+  "mods-to-csl-json": {
+    "label": "MODS → CSL-JSON",
+    "accept": [
+      ".xml",
+      ".mods"
+    ],
+    "fromMime": [
+      "application/mods+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "application/vnd.citationstyles.csl+json",
+    "maxFileSizeBytes": 104857600
+  },
+  "mods-to-csv": {
+    "label": "MODS → CSV",
+    "accept": [
+      ".xml",
+      ".mods"
+    ],
+    "fromMime": [
+      "application/mods+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "text/csv",
+    "maxFileSizeBytes": 104857600
+  },
+  "mods-to-xlsx": {
+    "label": "MODS → XLSX",
+    "accept": [
+      ".xml",
+      ".mods"
+    ],
+    "fromMime": [
+      "application/mods+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "maxFileSizeBytes": 104857600
+  },
+  "mods-to-markdown": {
+    "label": "MODS → Markdown",
+    "accept": [
+      ".xml",
+      ".mods"
+    ],
+    "fromMime": [
+      "application/mods+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "text/markdown",
+    "maxFileSizeBytes": 104857600
+  },
+  "mods-to-html": {
+    "label": "MODS → HTML",
+    "accept": [
+      ".xml",
+      ".mods"
+    ],
+    "fromMime": [
+      "application/mods+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 104857600
+  },
+  "mods-to-yaml": {
+    "label": "MODS → YAML (CSL)",
+    "accept": [
+      ".xml",
+      ".mods"
+    ],
+    "fromMime": [
+      "application/mods+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "application/x-yaml",
+    "maxFileSizeBytes": 104857600
+  },
+  "bibtex-to-mods": {
+    "label": "BibTeX → MODS",
+    "accept": [
+      ".bib",
+      ".bibtex"
+    ],
+    "fromMime": [
+      "application/x-bibtex",
+      "text/x-bibtex",
+      "text/plain"
+    ],
+    "toMime": "application/mods+xml",
+    "maxFileSizeBytes": 104857600
+  },
+  "ris-to-mods": {
+    "label": "RIS → MODS",
+    "accept": [
+      ".ris"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "application/mods+xml",
+    "maxFileSizeBytes": 104857600
+  },
+  "nbib-to-mods": {
+    "label": "NBIB → MODS",
+    "accept": [
+      ".nbib"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "application/mods+xml",
+    "maxFileSizeBytes": 104857600
+  },
+  "endnote-xml-to-mods": {
+    "label": "EndNote XML → MODS",
+    "accept": [
+      ".xml"
+    ],
+    "fromMime": [
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "application/mods+xml",
+    "maxFileSizeBytes": 104857600
+  },
+  "csl-json-to-mods": {
+    "label": "CSL-JSON → MODS",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/vnd.citationstyles.csl+json",
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "application/mods+xml",
+    "maxFileSizeBytes": 104857600
+  },
+  "csv-to-mods": {
+    "label": "CSV → MODS",
+    "accept": [
+      ".csv"
+    ],
+    "fromMime": [
+      "text/csv",
+      "application/csv",
+      "text/plain"
+    ],
+    "toMime": "application/mods+xml",
+    "maxFileSizeBytes": 104857600
+  },
   "mp3-to-wav": {
     "label": "MP3 → WAV",
     "accept": [

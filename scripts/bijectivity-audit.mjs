@@ -120,6 +120,7 @@ const FORMATS = {
   "endnote-xml": { kind: "data", lossless: true, family: "citation" },
   enw: { kind: "data", lossless: true, family: "citation" },
   refworks: { kind: "data", lossless: true, family: "citation" },
+  mods: { kind: "data", lossless: true, family: "citation" },
   // Web of Science / ISI tagged export: import-only (one-way extraction),
   // so it legitimately has no reverse writer.
   wos: { kind: "data", lossless: false, family: "citation" },

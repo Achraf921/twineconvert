@@ -819,6 +819,16 @@ export const validateRefworks: Validator = async ({ blob, minSize = 6 }) => {
   if (!/^(T1|A1) /m.test(text)) throw new Error("RefWorks has no T1 title or A1 author line");
 };
 
+export const validateMods: Validator = async ({ blob, minSize = 20 }) => {
+  assertMinSize(blob, minSize, "MODS");
+  const text = await readText(blob);
+  if (!/<mods\b/.test(text)) throw new Error("MODS missing a <mods> element");
+  // A real MODS record carries at least a title or a name.
+  if (!/<title>|<namePart/.test(text)) {
+    throw new Error("MODS has no <title> or <namePart> content");
+  }
+};
+
 export const validateHarJson: Validator = async ({ blob, minSize = 20 }) => {
   assertMinSize(blob, minSize, "HAR");
   const text = await readText(blob);
@@ -1190,6 +1200,9 @@ const BY_MIME: Record<string, Validator> = {
 
   // RefWorks tagged format
   "text/x-refworks": validateRefworks,
+
+  // MODS XML (Library of Congress)
+  "application/mods+xml": validateMods,
 };
 
 // Extension-keyed fallback, used when toMime is generic (octet-stream)

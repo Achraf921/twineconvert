@@ -289,6 +289,24 @@ const HAND_CURATED_RELATED: Record<string, string[]> = {
   "csl-json-to-refworks": ["refworks-to-csl-json","csl-json-to-bibtex","csl-json-to-ris"],
   "csv-to-refworks": ["refworks-to-csv","csv-to-bibtex","csv-to-ris"],
 
+  // ===== MODS XML (Library of Congress) =====
+  "mods-to-bibtex": ["bibtex-to-mods","mods-to-ris","mods-to-csv"],
+  "mods-to-ris": ["ris-to-mods","mods-to-bibtex","mods-to-csv"],
+  "mods-to-nbib": ["nbib-to-mods","mods-to-ris","mods-to-bibtex"],
+  "mods-to-endnote-xml": ["endnote-xml-to-mods","mods-to-ris","mods-to-bibtex"],
+  "mods-to-csl-json": ["csl-json-to-mods","mods-to-ris","mods-to-bibtex"],
+  "mods-to-csv": ["csv-to-mods","mods-to-bibtex","mods-to-xlsx"],
+  "mods-to-xlsx": ["mods-to-csv","mods-to-bibtex","ris-to-xlsx"],
+  "mods-to-markdown": ["mods-to-html","mods-to-yaml","mods-to-bibtex"],
+  "mods-to-html": ["mods-to-markdown","mods-to-yaml","mods-to-bibtex"],
+  "mods-to-yaml": ["mods-to-markdown","mods-to-html","mods-to-bibtex"],
+  "bibtex-to-mods": ["mods-to-bibtex","bibtex-to-ris","bibtex-to-csv"],
+  "ris-to-mods": ["mods-to-ris","ris-to-bibtex","ris-to-csv"],
+  "nbib-to-mods": ["mods-to-nbib","nbib-to-bibtex","nbib-to-ris"],
+  "endnote-xml-to-mods": ["mods-to-endnote-xml","endnote-xml-to-bibtex","endnote-xml-to-ris"],
+  "csl-json-to-mods": ["mods-to-csl-json","csl-json-to-bibtex","csl-json-to-ris"],
+  "csv-to-mods": ["mods-to-csv","csv-to-bibtex","csv-to-ris"],
+
   // ===== Chess (fen-to-png + pgn-to-fen rank well, sibling spread) =====
   "fen-to-pgn":  ["pgn-to-fen", "fen-to-png", "pgn-to-csv", "pgn-to-json"],
   "fen-to-png":  ["fen-to-pgn", "pgn-to-fen", "pgn-to-csv"],

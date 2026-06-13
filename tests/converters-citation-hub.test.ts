@@ -354,6 +354,118 @@ describe("citation hub: RefWorks tagged format carries real data", () => {
   });
 });
 
+const MODS_SAMPLE =
+  '<?xml version="1.0" encoding="UTF-8"?>\n' +
+  '<modsCollection xmlns="http://www.loc.gov/mods/v3">\n' +
+  '  <mods version="3.7">\n' +
+  '    <titleInfo><title>Vestibular function in aging adults</title></titleInfo>\n' +
+  '    <name type="personal"><namePart type="family">Smith</namePart><namePart type="given">John</namePart>' +
+  '<role><roleTerm type="text">author</roleTerm></role></name>\n' +
+  '    <name type="personal"><namePart type="family">Doe</namePart><namePart type="given">Jane</namePart></name>\n' +
+  '    <genre>journal article</genre>\n' +
+  '    <originInfo><publisher>Springer</publisher><dateIssued>2006</dateIssued></originInfo>\n' +
+  '    <relatedItem type="host"><titleInfo><title>Journal of Neurology</title></titleInfo>' +
+  '<part><detail type="volume"><number>253</number></detail><detail type="issue"><number>11</number></detail>' +
+  '<extent unit="pages"><start>1499</start><end>1508</end></extent></part></relatedItem>\n' +
+  '    <identifier type="doi">10.1007/s00415-006-0001-x</identifier>\n' +
+  '    <identifier type="issn">1432-1459</identifier>\n' +
+  '    <subject><topic>balance</topic></subject>\n' +
+  '    <abstract>We measured vestibular thresholds.</abstract>\n' +
+  '  </mods>\n' +
+  '</modsCollection>\n';
+
+describe("citation hub: MODS XML carries real data", () => {
+  const mods = () => f("rec.mods.xml", MODS_SAMPLE, "application/mods+xml");
+
+  it("mods-to-bibtex keeps title + DOI", async () => {
+    const bib = await (await run("mods-to-bibtex", mods())).blob.text();
+    expect(bib).toContain("Vestibular function in aging adults");
+    expect(bib).toContain("10.1007/s00415-006-0001-x");
+  });
+
+  it("mods-to-ris keeps title, both family/given authors, year", async () => {
+    const ris = await (await run("mods-to-ris", mods())).blob.text();
+    expect(ris).toMatch(/TI\s+-\s+Vestibular function in aging adults/);
+    expect(ris).toMatch(/AU\s+-\s+Smith, John/);
+    expect(ris).toMatch(/AU\s+-\s+Doe, Jane/);
+    expect(ris).toMatch(/PY\s+-\s+2006/);
+  });
+
+  it("mods-to-csl-json emits title + DOI + container from relatedItem", async () => {
+    const arr = JSON.parse(await (await run("mods-to-csl-json", mods())).blob.text());
+    expect(arr[0].title).toBe("Vestibular function in aging adults");
+    expect(arr[0].DOI).toBe("10.1007/s00415-006-0001-x");
+    expect(arr[0]["container-title"]).toBe("Journal of Neurology");
+  });
+
+  it("mods-to-csv carries the title and a keyword", async () => {
+    const csv = await (await run("mods-to-csv", mods())).blob.text();
+    expect(csv).toContain("Vestibular function in aging adults");
+    expect(csv).toContain("balance");
+  });
+
+  it("mods-to-nbib carries the title", async () => {
+    const nbib = await (await run("mods-to-nbib", mods())).blob.text();
+    expect(nbib).toContain("Vestibular function in aging adults");
+  });
+
+  it("mods-to-xlsx is a zip-backed spreadsheet", async () => {
+    const bytes = new Uint8Array(await (await run("mods-to-xlsx", mods())).blob.arrayBuffer());
+    expect(bytes[0]).toBe(0x50);
+    expect(bytes[1]).toBe(0x4b);
+  });
+
+  it("bibtex-to-mods emits MODS with <title> + <namePart> for the bibtex record", async () => {
+    const r = await run("bibtex-to-mods", f("a.bib", F.bibtex, "application/x-bibtex"));
+    const xml = await r.blob.text();
+    expect(r.blob.type).toContain("mods+xml");
+    expect(xml).toMatch(/<mods\b/);
+    expect(xml).toContain("<title>A Sample Paper</title>");
+    expect(xml).toMatch(/<namePart[^>]*>Smith<\/namePart>/);
+  });
+
+  it("ris-to-mods emits MODS with the RIS title", async () => {
+    const xml = await (await run("ris-to-mods", f("a.ris", F.ris, "application/x-research-info-systems"))).blob.text();
+    expect(xml).toContain("<title>A Sample Paper</title>");
+  });
+
+  it("nbib-to-mods emits MODS with the PubMed title", async () => {
+    const xml = await (await run("nbib-to-mods", f("a.nbib", F.nbibRealPubMed, "application/x-research-info-systems"))).blob.text();
+    expect(xml).toContain("Synaptic plasticity in the mouse hippocampus");
+  });
+
+  it("endnote-xml-to-mods emits MODS with the EndNote title", async () => {
+    const xml = await (await run("endnote-xml-to-mods", f("a.xml", F.endnoteXml, "application/xml"))).blob.text();
+    expect(xml).toContain("EndNote Sample Article");
+  });
+
+  it("csl-json-to-mods emits MODS with the CSL title", async () => {
+    const xml = await (await run("csl-json-to-mods", f("a.json", F.cslJson, "application/json"))).blob.text();
+    expect(xml).toContain("A Sample Paper");
+  });
+
+  it("csv-to-mods emits MODS carrying the CSV title", async () => {
+    const xml = await (await run("csv-to-mods", f("a.csv", CITATION_CSV, "text/csv"))).blob.text();
+    expect(xml).toContain("A Study of Things");
+    expect(xml).toMatch(/<mods\b/);
+  });
+
+  it("round-trip MODS -> RIS -> MODS preserves title + DOI + pages", async () => {
+    const r1 = await run("mods-to-ris", mods());
+    const r2 = await run("ris-to-mods", reFile(await r1.blob.text(), "b.ris", "application/x-research-info-systems"));
+    const xml = await r2.blob.text();
+    expect(xml).toContain("Vestibular function in aging adults");
+    expect(xml).toContain("10.1007/s00415-006-0001-x");
+    expect(xml).toMatch(/<start>1499<\/start>/);
+  });
+
+  it("mods-to-bibtex throws on XML with no MODS records", async () => {
+    await expect(
+      run("mods-to-bibtex", f("e.xml", '<modsCollection xmlns="http://www.loc.gov/mods/v3"></modsCollection>', "application/mods+xml")),
+    ).rejects.toThrow(/No references found/);
+  });
+});
+
 describe("citation hub: empty / invalid inputs fail loudly", () => {
   it("csl-json-to-ris throws on an empty CSL array", async () => {
     await expect(

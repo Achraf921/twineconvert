@@ -113,6 +113,27 @@ const ENW_SAMPLE =
   "%J Journal of Neurology\n%D 2006\n%V 253\n%N 11\n%P 1499-1508\n%@ 1432-1459\n" +
   "%R 10.1007/s00415-006-0001-x\n%K balance\n%X We measured vestibular thresholds.\n%F smith2006\n";
 
+// A real-shaped MODS XML (Library of Congress) document for mods -> X.
+const MODS_SAMPLE =
+  '<?xml version="1.0" encoding="UTF-8"?>\n' +
+  '<modsCollection xmlns="http://www.loc.gov/mods/v3">\n' +
+  '  <mods version="3.7">\n' +
+  '    <titleInfo><title>Vestibular function in aging adults</title></titleInfo>\n' +
+  '    <name type="personal"><namePart type="family">Smith</namePart><namePart type="given">John</namePart>' +
+  '<role><roleTerm type="text">author</roleTerm></role></name>\n' +
+  '    <name type="personal"><namePart type="family">Doe</namePart><namePart type="given">Jane</namePart></name>\n' +
+  '    <genre>journal article</genre>\n' +
+  '    <originInfo><publisher>Springer</publisher><dateIssued>2006</dateIssued></originInfo>\n' +
+  '    <relatedItem type="host"><titleInfo><title>Journal of Neurology</title></titleInfo>' +
+  '<part><detail type="volume"><number>253</number></detail><detail type="issue"><number>11</number></detail>' +
+  '<extent unit="pages"><start>1499</start><end>1508</end></extent></part></relatedItem>\n' +
+  '    <identifier type="doi">10.1007/s00415-006-0001-x</identifier>\n' +
+  '    <identifier type="issn">1432-1459</identifier>\n' +
+  '    <subject><topic>balance</topic></subject>\n' +
+  '    <abstract>We measured vestibular thresholds.</abstract>\n' +
+  '  </mods>\n' +
+  '</modsCollection>\n';
+
 // A real-shaped RefWorks Tagged Format export for the refworks -> X routes.
 const RWS_SAMPLE =
   "RT Journal Article\nA1 Smith, John\nA1 Doe, Jane\nT1 Vestibular function in aging adults\n" +
@@ -340,6 +361,24 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "endnote-xml-to-refworks": { provider: () => text("test.xml", F.endnoteXml, "application/xml"), env: "node" },
   "csl-json-to-refworks": { provider: () => text("test.json", F.cslJson, "application/json"), env: "node" },
   "csv-to-refworks": { provider: () => text("test.csv", CITATION_CSV, "text/csv"), env: "node" },
+
+  // MODS XML (Library of Congress) <-> citation hub
+  "mods-to-bibtex": { provider: () => text("test.mods.xml", MODS_SAMPLE, "application/mods+xml"), env: "node" },
+  "mods-to-ris": { provider: () => text("test.mods.xml", MODS_SAMPLE, "application/mods+xml"), env: "node" },
+  "mods-to-nbib": { provider: () => text("test.mods.xml", MODS_SAMPLE, "application/mods+xml"), env: "node" },
+  "mods-to-endnote-xml": { provider: () => text("test.mods.xml", MODS_SAMPLE, "application/mods+xml"), env: "node" },
+  "mods-to-csl-json": { provider: () => text("test.mods.xml", MODS_SAMPLE, "application/mods+xml"), env: "node" },
+  "mods-to-csv": { provider: () => text("test.mods.xml", MODS_SAMPLE, "application/mods+xml"), env: "node" },
+  "mods-to-xlsx": { provider: () => text("test.mods.xml", MODS_SAMPLE, "application/mods+xml"), env: "node" },
+  "mods-to-markdown": { provider: () => text("test.mods.xml", MODS_SAMPLE, "application/mods+xml"), env: "node" },
+  "mods-to-html": { provider: () => text("test.mods.xml", MODS_SAMPLE, "application/mods+xml"), env: "node" },
+  "mods-to-yaml": { provider: () => text("test.mods.xml", MODS_SAMPLE, "application/mods+xml"), env: "node" },
+  "bibtex-to-mods": { provider: () => text("test.bib", F.bibtex, "application/x-bibtex"), env: "node" },
+  "ris-to-mods": { provider: () => text("test.ris", F.ris, "application/x-research-info-systems"), env: "node" },
+  "nbib-to-mods": { provider: () => text("test.nbib", F.nbibRealPubMed, "application/x-research-info-systems"), env: "node" },
+  "endnote-xml-to-mods": { provider: () => text("test.xml", F.endnoteXml, "application/xml"), env: "node" },
+  "csl-json-to-mods": { provider: () => text("test.json", F.cslJson, "application/json"), env: "node" },
+  "csv-to-mods": { provider: () => text("test.csv", CITATION_CSV, "text/csv"), env: "node" },
   "mp3-to-wav":  { provider: () => Promise.reject(new Error("mp3 fixture pending")), env: "browser" },
   "mp3-to-m4a":  { provider: () => Promise.reject(new Error("mp3 fixture pending")), env: "browser" },
   "mp3-to-flac": { provider: () => Promise.reject(new Error("mp3 fixture pending")), env: "browser" },

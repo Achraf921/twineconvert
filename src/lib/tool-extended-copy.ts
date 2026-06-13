@@ -3781,6 +3781,150 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       { problem: "RefWorks will not import the file.", solution: "In RefWorks choose Import then the RefWorks Tagged Format filter. Each record this produces starts with an RT line and ends before the next blank line." },
     ],
   },
+  "mods-to-bibtex": {
+    whyConvert:
+      "MODS (Metadata Object Description Schema) is the Library of Congress XML format used by DSpace, Fedora, Islandora, and most institutional repositories and catalogs. This converts a MODS record to BibTeX so you can reuse the metadata in a LaTeX or Overleaf bibliography. Title, authors, year, host journal, volume, issue, pages, DOI, ISSN, and subjects all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You exported a record from a repository as MODS XML and need it in BibTeX for a LaTeX or Overleaf bibliography. Drop the .xml here and get BibTeX back.",
+    troubleshooting: [
+      { problem: "Authors or the journal are missing.", solution: "Author names must be in name elements with namePart family/given, and the journal in a relatedItem of type host. Records using only display-form names may not map cleanly." },
+    ],
+  },
+  "mods-to-ris": {
+    whyConvert:
+      "MODS (Metadata Object Description Schema) is the Library of Congress XML format used by DSpace, Fedora, Islandora, and most institutional repositories and catalogs. This converts a MODS record to RIS so you can reuse the metadata in EndNote, Mendeley, or Zotero. Title, authors, year, host journal, volume, issue, pages, DOI, ISSN, and subjects all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You exported a record from a repository as MODS XML and need it in RIS for EndNote, Mendeley, or Zotero. Drop the .xml here and get RIS back.",
+    troubleshooting: [
+      { problem: "Authors or the journal are missing.", solution: "Author names must be in name elements with namePart family/given, and the journal in a relatedItem of type host. Records using only display-form names may not map cleanly." },
+    ],
+  },
+  "mods-to-nbib": {
+    whyConvert:
+      "MODS (Metadata Object Description Schema) is the Library of Congress XML format used by DSpace, Fedora, Islandora, and most institutional repositories and catalogs. This converts a MODS record to NBIB so you can reuse the metadata in a PubMed-style manager. Title, authors, year, host journal, volume, issue, pages, DOI, ISSN, and subjects all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You exported a record from a repository as MODS XML and need it in NBIB for a PubMed-style manager. Drop the .xml here and get NBIB back.",
+    troubleshooting: [
+      { problem: "Authors or the journal are missing.", solution: "Author names must be in name elements with namePart family/given, and the journal in a relatedItem of type host. Records using only display-form names may not map cleanly." },
+    ],
+  },
+  "mods-to-endnote-xml": {
+    whyConvert:
+      "MODS (Metadata Object Description Schema) is the Library of Congress XML format used by DSpace, Fedora, Islandora, and most institutional repositories and catalogs. This converts a MODS record to EndNote XML so you can reuse the metadata in an EndNote XML library. Title, authors, year, host journal, volume, issue, pages, DOI, ISSN, and subjects all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You exported a record from a repository as MODS XML and need it in EndNote XML for an EndNote XML library. Drop the .xml here and get EndNote XML back.",
+    troubleshooting: [
+      { problem: "Authors or the journal are missing.", solution: "Author names must be in name elements with namePart family/given, and the journal in a relatedItem of type host. Records using only display-form names may not map cleanly." },
+    ],
+  },
+  "mods-to-csl-json": {
+    whyConvert:
+      "MODS (Metadata Object Description Schema) is the Library of Congress XML format used by DSpace, Fedora, Islandora, and most institutional repositories and catalogs. This converts a MODS record to CSL-JSON so you can reuse the metadata in Zotero or a pandoc workflow. Title, authors, year, host journal, volume, issue, pages, DOI, ISSN, and subjects all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You exported a record from a repository as MODS XML and need it in CSL-JSON for Zotero or a pandoc workflow. Drop the .xml here and get CSL-JSON back.",
+    troubleshooting: [
+      { problem: "Authors or the journal are missing.", solution: "Author names must be in name elements with namePart family/given, and the journal in a relatedItem of type host. Records using only display-form names may not map cleanly." },
+    ],
+  },
+  "mods-to-csv": {
+    whyConvert:
+      "MODS (Metadata Object Description Schema) is the Library of Congress XML format used by DSpace, Fedora, Islandora, and most institutional repositories and catalogs. This converts a MODS record to CSV so you can reuse the metadata in a spreadsheet. Title, authors, year, host journal, volume, issue, pages, DOI, ISSN, and subjects all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You exported a record from a repository as MODS XML and need it in CSV for a spreadsheet. Drop the .xml here and get CSV back.",
+    troubleshooting: [
+      { problem: "Authors or the journal are missing.", solution: "Author names must be in name elements with namePart family/given, and the journal in a relatedItem of type host. Records using only display-form names may not map cleanly." },
+    ],
+  },
+  "mods-to-xlsx": {
+    whyConvert:
+      "MODS (Metadata Object Description Schema) is the Library of Congress XML format used by DSpace, Fedora, Islandora, and most institutional repositories and catalogs. This converts a MODS record to Excel (XLSX) so you can reuse the metadata in Excel. Title, authors, year, host journal, volume, issue, pages, DOI, ISSN, and subjects all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You exported a record from a repository as MODS XML and need it in Excel (XLSX) for Excel. Drop the .xml here and get Excel (XLSX) back.",
+    troubleshooting: [
+      { problem: "A column is blank for some rows.", solution: "MODS records vary in completeness; the converter fills only the elements the record actually contains." },
+    ],
+  },
+  "mods-to-markdown": {
+    whyConvert:
+      "MODS (Metadata Object Description Schema) is the Library of Congress XML format used by DSpace, Fedora, Islandora, and most institutional repositories and catalogs. This converts a MODS record to Markdown so you can reuse the metadata in an Obsidian note or README. Title, authors, year, host journal, volume, issue, pages, DOI, ISSN, and subjects all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You exported a record from a repository as MODS XML and need it in Markdown for an Obsidian note or README. Drop the .xml here and get Markdown back.",
+    troubleshooting: [
+      { problem: "Authors or the journal are missing.", solution: "Author names must be in name elements with namePart family/given, and the journal in a relatedItem of type host. Records using only display-form names may not map cleanly." },
+    ],
+  },
+  "mods-to-html": {
+    whyConvert:
+      "MODS (Metadata Object Description Schema) is the Library of Congress XML format used by DSpace, Fedora, Islandora, and most institutional repositories and catalogs. This converts a MODS record to HTML so you can reuse the metadata in a webpage. Title, authors, year, host journal, volume, issue, pages, DOI, ISSN, and subjects all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You exported a record from a repository as MODS XML and need it in HTML for a webpage. Drop the .xml here and get HTML back.",
+    troubleshooting: [
+      { problem: "Authors or the journal are missing.", solution: "Author names must be in name elements with namePart family/given, and the journal in a relatedItem of type host. Records using only display-form names may not map cleanly." },
+    ],
+  },
+  "mods-to-yaml": {
+    whyConvert:
+      "MODS (Metadata Object Description Schema) is the Library of Congress XML format used by DSpace, Fedora, Islandora, and most institutional repositories and catalogs. This converts a MODS record to YAML (CSL) so you can reuse the metadata in a Pandoc bibliography. Title, authors, year, host journal, volume, issue, pages, DOI, ISSN, and subjects all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You exported a record from a repository as MODS XML and need it in YAML (CSL) for a Pandoc bibliography. Drop the .xml here and get YAML (CSL) back.",
+    troubleshooting: [
+      { problem: "Authors or the journal are missing.", solution: "Author names must be in name elements with namePart family/given, and the journal in a relatedItem of type host. Records using only display-form names may not map cleanly." },
+    ],
+  },
+  "bibtex-to-mods": {
+    whyConvert:
+      "BibTeX is LaTeX or Overleaf bibliography data; this rewrites it as MODS XML (Library of Congress schema) so you can deposit the records into DSpace, Fedora, or another repository. Goes through the unified Citation model so title, authors, year, journal, pages, and DOI carry across.",
+    example:
+      "You have BibTeX references and your repository ingests MODS. Convert here and load the MODS XML into the repository.",
+    troubleshooting: [
+      { problem: "The repository rejects the MODS.", solution: "The output is MODS v3.7 in the http://www.loc.gov/mods/v3 namespace. If your repository expects a single mods root rather than a modsCollection, extract one mods element, or configure the ingest to accept modsCollection." },
+    ],
+  },
+  "ris-to-mods": {
+    whyConvert:
+      "RIS is EndNote, Mendeley, or Zotero data; this rewrites it as MODS XML (Library of Congress schema) so you can deposit the records into DSpace, Fedora, or another repository. Goes through the unified Citation model so title, authors, year, journal, pages, and DOI carry across.",
+    example:
+      "You have RIS references and your repository ingests MODS. Convert here and load the MODS XML into the repository.",
+    troubleshooting: [
+      { problem: "The repository rejects the MODS.", solution: "The output is MODS v3.7 in the http://www.loc.gov/mods/v3 namespace. If your repository expects a single mods root rather than a modsCollection, extract one mods element, or configure the ingest to accept modsCollection." },
+    ],
+  },
+  "nbib-to-mods": {
+    whyConvert:
+      "NBIB is PubMed-style manager data; this rewrites it as MODS XML (Library of Congress schema) so you can deposit the records into DSpace, Fedora, or another repository. Goes through the unified Citation model so title, authors, year, journal, pages, and DOI carry across.",
+    example:
+      "You have NBIB references and your repository ingests MODS. Convert here and load the MODS XML into the repository.",
+    troubleshooting: [
+      { problem: "The repository rejects the MODS.", solution: "The output is MODS v3.7 in the http://www.loc.gov/mods/v3 namespace. If your repository expects a single mods root rather than a modsCollection, extract one mods element, or configure the ingest to accept modsCollection." },
+    ],
+  },
+  "endnote-xml-to-mods": {
+    whyConvert:
+      "EndNote XML is EndNote XML library data; this rewrites it as MODS XML (Library of Congress schema) so you can deposit the records into DSpace, Fedora, or another repository. Goes through the unified Citation model so title, authors, year, journal, pages, and DOI carry across.",
+    example:
+      "You have EndNote XML references and your repository ingests MODS. Convert here and load the MODS XML into the repository.",
+    troubleshooting: [
+      { problem: "The repository rejects the MODS.", solution: "The output is MODS v3.7 in the http://www.loc.gov/mods/v3 namespace. If your repository expects a single mods root rather than a modsCollection, extract one mods element, or configure the ingest to accept modsCollection." },
+    ],
+  },
+  "csl-json-to-mods": {
+    whyConvert:
+      "CSL-JSON is Zotero or a pandoc workflow data; this rewrites it as MODS XML (Library of Congress schema) so you can deposit the records into DSpace, Fedora, or another repository. Goes through the unified Citation model so title, authors, year, journal, pages, and DOI carry across.",
+    example:
+      "You have CSL-JSON references and your repository ingests MODS. Convert here and load the MODS XML into the repository.",
+    troubleshooting: [
+      { problem: "The repository rejects the MODS.", solution: "The output is MODS v3.7 in the http://www.loc.gov/mods/v3 namespace. If your repository expects a single mods root rather than a modsCollection, extract one mods element, or configure the ingest to accept modsCollection." },
+    ],
+  },
+  "csv-to-mods": {
+    whyConvert:
+      "CSV is a spreadsheet of references; this rewrites it as MODS XML (Library of Congress schema) so you can deposit the records into DSpace, Fedora, or another repository. Goes through the unified Citation model so title, authors, year, journal, pages, and DOI carry across.",
+    example:
+      "You have CSV references and your repository ingests MODS. Convert here and load the MODS XML into the repository.",
+    troubleshooting: [
+      { problem: "The repository rejects the MODS.", solution: "The output is MODS v3.7 in the http://www.loc.gov/mods/v3 namespace. If your repository expects a single mods root rather than a modsCollection, extract one mods element, or configure the ingest to accept modsCollection." },
+    ],
+  },
 };
 
 export function getExtendedCopy(toolId: string): ExtendedCopy | undefined {
