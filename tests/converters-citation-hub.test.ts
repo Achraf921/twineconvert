@@ -249,6 +249,57 @@ describe("citation hub: EndNote ENW carries real data", () => {
   });
 });
 
+const WOS_SAMPLE =
+  "FN Clarivate Analytics Web of Science\nVR 1.0\nPT J\n" +
+  "AU Smith, J\n   Doe, J\nAF Smith, John\n   Doe, Jane\n" +
+  "TI Vestibular function in aging adults\nSO JOURNAL OF NEUROLOGY\nPY 2006\n" +
+  "VL 253\nIS 11\nBP 1499\nEP 1508\nDI 10.1007/s00415-006-0001-x\n" +
+  "DE balance; aging\nAB We measured vestibular thresholds.\nSN 1432-1459\n" +
+  "UT WOS:000241500100001\nER\n\nEF\n";
+
+describe("citation hub: Web of Science carries real data", () => {
+  const wos = () => f("savedrecs.txt", WOS_SAMPLE, "text/plain");
+
+  it("wos-to-bibtex keeps title + DOI", async () => {
+    const bib = await (await run("wos-to-bibtex", wos())).blob.text();
+    expect(bib).toContain("Vestibular function in aging adults");
+    expect(bib).toContain("10.1007/s00415-006-0001-x");
+  });
+
+  it("wos-to-ris keeps title, both full-name authors, year", async () => {
+    const ris = await (await run("wos-to-ris", wos())).blob.text();
+    expect(ris).toMatch(/TI\s+-\s+Vestibular function in aging adults/);
+    expect(ris).toMatch(/AU\s+-\s+Smith, John/);
+    expect(ris).toMatch(/AU\s+-\s+Doe, Jane/);
+    expect(ris).toMatch(/PY\s+-\s+2006/);
+  });
+
+  it("wos-to-csl-json emits a CSL array with title + DOI + journal", async () => {
+    const arr = JSON.parse(await (await run("wos-to-csl-json", wos())).blob.text());
+    expect(arr[0].title).toBe("Vestibular function in aging adults");
+    expect(arr[0].DOI).toBe("10.1007/s00415-006-0001-x");
+    expect(arr[0]["container-title"]).toBe("JOURNAL OF NEUROLOGY");
+  });
+
+  it("wos-to-csv carries the title and keywords", async () => {
+    const csv = await (await run("wos-to-csv", wos())).blob.text();
+    expect(csv).toContain("Vestibular function in aging adults");
+    expect(csv).toContain("balance");
+  });
+
+  it("wos-to-xlsx is a zip-backed spreadsheet", async () => {
+    const bytes = new Uint8Array(await (await run("wos-to-xlsx", wos())).blob.arrayBuffer());
+    expect(bytes[0]).toBe(0x50);
+    expect(bytes[1]).toBe(0x4b);
+  });
+
+  it("wos-to-bibtex throws on input with no records", async () => {
+    await expect(
+      run("wos-to-bibtex", f("e.txt", "just some plain text\nno tags here\n", "text/plain")),
+    ).rejects.toThrow(/No references found/);
+  });
+});
+
 describe("citation hub: empty / invalid inputs fail loudly", () => {
   it("csl-json-to-ris throws on an empty CSL array", async () => {
     await expect(

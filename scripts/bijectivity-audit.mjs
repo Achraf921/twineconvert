@@ -119,6 +119,9 @@ const FORMATS = {
   nbib: { kind: "data", lossless: true, family: "citation" },
   "endnote-xml": { kind: "data", lossless: true, family: "citation" },
   enw: { kind: "data", lossless: true, family: "citation" },
+  // Web of Science / ISI tagged export: import-only (one-way extraction),
+  // so it legitimately has no reverse writer.
+  wos: { kind: "data", lossless: false, family: "citation" },
   // ==== Color palettes ====
   ase: { kind: "palette", lossless: true, family: "design" },
   gpl: { kind: "palette", lossless: true, family: "design" },

@@ -3547,6 +3547,96 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       { problem: "EndNote will not import the file.", solution: "EndNote expects the .enw extension and a %0 reference-type line per record, which this produces. If import still fails, open EndNote's import filter and pick \"EndNote Import\" or \"Refer/BibIX\"." },
     ],
   },
+  "wos-to-bibtex": {
+    whyConvert:
+      "Web of Science (Clarivate) and the older ISI export references as a tagged plain-text file, the format VOSviewer, bibliometrix, and CiteSpace read. This converts that export to BibTeX so you can load the records into a LaTeX or Overleaf bibliography. Title, authors, year, source, volume, issue, pages, DOI, and keywords all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You ran a Web of Science search, chose Export then Plain Text, and need the records in BibTeX for a LaTeX or Overleaf bibliography. Drop the savedrecs.txt here and get BibTeX back.",
+    troubleshooting: [
+      { problem: "The file is not recognized.", solution: "Export from Web of Science as Plain Text (the tagged format starting with FN and PT lines), not as Tab-delimited or BibTeX. Each record must end with an ER line." },
+    ],
+  },
+  "wos-to-ris": {
+    whyConvert:
+      "Web of Science (Clarivate) and the older ISI export references as a tagged plain-text file, the format VOSviewer, bibliometrix, and CiteSpace read. This converts that export to RIS so you can load the records into EndNote, Mendeley, or Zotero. Title, authors, year, source, volume, issue, pages, DOI, and keywords all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You ran a Web of Science search, chose Export then Plain Text, and need the records in RIS for EndNote, Mendeley, or Zotero. Drop the savedrecs.txt here and get RIS back.",
+    troubleshooting: [
+      { problem: "The file is not recognized.", solution: "Export from Web of Science as Plain Text (the tagged format starting with FN and PT lines), not as Tab-delimited or BibTeX. Each record must end with an ER line." },
+    ],
+  },
+  "wos-to-nbib": {
+    whyConvert:
+      "Web of Science (Clarivate) and the older ISI export references as a tagged plain-text file, the format VOSviewer, bibliometrix, and CiteSpace read. This converts that export to NBIB so you can load the records into a PubMed-style citation manager. Title, authors, year, source, volume, issue, pages, DOI, and keywords all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You ran a Web of Science search, chose Export then Plain Text, and need the records in NBIB for a PubMed-style citation manager. Drop the savedrecs.txt here and get NBIB back.",
+    troubleshooting: [
+      { problem: "The file is not recognized.", solution: "Export from Web of Science as Plain Text (the tagged format starting with FN and PT lines), not as Tab-delimited or BibTeX. Each record must end with an ER line." },
+    ],
+  },
+  "wos-to-endnote-xml": {
+    whyConvert:
+      "Web of Science (Clarivate) and the older ISI export references as a tagged plain-text file, the format VOSviewer, bibliometrix, and CiteSpace read. This converts that export to EndNote XML so you can load the records into an EndNote XML library. Title, authors, year, source, volume, issue, pages, DOI, and keywords all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You ran a Web of Science search, chose Export then Plain Text, and need the records in EndNote XML for an EndNote XML library. Drop the savedrecs.txt here and get EndNote XML back.",
+    troubleshooting: [
+      { problem: "The file is not recognized.", solution: "Export from Web of Science as Plain Text (the tagged format starting with FN and PT lines), not as Tab-delimited or BibTeX. Each record must end with an ER line." },
+    ],
+  },
+  "wos-to-csl-json": {
+    whyConvert:
+      "Web of Science (Clarivate) and the older ISI export references as a tagged plain-text file, the format VOSviewer, bibliometrix, and CiteSpace read. This converts that export to CSL-JSON so you can load the records into Zotero or a pandoc workflow. Title, authors, year, source, volume, issue, pages, DOI, and keywords all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You ran a Web of Science search, chose Export then Plain Text, and need the records in CSL-JSON for Zotero or a pandoc workflow. Drop the savedrecs.txt here and get CSL-JSON back.",
+    troubleshooting: [
+      { problem: "The file is not recognized.", solution: "Export from Web of Science as Plain Text (the tagged format starting with FN and PT lines), not as Tab-delimited or BibTeX. Each record must end with an ER line." },
+    ],
+  },
+  "wos-to-csv": {
+    whyConvert:
+      "Web of Science (Clarivate) and the older ISI export references as a tagged plain-text file, the format VOSviewer, bibliometrix, and CiteSpace read. This converts that export to CSV so you can load the records into a spreadsheet for screening or coding. Title, authors, year, source, volume, issue, pages, DOI, and keywords all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You ran a Web of Science search, chose Export then Plain Text, and need the records in CSV for a spreadsheet for screening or coding. Drop the savedrecs.txt here and get CSV back.",
+    troubleshooting: [
+      { problem: "The file is not recognized.", solution: "Export from Web of Science as Plain Text (the tagged format starting with FN and PT lines), not as Tab-delimited or BibTeX. Each record must end with an ER line." },
+    ],
+  },
+  "wos-to-xlsx": {
+    whyConvert:
+      "Web of Science (Clarivate) and the older ISI export references as a tagged plain-text file, the format VOSviewer, bibliometrix, and CiteSpace read. This converts that export to Excel (XLSX) so you can load the records into Excel for systematic-review screening. Title, authors, year, source, volume, issue, pages, DOI, and keywords all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You ran a Web of Science search, chose Export then Plain Text, and need the records in Excel (XLSX) for Excel for systematic-review screening. Drop the savedrecs.txt here and get Excel (XLSX) back.",
+    troubleshooting: [
+      { problem: "A column is blank for some rows.", solution: "Web of Science omits tags it has no data for (a record with no DI has no DOI). The converter fills only what the export contained." },
+    ],
+  },
+  "wos-to-markdown": {
+    whyConvert:
+      "Web of Science (Clarivate) and the older ISI export references as a tagged plain-text file, the format VOSviewer, bibliometrix, and CiteSpace read. This converts that export to Markdown so you can load the records into an Obsidian note or README. Title, authors, year, source, volume, issue, pages, DOI, and keywords all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You ran a Web of Science search, chose Export then Plain Text, and need the records in Markdown for an Obsidian note or README. Drop the savedrecs.txt here and get Markdown back.",
+    troubleshooting: [
+      { problem: "The file is not recognized.", solution: "Export from Web of Science as Plain Text (the tagged format starting with FN and PT lines), not as Tab-delimited or BibTeX. Each record must end with an ER line." },
+    ],
+  },
+  "wos-to-html": {
+    whyConvert:
+      "Web of Science (Clarivate) and the older ISI export references as a tagged plain-text file, the format VOSviewer, bibliometrix, and CiteSpace read. This converts that export to HTML so you can load the records into a webpage. Title, authors, year, source, volume, issue, pages, DOI, and keywords all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You ran a Web of Science search, chose Export then Plain Text, and need the records in HTML for a webpage. Drop the savedrecs.txt here and get HTML back.",
+    troubleshooting: [
+      { problem: "The file is not recognized.", solution: "Export from Web of Science as Plain Text (the tagged format starting with FN and PT lines), not as Tab-delimited or BibTeX. Each record must end with an ER line." },
+    ],
+  },
+  "wos-to-yaml": {
+    whyConvert:
+      "Web of Science (Clarivate) and the older ISI export references as a tagged plain-text file, the format VOSviewer, bibliometrix, and CiteSpace read. This converts that export to YAML (CSL) so you can load the records into a Pandoc bibliography. Title, authors, year, source, volume, issue, pages, DOI, and keywords all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You ran a Web of Science search, chose Export then Plain Text, and need the records in YAML (CSL) for a Pandoc bibliography. Drop the savedrecs.txt here and get YAML (CSL) back.",
+    troubleshooting: [
+      { problem: "The file is not recognized.", solution: "Export from Web of Science as Plain Text (the tagged format starting with FN and PT lines), not as Tab-delimited or BibTeX. Each record must end with an ER line." },
+    ],
+  },
 };
 
 export function getExtendedCopy(toolId: string): ExtendedCopy | undefined {

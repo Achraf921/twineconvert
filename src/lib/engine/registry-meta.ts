@@ -1540,6 +1540,146 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "application/x-endnote-refer",
     "maxFileSizeBytes": 104857600
   },
+  "wos-to-bibtex": {
+    "label": "Web of Science → BibTeX",
+    "accept": [
+      ".txt",
+      ".ciw",
+      ".isi"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-inst-for-scientific-info"
+    ],
+    "toMime": "application/x-bibtex",
+    "maxFileSizeBytes": 104857600
+  },
+  "wos-to-ris": {
+    "label": "Web of Science → RIS",
+    "accept": [
+      ".txt",
+      ".ciw",
+      ".isi"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-inst-for-scientific-info"
+    ],
+    "toMime": "application/x-research-info-systems",
+    "maxFileSizeBytes": 104857600
+  },
+  "wos-to-nbib": {
+    "label": "Web of Science → NBIB",
+    "accept": [
+      ".txt",
+      ".ciw",
+      ".isi"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-inst-for-scientific-info"
+    ],
+    "toMime": "application/x-research-info-systems",
+    "maxFileSizeBytes": 104857600
+  },
+  "wos-to-endnote-xml": {
+    "label": "Web of Science → EndNote XML",
+    "accept": [
+      ".txt",
+      ".ciw",
+      ".isi"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-inst-for-scientific-info"
+    ],
+    "toMime": "application/xml",
+    "maxFileSizeBytes": 104857600
+  },
+  "wos-to-csl-json": {
+    "label": "Web of Science → CSL-JSON",
+    "accept": [
+      ".txt",
+      ".ciw",
+      ".isi"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-inst-for-scientific-info"
+    ],
+    "toMime": "application/vnd.citationstyles.csl+json",
+    "maxFileSizeBytes": 104857600
+  },
+  "wos-to-csv": {
+    "label": "Web of Science → CSV",
+    "accept": [
+      ".txt",
+      ".ciw",
+      ".isi"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-inst-for-scientific-info"
+    ],
+    "toMime": "text/csv",
+    "maxFileSizeBytes": 104857600
+  },
+  "wos-to-xlsx": {
+    "label": "Web of Science → XLSX",
+    "accept": [
+      ".txt",
+      ".ciw",
+      ".isi"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-inst-for-scientific-info"
+    ],
+    "toMime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "maxFileSizeBytes": 104857600
+  },
+  "wos-to-markdown": {
+    "label": "Web of Science → Markdown",
+    "accept": [
+      ".txt",
+      ".ciw",
+      ".isi"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-inst-for-scientific-info"
+    ],
+    "toMime": "text/markdown",
+    "maxFileSizeBytes": 104857600
+  },
+  "wos-to-html": {
+    "label": "Web of Science → HTML",
+    "accept": [
+      ".txt",
+      ".ciw",
+      ".isi"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-inst-for-scientific-info"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 104857600
+  },
+  "wos-to-yaml": {
+    "label": "Web of Science → YAML (CSL)",
+    "accept": [
+      ".txt",
+      ".ciw",
+      ".isi"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-inst-for-scientific-info"
+    ],
+    "toMime": "application/x-yaml",
+    "maxFileSizeBytes": 104857600
+  },
   "mp3-to-wav": {
     "label": "MP3 → WAV",
     "accept": [

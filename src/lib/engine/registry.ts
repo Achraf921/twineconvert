@@ -311,6 +311,28 @@ export const registry: Record<string, ConverterLoader> = {
   "csv-to-enw": () =>
     import("./converters/csv-to-enw").then((m) => m.default),
 
+  // Web of Science / ISI tagged export (import-only) -> citation hub
+  "wos-to-bibtex": () =>
+    import("./converters/wos-to-bibtex").then((m) => m.default),
+  "wos-to-ris": () =>
+    import("./converters/wos-to-ris").then((m) => m.default),
+  "wos-to-nbib": () =>
+    import("./converters/wos-to-nbib").then((m) => m.default),
+  "wos-to-endnote-xml": () =>
+    import("./converters/wos-to-endnote-xml").then((m) => m.default),
+  "wos-to-csl-json": () =>
+    import("./converters/wos-to-csl-json").then((m) => m.default),
+  "wos-to-csv": () =>
+    import("./converters/wos-to-csv").then((m) => m.default),
+  "wos-to-xlsx": () =>
+    import("./converters/wos-to-xlsx").then((m) => m.default),
+  "wos-to-markdown": () =>
+    import("./converters/wos-to-markdown").then((m) => m.default),
+  "wos-to-html": () =>
+    import("./converters/wos-to-html").then((m) => m.default),
+  "wos-to-yaml": () =>
+    import("./converters/wos-to-yaml").then((m) => m.default),
+
   "mp3-to-wav": () =>
     import("./converters/mp3-to-wav").then((m) => m.default),
   "wav-to-mp3": () =>

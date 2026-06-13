@@ -113,6 +113,15 @@ const ENW_SAMPLE =
   "%J Journal of Neurology\n%D 2006\n%V 253\n%N 11\n%P 1499-1508\n%@ 1432-1459\n" +
   "%R 10.1007/s00415-006-0001-x\n%K balance\n%X We measured vestibular thresholds.\n%F smith2006\n";
 
+// A real-shaped Web of Science / ISI tagged export for the wos -> X routes.
+const WOS_SAMPLE =
+  "FN Clarivate Analytics Web of Science\nVR 1.0\nPT J\n" +
+  "AU Smith, J\n   Doe, J\nAF Smith, John\n   Doe, Jane\n" +
+  "TI Vestibular function in aging adults\nSO JOURNAL OF NEUROLOGY\nPY 2006\n" +
+  "VL 253\nIS 11\nBP 1499\nEP 1508\nDI 10.1007/s00415-006-0001-x\n" +
+  "DE balance; aging\nAB We measured vestibular thresholds.\nSN 1432-1459\n" +
+  "UT WOS:000241500100001\nER\n\nEF\n";
+
 // ============================================================================
 // Registry: converter id → fixture spec
 //
@@ -294,6 +303,18 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "endnote-xml-to-enw": { provider: () => text("test.xml", F.endnoteXml, "application/xml"), env: "node" },
   "csl-json-to-enw": { provider: () => text("test.json", F.cslJson, "application/json"), env: "node" },
   "csv-to-enw": { provider: () => text("test.csv", CITATION_CSV, "text/csv"), env: "node" },
+
+  // Web of Science / ISI tagged export (import-only)
+  "wos-to-bibtex": { provider: () => text("savedrecs.txt", WOS_SAMPLE, "text/plain"), env: "node" },
+  "wos-to-ris": { provider: () => text("savedrecs.txt", WOS_SAMPLE, "text/plain"), env: "node" },
+  "wos-to-nbib": { provider: () => text("savedrecs.txt", WOS_SAMPLE, "text/plain"), env: "node" },
+  "wos-to-endnote-xml": { provider: () => text("savedrecs.txt", WOS_SAMPLE, "text/plain"), env: "node" },
+  "wos-to-csl-json": { provider: () => text("savedrecs.txt", WOS_SAMPLE, "text/plain"), env: "node" },
+  "wos-to-csv": { provider: () => text("savedrecs.txt", WOS_SAMPLE, "text/plain"), env: "node" },
+  "wos-to-xlsx": { provider: () => text("savedrecs.txt", WOS_SAMPLE, "text/plain"), env: "node" },
+  "wos-to-markdown": { provider: () => text("savedrecs.txt", WOS_SAMPLE, "text/plain"), env: "node" },
+  "wos-to-html": { provider: () => text("savedrecs.txt", WOS_SAMPLE, "text/plain"), env: "node" },
+  "wos-to-yaml": { provider: () => text("savedrecs.txt", WOS_SAMPLE, "text/plain"), env: "node" },
   "mp3-to-wav":  { provider: () => Promise.reject(new Error("mp3 fixture pending")), env: "browser" },
   "mp3-to-m4a":  { provider: () => Promise.reject(new Error("mp3 fixture pending")), env: "browser" },
   "mp3-to-flac": { provider: () => Promise.reject(new Error("mp3 fixture pending")), env: "browser" },

@@ -6,12 +6,12 @@ Generated 2026-06-13 from src/lib/engine/converters/.
 
 | Classification | Count |
 |---|---:|
-| Total converters | 429 |
+| Total converters | 439 |
 | **Bijective candidates** (lossless, same-kind, both directions exist) | 204 |
 | **Bijective candidates missing reverse converter** | 28 |
 | **Bijective candidates missing round-trip test** | 15 |
-| Lossy encoding (same kind, but lossy format) | 85 |
-| Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 59 |
+| Lossy encoding (same kind, but lossy format) | 93 |
+| Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 61 |
 | Single-action (no reverse possible) | 53 |
 | Unknown formats (need to add to FORMATS table) | 0 |
 | Compound id (irregular pattern) | 0 |
@@ -491,6 +491,16 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `wma-to-mp3` | lossy-encoding | (`mp3-to-wma` missing) | n/a | wma or mp3 uses lossy encoding |
 | `wmv-to-mp4` | lossy-encoding | (`mp4-to-wmv` missing) | n/a | wmv or mp4 uses lossy encoding |
 | `woff-to-ttf` | bijective-candidate | ✓ | ✗ MISSING | both lossless font formats; should round-trip cleanly |
+| `wos-to-bibtex` | lossy-encoding | (`bibtex-to-wos` missing) | ✓ | wos or bibtex uses lossy encoding |
+| `wos-to-csl-json` | lossy-encoding | (`csl-json-to-wos` missing) | ✓ | wos or csl-json uses lossy encoding |
+| `wos-to-csv` | lossy-encoding | (`csv-to-wos` missing) | ✓ | wos or csv uses lossy encoding |
+| `wos-to-endnote-xml` | lossy-encoding | (`endnote-xml-to-wos` missing) | n/a | wos or endnote-xml uses lossy encoding |
+| `wos-to-html` | cross-kind | (`html-to-wos` missing) | n/a | data -> doc: cross-domain, inherently lossy |
+| `wos-to-markdown` | cross-kind | (`markdown-to-wos` missing) | n/a | data -> doc: cross-domain, inherently lossy |
+| `wos-to-nbib` | lossy-encoding | (`nbib-to-wos` missing) | n/a | wos or nbib uses lossy encoding |
+| `wos-to-ris` | lossy-encoding | (`ris-to-wos` missing) | ✓ | wos or ris uses lossy encoding |
+| `wos-to-xlsx` | lossy-encoding | (`xlsx-to-wos` missing) | ✓ | wos or xlsx uses lossy encoding |
+| `wos-to-yaml` | lossy-encoding | (`yaml-to-wos` missing) | n/a | wos or yaml uses lossy encoding |
 | `xlsx-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `xlsx-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `xlsx-to-ods` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |

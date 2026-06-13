@@ -259,6 +259,18 @@ const HAND_CURATED_RELATED: Record<string, string[]> = {
   "csl-json-to-enw": ["enw-to-csl-json","csl-json-to-bibtex","csl-json-to-ris"],
   "csv-to-enw": ["enw-to-csv","csv-to-bibtex","csv-to-ris"],
 
+  // ===== Web of Science / ISI tagged export (import-only) =====
+  "wos-to-bibtex": ["wos-to-ris","wos-to-csv","wos-to-endnote-xml"],
+  "wos-to-ris": ["wos-to-bibtex","wos-to-csv","wos-to-endnote-xml"],
+  "wos-to-nbib": ["wos-to-ris","wos-to-bibtex","wos-to-csv"],
+  "wos-to-endnote-xml": ["wos-to-ris","wos-to-bibtex","wos-to-csv"],
+  "wos-to-csl-json": ["wos-to-ris","wos-to-bibtex","wos-to-csv"],
+  "wos-to-csv": ["wos-to-xlsx","wos-to-bibtex","wos-to-ris"],
+  "wos-to-xlsx": ["wos-to-csv","wos-to-bibtex","wos-to-ris"],
+  "wos-to-markdown": ["wos-to-html","wos-to-yaml","wos-to-bibtex"],
+  "wos-to-html": ["wos-to-markdown","wos-to-yaml","wos-to-bibtex"],
+  "wos-to-yaml": ["wos-to-markdown","wos-to-html","wos-to-bibtex"],
+
   // ===== Chess (fen-to-png + pgn-to-fen rank well, sibling spread) =====
   "fen-to-pgn":  ["pgn-to-fen", "fen-to-png", "pgn-to-csv", "pgn-to-json"],
   "fen-to-png":  ["fen-to-pgn", "pgn-to-fen", "pgn-to-csv"],
