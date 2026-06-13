@@ -271,6 +271,24 @@ const HAND_CURATED_RELATED: Record<string, string[]> = {
   "wos-to-html": ["wos-to-markdown","wos-to-yaml","wos-to-bibtex"],
   "wos-to-yaml": ["wos-to-markdown","wos-to-html","wos-to-bibtex"],
 
+  // ===== RefWorks tagged format =====
+  "refworks-to-bibtex": ["bibtex-to-refworks","refworks-to-ris","refworks-to-csv"],
+  "refworks-to-ris": ["ris-to-refworks","refworks-to-bibtex","refworks-to-csv"],
+  "refworks-to-nbib": ["nbib-to-refworks","refworks-to-ris","refworks-to-bibtex"],
+  "refworks-to-endnote-xml": ["endnote-xml-to-refworks","refworks-to-ris","refworks-to-bibtex"],
+  "refworks-to-csl-json": ["csl-json-to-refworks","refworks-to-ris","refworks-to-bibtex"],
+  "refworks-to-csv": ["csv-to-refworks","refworks-to-bibtex","refworks-to-xlsx"],
+  "refworks-to-xlsx": ["refworks-to-csv","refworks-to-bibtex","ris-to-xlsx"],
+  "refworks-to-markdown": ["refworks-to-html","refworks-to-yaml","refworks-to-bibtex"],
+  "refworks-to-html": ["refworks-to-markdown","refworks-to-yaml","refworks-to-bibtex"],
+  "refworks-to-yaml": ["refworks-to-markdown","refworks-to-html","refworks-to-bibtex"],
+  "bibtex-to-refworks": ["refworks-to-bibtex","bibtex-to-ris","bibtex-to-csv"],
+  "ris-to-refworks": ["refworks-to-ris","ris-to-bibtex","ris-to-csv"],
+  "nbib-to-refworks": ["refworks-to-nbib","nbib-to-bibtex","nbib-to-ris"],
+  "endnote-xml-to-refworks": ["refworks-to-endnote-xml","endnote-xml-to-bibtex","endnote-xml-to-ris"],
+  "csl-json-to-refworks": ["refworks-to-csl-json","csl-json-to-bibtex","csl-json-to-ris"],
+  "csv-to-refworks": ["refworks-to-csv","csv-to-bibtex","csv-to-ris"],
+
   // ===== Chess (fen-to-png + pgn-to-fen rank well, sibling spread) =====
   "fen-to-pgn":  ["pgn-to-fen", "fen-to-png", "pgn-to-csv", "pgn-to-json"],
   "fen-to-png":  ["fen-to-pgn", "pgn-to-fen", "pgn-to-csv"],

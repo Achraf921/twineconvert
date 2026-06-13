@@ -1680,6 +1680,212 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "application/x-yaml",
     "maxFileSizeBytes": 104857600
   },
+  "refworks-to-bibtex": {
+    "label": "RefWorks → BibTeX",
+    "accept": [
+      ".txt",
+      ".rwt"
+    ],
+    "fromMime": [
+      "text/plain",
+      "text/x-refworks"
+    ],
+    "toMime": "application/x-bibtex",
+    "maxFileSizeBytes": 104857600
+  },
+  "refworks-to-ris": {
+    "label": "RefWorks → RIS",
+    "accept": [
+      ".txt",
+      ".rwt"
+    ],
+    "fromMime": [
+      "text/plain",
+      "text/x-refworks"
+    ],
+    "toMime": "application/x-research-info-systems",
+    "maxFileSizeBytes": 104857600
+  },
+  "refworks-to-nbib": {
+    "label": "RefWorks → NBIB",
+    "accept": [
+      ".txt",
+      ".rwt"
+    ],
+    "fromMime": [
+      "text/plain",
+      "text/x-refworks"
+    ],
+    "toMime": "application/x-research-info-systems",
+    "maxFileSizeBytes": 104857600
+  },
+  "refworks-to-endnote-xml": {
+    "label": "RefWorks → EndNote XML",
+    "accept": [
+      ".txt",
+      ".rwt"
+    ],
+    "fromMime": [
+      "text/plain",
+      "text/x-refworks"
+    ],
+    "toMime": "application/xml",
+    "maxFileSizeBytes": 104857600
+  },
+  "refworks-to-csl-json": {
+    "label": "RefWorks → CSL-JSON",
+    "accept": [
+      ".txt",
+      ".rwt"
+    ],
+    "fromMime": [
+      "text/plain",
+      "text/x-refworks"
+    ],
+    "toMime": "application/vnd.citationstyles.csl+json",
+    "maxFileSizeBytes": 104857600
+  },
+  "refworks-to-csv": {
+    "label": "RefWorks → CSV",
+    "accept": [
+      ".txt",
+      ".rwt"
+    ],
+    "fromMime": [
+      "text/plain",
+      "text/x-refworks"
+    ],
+    "toMime": "text/csv",
+    "maxFileSizeBytes": 104857600
+  },
+  "refworks-to-xlsx": {
+    "label": "RefWorks → XLSX",
+    "accept": [
+      ".txt",
+      ".rwt"
+    ],
+    "fromMime": [
+      "text/plain",
+      "text/x-refworks"
+    ],
+    "toMime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "maxFileSizeBytes": 104857600
+  },
+  "refworks-to-markdown": {
+    "label": "RefWorks → Markdown",
+    "accept": [
+      ".txt",
+      ".rwt"
+    ],
+    "fromMime": [
+      "text/plain",
+      "text/x-refworks"
+    ],
+    "toMime": "text/markdown",
+    "maxFileSizeBytes": 104857600
+  },
+  "refworks-to-html": {
+    "label": "RefWorks → HTML",
+    "accept": [
+      ".txt",
+      ".rwt"
+    ],
+    "fromMime": [
+      "text/plain",
+      "text/x-refworks"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 104857600
+  },
+  "refworks-to-yaml": {
+    "label": "RefWorks → YAML (CSL)",
+    "accept": [
+      ".txt",
+      ".rwt"
+    ],
+    "fromMime": [
+      "text/plain",
+      "text/x-refworks"
+    ],
+    "toMime": "application/x-yaml",
+    "maxFileSizeBytes": 104857600
+  },
+  "bibtex-to-refworks": {
+    "label": "BibTeX → RefWorks",
+    "accept": [
+      ".bib",
+      ".bibtex"
+    ],
+    "fromMime": [
+      "application/x-bibtex",
+      "text/x-bibtex",
+      "text/plain"
+    ],
+    "toMime": "text/x-refworks",
+    "maxFileSizeBytes": 104857600
+  },
+  "ris-to-refworks": {
+    "label": "RIS → RefWorks",
+    "accept": [
+      ".ris"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "text/x-refworks",
+    "maxFileSizeBytes": 104857600
+  },
+  "nbib-to-refworks": {
+    "label": "NBIB → RefWorks",
+    "accept": [
+      ".nbib"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "text/x-refworks",
+    "maxFileSizeBytes": 104857600
+  },
+  "endnote-xml-to-refworks": {
+    "label": "EndNote XML → RefWorks",
+    "accept": [
+      ".xml"
+    ],
+    "fromMime": [
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "text/x-refworks",
+    "maxFileSizeBytes": 104857600
+  },
+  "csl-json-to-refworks": {
+    "label": "CSL-JSON → RefWorks",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/vnd.citationstyles.csl+json",
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "text/x-refworks",
+    "maxFileSizeBytes": 104857600
+  },
+  "csv-to-refworks": {
+    "label": "CSV → RefWorks",
+    "accept": [
+      ".csv"
+    ],
+    "fromMime": [
+      "text/csv",
+      "application/csv",
+      "text/plain"
+    ],
+    "toMime": "text/x-refworks",
+    "maxFileSizeBytes": 104857600
+  },
   "mp3-to-wav": {
     "label": "MP3 → WAV",
     "accept": [

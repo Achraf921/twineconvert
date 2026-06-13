@@ -3637,6 +3637,150 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       { problem: "The file is not recognized.", solution: "Export from Web of Science as Plain Text (the tagged format starting with FN and PT lines), not as Tab-delimited or BibTeX. Each record must end with an ER line." },
     ],
   },
+  "refworks-to-bibtex": {
+    whyConvert:
+      "RefWorks (ProQuest) is the institutional reference manager many university libraries provide; it exports a tagged text file (RT, A1, T1, ...). This converts that export to BibTeX so you can load the references into a LaTeX or Overleaf bibliography. Title, authors, year, journal, volume, issue, pages, DOI, and keywords all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You exported references from RefWorks as a tagged text file and need them in BibTeX for a LaTeX or Overleaf bibliography. Drop the file here and get BibTeX back.",
+    troubleshooting: [
+      { problem: "The file is not recognized.", solution: "Export from RefWorks in the Tagged Format (records begin with an RT line), not RIS or BibTeX. Each record needs an RT reference-type line." },
+    ],
+  },
+  "refworks-to-ris": {
+    whyConvert:
+      "RefWorks (ProQuest) is the institutional reference manager many university libraries provide; it exports a tagged text file (RT, A1, T1, ...). This converts that export to RIS so you can load the references into EndNote, Mendeley, or Zotero. Title, authors, year, journal, volume, issue, pages, DOI, and keywords all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You exported references from RefWorks as a tagged text file and need them in RIS for EndNote, Mendeley, or Zotero. Drop the file here and get RIS back.",
+    troubleshooting: [
+      { problem: "The file is not recognized.", solution: "Export from RefWorks in the Tagged Format (records begin with an RT line), not RIS or BibTeX. Each record needs an RT reference-type line." },
+    ],
+  },
+  "refworks-to-nbib": {
+    whyConvert:
+      "RefWorks (ProQuest) is the institutional reference manager many university libraries provide; it exports a tagged text file (RT, A1, T1, ...). This converts that export to NBIB so you can load the references into a PubMed-style manager. Title, authors, year, journal, volume, issue, pages, DOI, and keywords all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You exported references from RefWorks as a tagged text file and need them in NBIB for a PubMed-style manager. Drop the file here and get NBIB back.",
+    troubleshooting: [
+      { problem: "The file is not recognized.", solution: "Export from RefWorks in the Tagged Format (records begin with an RT line), not RIS or BibTeX. Each record needs an RT reference-type line." },
+    ],
+  },
+  "refworks-to-endnote-xml": {
+    whyConvert:
+      "RefWorks (ProQuest) is the institutional reference manager many university libraries provide; it exports a tagged text file (RT, A1, T1, ...). This converts that export to EndNote XML so you can load the references into an EndNote XML library. Title, authors, year, journal, volume, issue, pages, DOI, and keywords all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You exported references from RefWorks as a tagged text file and need them in EndNote XML for an EndNote XML library. Drop the file here and get EndNote XML back.",
+    troubleshooting: [
+      { problem: "The file is not recognized.", solution: "Export from RefWorks in the Tagged Format (records begin with an RT line), not RIS or BibTeX. Each record needs an RT reference-type line." },
+    ],
+  },
+  "refworks-to-csl-json": {
+    whyConvert:
+      "RefWorks (ProQuest) is the institutional reference manager many university libraries provide; it exports a tagged text file (RT, A1, T1, ...). This converts that export to CSL-JSON so you can load the references into Zotero or a pandoc workflow. Title, authors, year, journal, volume, issue, pages, DOI, and keywords all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You exported references from RefWorks as a tagged text file and need them in CSL-JSON for Zotero or a pandoc workflow. Drop the file here and get CSL-JSON back.",
+    troubleshooting: [
+      { problem: "The file is not recognized.", solution: "Export from RefWorks in the Tagged Format (records begin with an RT line), not RIS or BibTeX. Each record needs an RT reference-type line." },
+    ],
+  },
+  "refworks-to-csv": {
+    whyConvert:
+      "RefWorks (ProQuest) is the institutional reference manager many university libraries provide; it exports a tagged text file (RT, A1, T1, ...). This converts that export to CSV so you can load the references into a spreadsheet. Title, authors, year, journal, volume, issue, pages, DOI, and keywords all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You exported references from RefWorks as a tagged text file and need them in CSV for a spreadsheet. Drop the file here and get CSV back.",
+    troubleshooting: [
+      { problem: "The file is not recognized.", solution: "Export from RefWorks in the Tagged Format (records begin with an RT line), not RIS or BibTeX. Each record needs an RT reference-type line." },
+    ],
+  },
+  "refworks-to-xlsx": {
+    whyConvert:
+      "RefWorks (ProQuest) is the institutional reference manager many university libraries provide; it exports a tagged text file (RT, A1, T1, ...). This converts that export to Excel (XLSX) so you can load the references into Excel. Title, authors, year, journal, volume, issue, pages, DOI, and keywords all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You exported references from RefWorks as a tagged text file and need them in Excel (XLSX) for Excel. Drop the file here and get Excel (XLSX) back.",
+    troubleshooting: [
+      { problem: "A column is blank for some rows.", solution: "RefWorks omits tags it has no value for; the converter fills only the fields the export contained." },
+    ],
+  },
+  "refworks-to-markdown": {
+    whyConvert:
+      "RefWorks (ProQuest) is the institutional reference manager many university libraries provide; it exports a tagged text file (RT, A1, T1, ...). This converts that export to Markdown so you can load the references into an Obsidian note or README. Title, authors, year, journal, volume, issue, pages, DOI, and keywords all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You exported references from RefWorks as a tagged text file and need them in Markdown for an Obsidian note or README. Drop the file here and get Markdown back.",
+    troubleshooting: [
+      { problem: "The file is not recognized.", solution: "Export from RefWorks in the Tagged Format (records begin with an RT line), not RIS or BibTeX. Each record needs an RT reference-type line." },
+    ],
+  },
+  "refworks-to-html": {
+    whyConvert:
+      "RefWorks (ProQuest) is the institutional reference manager many university libraries provide; it exports a tagged text file (RT, A1, T1, ...). This converts that export to HTML so you can load the references into a webpage. Title, authors, year, journal, volume, issue, pages, DOI, and keywords all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You exported references from RefWorks as a tagged text file and need them in HTML for a webpage. Drop the file here and get HTML back.",
+    troubleshooting: [
+      { problem: "The file is not recognized.", solution: "Export from RefWorks in the Tagged Format (records begin with an RT line), not RIS or BibTeX. Each record needs an RT reference-type line." },
+    ],
+  },
+  "refworks-to-yaml": {
+    whyConvert:
+      "RefWorks (ProQuest) is the institutional reference manager many university libraries provide; it exports a tagged text file (RT, A1, T1, ...). This converts that export to YAML (CSL) so you can load the references into a Pandoc bibliography. Title, authors, year, journal, volume, issue, pages, DOI, and keywords all carry across. Runs in your browser, nothing is uploaded.",
+    example:
+      "You exported references from RefWorks as a tagged text file and need them in YAML (CSL) for a Pandoc bibliography. Drop the file here and get YAML (CSL) back.",
+    troubleshooting: [
+      { problem: "The file is not recognized.", solution: "Export from RefWorks in the Tagged Format (records begin with an RT line), not RIS or BibTeX. Each record needs an RT reference-type line." },
+    ],
+  },
+  "bibtex-to-refworks": {
+    whyConvert:
+      "BibTeX is LaTeX or Overleaf bibliography data; this rewrites it as a RefWorks tagged file you can import into RefWorks. Goes through the unified Citation model so title, authors, year, journal, pages, and DOI carry across.",
+    example:
+      "You have BibTeX references and your institution uses RefWorks. Convert here and import the tagged file into RefWorks.",
+    troubleshooting: [
+      { problem: "RefWorks will not import the file.", solution: "In RefWorks choose Import then the RefWorks Tagged Format filter. Each record this produces starts with an RT line and ends before the next blank line." },
+    ],
+  },
+  "ris-to-refworks": {
+    whyConvert:
+      "RIS is EndNote, Mendeley, or Zotero data; this rewrites it as a RefWorks tagged file you can import into RefWorks. Goes through the unified Citation model so title, authors, year, journal, pages, and DOI carry across.",
+    example:
+      "You have RIS references and your institution uses RefWorks. Convert here and import the tagged file into RefWorks.",
+    troubleshooting: [
+      { problem: "RefWorks will not import the file.", solution: "In RefWorks choose Import then the RefWorks Tagged Format filter. Each record this produces starts with an RT line and ends before the next blank line." },
+    ],
+  },
+  "nbib-to-refworks": {
+    whyConvert:
+      "NBIB is PubMed-style manager data; this rewrites it as a RefWorks tagged file you can import into RefWorks. Goes through the unified Citation model so title, authors, year, journal, pages, and DOI carry across.",
+    example:
+      "You have NBIB references and your institution uses RefWorks. Convert here and import the tagged file into RefWorks.",
+    troubleshooting: [
+      { problem: "RefWorks will not import the file.", solution: "In RefWorks choose Import then the RefWorks Tagged Format filter. Each record this produces starts with an RT line and ends before the next blank line." },
+    ],
+  },
+  "endnote-xml-to-refworks": {
+    whyConvert:
+      "EndNote XML is EndNote XML library data; this rewrites it as a RefWorks tagged file you can import into RefWorks. Goes through the unified Citation model so title, authors, year, journal, pages, and DOI carry across.",
+    example:
+      "You have EndNote XML references and your institution uses RefWorks. Convert here and import the tagged file into RefWorks.",
+    troubleshooting: [
+      { problem: "RefWorks will not import the file.", solution: "In RefWorks choose Import then the RefWorks Tagged Format filter. Each record this produces starts with an RT line and ends before the next blank line." },
+    ],
+  },
+  "csl-json-to-refworks": {
+    whyConvert:
+      "CSL-JSON is Zotero or a pandoc workflow data; this rewrites it as a RefWorks tagged file you can import into RefWorks. Goes through the unified Citation model so title, authors, year, journal, pages, and DOI carry across.",
+    example:
+      "You have CSL-JSON references and your institution uses RefWorks. Convert here and import the tagged file into RefWorks.",
+    troubleshooting: [
+      { problem: "RefWorks will not import the file.", solution: "In RefWorks choose Import then the RefWorks Tagged Format filter. Each record this produces starts with an RT line and ends before the next blank line." },
+    ],
+  },
+  "csv-to-refworks": {
+    whyConvert:
+      "CSV is a spreadsheet of references; this rewrites it as a RefWorks tagged file you can import into RefWorks. Goes through the unified Citation model so title, authors, year, journal, pages, and DOI carry across.",
+    example:
+      "You have CSV references and your institution uses RefWorks. Convert here and import the tagged file into RefWorks.",
+    troubleshooting: [
+      { problem: "RefWorks will not import the file.", solution: "In RefWorks choose Import then the RefWorks Tagged Format filter. Each record this produces starts with an RT line and ends before the next blank line." },
+    ],
+  },
 };
 
 export function getExtendedCopy(toolId: string): ExtendedCopy | undefined {

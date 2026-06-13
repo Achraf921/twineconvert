@@ -300,6 +300,60 @@ describe("citation hub: Web of Science carries real data", () => {
   });
 });
 
+const RWS_SAMPLE =
+  "RT Journal Article\nA1 Smith, John\nA1 Doe, Jane\nT1 Vestibular function in aging adults\n" +
+  "JF Journal of Neurology\nYR 2006\nVO 253\nIS 11\nSP 1499\nOP 1508\n" +
+  "DO 10.1007/s00415-006-0001-x\nK1 balance\nK1 aging\nAB We measured vestibular thresholds.\n" +
+  "SN 1432-1459\nPB Springer\nID smith2006\n";
+
+describe("citation hub: RefWorks tagged format carries real data", () => {
+  const rws = () => f("refs.txt", RWS_SAMPLE, "text/plain");
+
+  it("refworks-to-bibtex keeps title + DOI", async () => {
+    const bib = await (await run("refworks-to-bibtex", rws())).blob.text();
+    expect(bib).toContain("Vestibular function in aging adults");
+    expect(bib).toContain("10.1007/s00415-006-0001-x");
+  });
+
+  it("refworks-to-ris keeps title, both authors, year, pages", async () => {
+    const ris = await (await run("refworks-to-ris", rws())).blob.text();
+    expect(ris).toMatch(/TI\s+-\s+Vestibular function in aging adults/);
+    expect(ris).toMatch(/AU\s+-\s+Smith, John/);
+    expect(ris).toMatch(/AU\s+-\s+Doe, Jane/);
+    expect(ris).toMatch(/PY\s+-\s+2006/);
+  });
+
+  it("ris-to-refworks emits RefWorks with RT, T1, A1 and the RIS title", async () => {
+    const r = await run("ris-to-refworks", f("a.ris", F.ris, "application/x-research-info-systems"));
+    const rwt = await r.blob.text();
+    expect(r.blob.type).toContain("refworks");
+    expect(rwt).toMatch(/^RT /m);
+    expect(rwt).toMatch(/^T1 A Sample Paper/m);
+    expect(rwt).toMatch(/^A1 Smith, John/m);
+  });
+
+  it("csv-to-refworks emits RefWorks carrying the CSV title", async () => {
+    const rwt = await (await run("csv-to-refworks", f("a.csv", CITATION_CSV, "text/csv"))).blob.text();
+    expect(rwt).toContain("A Study of Things");
+    expect(rwt).toMatch(/^RT /m);
+  });
+
+  it("round-trip RefWorks -> RIS -> RefWorks preserves title + DOI + pages", async () => {
+    const r1 = await run("refworks-to-ris", rws());
+    const r2 = await run("ris-to-refworks", reFile(await r1.blob.text(), "b.ris", "application/x-research-info-systems"));
+    const rwt = await r2.blob.text();
+    expect(rwt).toContain("Vestibular function in aging adults");
+    expect(rwt).toContain("10.1007/s00415-006-0001-x");
+    expect(rwt).toMatch(/^SP 1499/m);
+  });
+
+  it("refworks-to-bibtex throws on input with no records", async () => {
+    await expect(
+      run("refworks-to-bibtex", f("e.txt", "plain text, no RefWorks tags\n", "text/plain")),
+    ).rejects.toThrow(/No references found/);
+  });
+});
+
 describe("citation hub: empty / invalid inputs fail loudly", () => {
   it("csl-json-to-ris throws on an empty CSL array", async () => {
     await expect(

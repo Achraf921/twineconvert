@@ -113,6 +113,13 @@ const ENW_SAMPLE =
   "%J Journal of Neurology\n%D 2006\n%V 253\n%N 11\n%P 1499-1508\n%@ 1432-1459\n" +
   "%R 10.1007/s00415-006-0001-x\n%K balance\n%X We measured vestibular thresholds.\n%F smith2006\n";
 
+// A real-shaped RefWorks Tagged Format export for the refworks -> X routes.
+const RWS_SAMPLE =
+  "RT Journal Article\nA1 Smith, John\nA1 Doe, Jane\nT1 Vestibular function in aging adults\n" +
+  "JF Journal of Neurology\nYR 2006\nVO 253\nIS 11\nSP 1499\nOP 1508\n" +
+  "DO 10.1007/s00415-006-0001-x\nK1 balance\nK1 aging\nAB We measured vestibular thresholds.\n" +
+  "SN 1432-1459\nPB Springer\nID smith2006\n";
+
 // A real-shaped Web of Science / ISI tagged export for the wos -> X routes.
 const WOS_SAMPLE =
   "FN Clarivate Analytics Web of Science\nVR 1.0\nPT J\n" +
@@ -315,6 +322,24 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "wos-to-markdown": { provider: () => text("savedrecs.txt", WOS_SAMPLE, "text/plain"), env: "node" },
   "wos-to-html": { provider: () => text("savedrecs.txt", WOS_SAMPLE, "text/plain"), env: "node" },
   "wos-to-yaml": { provider: () => text("savedrecs.txt", WOS_SAMPLE, "text/plain"), env: "node" },
+
+  // RefWorks tagged format <-> citation hub
+  "refworks-to-bibtex": { provider: () => text("refs.txt", RWS_SAMPLE, "text/plain"), env: "node" },
+  "refworks-to-ris": { provider: () => text("refs.txt", RWS_SAMPLE, "text/plain"), env: "node" },
+  "refworks-to-nbib": { provider: () => text("refs.txt", RWS_SAMPLE, "text/plain"), env: "node" },
+  "refworks-to-endnote-xml": { provider: () => text("refs.txt", RWS_SAMPLE, "text/plain"), env: "node" },
+  "refworks-to-csl-json": { provider: () => text("refs.txt", RWS_SAMPLE, "text/plain"), env: "node" },
+  "refworks-to-csv": { provider: () => text("refs.txt", RWS_SAMPLE, "text/plain"), env: "node" },
+  "refworks-to-xlsx": { provider: () => text("refs.txt", RWS_SAMPLE, "text/plain"), env: "node" },
+  "refworks-to-markdown": { provider: () => text("refs.txt", RWS_SAMPLE, "text/plain"), env: "node" },
+  "refworks-to-html": { provider: () => text("refs.txt", RWS_SAMPLE, "text/plain"), env: "node" },
+  "refworks-to-yaml": { provider: () => text("refs.txt", RWS_SAMPLE, "text/plain"), env: "node" },
+  "bibtex-to-refworks": { provider: () => text("test.bib", F.bibtex, "application/x-bibtex"), env: "node" },
+  "ris-to-refworks": { provider: () => text("test.ris", F.ris, "application/x-research-info-systems"), env: "node" },
+  "nbib-to-refworks": { provider: () => text("test.nbib", F.nbibRealPubMed, "application/x-research-info-systems"), env: "node" },
+  "endnote-xml-to-refworks": { provider: () => text("test.xml", F.endnoteXml, "application/xml"), env: "node" },
+  "csl-json-to-refworks": { provider: () => text("test.json", F.cslJson, "application/json"), env: "node" },
+  "csv-to-refworks": { provider: () => text("test.csv", CITATION_CSV, "text/csv"), env: "node" },
   "mp3-to-wav":  { provider: () => Promise.reject(new Error("mp3 fixture pending")), env: "browser" },
   "mp3-to-m4a":  { provider: () => Promise.reject(new Error("mp3 fixture pending")), env: "browser" },
   "mp3-to-flac": { provider: () => Promise.reject(new Error("mp3 fixture pending")), env: "browser" },

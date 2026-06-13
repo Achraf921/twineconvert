@@ -810,6 +810,15 @@ export const validateEnw: Validator = async ({ blob, minSize = 6 }) => {
   if (!/^%[TA] /m.test(text)) throw new Error("ENW has no %T title or %A author line");
 };
 
+export const validateRefworks: Validator = async ({ blob, minSize = 6 }) => {
+  assertMinSize(blob, minSize, "RefWorks");
+  const text = await readText(blob);
+  // Every RefWorks record opens with an RT type line; a real record also
+  // carries a title (T1) or author (A1).
+  if (!/^RT /m.test(text)) throw new Error("RefWorks missing an RT reference-type line");
+  if (!/^(T1|A1) /m.test(text)) throw new Error("RefWorks has no T1 title or A1 author line");
+};
+
 export const validateHarJson: Validator = async ({ blob, minSize = 20 }) => {
   assertMinSize(blob, minSize, "HAR");
   const text = await readText(blob);
@@ -1178,6 +1187,9 @@ const BY_MIME: Record<string, Validator> = {
 
   // EndNote ENW (Refer/tagged)
   "application/x-endnote-refer": validateEnw,
+
+  // RefWorks tagged format
+  "text/x-refworks": validateRefworks,
 };
 
 // Extension-keyed fallback, used when toMime is generic (octet-stream)

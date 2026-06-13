@@ -6,12 +6,12 @@ Generated 2026-06-13 from src/lib/engine/converters/.
 
 | Classification | Count |
 |---|---:|
-| Total converters | 439 |
-| **Bijective candidates** (lossless, same-kind, both directions exist) | 204 |
-| **Bijective candidates missing reverse converter** | 28 |
-| **Bijective candidates missing round-trip test** | 15 |
+| Total converters | 455 |
+| **Bijective candidates** (lossless, same-kind, both directions exist) | 216 |
+| **Bijective candidates missing reverse converter** | 30 |
+| **Bijective candidates missing round-trip test** | 23 |
 | Lossy encoding (same kind, but lossy format) | 93 |
-| Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 61 |
+| Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 63 |
 | Single-action (no reverse possible) | 53 |
 | Unknown formats (need to add to FORMATS table) | 0 |
 | Compound id (irregular pattern) | 0 |
@@ -46,6 +46,8 @@ These converters are lossless and could round-trip, but the reverse converter is
 | `nbib-to-yaml` | `yaml-to-nbib` |
 | `opt-to-csv` | `csv-to-opt` |
 | `otf-to-ttf` | `ttf-to-otf` |
+| `refworks-to-xlsx` | `xlsx-to-refworks` |
+| `refworks-to-yaml` | `yaml-to-refworks` |
 | `ris-to-xlsx` | `xlsx-to-ris` |
 | `ris-to-yaml` | `yaml-to-ris` |
 | `tiff-to-png` | `png-to-tiff` |
@@ -60,12 +62,17 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | Pair | A→B | B→A |
 |---|---|---|
 | bibtex ↔ enw | `bibtex-to-enw` | `enw-to-bibtex` |
+| bibtex ↔ refworks | `bibtex-to-refworks` | `refworks-to-bibtex` |
 | csl-json ↔ enw | `csl-json-to-enw` | `enw-to-csl-json` |
+| csl-json ↔ refworks | `csl-json-to-refworks` | `refworks-to-csl-json` |
 | csv ↔ ics | `csv-to-ics` | `ics-to-csv` |
 | csv ↔ vcf | `csv-to-vcf` | `vcf-to-csv` |
 | endnote-xml ↔ enw | `endnote-xml-to-enw` | `enw-to-endnote-xml` |
+| endnote-xml ↔ refworks | `endnote-xml-to-refworks` | `refworks-to-endnote-xml` |
 | enw ↔ nbib | `enw-to-nbib` | `nbib-to-enw` |
 | lrc ↔ srt | `lrc-to-srt` | `srt-to-lrc` |
+| nbib ↔ refworks | `nbib-to-refworks` | `refworks-to-nbib` |
+| refworks ↔ csv | `refworks-to-csv` | `csv-to-refworks` |
 | ttf ↔ woff | `ttf-to-woff` | `woff-to-ttf` |
 
 ## Full Classification Table
@@ -112,6 +119,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `bibtex-to-html` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
 | `bibtex-to-markdown` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
 | `bibtex-to-nbib` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `bibtex-to-refworks` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
 | `bibtex-to-ris` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `bibtex-to-xlsx` | bijective-candidate | (`xlsx-to-bibtex` missing) | n/a | both lossless data formats; should round-trip cleanly |
 | `bibtex-to-yaml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
@@ -132,6 +140,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `csl-json-to-html` | cross-kind | (`html-to-csl-json` missing) | n/a | data -> doc: cross-domain, inherently lossy |
 | `csl-json-to-markdown` | cross-kind | (`markdown-to-csl-json` missing) | n/a | data -> doc: cross-domain, inherently lossy |
 | `csl-json-to-nbib` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `csl-json-to-refworks` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
 | `csl-json-to-ris` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csl-json-to-xlsx` | bijective-candidate | (`xlsx-to-csl-json` missing) | ✓ | both lossless data formats; should round-trip cleanly |
 | `csl-json-to-yaml` | bijective-candidate | (`yaml-to-csl-json` missing) | n/a | both lossless data formats; should round-trip cleanly |
@@ -159,6 +168,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `csv-to-qbo` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-qfx` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-qif` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `csv-to-refworks` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-ris` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-sql` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-tsv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
@@ -200,6 +210,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `endnote-xml-to-html` | cross-kind | (`html-to-endnote-xml` missing) | n/a | data -> doc: cross-domain, inherently lossy |
 | `endnote-xml-to-markdown` | cross-kind | (`markdown-to-endnote-xml` missing) | n/a | data -> doc: cross-domain, inherently lossy |
 | `endnote-xml-to-nbib` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `endnote-xml-to-refworks` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
 | `endnote-xml-to-ris` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `endnote-xml-to-xlsx` | bijective-candidate | (`xlsx-to-endnote-xml` missing) | ✓ | both lossless data formats; should round-trip cleanly |
 | `endnote-xml-to-yaml` | bijective-candidate | (`yaml-to-endnote-xml` missing) | n/a | both lossless data formats; should round-trip cleanly |
@@ -375,6 +386,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `nbib-to-enw` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
 | `nbib-to-html` | cross-kind | (`html-to-nbib` missing) | n/a | data -> doc: cross-domain, inherently lossy |
 | `nbib-to-markdown` | cross-kind | (`markdown-to-nbib` missing) | n/a | data -> doc: cross-domain, inherently lossy |
+| `nbib-to-refworks` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
 | `nbib-to-ris` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `nbib-to-xlsx` | bijective-candidate | (`xlsx-to-nbib` missing) | n/a | both lossless data formats; should round-trip cleanly |
 | `nbib-to-yaml` | bijective-candidate | (`yaml-to-nbib` missing) | n/a | both lossless data formats; should round-trip cleanly |
@@ -422,6 +434,16 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `qfx-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `qif-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `qif-to-ofx` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `refworks-to-bibtex` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `refworks-to-csl-json` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
+| `refworks-to-csv` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
+| `refworks-to-endnote-xml` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
+| `refworks-to-html` | cross-kind | (`html-to-refworks` missing) | n/a | data -> doc: cross-domain, inherently lossy |
+| `refworks-to-markdown` | cross-kind | (`markdown-to-refworks` missing) | n/a | data -> doc: cross-domain, inherently lossy |
+| `refworks-to-nbib` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
+| `refworks-to-ris` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `refworks-to-xlsx` | bijective-candidate | (`xlsx-to-refworks` missing) | n/a | both lossless data formats; should round-trip cleanly |
+| `refworks-to-yaml` | bijective-candidate | (`yaml-to-refworks` missing) | n/a | both lossless data formats; should round-trip cleanly |
 | `remove-background` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
 | `rgb-to-cmyk` | lossy-encoding | ✓ | ✓ | rgb or cmyk uses lossy encoding |
 | `rgb-to-hex` | cross-kind | ✓ | ✓ | color -> palette: cross-domain, inherently lossy |
@@ -435,6 +457,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `ris-to-html` | cross-kind | (`html-to-ris` missing) | n/a | data -> doc: cross-domain, inherently lossy |
 | `ris-to-markdown` | cross-kind | (`markdown-to-ris` missing) | n/a | data -> doc: cross-domain, inherently lossy |
 | `ris-to-nbib` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `ris-to-refworks` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `ris-to-xlsx` | bijective-candidate | (`xlsx-to-ris` missing) | n/a | both lossless data formats; should round-trip cleanly |
 | `ris-to-yaml` | bijective-candidate | (`yaml-to-ris` missing) | n/a | both lossless data formats; should round-trip cleanly |
 | `rtf-to-html` | lossy-encoding | (`html-to-rtf` missing) | n/a | rtf or html uses lossy encoding |
