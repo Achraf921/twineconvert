@@ -4267,6 +4267,96 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       { problem: "Multi-page TIFF only converted the first page.", solution: "This reads the first image in the TIFF. For multi-page TIFFs, split the pages first or use a multi-page-aware tool." },
     ],
   },
+  "markdown-table-to-html-table": {
+    whyConvert:
+      "Markdown Table and HTML Table are both ways to hold tabular data; this converts one to the other through a shared row-and-column model, so headers and every cell value carry across exactly. Use it to move a table into a web page, email, or CMS. Runs in your browser, nothing is uploaded.",
+    example:
+      "You have a table as Markdown Table and need it as HTML Table for a web page, email, or CMS. Drop it here and get HTML Table back in one step.",
+    troubleshooting: [
+      { problem: "A column looks misaligned.", solution: "The converter uses the first row as headers. If your source has no header row, the first data row will be treated as headers; add one first." },
+    ],
+  },
+  "html-table-to-markdown-table": {
+    whyConvert:
+      "HTML Table and Markdown Table are both ways to hold tabular data; this converts one to the other through a shared row-and-column model, so headers and every cell value carry across exactly. Use it to move a table into a README, GitHub issue, Obsidian note, or docs page. Runs in your browser, nothing is uploaded.",
+    example:
+      "You have a table as HTML Table and need it as Markdown Table for a README, GitHub issue, Obsidian note, or docs page. Drop it here and get Markdown Table back in one step.",
+    troubleshooting: [
+      { problem: "A column looks misaligned.", solution: "The converter uses the first row as headers. If your source has no header row, the first data row will be treated as headers; add one first." },
+    ],
+  },
+  "markdown-table-to-json": {
+    whyConvert:
+      "Markdown Table and JSON are both ways to hold tabular data; this converts one to the other through a shared row-and-column model, so headers and every cell value carry across exactly. Use it to move a table into an app, API, or script. Runs in your browser, nothing is uploaded.",
+    example:
+      "You have a table as Markdown Table and need it as JSON for an app, API, or script. Drop it here and get JSON back in one step.",
+    troubleshooting: [
+      { problem: "All my values are strings.", solution: "Table cells have no type information, so every value is emitted as a string. Cast the fields you need (Number(row.age)) in your code after parsing." },
+    ],
+  },
+  "json-to-markdown-table": {
+    whyConvert:
+      "JSON and Markdown Table are both ways to hold tabular data; this converts one to the other through a shared row-and-column model, so headers and every cell value carry across exactly. Use it to move a table into a README, GitHub issue, Obsidian note, or docs page. Runs in your browser, nothing is uploaded.",
+    example:
+      "You have a table as JSON and need it as Markdown Table for a README, GitHub issue, Obsidian note, or docs page. Drop it here and get Markdown Table back in one step.",
+    troubleshooting: [
+      { problem: "A column looks misaligned.", solution: "The converter uses the first row as headers. If your source has no header row, the first data row will be treated as headers; add one first." },
+    ],
+  },
+  "html-table-to-json": {
+    whyConvert:
+      "HTML Table and JSON are both ways to hold tabular data; this converts one to the other through a shared row-and-column model, so headers and every cell value carry across exactly. Use it to move a table into an app, API, or script. Runs in your browser, nothing is uploaded.",
+    example:
+      "You have a table as HTML Table and need it as JSON for an app, API, or script. Drop it here and get JSON back in one step.",
+    troubleshooting: [
+      { problem: "All my values are strings.", solution: "Table cells have no type information, so every value is emitted as a string. Cast the fields you need (Number(row.age)) in your code after parsing." },
+    ],
+  },
+  "json-to-html-table": {
+    whyConvert:
+      "JSON and HTML Table are both ways to hold tabular data; this converts one to the other through a shared row-and-column model, so headers and every cell value carry across exactly. Use it to move a table into a web page, email, or CMS. Runs in your browser, nothing is uploaded.",
+    example:
+      "You have a table as JSON and need it as HTML Table for a web page, email, or CMS. Drop it here and get HTML Table back in one step.",
+    troubleshooting: [
+      { problem: "A column looks misaligned.", solution: "The converter uses the first row as headers. If your source has no header row, the first data row will be treated as headers; add one first." },
+    ],
+  },
+  "markdown-table-to-xlsx": {
+    whyConvert:
+      "Markdown Table and Excel (XLSX) are both ways to hold tabular data; this converts one to the other through a shared row-and-column model, so headers and every cell value carry across exactly. Use it to move a table into Excel, Google Sheets, or Numbers. Runs in your browser, nothing is uploaded.",
+    example:
+      "You have a table as Markdown Table and need it as Excel (XLSX) for Excel, Google Sheets, or Numbers. Drop it here and get Excel (XLSX) back in one step.",
+    troubleshooting: [
+      { problem: "Numbers became text in Excel.", solution: "Cells are written as their literal text; Excel will auto-detect numbers on open. If a column must stay text (leading zeros, IDs), format that column as Text in Excel after import." },
+    ],
+  },
+  "html-table-to-xlsx": {
+    whyConvert:
+      "HTML Table and Excel (XLSX) are both ways to hold tabular data; this converts one to the other through a shared row-and-column model, so headers and every cell value carry across exactly. Use it to move a table into Excel, Google Sheets, or Numbers. Runs in your browser, nothing is uploaded.",
+    example:
+      "You have a table as HTML Table and need it as Excel (XLSX) for Excel, Google Sheets, or Numbers. Drop it here and get Excel (XLSX) back in one step.",
+    troubleshooting: [
+      { problem: "Numbers became text in Excel.", solution: "Cells are written as their literal text; Excel will auto-detect numbers on open. If a column must stay text (leading zeros, IDs), format that column as Text in Excel after import." },
+    ],
+  },
+  "xlsx-to-markdown-table": {
+    whyConvert:
+      "Excel (XLSX) and Markdown Table are both ways to hold tabular data; this converts one to the other through a shared row-and-column model, so headers and every cell value carry across exactly. Use it to move a table into a README, GitHub issue, Obsidian note, or docs page. Runs in your browser, nothing is uploaded.",
+    example:
+      "You have a table as Excel (XLSX) and need it as Markdown Table for a README, GitHub issue, Obsidian note, or docs page. Drop it here and get Markdown Table back in one step.",
+    troubleshooting: [
+      { problem: "A column looks misaligned.", solution: "The converter uses the first row as headers. If your source has no header row, the first data row will be treated as headers; add one first." },
+    ],
+  },
+  "xlsx-to-html-table": {
+    whyConvert:
+      "Excel (XLSX) and HTML Table are both ways to hold tabular data; this converts one to the other through a shared row-and-column model, so headers and every cell value carry across exactly. Use it to move a table into a web page, email, or CMS. Runs in your browser, nothing is uploaded.",
+    example:
+      "You have a table as Excel (XLSX) and need it as HTML Table for a web page, email, or CMS. Drop it here and get HTML Table back in one step.",
+    troubleshooting: [
+      { problem: "A column looks misaligned.", solution: "The converter uses the first row as headers. If your source has no header row, the first data row will be treated as headers; add one first." },
+    ],
+  },
 };
 
 export function getExtendedCopy(toolId: string): ExtendedCopy | undefined {

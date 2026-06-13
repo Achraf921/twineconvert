@@ -340,6 +340,18 @@ const HAND_CURATED_RELATED: Record<string, string[]> = {
   "ico-to-bmp": ["ico-to-png","ico-to-webp","ico-to-gif"],
   "tiff-to-webp": ["tiff-to-png","tiff-to-jpg","tiff-to-pdf"],
 
+  // ===== Tabular hub gap fills =====
+  "markdown-table-to-html-table": ["html-table-to-markdown-table","markdown-table-to-csv","markdown-table-to-json"],
+  "html-table-to-markdown-table": ["markdown-table-to-html-table","html-table-to-csv","html-table-to-json"],
+  "markdown-table-to-json": ["json-to-markdown-table","markdown-table-to-csv","markdown-table-to-xlsx"],
+  "json-to-markdown-table": ["markdown-table-to-json","json-to-csv","json-to-html-table"],
+  "html-table-to-json": ["json-to-html-table","html-table-to-csv","html-table-to-xlsx"],
+  "json-to-html-table": ["html-table-to-json","json-to-csv","json-to-markdown-table"],
+  "markdown-table-to-xlsx": ["markdown-table-to-csv","markdown-table-to-json","xlsx-to-markdown-table"],
+  "html-table-to-xlsx": ["html-table-to-csv","html-table-to-json","xlsx-to-html-table"],
+  "xlsx-to-markdown-table": ["xlsx-to-csv","xlsx-to-json","markdown-table-to-xlsx"],
+  "xlsx-to-html-table": ["xlsx-to-csv","xlsx-to-json","html-table-to-xlsx"],
+
   // ===== Subtitle transcripts + matrix gaps =====
   "srt-to-txt": ["vtt-to-txt", "srt-to-vtt", "srt-to-ass"],
   "vtt-to-txt": ["srt-to-txt", "vtt-to-srt", "vtt-to-ass"],

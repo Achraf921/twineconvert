@@ -91,6 +91,28 @@ export const registry: Record<string, ConverterLoader> = {
   "ico-to-bmp": () => import("./converters/ico-to-bmp").then((m) => m.default),
   "tiff-to-webp": () => import("./converters/tiff-to-webp").then((m) => m.default),
 
+  // Tabular hub gap fills (markdown-table / html-table / json / xlsx)
+  "markdown-table-to-html-table": () =>
+    import("./converters/markdown-table-to-html-table").then((m) => m.default),
+  "html-table-to-markdown-table": () =>
+    import("./converters/html-table-to-markdown-table").then((m) => m.default),
+  "markdown-table-to-json": () =>
+    import("./converters/markdown-table-to-json").then((m) => m.default),
+  "json-to-markdown-table": () =>
+    import("./converters/json-to-markdown-table").then((m) => m.default),
+  "html-table-to-json": () =>
+    import("./converters/html-table-to-json").then((m) => m.default),
+  "json-to-html-table": () =>
+    import("./converters/json-to-html-table").then((m) => m.default),
+  "markdown-table-to-xlsx": () =>
+    import("./converters/markdown-table-to-xlsx").then((m) => m.default),
+  "html-table-to-xlsx": () =>
+    import("./converters/html-table-to-xlsx").then((m) => m.default),
+  "xlsx-to-markdown-table": () =>
+    import("./converters/xlsx-to-markdown-table").then((m) => m.default),
+  "xlsx-to-html-table": () =>
+    import("./converters/xlsx-to-html-table").then((m) => m.default),
+
   // PDF family, pdfjs-dist for rendering, pdf-lib for assembly + manipulation
   "pdf-to-jpg": () =>
     import("./converters/pdf-to-jpg").then((m) => m.default),

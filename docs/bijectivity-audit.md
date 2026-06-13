@@ -6,8 +6,8 @@ Generated 2026-06-13 from src/lib/engine/converters/.
 
 | Classification | Count |
 |---|---:|
-| Total converters | 509 |
-| **Bijective candidates** (lossless, same-kind, both directions exist) | 232 |
+| Total converters | 519 |
+| **Bijective candidates** (lossless, same-kind, both directions exist) | 242 |
 | **Bijective candidates missing reverse converter** | 34 |
 | **Bijective candidates missing round-trip test** | 24 |
 | Lossy encoding (same kind, but lossy format) | 114 |
@@ -301,6 +301,9 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `hsl-to-hex` | cross-kind | ✓ | ✓ | color -> palette: cross-domain, inherently lossy |
 | `hsl-to-rgb` | lossy-encoding | ✓ | ✓ | hsl or rgb uses lossy encoding |
 | `html-table-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `html-table-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `html-table-to-markdown-table` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `html-table-to-xlsx` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `html-to-docx` | lossy-encoding | ✓ | n/a | html or docx uses lossy encoding |
 | `html-to-markdown` | lossy-encoding | ✓ | n/a | html or markdown uses lossy encoding |
 | `ico-to-avif` | lossy-encoding | (`avif-to-ico` missing) | ✓ | ico or avif uses lossy encoding |
@@ -338,8 +341,10 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `json-to-fastq` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `json-to-gedcom` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `json-to-hl7` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `json-to-html-table` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `json-to-ini` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `json-to-jsonl` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `json-to-markdown-table` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `json-to-msgpack` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `json-to-po` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `json-to-properties` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
@@ -379,6 +384,9 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `marcxml-to-xlsx` | lossy-encoding | (`xlsx-to-marcxml` missing) | ✓ | marcxml or xlsx uses lossy encoding |
 | `marcxml-to-yaml` | lossy-encoding | (`yaml-to-marcxml` missing) | n/a | marcxml or yaml uses lossy encoding |
 | `markdown-table-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `markdown-table-to-html-table` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `markdown-table-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `markdown-table-to-xlsx` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `markdown-to-html` | lossy-encoding | ✓ | n/a | markdown or html uses lossy encoding |
 | `markdown-to-pdf` | lossy-encoding | (`pdf-to-markdown` missing) | n/a | markdown or pdf uses lossy encoding |
 | `mbox-to-csv` | bijective-candidate | (`csv-to-mbox` missing) | n/a | both lossless data formats; should round-trip cleanly |
@@ -584,7 +592,9 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `wos-to-xlsx` | lossy-encoding | (`xlsx-to-wos` missing) | ✓ | wos or xlsx uses lossy encoding |
 | `wos-to-yaml` | lossy-encoding | (`yaml-to-wos` missing) | n/a | wos or yaml uses lossy encoding |
 | `xlsx-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `xlsx-to-html-table` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `xlsx-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `xlsx-to-markdown-table` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `xlsx-to-ods` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `xlsx-to-tsv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `xml-to-csv` | bijective-candidate | (`csv-to-xml` missing) | n/a | both lossless data formats; should round-trip cleanly |

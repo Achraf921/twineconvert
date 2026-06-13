@@ -134,3 +134,44 @@ export function csvRowsToTable(rows: string[][]): Table {
 export function tableToCsvRows(table: Table): string[][] {
   return [table.headers, ...table.rows];
 }
+
+/** Table -> array of row objects keyed by header (the shape JSON tools expect). */
+export function tableToObjects(table: Table): Record<string, string>[] {
+  return table.rows.map((row) => {
+    const obj: Record<string, string> = {};
+    table.headers.forEach((h, i) => {
+      obj[h || `column${i + 1}`] = row[i] ?? "";
+    });
+    return obj;
+  });
+}
+
+/** Array of row objects -> Table. Headers are the union of keys in first-seen order. */
+export function objectsToTable(objs: unknown): Table {
+  if (!Array.isArray(objs)) {
+    throw new Error("JSON must be an array of row objects to build a table.");
+  }
+  const headers: string[] = [];
+  const seen = new Set<string>();
+  for (const o of objs) {
+    if (o && typeof o === "object" && !Array.isArray(o)) {
+      for (const k of Object.keys(o)) {
+        if (!seen.has(k)) {
+          seen.add(k);
+          headers.push(k);
+        }
+      }
+    }
+  }
+  if (headers.length === 0) {
+    throw new Error("JSON rows have no fields; nothing to tabulate.");
+  }
+  const rows = objs.map((o) =>
+    headers.map((h) => {
+      const v = (o as Record<string, unknown>)?.[h];
+      if (v == null) return "";
+      return typeof v === "object" ? JSON.stringify(v) : String(v);
+    }),
+  );
+  return { headers, rows };
+}

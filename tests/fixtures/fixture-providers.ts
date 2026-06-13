@@ -735,6 +735,18 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "csv-to-html-table":      { provider: () => text("test.csv", F.genericCsv, "text/csv"), env: "node" },
   "html-table-to-csv":      { provider: () => text("table.html", F.htmlTable, "text/html"), env: "node" },
 
+  // Tabular hub gap fills (markdown-table / html-table / json / xlsx)
+  "markdown-table-to-html-table": { provider: () => text("table.md", F.markdownTable, "text/markdown"), env: "node" },
+  "html-table-to-markdown-table": { provider: () => text("table.html", F.htmlTable, "text/html"), env: "node" },
+  "markdown-table-to-json": { provider: () => text("table.md", F.markdownTable, "text/markdown"), env: "node" },
+  "json-to-markdown-table": { provider: () => text("test.json", F.jsonArray, "application/json"), env: "node" },
+  "html-table-to-json": { provider: () => text("table.html", F.htmlTable, "text/html"), env: "node" },
+  "json-to-html-table": { provider: () => text("test.json", F.jsonArray, "application/json"), env: "node" },
+  "markdown-table-to-xlsx": { provider: () => text("table.md", F.markdownTable, "text/markdown"), env: "node" },
+  "html-table-to-xlsx": { provider: () => text("table.html", F.htmlTable, "text/html"), env: "node" },
+  "xlsx-to-markdown-table": { provider: async () => fileFromBytes("test.xlsx", await makeTinyXlsx(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"), env: "node" },
+  "xlsx-to-html-table": { provider: async () => fileFromBytes("test.xlsx", await makeTinyXlsx(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"), env: "node" },
+
   // ===== SQL =====
   "csv-to-sql":  { provider: () => text("users.csv", F.genericCsv, "text/csv"), env: "node" },
   "sql-to-csv":  { provider: () => text("dump.sql", F.sqlDump, "application/sql"), env: "node" },

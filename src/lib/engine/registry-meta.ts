@@ -415,6 +415,130 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "image/webp",
     "maxFileSizeBytes": 104857600
   },
+  "markdown-table-to-html-table": {
+    "label": "Markdown Table → HTML Table",
+    "accept": [
+      ".md",
+      ".markdown"
+    ],
+    "fromMime": [
+      "text/markdown",
+      "text/plain"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 52428800
+  },
+  "html-table-to-markdown-table": {
+    "label": "HTML Table → Markdown Table",
+    "accept": [
+      ".html",
+      ".htm"
+    ],
+    "fromMime": [
+      "text/html",
+      "text/plain"
+    ],
+    "toMime": "text/markdown",
+    "maxFileSizeBytes": 52428800
+  },
+  "markdown-table-to-json": {
+    "label": "Markdown Table → JSON",
+    "accept": [
+      ".md",
+      ".markdown"
+    ],
+    "fromMime": [
+      "text/markdown",
+      "text/plain"
+    ],
+    "toMime": "application/json",
+    "maxFileSizeBytes": 52428800
+  },
+  "json-to-markdown-table": {
+    "label": "JSON → Markdown Table",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "text/markdown",
+    "maxFileSizeBytes": 52428800
+  },
+  "html-table-to-json": {
+    "label": "HTML Table → JSON",
+    "accept": [
+      ".html",
+      ".htm"
+    ],
+    "fromMime": [
+      "text/html",
+      "text/plain"
+    ],
+    "toMime": "application/json",
+    "maxFileSizeBytes": 52428800
+  },
+  "json-to-html-table": {
+    "label": "JSON → HTML Table",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 52428800
+  },
+  "markdown-table-to-xlsx": {
+    "label": "Markdown Table → XLSX",
+    "accept": [
+      ".md",
+      ".markdown"
+    ],
+    "fromMime": [
+      "text/markdown",
+      "text/plain"
+    ],
+    "toMime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "maxFileSizeBytes": 52428800
+  },
+  "html-table-to-xlsx": {
+    "label": "HTML Table → XLSX",
+    "accept": [
+      ".html",
+      ".htm"
+    ],
+    "fromMime": [
+      "text/html",
+      "text/plain"
+    ],
+    "toMime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "maxFileSizeBytes": 52428800
+  },
+  "xlsx-to-markdown-table": {
+    "label": "XLSX → Markdown Table",
+    "accept": [
+      ".xlsx"
+    ],
+    "fromMime": [
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    ],
+    "toMime": "text/markdown",
+    "maxFileSizeBytes": 52428800
+  },
+  "xlsx-to-html-table": {
+    "label": "XLSX → HTML Table",
+    "accept": [
+      ".xlsx"
+    ],
+    "fromMime": [
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 52428800
+  },
   "pdf-to-jpg": {
     "label": "PDF → JPG",
     "accept": [
