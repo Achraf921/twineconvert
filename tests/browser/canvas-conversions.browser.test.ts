@@ -132,3 +132,83 @@ describe("canvas image converters (browser)", () => {
     expect(result.blob.size).toBeGreaterThan(0);
   });
 });
+
+describe("image format matrix gap fills (browser)", () => {
+  // Derive each non-trivial input from a known-good PNG test pattern via
+  // an existing, already-tested converter, then run the new converter.
+  const SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+    <rect width="16" height="16" x="0" y="0" fill="#ff0000"/>
+    <rect width="16" height="16" x="16" y="0" fill="#00ff00"/>
+    <rect width="16" height="16" x="0" y="16" fill="#0000ff"/>
+    <rect width="16" height="16" x="16" y="16" fill="#ffff00"/>
+  </svg>`;
+  const pngFile = async () => fileFromBlob(await makeTestPatternPng(32, 32), "in.png", "image/png");
+  const derive = async (id: string, name: string, mime: string) =>
+    fileFromBlob((await run(id, await pngFile())).blob, name, mime);
+
+  // --- to WebP (canvasEncode) ---
+  it("svg-to-webp renders the vector to a real WebP", async () => {
+    const svg = fileFromBlob(new Blob([SVG], { type: "image/svg+xml" }), "in.svg", "image/svg+xml");
+    const r = await run("svg-to-webp", svg);
+    await expectMagic(r.blob, MAGIC.WEBP_RIFF);
+    expect(r.blob.size).toBeGreaterThan(0);
+  });
+  it("gif-to-webp preserves content", async () => {
+    const gif = await derive("png-to-gif", "in.gif", "image/gif");
+    const r = await run("gif-to-webp", gif);
+    await expectMagic(r.blob, MAGIC.WEBP_RIFF);
+    await assertImageQuality(gif, r.blob);
+  });
+  it("bmp-to-webp preserves content", async () => {
+    const bmp = await derive("png-to-bmp", "in.bmp", "image/bmp");
+    const r = await run("bmp-to-webp", bmp);
+    await expectMagic(r.blob, MAGIC.WEBP_RIFF);
+    await assertImageQuality(bmp, r.blob);
+  });
+  it("ico-to-webp produces a real WebP", async () => {
+    const ico = await derive("png-to-ico", "in.ico", "image/x-icon");
+    const r = await run("ico-to-webp", ico);
+    await expectMagic(r.blob, MAGIC.WEBP_RIFF);
+    expect(r.blob.size).toBeGreaterThan(0);
+  });
+
+  // --- to GIF (gifenc) ---
+  it("webp-to-gif produces a real GIF", async () => {
+    const webp = fileFromBlob(await makeTestPatternWebp(32, 32), "in.webp", "image/webp");
+    const r = await run("webp-to-gif", webp);
+    await expectMagic(r.blob, MAGIC.GIF);
+    expect(r.blob.size).toBeGreaterThan(0);
+  });
+  it("avif-to-gif produces a real GIF", async () => {
+    const avif = await derive("png-to-avif", "in.avif", "image/avif");
+    const r = await run("avif-to-gif", avif);
+    await expectMagic(r.blob, MAGIC.GIF);
+    expect(r.blob.size).toBeGreaterThan(0);
+  });
+  it("bmp-to-gif produces a real GIF", async () => {
+    const bmp = await derive("png-to-bmp", "in.bmp", "image/bmp");
+    const r = await run("bmp-to-gif", bmp);
+    await expectMagic(r.blob, MAGIC.GIF);
+    expect(r.blob.size).toBeGreaterThan(0);
+  });
+
+  // --- to BMP (bmp-encode) ---
+  it("webp-to-bmp preserves content", async () => {
+    const webp = fileFromBlob(await makeTestPatternWebp(32, 32), "in.webp", "image/webp");
+    const r = await run("webp-to-bmp", webp);
+    await expectMagic(r.blob, MAGIC.BMP);
+    await assertImageQuality(webp, r.blob);
+  });
+  it("gif-to-bmp produces a real BMP", async () => {
+    const gif = await derive("png-to-gif", "in.gif", "image/gif");
+    const r = await run("gif-to-bmp", gif);
+    await expectMagic(r.blob, MAGIC.BMP);
+    expect(r.blob.size).toBeGreaterThan(0);
+  });
+  it("avif-to-bmp produces a real BMP", async () => {
+    const avif = await derive("png-to-avif", "in.avif", "image/avif");
+    const r = await run("avif-to-bmp", avif);
+    await expectMagic(r.blob, MAGIC.BMP);
+    expect(r.blob.size).toBeGreaterThan(0);
+  });
+});

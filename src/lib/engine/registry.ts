@@ -70,6 +70,18 @@ export const registry: Record<string, ConverterLoader> = {
   "svg-to-jpg": () =>
     import("./converters/svg-to-jpg").then((m) => m.default),
 
+  // Image format matrix gap fills (canvas decode + webp/gif/bmp encode)
+  "svg-to-webp": () => import("./converters/svg-to-webp").then((m) => m.default),
+  "gif-to-webp": () => import("./converters/gif-to-webp").then((m) => m.default),
+  "bmp-to-webp": () => import("./converters/bmp-to-webp").then((m) => m.default),
+  "ico-to-webp": () => import("./converters/ico-to-webp").then((m) => m.default),
+  "webp-to-gif": () => import("./converters/webp-to-gif").then((m) => m.default),
+  "avif-to-gif": () => import("./converters/avif-to-gif").then((m) => m.default),
+  "bmp-to-gif": () => import("./converters/bmp-to-gif").then((m) => m.default),
+  "webp-to-bmp": () => import("./converters/webp-to-bmp").then((m) => m.default),
+  "gif-to-bmp": () => import("./converters/gif-to-bmp").then((m) => m.default),
+  "avif-to-bmp": () => import("./converters/avif-to-bmp").then((m) => m.default),
+
   // PDF family, pdfjs-dist for rendering, pdf-lib for assembly + manipulation
   "pdf-to-jpg": () =>
     import("./converters/pdf-to-jpg").then((m) => m.default),

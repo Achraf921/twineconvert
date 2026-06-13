@@ -6,12 +6,12 @@ Generated 2026-06-13 from src/lib/engine/converters/.
 
 | Classification | Count |
 |---|---:|
-| Total converters | 490 |
-| **Bijective candidates** (lossless, same-kind, both directions exist) | 230 |
+| Total converters | 500 |
+| **Bijective candidates** (lossless, same-kind, both directions exist) | 232 |
 | **Bijective candidates missing reverse converter** | 32 |
 | **Bijective candidates missing round-trip test** | 24 |
-| Lossy encoding (same kind, but lossy format) | 103 |
-| Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 72 |
+| Lossy encoding (same kind, but lossy format) | 110 |
+| Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 73 |
 | Single-action (no reverse possible) | 53 |
 | Unknown formats (need to add to FORMATS table) | 0 |
 | Compound id (irregular pattern) | 0 |
@@ -112,6 +112,8 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `ass-to-txt` | cross-kind | (`txt-to-ass` missing) | ✓ | data -> doc: cross-domain, inherently lossy |
 | `ass-to-vtt` | lossy-encoding | ✓ | ✓ | ass or vtt uses lossy encoding |
 | `avi-to-mp4` | lossy-encoding | ✓ | ✓ | avi or mp4 uses lossy encoding |
+| `avif-to-bmp` | lossy-encoding | (`bmp-to-avif` missing) | ✓ | avif or bmp uses lossy encoding |
+| `avif-to-gif` | lossy-encoding | (`gif-to-avif` missing) | ✓ | avif or gif uses lossy encoding |
 | `avif-to-jpg` | lossy-encoding | ✓ | ✓ | avif or jpg uses lossy encoding |
 | `avif-to-png` | lossy-encoding | ✓ | ✓ | avif or png uses lossy encoding |
 | `avif-to-webp` | lossy-encoding | ✓ | ✓ | avif or webp uses lossy encoding |
@@ -129,8 +131,10 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `bibtex-to-ris` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `bibtex-to-xlsx` | bijective-candidate | (`xlsx-to-bibtex` missing) | n/a | both lossless data formats; should round-trip cleanly |
 | `bibtex-to-yaml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `bmp-to-gif` | bijective-candidate | ✓ | ✓ | both lossless raster formats; should round-trip cleanly |
 | `bmp-to-jpg` | lossy-encoding | ✓ | ✓ | bmp or jpg uses lossy encoding |
 | `bmp-to-png` | bijective-candidate | ✓ | ✓ | both lossless raster formats; should round-trip cleanly |
+| `bmp-to-webp` | lossy-encoding | ✓ | ✓ | bmp or webp uses lossy encoding |
 | `cabrillo-to-adif` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `cbor-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `ccda-to-html` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
@@ -261,9 +265,11 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `geojson-to-kml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `geojson-to-wkb` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `geojson-to-wkt` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `gif-to-bmp` | bijective-candidate | ✓ | ✓ | both lossless raster formats; should round-trip cleanly |
 | `gif-to-jpg` | lossy-encoding | ✓ | ✓ | gif or jpg uses lossy encoding |
 | `gif-to-mp4` | cross-kind | ✓ | ✓ | raster -> video: cross-domain, inherently lossy |
 | `gif-to-png` | bijective-candidate | ✓ | ✓ | both lossless raster formats; should round-trip cleanly |
+| `gif-to-webp` | lossy-encoding | ✓ | ✓ | gif or webp uses lossy encoding |
 | `glb-to-obj` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
 | `glb-to-stl` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
 | `gpl-to-aco` | bijective-candidate | ✓ | ✓ | both lossless palette formats; should round-trip cleanly |
@@ -295,6 +301,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `html-to-markdown` | lossy-encoding | ✓ | n/a | html or markdown uses lossy encoding |
 | `ico-to-jpg` | lossy-encoding | ✓ | ✓ | ico or jpg uses lossy encoding |
 | `ico-to-png` | bijective-candidate | ✓ | ✓ | both lossless raster formats; should round-trip cleanly |
+| `ico-to-webp` | lossy-encoding | (`webp-to-ico` missing) | ✓ | ico or webp uses lossy encoding |
 | `ics-to-csv` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
 | `ics-to-json` | bijective-candidate | (`json-to-ics` missing) | n/a | both lossless data formats; should round-trip cleanly |
 | `ics-to-xlsx` | bijective-candidate | (`xlsx-to-ics` missing) | n/a | both lossless data formats; should round-trip cleanly |
@@ -511,6 +518,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `stl-to-obj` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
 | `svg-to-jpg` | cross-kind | (`jpg-to-svg` missing) | ✓ | vector -> raster: cross-domain, inherently lossy |
 | `svg-to-png` | cross-kind | (`png-to-svg` missing) | ✓ | vector -> raster: cross-domain, inherently lossy |
+| `svg-to-webp` | cross-kind | (`webp-to-svg` missing) | ✓ | vector -> raster: cross-domain, inherently lossy |
 | `text-to-base64` | bijective-candidate | ✓ | ✓ | both lossless encoding formats; should round-trip cleanly |
 | `text-to-hex` | cross-kind | ✓ | ✓ | encoding -> palette: cross-domain, inherently lossy |
 | `text-to-url-encoded` | bijective-candidate | ✓ | ✓ | both lossless encoding formats; should round-trip cleanly |
@@ -540,6 +548,8 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `wav-to-mp3` | lossy-encoding | ✓ | ✓ | wav or mp3 uses lossy encoding |
 | `webm-to-mp4` | lossy-encoding | ✓ | ✓ | webm or mp4 uses lossy encoding |
 | `webp-to-avif` | lossy-encoding | ✓ | ✓ | webp or avif uses lossy encoding |
+| `webp-to-bmp` | lossy-encoding | ✓ | ✓ | webp or bmp uses lossy encoding |
+| `webp-to-gif` | lossy-encoding | ✓ | ✓ | webp or gif uses lossy encoding |
 | `webp-to-jpg` | lossy-encoding | ✓ | ✓ | webp or jpg uses lossy encoding |
 | `webp-to-pdf` | cross-kind | (`pdf-to-webp` missing) | ✓ | raster -> doc: cross-domain, inherently lossy |
 | `webp-to-png` | lossy-encoding | ✓ | ✓ | webp or png uses lossy encoding |

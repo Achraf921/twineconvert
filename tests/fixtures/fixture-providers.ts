@@ -219,6 +219,18 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "svg-to-png": { provider: () => Promise.reject(new Error("svg fixture pending")), env: "browser" },
   "svg-to-jpg": { provider: () => Promise.reject(new Error("svg fixture pending")), env: "browser" },
 
+  // Image format matrix gap fills (verified in tests/browser/canvas-conversions)
+  "svg-to-webp": { provider: () => Promise.reject(new Error("svg fixture in browser suite")), env: "browser" },
+  "gif-to-webp": { provider: () => Promise.reject(new Error("gif fixture in browser suite")), env: "browser" },
+  "bmp-to-webp": { provider: () => Promise.reject(new Error("bmp fixture in browser suite")), env: "browser" },
+  "ico-to-webp": { provider: () => Promise.reject(new Error("ico fixture in browser suite")), env: "browser" },
+  "webp-to-gif": { provider: () => Promise.reject(new Error("webp fixture in browser suite")), env: "browser" },
+  "avif-to-gif": { provider: () => Promise.reject(new Error("avif fixture in browser suite")), env: "browser" },
+  "bmp-to-gif": { provider: () => Promise.reject(new Error("bmp fixture in browser suite")), env: "browser" },
+  "webp-to-bmp": { provider: () => Promise.reject(new Error("webp fixture in browser suite")), env: "browser" },
+  "gif-to-bmp": { provider: () => Promise.reject(new Error("gif fixture in browser suite")), env: "browser" },
+  "avif-to-bmp": { provider: () => Promise.reject(new Error("avif fixture in browser suite")), env: "browser" },
+
   "tiff-to-jpg": { provider: () => Promise.reject(new Error("tiff fixture pending")), env: "browser" },
   "tiff-to-png": { provider: () => Promise.reject(new Error("tiff fixture pending")), env: "browser" },
   "tiff-to-pdf": { provider: () => Promise.reject(new Error("tiff fixture pending")), env: "browser" },

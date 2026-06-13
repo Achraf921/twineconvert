@@ -319,6 +319,18 @@ const HAND_CURATED_RELATED: Record<string, string[]> = {
   "marcxml-to-html": ["marcxml-to-markdown","marcxml-to-yaml","marcxml-to-bibtex"],
   "marcxml-to-yaml": ["marcxml-to-markdown","marcxml-to-html","marcxml-to-bibtex"],
 
+  // ===== Image format matrix gap fills =====
+  "svg-to-webp": ["svg-to-png","svg-to-jpg","png-to-webp"],
+  "gif-to-webp": ["gif-to-png","gif-to-jpg","gif-to-bmp"],
+  "bmp-to-webp": ["bmp-to-png","bmp-to-jpg","bmp-to-gif"],
+  "ico-to-webp": ["ico-to-png","ico-to-jpg","png-to-ico"],
+  "webp-to-gif": ["webp-to-png","webp-to-jpg","webp-to-bmp"],
+  "avif-to-gif": ["avif-to-png","avif-to-jpg","avif-to-bmp"],
+  "bmp-to-gif": ["bmp-to-png","bmp-to-webp","bmp-to-jpg"],
+  "webp-to-bmp": ["webp-to-png","webp-to-gif","webp-to-jpg"],
+  "gif-to-bmp": ["gif-to-png","gif-to-webp","gif-to-jpg"],
+  "avif-to-bmp": ["avif-to-png","avif-to-gif","avif-to-jpg"],
+
   // ===== Subtitle transcripts + matrix gaps =====
   "srt-to-txt": ["vtt-to-txt", "srt-to-vtt", "srt-to-ass"],
   "vtt-to-txt": ["srt-to-txt", "vtt-to-srt", "vtt-to-ass"],

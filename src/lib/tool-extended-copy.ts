@@ -4096,6 +4096,96 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       { problem: "Styling or positioning is lost.", solution: "Plain timing and text always carry across. ASS styling tags are added with defaults since SBV/plain formats do not carry them." },
     ],
   },
+  "svg-to-webp": {
+    whyConvert:
+      "WebP is the modern web image format: 25 to 35 percent smaller than PNG or JPEG at the same quality, with alpha transparency support. This converts SVG images to WebP entirely in your browser using the Canvas API, so the file never leaves your device. Transparency in the source is preserved.",
+    example:
+      "You have a SVG image and a tool, site, or workflow that needs WebP. Drop the SVG here and download the WebP in one step, no upload.",
+    troubleshooting: [
+      { problem: "The WebP looks slightly different in an old browser.", solution: "WebP is supported in all current browsers; very old versions may not render it. The file itself is a standard lossy WebP at quality 0.9." },
+    ],
+  },
+  "gif-to-webp": {
+    whyConvert:
+      "WebP is the modern web image format: 25 to 35 percent smaller than PNG or JPEG at the same quality, with alpha transparency support. This converts GIF images to WebP entirely in your browser using the Canvas API, so the file never leaves your device. Transparency in the source is preserved.",
+    example:
+      "You have a GIF image and a tool, site, or workflow that needs WebP. Drop the GIF here and download the WebP in one step, no upload.",
+    troubleshooting: [
+      { problem: "The WebP looks slightly different in an old browser.", solution: "WebP is supported in all current browsers; very old versions may not render it. The file itself is a standard lossy WebP at quality 0.9." },
+    ],
+  },
+  "bmp-to-webp": {
+    whyConvert:
+      "WebP is the modern web image format: 25 to 35 percent smaller than PNG or JPEG at the same quality, with alpha transparency support. This converts BMP images to WebP entirely in your browser using the Canvas API, so the file never leaves your device. Transparency in the source is preserved.",
+    example:
+      "You have a BMP image and a tool, site, or workflow that needs WebP. Drop the BMP here and download the WebP in one step, no upload.",
+    troubleshooting: [
+      { problem: "The WebP looks slightly different in an old browser.", solution: "WebP is supported in all current browsers; very old versions may not render it. The file itself is a standard lossy WebP at quality 0.9." },
+    ],
+  },
+  "ico-to-webp": {
+    whyConvert:
+      "WebP is the modern web image format: 25 to 35 percent smaller than PNG or JPEG at the same quality, with alpha transparency support. This converts ICO images to WebP entirely in your browser using the Canvas API, so the file never leaves your device. Transparency in the source is preserved.",
+    example:
+      "You have a ICO image and a tool, site, or workflow that needs WebP. Drop the ICO here and download the WebP in one step, no upload.",
+    troubleshooting: [
+      { problem: "The WebP looks slightly different in an old browser.", solution: "WebP is supported in all current browsers; very old versions may not render it. The file itself is a standard lossy WebP at quality 0.9." },
+    ],
+  },
+  "webp-to-gif": {
+    whyConvert:
+      "GIF is the universally supported format for simple graphics and the format many chat apps, forums, and legacy tools still require. This converts WebP images to GIF entirely in your browser using the Canvas API, so the file never leaves your device. Animated sources export their first frame as a static GIF.",
+    example:
+      "You have a WebP image and a tool, site, or workflow that needs GIF. Drop the WebP here and download the GIF in one step, no upload.",
+    troubleshooting: [
+      { problem: "My animated source only produced one frame.", solution: "Canvas reads a single frame, so animated GIF/WebP sources export the first frame as a static GIF. For animation-preserving conversion you need a frame-by-frame tool." },
+    ],
+  },
+  "avif-to-gif": {
+    whyConvert:
+      "GIF is the universally supported format for simple graphics and the format many chat apps, forums, and legacy tools still require. This converts AVIF images to GIF entirely in your browser using the Canvas API, so the file never leaves your device. Animated sources export their first frame as a static GIF.",
+    example:
+      "You have a AVIF image and a tool, site, or workflow that needs GIF. Drop the AVIF here and download the GIF in one step, no upload.",
+    troubleshooting: [
+      { problem: "My animated source only produced one frame.", solution: "Canvas reads a single frame, so animated GIF/WebP sources export the first frame as a static GIF. For animation-preserving conversion you need a frame-by-frame tool." },
+    ],
+  },
+  "bmp-to-gif": {
+    whyConvert:
+      "GIF is the universally supported format for simple graphics and the format many chat apps, forums, and legacy tools still require. This converts BMP images to GIF entirely in your browser using the Canvas API, so the file never leaves your device. Animated sources export their first frame as a static GIF.",
+    example:
+      "You have a BMP image and a tool, site, or workflow that needs GIF. Drop the BMP here and download the GIF in one step, no upload.",
+    troubleshooting: [
+      { problem: "My animated source only produced one frame.", solution: "Canvas reads a single frame, so animated GIF/WebP sources export the first frame as a static GIF. For animation-preserving conversion you need a frame-by-frame tool." },
+    ],
+  },
+  "webp-to-bmp": {
+    whyConvert:
+      "BMP is the uncompressed bitmap format Windows tools, some scanners, and older software expect. This converts WebP images to BMP entirely in your browser using the Canvas API, so the file never leaves your device. Output is a standard uncompressed 24-bit bitmap.",
+    example:
+      "You have a WebP image and a tool, site, or workflow that needs BMP. Drop the WebP here and download the BMP in one step, no upload.",
+    troubleshooting: [
+      { problem: "The BMP file is large.", solution: "BMP is uncompressed by design, so it is much bigger than the source. If size matters, PNG (lossless, compressed) is usually the better target." },
+    ],
+  },
+  "gif-to-bmp": {
+    whyConvert:
+      "BMP is the uncompressed bitmap format Windows tools, some scanners, and older software expect. This converts GIF images to BMP entirely in your browser using the Canvas API, so the file never leaves your device. Output is a standard uncompressed 24-bit bitmap.",
+    example:
+      "You have a GIF image and a tool, site, or workflow that needs BMP. Drop the GIF here and download the BMP in one step, no upload.",
+    troubleshooting: [
+      { problem: "The BMP file is large.", solution: "BMP is uncompressed by design, so it is much bigger than the source. If size matters, PNG (lossless, compressed) is usually the better target." },
+    ],
+  },
+  "avif-to-bmp": {
+    whyConvert:
+      "BMP is the uncompressed bitmap format Windows tools, some scanners, and older software expect. This converts AVIF images to BMP entirely in your browser using the Canvas API, so the file never leaves your device. Output is a standard uncompressed 24-bit bitmap.",
+    example:
+      "You have a AVIF image and a tool, site, or workflow that needs BMP. Drop the AVIF here and download the BMP in one step, no upload.",
+    troubleshooting: [
+      { problem: "The BMP file is large.", solution: "BMP is uncompressed by design, so it is much bigger than the source. If size matters, PNG (lossless, compressed) is usually the better target." },
+    ],
+  },
 };
 
 export function getExtendedCopy(toolId: string): ExtendedCopy | undefined {

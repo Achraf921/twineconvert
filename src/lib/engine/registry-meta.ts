@@ -215,6 +215,109 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     ],
     "toMime": "image/jpeg"
   },
+  "svg-to-webp": {
+    "label": "SVG → WebP",
+    "accept": [
+      ".svg"
+    ],
+    "fromMime": [
+      "image/svg+xml"
+    ],
+    "toMime": "image/webp"
+  },
+  "gif-to-webp": {
+    "label": "GIF → WebP",
+    "accept": [
+      ".gif"
+    ],
+    "fromMime": [
+      "image/gif"
+    ],
+    "toMime": "image/webp"
+  },
+  "bmp-to-webp": {
+    "label": "BMP → WebP",
+    "accept": [
+      ".bmp"
+    ],
+    "fromMime": [
+      "image/bmp",
+      "image/x-bmp"
+    ],
+    "toMime": "image/webp"
+  },
+  "ico-to-webp": {
+    "label": "ICO → WebP",
+    "accept": [
+      ".ico"
+    ],
+    "fromMime": [
+      "image/x-icon",
+      "image/vnd.microsoft.icon"
+    ],
+    "toMime": "image/webp"
+  },
+  "webp-to-gif": {
+    "label": "WebP → GIF",
+    "accept": [
+      ".webp"
+    ],
+    "fromMime": [
+      "image/webp"
+    ],
+    "toMime": "image/gif"
+  },
+  "avif-to-gif": {
+    "label": "AVIF → GIF",
+    "accept": [
+      ".avif"
+    ],
+    "fromMime": [
+      "image/avif"
+    ],
+    "toMime": "image/gif"
+  },
+  "bmp-to-gif": {
+    "label": "BMP → GIF",
+    "accept": [
+      ".bmp"
+    ],
+    "fromMime": [
+      "image/bmp",
+      "image/x-bmp"
+    ],
+    "toMime": "image/gif"
+  },
+  "webp-to-bmp": {
+    "label": "WebP → BMP",
+    "accept": [
+      ".webp"
+    ],
+    "fromMime": [
+      "image/webp"
+    ],
+    "toMime": "image/bmp"
+  },
+  "gif-to-bmp": {
+    "label": "GIF → BMP",
+    "accept": [
+      ".gif"
+    ],
+    "fromMime": [
+      "image/gif"
+    ],
+    "toMime": "image/bmp"
+  },
+  "avif-to-bmp": {
+    "label": "AVIF → BMP",
+    "accept": [
+      ".avif"
+    ],
+    "fromMime": [
+      "image/avif"
+    ],
+    "toMime": "image/bmp"
+  },
   "pdf-to-jpg": {
     "label": "PDF → JPG",
     "accept": [
