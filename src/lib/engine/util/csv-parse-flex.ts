@@ -31,6 +31,27 @@ export interface FlexParseOptions {
   header?: boolean;
 }
 
+/**
+ * Strip the two things that silently break real-world CSV exports before
+ * any delimiter sniffing or parsing:
+ *   1. A leading UTF-8 BOM (corrupts the first header name).
+ *   2. An Excel locale-hint line `sep=;` / `sep=,` that many "Save as
+ *      CSV" exports (especially non-US Excel) prepend. Left in, the
+ *      parser reads `sep=;` AS the header row and every real column is
+ *      lost. When present, its character is the intended delimiter.
+ * Returns the cleaned text and, if a sep= line declared one, the
+ * delimiter to use (overriding the sniff).
+ */
+export function stripCsvPreamble(text: string): { text: string; delimiter?: string } {
+  const body = text.replace(/^﻿/, "");
+  const sepMatch = body.match(/^sep=(.)\r?\n/i);
+  if (sepMatch) {
+    const delimiter = sepMatch[1] === "\\t" ? "\t" : sepMatch[1];
+    return { text: body.slice(sepMatch[0].length), delimiter };
+  }
+  return { text: body };
+}
+
 /** Pick the delimiter that splits the header line into the most columns. */
 export function sniffDelimiter(text: string): string {
   const head = text.replace(/^﻿/, "").split(/\r?\n/, 1)[0] ?? "";
@@ -51,8 +72,9 @@ export function parseCsvFlex<T = Record<string, string>>(
   text: string,
   opts: FlexParseOptions = {},
 ): FlexParseResult<T> {
-  const delimiter = sniffDelimiter(text);
-  const parsed = Papa.parse<T>(text, {
+  const pre = stripCsvPreamble(text);
+  const delimiter = pre.delimiter ?? sniffDelimiter(pre.text);
+  const parsed = Papa.parse<T>(pre.text, {
     header: opts.header ?? true,
     skipEmptyLines: true,
     delimiter,

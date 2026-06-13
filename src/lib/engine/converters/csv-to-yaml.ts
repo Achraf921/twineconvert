@@ -1,6 +1,7 @@
 import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
+import { stripCsvPreamble } from "../util/csv-parse-flex";
 
 const csvToYaml: Converter = {
   id: "csv-to-yaml",
@@ -16,10 +17,12 @@ const csvToYaml: Converter = {
     try {
       const Papa = (await import("papaparse")).default;
       const yaml = await import("js-yaml");
-      const parsed = Papa.parse<Record<string, unknown>>(await input.text(), {
+      const { text, delimiter } = stripCsvPreamble(await input.text());
+      const parsed = Papa.parse<Record<string, unknown>>(text, {
         header: true,
         skipEmptyLines: true,
         dynamicTyping: true,
+        ...(delimiter ? { delimiter } : {}),
       });
       if (parsed.errors.length > 0) {
         throw new Error(`CSV parse error: ${parsed.errors[0].message}`);

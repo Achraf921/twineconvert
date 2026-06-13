@@ -1,6 +1,7 @@
 import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
+import { stripCsvPreamble } from "../util/csv-parse-flex";
 
 const csvToXlsx: Converter = {
   id: "csv-to-xlsx",
@@ -19,9 +20,12 @@ const csvToXlsx: Converter = {
       // exposes the methods directly OR wraps them in a `default` export.
       // Handle both shapes.
       const XLSX = XLSXModule.default ?? XLSXModule;
-      const text = await input.text();
+      const { text, delimiter } = stripCsvPreamble(await input.text());
       const Papa = (await import("papaparse")).default;
-      const parsed = Papa.parse<string[]>(text, { skipEmptyLines: true });
+      const parsed = Papa.parse<string[]>(text, {
+        skipEmptyLines: true,
+        ...(delimiter ? { delimiter } : {}),
+      });
       if (!parsed.data || parsed.data.length === 0) {
         throw new Error("CSV input has no rows");
       }

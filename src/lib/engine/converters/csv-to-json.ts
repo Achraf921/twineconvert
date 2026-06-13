@@ -1,6 +1,7 @@
 import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
+import { stripCsvPreamble } from "../util/csv-parse-flex";
 
 /**
  * CSV → JSON via Papa Parse. `header: true` means the first row is treated
@@ -20,11 +21,12 @@ const csvToJson: Converter = {
     let json: string;
     try {
       const Papa = (await import("papaparse")).default;
-      const text = await input.text();
+      const { text, delimiter } = stripCsvPreamble(await input.text());
       const parsed = Papa.parse(text, {
         header: true,
         skipEmptyLines: true,
         dynamicTyping: true,
+        ...(delimiter ? { delimiter } : {}),
       });
       json = JSON.stringify(parsed.data, null, 2);
     } catch (err) {
