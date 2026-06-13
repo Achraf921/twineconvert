@@ -468,6 +468,7 @@ const TEST_FILE_GLOBS = [
   "tests/converters-tabular-hub.test.ts",
   "tests/converters-config-matrix.test.ts",
   "tests/converters-document-hub.test.ts",
+  "tests/converters-office-table.test.ts",
 ];
 const browserTestFiles = (() => {
   try {

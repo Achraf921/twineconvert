@@ -1854,6 +1854,86 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       },
     ],
   },
+  "rtf-to-docx": {
+    whyConvert:
+      "RTF is the lowest-common-denominator rich-text format that opens anywhere, but most people actually want a real Word document to edit, comment on, or drop into a Word-based workflow. Convert the .rtf to a modern .docx.",
+    example:
+      "An old app or scanner exported your document as .rtf and your team works in Word. Convert to DOCX here. Headings, paragraphs, and bold/italic carry over as Word styles, ready to edit.",
+    troubleshooting: [
+      {
+        problem: "Tables or images in the RTF didn't carry over.",
+        solution:
+          "Conversion preserves text structure, headings, and basic emphasis. RTF tables and embedded images flatten to plain paragraphs. For documents built around tables or graphics, rebuild those parts in Word after converting.",
+      },
+    ],
+  },
+  "rtf-to-markdown": {
+    whyConvert:
+      "You want RTF content in a Markdown system: a static site, a wiki, a README, or a clean text file for an LLM. Markdown is portable and diffable where RTF's control words are noise.",
+    example:
+      "You have help text saved as .rtf and your docs live in Markdown. Convert to .md here and the headings, paragraphs, and emphasis become clean Markdown with the \\rtf control codes stripped out.",
+    troubleshooting: [
+      {
+        problem: "The output is plain paragraphs with little formatting.",
+        solution:
+          "RTF stores formatting as low-level control words; only structure that maps cleanly to Markdown (paragraphs, headings, bold/italic, lists) is kept. Complex layout has no Markdown equivalent and is dropped.",
+      },
+    ],
+  },
+  "xlsx-to-html": {
+    whyConvert:
+      "You need a spreadsheet's data as an HTML table to publish on a web page, paste into a CMS, or embed in an email, without a screenshot or a clunky 'Save as Web Page' export full of Excel markup.",
+    example:
+      "You have a price list in Excel and want it live on your site. Convert to HTML here, copy the table into your page, and you have clean, styled rows instead of an image people cannot select or search.",
+    troubleshooting: [
+      {
+        problem: "Only the first sheet came through.",
+        solution:
+          "Multi-sheet workbooks export the first sheet, matching the other spreadsheet tools. To publish another sheet, move it to the first position in Excel, or split the workbook and convert each sheet separately.",
+      },
+      {
+        problem: "Formulas showed as values, not the formula text.",
+        solution:
+          "The converter reads the computed cell values, which is what a web table should show. If you need the formulas themselves, those live only in the spreadsheet; export is value-based by design.",
+      },
+    ],
+  },
+  "html-to-xlsx": {
+    whyConvert:
+      "You found a table on a web page or in an HTML report and want it in Excel or Google Sheets to sort, filter, chart, or do math on, instead of retyping rows by hand.",
+    example:
+      "A dashboard renders results as an HTML table. Save the page, convert to XLSX here, and open a real .xlsx in Excel where you can pivot and total the numbers.",
+    troubleshooting: [
+      {
+        problem: "Nothing converted / no table found.",
+        solution:
+          "The tool reads the first real <table> element. If the page draws its grid with <div>s and CSS (many modern apps do), there is no HTML table to extract. Look for an export or copy the data into a CSV first.",
+      },
+      {
+        problem: "Numbers came in as text in Excel.",
+        solution:
+          "Cell values are taken verbatim from the table. If Excel treats a column as text, select it and use Data > Text to Columns or multiply by 1 to coerce to numbers.",
+      },
+    ],
+  },
+  "html-to-csv": {
+    whyConvert:
+      "Pull a table out of a web page or HTML report into CSV for a spreadsheet, a script, a database import, or a data pipeline. CSV is the universal tabular exchange format.",
+    example:
+      "A report page shows a table you need in your analysis. Save the HTML, convert to CSV here, and load it into pandas, Excel, or your database with the headers and rows intact and commas safely quoted.",
+    troubleshooting: [
+      {
+        problem: "No table found in the HTML.",
+        solution:
+          "The converter extracts the first <table> element. Pages that render grids with <div>/CSS have no table to read. If there is no real table, copy the data into a spreadsheet and export CSV from there.",
+      },
+      {
+        problem: "A cell with commas split into extra columns when I opened it.",
+        solution:
+          "The output is RFC-4180 CSV, so cells containing commas are wrapped in quotes. If a tool mis-parses them, it is not reading quoted fields. Import via your spreadsheet's text-import wizard and set the delimiter to comma.",
+      },
+    ],
+  },
   "markdown-to-docx": {
     whyConvert:
       "You wrote in Markdown but the people reviewing it live in Word. A client, a professor, a legal team, a manager who track-changes everything. Convert your README, spec, or draft to a real .docx they can open and edit.",

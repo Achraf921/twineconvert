@@ -517,6 +517,11 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "markdown-to-txt": { provider: () => text("test.md", "# Title\n\nHello **world** with a [link](https://example.com).\n", "text/markdown"), env: "node" },
   "html-to-txt":   { provider: () => text("test.html", "<html><body><h1>Title</h1><p>Hello world.</p><p>Second.</p></body></html>", "text/html"), env: "node" },
   "txt-to-html":   { provider: () => text("test.txt", "First paragraph here.\n\nSecond paragraph here.", "text/plain"), env: "node" },
+  "rtf-to-docx":   { provider: () => text("test.rtf", "{\\rtf1\\ansi\\deff0 {\\b Title}\\par Hello world paragraph.\\par}", "application/rtf"), env: "node" },
+  "rtf-to-markdown": { provider: () => text("test.rtf", "{\\rtf1\\ansi\\deff0 {\\b Title}\\par Hello world paragraph.\\par}", "application/rtf"), env: "node" },
+  "xlsx-to-html":  { provider: async () => fileFromBytes("test.xlsx", await makeTinyXlsx(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"), env: "node" },
+  "html-to-xlsx":  { provider: () => text("test.html", "<table><tr><th>City</th><th>Pop</th></tr><tr><td>Paris</td><td>2161000</td></tr></table>", "text/html"), env: "node" },
+  "html-to-csv":   { provider: () => text("test.html", "<table><tr><th>Name</th><th>Age</th></tr><tr><td>Alice</td><td>30</td></tr></table>", "text/html"), env: "node" },
 
   // ===== EPUB =====
   "epub-to-text": { provider: async () => fileFromBytes("test.epub", await makeTinyEpub(), "application/epub+zip"), env: "node" },

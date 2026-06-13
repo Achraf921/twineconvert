@@ -6,12 +6,12 @@ Generated 2026-06-13 from src/lib/engine/converters/.
 
 | Classification | Count |
 |---|---:|
-| Total converters | 544 |
+| Total converters | 549 |
 | **Bijective candidates** (lossless, same-kind, both directions exist) | 256 |
 | **Bijective candidates missing reverse converter** | 40 |
 | **Bijective candidates missing round-trip test** | 27 |
-| Lossy encoding (same kind, but lossy format) | 119 |
-| Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 76 |
+| Lossy encoding (same kind, but lossy format) | 121 |
+| Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 79 |
 | Single-action (no reverse possible) | 53 |
 | Unknown formats (need to add to FORMATS table) | 0 |
 | Compound id (irregular pattern) | 0 |
@@ -178,7 +178,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `csv-to-enw` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-fhir-bundle` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-gedcom` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
-| `csv-to-html` | cross-kind | (`html-to-csv` missing) | n/a | data -> doc: cross-domain, inherently lossy |
+| `csv-to-html` | cross-kind | ✓ | ✓ | data -> doc: cross-domain, inherently lossy |
 | `csv-to-html-table` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-ics` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
 | `csv-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
@@ -214,7 +214,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `docx-to-html` | lossy-encoding | ✓ | n/a | docx or html uses lossy encoding |
 | `docx-to-markdown` | lossy-encoding | ✓ | ✓ | docx or markdown uses lossy encoding |
 | `docx-to-pdf` | lossy-encoding | ✓ | ✓ | docx or pdf uses lossy encoding |
-| `docx-to-txt` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
+| `docx-to-txt` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
 | `dot-to-png` | cross-kind | (`png-to-dot` missing) | ✓ | markup -> raster: cross-domain, inherently lossy |
 | `dot-to-svg` | cross-kind | (`svg-to-dot` missing) | ✓ | markup -> vector: cross-domain, inherently lossy |
 | `dst-to-exp` | bijective-candidate | ✓ | ✓ | both lossless embroidery formats; should round-trip cleanly |
@@ -314,9 +314,11 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `html-table-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `html-table-to-markdown-table` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `html-table-to-xlsx` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `html-to-csv` | cross-kind | ✓ | ✓ | doc -> data: cross-domain, inherently lossy |
 | `html-to-docx` | lossy-encoding | ✓ | n/a | html or docx uses lossy encoding |
 | `html-to-markdown` | lossy-encoding | ✓ | n/a | html or markdown uses lossy encoding |
 | `html-to-txt` | lossy-encoding | ✓ | ✓ | html or txt uses lossy encoding |
+| `html-to-xlsx` | cross-kind | ✓ | ✓ | doc -> data: cross-domain, inherently lossy |
 | `ico-to-avif` | lossy-encoding | (`avif-to-ico` missing) | ✓ | ico or avif uses lossy encoding |
 | `ico-to-bmp` | bijective-candidate | (`bmp-to-ico` missing) | ✓ | both lossless raster formats; should round-trip cleanly |
 | `ico-to-gif` | bijective-candidate | (`gif-to-ico` missing) | ✓ | both lossless raster formats; should round-trip cleanly |
@@ -538,7 +540,9 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `ris-to-refworks` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `ris-to-xlsx` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
 | `ris-to-yaml` | bijective-candidate | (`yaml-to-ris` missing) | n/a | both lossless data formats; should round-trip cleanly |
+| `rtf-to-docx` | lossy-encoding | (`docx-to-rtf` missing) | ✓ | rtf or docx uses lossy encoding |
 | `rtf-to-html` | lossy-encoding | (`html-to-rtf` missing) | n/a | rtf or html uses lossy encoding |
+| `rtf-to-markdown` | lossy-encoding | (`markdown-to-rtf` missing) | ✓ | rtf or markdown uses lossy encoding |
 | `rtf-to-txt` | lossy-encoding | (`txt-to-rtf` missing) | n/a | rtf or txt uses lossy encoding |
 | `sarif-to-csv` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
 | `sarif-to-html` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
@@ -621,6 +625,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `xlsx-to-csl-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `xlsx-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `xlsx-to-endnote-xml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `xlsx-to-html` | cross-kind | ✓ | ✓ | data -> doc: cross-domain, inherently lossy |
 | `xlsx-to-html-table` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `xlsx-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `xlsx-to-markdown-table` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |

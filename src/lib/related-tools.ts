@@ -200,6 +200,13 @@ const HAND_CURATED_RELATED: Record<string, string[]> = {
   "bencode-to-json": ["json-to-bencode", "json-to-msgpack", "cbor-to-json"],
   "json-to-bencode": ["bencode-to-json", "msgpack-to-json", "json-to-cbor"],
 
+  // ===== Office + table conversions (RTF / XLSX / HTML table / CSV) =====
+  "rtf-to-docx":     ["rtf-to-html", "rtf-to-markdown", "rtf-to-txt"],
+  "rtf-to-markdown": ["rtf-to-html", "rtf-to-docx", "html-to-markdown"],
+  "xlsx-to-html":    ["html-to-xlsx", "xlsx-to-csv", "csv-to-html"],
+  "html-to-xlsx":    ["xlsx-to-html", "html-to-csv", "csv-to-xlsx"],
+  "html-to-csv":     ["csv-to-html", "html-to-xlsx", "html-to-markdown"],
+
   // ===== Document conversions (Markdown / DOCX / HTML / text) =====
   "markdown-to-docx": ["docx-to-markdown", "markdown-to-pdf", "markdown-to-html"],
   "docx-to-markdown": ["markdown-to-docx", "docx-to-html", "docx-to-txt"],

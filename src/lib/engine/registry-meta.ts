@@ -3178,6 +3178,72 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "text/html",
     "maxFileSizeBytes": 26214400
   },
+  "rtf-to-docx": {
+    "label": "RTF → DOCX",
+    "accept": [
+      ".rtf"
+    ],
+    "fromMime": [
+      "application/rtf",
+      "text/rtf",
+      "text/plain"
+    ],
+    "toMime": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "maxFileSizeBytes": 26214400
+  },
+  "rtf-to-markdown": {
+    "label": "RTF → Markdown",
+    "accept": [
+      ".rtf"
+    ],
+    "fromMime": [
+      "application/rtf",
+      "text/rtf",
+      "text/plain"
+    ],
+    "toMime": "text/markdown",
+    "maxFileSizeBytes": 26214400
+  },
+  "xlsx-to-html": {
+    "label": "XLSX → HTML",
+    "accept": [
+      ".xlsx"
+    ],
+    "fromMime": [
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "application/vnd.ms-excel"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 52428800
+  },
+  "html-to-xlsx": {
+    "label": "HTML → XLSX",
+    "accept": [
+      ".html",
+      ".htm",
+      ".xhtml"
+    ],
+    "fromMime": [
+      "text/html",
+      "application/xhtml+xml"
+    ],
+    "toMime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "maxFileSizeBytes": 26214400
+  },
+  "html-to-csv": {
+    "label": "HTML → CSV",
+    "accept": [
+      ".html",
+      ".htm",
+      ".xhtml"
+    ],
+    "fromMime": [
+      "text/html",
+      "application/xhtml+xml"
+    ],
+    "toMime": "text/csv",
+    "maxFileSizeBytes": 26214400
+  },
   "vcf-to-xlsx": {
     "label": "VCF → XLSX",
     "accept": [
