@@ -1,6 +1,7 @@
 import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
+import { stripCsvPreamble } from "../util/csv-parse-flex";
 import { rowsToBundle } from "../util/fhir";
 
 /**
@@ -25,7 +26,11 @@ const csvToFhirBundle: Converter = {
     let out: string;
     try {
       const Papa = (await import("papaparse")).default;
-      const parsed = Papa.parse<string[]>(await input.text(), { skipEmptyLines: true });
+      const { text, delimiter } = stripCsvPreamble(await input.text());
+      const parsed = Papa.parse<string[]>(text, {
+        skipEmptyLines: true,
+        ...(delimiter ? { delimiter } : {}),
+      });
       if (parsed.errors.length > 0) {
         throw new Error(`CSV parse error: ${parsed.errors[0].message}`);
       }

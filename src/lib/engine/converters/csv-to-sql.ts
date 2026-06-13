@@ -1,6 +1,7 @@
 import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
+import { stripCsvPreamble } from "../util/csv-parse-flex";
 import { buildSqlDump, type SqlTable } from "../util/sql";
 
 const csvToSql: Converter = {
@@ -16,9 +17,10 @@ const csvToSql: Converter = {
     let sql: string;
     try {
       const Papa = (await import("papaparse")).default;
+      const { text, delimiter } = stripCsvPreamble(await input.text());
       const parsed = Papa.parse<Record<string, string | number | boolean | null>>(
-        await input.text(),
-        { header: true, skipEmptyLines: true, dynamicTyping: true },
+        text,
+        { header: true, skipEmptyLines: true, dynamicTyping: true, ...(delimiter ? { delimiter } : {}) },
       );
       if (parsed.errors.length > 0) {
         throw new Error(`CSV parse error: ${parsed.errors[0].message}`);

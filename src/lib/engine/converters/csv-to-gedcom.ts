@@ -2,6 +2,7 @@ import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
 import { buildGedcom } from "../util/gedcom-build";
+import { stripCsvPreamble } from "../util/csv-parse-flex";
 import type { GedcomIndividual } from "../util/gedcom-parse";
 
 /**
@@ -27,10 +28,11 @@ const csvToGedcom: Converter = {
     let gedcom: string;
     try {
       const Papa = (await import("papaparse")).default;
-      const text = await input.text();
+      const { text, delimiter } = stripCsvPreamble(await input.text());
       const parsed = Papa.parse<Record<string, string>>(text, {
         header: true,
         skipEmptyLines: true,
+        ...(delimiter ? { delimiter } : {}),
       });
 
       const pick = (row: Record<string, string>, ...keys: string[]) => {

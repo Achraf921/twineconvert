@@ -1,6 +1,7 @@
 import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
+import { stripCsvPreamble } from "../util/csv-parse-flex";
 import { buildVcard, contactFromRow } from "../util/vcard";
 
 const csvToVcf: Converter = {
@@ -16,9 +17,11 @@ const csvToVcf: Converter = {
     let vcf: string;
     try {
       const Papa = (await import("papaparse")).default;
-      const parsed = Papa.parse<Record<string, string>>(await input.text(), {
+      const { text, delimiter } = stripCsvPreamble(await input.text());
+      const parsed = Papa.parse<Record<string, string>>(text, {
         header: true,
         skipEmptyLines: true,
+        ...(delimiter ? { delimiter } : {}),
       });
       const rows = (parsed.data ?? []).filter(
         (r) => r && typeof r === "object" && Object.keys(r).length > 0,

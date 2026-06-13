@@ -79,3 +79,50 @@ describe("csv-to-html (parseCsvFlex): Excel sep= hardening", () => {
     expect(html).not.toMatch(/sep=/);
   });
 });
+
+describe("remaining direct-papaparse CSV tools: Excel sep= hardening", () => {
+  // Each asserts the real data value survives and the sep= line never
+  // leaks into the output (its signature when the preamble breaks parsing).
+  it("csv-to-jsonl keeps keyed values from a sep=; CSV", async () => {
+    const out = await (await run("csv-to-jsonl", f("x.csv", "sep=;\nname;age\nBob;30\n"))).blob.text();
+    expect(out).toMatch(/"name":\s*"Bob"/);
+    expect(out).not.toMatch(/sep=/);
+  });
+  it("csv-to-sql emits INSERTs with the row data from a sep=; CSV", async () => {
+    const out = await (await run("csv-to-sql", f("x.csv", "sep=;\nid;name\n1;Bob\n"))).blob.text();
+    expect(out).toMatch(/INSERT INTO/i);
+    expect(out).toMatch(/Bob/);
+    expect(out).not.toMatch(/sep=/);
+  });
+  it("csv-to-vcf keeps the contact from a sep=; CSV", async () => {
+    const out = await (await run("csv-to-vcf", f("x.csv", "sep=;\nfullName;email\nBob Smith;bob@x.com\n"))).blob.text();
+    expect(out).toMatch(/Bob Smith/);
+    expect(out).not.toMatch(/sep=/);
+  });
+  it("csv-to-ics keeps the event from a sep=; CSV", async () => {
+    const out = await (await run("csv-to-ics", f("x.csv", "sep=;\nsummary;dtstart\nTeam Meeting;2024-01-15\n"))).blob.text();
+    expect(out).toMatch(/Team Meeting/);
+    expect(out).not.toMatch(/sep=/);
+  });
+  it("csv-to-gedcom keeps the individual from a sep=; CSV", async () => {
+    const out = await (await run("csv-to-gedcom", f("x.csv", "sep=;\nname;sex\nJohn Doe;M\n"))).blob.text();
+    expect(out).toMatch(/John/);
+    expect(out).not.toMatch(/sep=/);
+  });
+  it("csv-to-markdown-table renders a table from a sep=; CSV", async () => {
+    const out = await (await run("csv-to-markdown-table", f("x.csv", "sep=;\nName;Age\nBob;30\n"))).blob.text();
+    expect(out).toMatch(/\|\s*Name\s*\|/);
+    expect(out).toMatch(/\|\s*Bob\s*\|/);
+    expect(out).not.toMatch(/sep=/);
+  });
+  it("csv-to-html-table renders a table from a sep=; CSV", async () => {
+    const out = await (await run("csv-to-html-table", f("x.csv", "sep=;\nName;Age\nBob;30\n"))).blob.text();
+    expect(out).toMatch(/Bob/);
+    expect(out).not.toMatch(/sep=/);
+  });
+  it("csv-to-fhir-bundle keeps the resource from a sep=; CSV", async () => {
+    const out = await (await run("csv-to-fhir-bundle", f("x.csv", "sep=;\nresourceType;name\nPatient;Bob\n"))).blob.text();
+    expect(out).toMatch(/Patient/);
+    expect(out).not.toMatch(/sep=/);
+  });
+});
