@@ -81,6 +81,15 @@ export const registry: Record<string, ConverterLoader> = {
   "webp-to-bmp": () => import("./converters/webp-to-bmp").then((m) => m.default),
   "gif-to-bmp": () => import("./converters/gif-to-bmp").then((m) => m.default),
   "avif-to-bmp": () => import("./converters/avif-to-bmp").then((m) => m.default),
+  "gif-to-avif": () => import("./converters/gif-to-avif").then((m) => m.default),
+  "bmp-to-avif": () => import("./converters/bmp-to-avif").then((m) => m.default),
+  "svg-to-avif": () => import("./converters/svg-to-avif").then((m) => m.default),
+  "ico-to-avif": () => import("./converters/ico-to-avif").then((m) => m.default),
+  "svg-to-gif": () => import("./converters/svg-to-gif").then((m) => m.default),
+  "ico-to-gif": () => import("./converters/ico-to-gif").then((m) => m.default),
+  "svg-to-bmp": () => import("./converters/svg-to-bmp").then((m) => m.default),
+  "ico-to-bmp": () => import("./converters/ico-to-bmp").then((m) => m.default),
+  "tiff-to-webp": () => import("./converters/tiff-to-webp").then((m) => m.default),
 
   // PDF family, pdfjs-dist for rendering, pdf-lib for assembly + manipulation
   "pdf-to-jpg": () =>

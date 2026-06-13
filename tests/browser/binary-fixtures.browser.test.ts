@@ -68,6 +68,12 @@ describe("TIFF converters (browser, hand-encoded fixture)", () => {
     await assertImageQuality(tifReferencePng, result.blob, { maxFingerprintDelta: 22 });
   });
 
+  it("tiff-to-webp matches the PNG reference", async () => {
+    const result = await run("tiff-to-webp", loadFixtureSync("sample.tif"));
+    await expectMagic(result.blob, MAGIC.WEBP_RIFF);
+    await assertImageQuality(tifReferencePng, result.blob, { maxFingerprintDelta: 22 });
+  });
+
   it("tiff-to-pdf wraps the image in a PDF", async () => {
     const result = await run("tiff-to-pdf", loadFixtureSync("sample.tif"));
     expect(result.blob.size).toBeGreaterThan(0);

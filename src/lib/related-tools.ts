@@ -330,6 +330,15 @@ const HAND_CURATED_RELATED: Record<string, string[]> = {
   "webp-to-bmp": ["webp-to-png","webp-to-gif","webp-to-jpg"],
   "gif-to-bmp": ["gif-to-png","gif-to-webp","gif-to-jpg"],
   "avif-to-bmp": ["avif-to-png","avif-to-gif","avif-to-jpg"],
+  "gif-to-avif": ["gif-to-webp","gif-to-png","avif-to-gif"],
+  "bmp-to-avif": ["bmp-to-webp","bmp-to-png","avif-to-bmp"],
+  "svg-to-avif": ["svg-to-webp","svg-to-png","svg-to-gif"],
+  "ico-to-avif": ["ico-to-webp","ico-to-png","ico-to-gif"],
+  "svg-to-gif": ["svg-to-png","svg-to-webp","svg-to-bmp"],
+  "ico-to-gif": ["ico-to-png","ico-to-webp","ico-to-bmp"],
+  "svg-to-bmp": ["svg-to-png","svg-to-webp","svg-to-gif"],
+  "ico-to-bmp": ["ico-to-png","ico-to-webp","ico-to-gif"],
+  "tiff-to-webp": ["tiff-to-png","tiff-to-jpg","tiff-to-pdf"],
 
   // ===== Subtitle transcripts + matrix gaps =====
   "srt-to-txt": ["vtt-to-txt", "srt-to-vtt", "srt-to-ass"],

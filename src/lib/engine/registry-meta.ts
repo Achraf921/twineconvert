@@ -318,6 +318,103 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     ],
     "toMime": "image/bmp"
   },
+  "gif-to-avif": {
+    "label": "GIF → AVIF",
+    "accept": [
+      ".gif"
+    ],
+    "fromMime": [
+      "image/gif"
+    ],
+    "toMime": "image/avif"
+  },
+  "bmp-to-avif": {
+    "label": "BMP → AVIF",
+    "accept": [
+      ".bmp"
+    ],
+    "fromMime": [
+      "image/bmp",
+      "image/x-bmp"
+    ],
+    "toMime": "image/avif"
+  },
+  "svg-to-avif": {
+    "label": "SVG → AVIF",
+    "accept": [
+      ".svg"
+    ],
+    "fromMime": [
+      "image/svg+xml"
+    ],
+    "toMime": "image/avif"
+  },
+  "ico-to-avif": {
+    "label": "ICO → AVIF",
+    "accept": [
+      ".ico"
+    ],
+    "fromMime": [
+      "image/x-icon",
+      "image/vnd.microsoft.icon"
+    ],
+    "toMime": "image/avif"
+  },
+  "svg-to-gif": {
+    "label": "SVG → GIF",
+    "accept": [
+      ".svg"
+    ],
+    "fromMime": [
+      "image/svg+xml"
+    ],
+    "toMime": "image/gif"
+  },
+  "ico-to-gif": {
+    "label": "ICO → GIF",
+    "accept": [
+      ".ico"
+    ],
+    "fromMime": [
+      "image/x-icon",
+      "image/vnd.microsoft.icon"
+    ],
+    "toMime": "image/gif"
+  },
+  "svg-to-bmp": {
+    "label": "SVG → BMP",
+    "accept": [
+      ".svg"
+    ],
+    "fromMime": [
+      "image/svg+xml"
+    ],
+    "toMime": "image/bmp"
+  },
+  "ico-to-bmp": {
+    "label": "ICO → BMP",
+    "accept": [
+      ".ico"
+    ],
+    "fromMime": [
+      "image/x-icon",
+      "image/vnd.microsoft.icon"
+    ],
+    "toMime": "image/bmp"
+  },
+  "tiff-to-webp": {
+    "label": "TIFF → WebP",
+    "accept": [
+      ".tiff",
+      ".tif"
+    ],
+    "fromMime": [
+      "image/tiff",
+      "image/x-tiff"
+    ],
+    "toMime": "image/webp",
+    "maxFileSizeBytes": 104857600
+  },
   "pdf-to-jpg": {
     "label": "PDF → JPG",
     "accept": [

@@ -211,4 +211,60 @@ describe("image format matrix gap fills (browser)", () => {
     await expectMagic(r.blob, MAGIC.BMP);
     expect(r.blob.size).toBeGreaterThan(0);
   });
+
+  const svgFile = () =>
+    fileFromBlob(new Blob([SVG], { type: "image/svg+xml" }), "in.svg", "image/svg+xml");
+
+  // --- to AVIF (avif-encode). AVIF carries "ftyp" at byte offset 4;
+  //     verify that, then round-trip back to PNG to prove real content. ---
+  const assertAvif = async (blob: Blob) => {
+    const head = new Uint8Array(await blob.slice(4, 8).arrayBuffer());
+    expect(String.fromCharCode(...head)).toBe("ftyp");
+    expect(blob.size).toBeGreaterThan(0);
+    // Decodes cleanly back to PNG (proves it is a valid AVIF, not garbage).
+    const back = await run("avif-to-png", new File([blob], "rt.avif", { type: "image/avif" }));
+    await expectMagic(back.blob, MAGIC.PNG);
+  };
+  it("gif-to-avif produces a real AVIF", async () => {
+    const gif = await derive("png-to-gif", "in.gif", "image/gif");
+    await assertAvif((await run("gif-to-avif", gif)).blob);
+  }, 60000);
+  it("bmp-to-avif preserves content", async () => {
+    const bmp = await derive("png-to-bmp", "in.bmp", "image/bmp");
+    const r = await run("bmp-to-avif", bmp);
+    await assertAvif(r.blob);
+    const back = await run("avif-to-png", new File([r.blob], "rt.avif", { type: "image/avif" }));
+    await assertImageQuality(bmp, back.blob, { maxFingerprintDelta: 24 });
+  }, 60000);
+  it("svg-to-avif produces a real AVIF", async () => {
+    await assertAvif((await run("svg-to-avif", svgFile())).blob);
+  }, 60000);
+  it("ico-to-avif produces a real AVIF", async () => {
+    const ico = await derive("png-to-ico", "in.ico", "image/x-icon");
+    await assertAvif((await run("ico-to-avif", ico)).blob);
+  }, 60000);
+
+  // --- SVG / ICO to GIF + BMP ---
+  it("svg-to-gif produces a real GIF", async () => {
+    const r = await run("svg-to-gif", svgFile());
+    await expectMagic(r.blob, MAGIC.GIF);
+    expect(r.blob.size).toBeGreaterThan(0);
+  });
+  it("ico-to-gif produces a real GIF", async () => {
+    const ico = await derive("png-to-ico", "in.ico", "image/x-icon");
+    const r = await run("ico-to-gif", ico);
+    await expectMagic(r.blob, MAGIC.GIF);
+    expect(r.blob.size).toBeGreaterThan(0);
+  });
+  it("svg-to-bmp produces a real BMP", async () => {
+    const r = await run("svg-to-bmp", svgFile());
+    await expectMagic(r.blob, MAGIC.BMP);
+    expect(r.blob.size).toBeGreaterThan(0);
+  });
+  it("ico-to-bmp produces a real BMP", async () => {
+    const ico = await derive("png-to-ico", "in.ico", "image/x-icon");
+    const r = await run("ico-to-bmp", ico);
+    await expectMagic(r.blob, MAGIC.BMP);
+    expect(r.blob.size).toBeGreaterThan(0);
+  });
 });

@@ -4186,6 +4186,87 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       { problem: "The BMP file is large.", solution: "BMP is uncompressed by design, so it is much bigger than the source. If size matters, PNG (lossless, compressed) is usually the better target." },
     ],
   },
+  "gif-to-avif": {
+    whyConvert:
+      "AVIF is the newest web image format, typically 20 percent smaller than WebP and far smaller than PNG or JPEG at the same quality, with alpha transparency. This converts GIF images to AVIF entirely in your browser, so the file never leaves your device. Source transparency is preserved.",
+    example:
+      "You have a GIF image and need AVIF for a site, app, or workflow that requires it. Drop the GIF here and download the AVIF, no upload.",
+    troubleshooting: [
+      { problem: "An older browser will not open the AVIF.", solution: "AVIF is supported in all current browsers; very old versions may not decode it. The output is a standard AVIF you can verify by re-opening it here." },
+    ],
+  },
+  "bmp-to-avif": {
+    whyConvert:
+      "AVIF is the newest web image format, typically 20 percent smaller than WebP and far smaller than PNG or JPEG at the same quality, with alpha transparency. This converts BMP images to AVIF entirely in your browser, so the file never leaves your device. Source transparency is preserved.",
+    example:
+      "You have a BMP image and need AVIF for a site, app, or workflow that requires it. Drop the BMP here and download the AVIF, no upload.",
+    troubleshooting: [
+      { problem: "An older browser will not open the AVIF.", solution: "AVIF is supported in all current browsers; very old versions may not decode it. The output is a standard AVIF you can verify by re-opening it here." },
+    ],
+  },
+  "svg-to-avif": {
+    whyConvert:
+      "AVIF is the newest web image format, typically 20 percent smaller than WebP and far smaller than PNG or JPEG at the same quality, with alpha transparency. This converts SVG images to AVIF entirely in your browser, so the file never leaves your device. Source transparency is preserved.",
+    example:
+      "You have a SVG image and need AVIF for a site, app, or workflow that requires it. Drop the SVG here and download the AVIF, no upload.",
+    troubleshooting: [
+      { problem: "An older browser will not open the AVIF.", solution: "AVIF is supported in all current browsers; very old versions may not decode it. The output is a standard AVIF you can verify by re-opening it here." },
+    ],
+  },
+  "ico-to-avif": {
+    whyConvert:
+      "AVIF is the newest web image format, typically 20 percent smaller than WebP and far smaller than PNG or JPEG at the same quality, with alpha transparency. This converts ICO images to AVIF entirely in your browser, so the file never leaves your device. Source transparency is preserved.",
+    example:
+      "You have a ICO image and need AVIF for a site, app, or workflow that requires it. Drop the ICO here and download the AVIF, no upload.",
+    troubleshooting: [
+      { problem: "An older browser will not open the AVIF.", solution: "AVIF is supported in all current browsers; very old versions may not decode it. The output is a standard AVIF you can verify by re-opening it here." },
+    ],
+  },
+  "svg-to-gif": {
+    whyConvert:
+      "GIF is universally supported by chat apps, forums, and legacy tools that do not accept newer formats. This converts SVG images to GIF entirely in your browser, so the file never leaves your device. Animated sources export the first frame as a static GIF.",
+    example:
+      "You have a SVG image and need GIF for a site, app, or workflow that requires it. Drop the SVG here and download the GIF, no upload.",
+    troubleshooting: [
+      { problem: "My animated source became one frame.", solution: "Canvas reads a single frame, so animated sources export their first frame as a static GIF." },
+    ],
+  },
+  "ico-to-gif": {
+    whyConvert:
+      "GIF is universally supported by chat apps, forums, and legacy tools that do not accept newer formats. This converts ICO images to GIF entirely in your browser, so the file never leaves your device. Animated sources export the first frame as a static GIF.",
+    example:
+      "You have a ICO image and need GIF for a site, app, or workflow that requires it. Drop the ICO here and download the GIF, no upload.",
+    troubleshooting: [
+      { problem: "My animated source became one frame.", solution: "Canvas reads a single frame, so animated sources export their first frame as a static GIF." },
+    ],
+  },
+  "svg-to-bmp": {
+    whyConvert:
+      "BMP is the uncompressed bitmap Windows utilities, some scanners, and older software still expect. This converts SVG images to BMP entirely in your browser, so the file never leaves your device. Output is a standard 24-bit uncompressed bitmap.",
+    example:
+      "You have a SVG image and need BMP for a site, app, or workflow that requires it. Drop the SVG here and download the BMP, no upload.",
+    troubleshooting: [
+      { problem: "The BMP is large.", solution: "BMP is uncompressed by design and much bigger than the source; PNG (lossless, compressed) is usually a better target if size matters." },
+    ],
+  },
+  "ico-to-bmp": {
+    whyConvert:
+      "BMP is the uncompressed bitmap Windows utilities, some scanners, and older software still expect. This converts ICO images to BMP entirely in your browser, so the file never leaves your device. Output is a standard 24-bit uncompressed bitmap.",
+    example:
+      "You have a ICO image and need BMP for a site, app, or workflow that requires it. Drop the ICO here and download the BMP, no upload.",
+    troubleshooting: [
+      { problem: "The BMP is large.", solution: "BMP is uncompressed by design and much bigger than the source; PNG (lossless, compressed) is usually a better target if size matters." },
+    ],
+  },
+  "tiff-to-webp": {
+    whyConvert:
+      "WebP is 25 to 35 percent smaller than PNG or JPEG at equal quality and is supported across all modern browsers. This decodes the TIFF and re-encodes TIFF images to WebP entirely in your browser, so the file never leaves your device. Source transparency is preserved.",
+    example:
+      "You have a TIFF image and need WebP for a site, app, or workflow that requires it. Drop the TIFF here and download the WebP, no upload.",
+    troubleshooting: [
+      { problem: "Multi-page TIFF only converted the first page.", solution: "This reads the first image in the TIFF. For multi-page TIFFs, split the pages first or use a multi-page-aware tool." },
+    ],
+  },
 };
 
 export function getExtendedCopy(toolId: string): ExtendedCopy | undefined {
