@@ -101,6 +101,12 @@ const text = (name: string, content: string, mime = "text/plain") =>
 
 const F = FIXTURES;
 
+// A small but complete citation CSV (our own writer's column layout) used
+// to drive the csv -> {csl-json, endnote-xml, nbib} citation-hub routes.
+const CITATION_CSV =
+  "id,type,title,authors,year,journal,volume,issue,pages,doi\n" +
+  'smith2021,article,"A Study of Things","Smith, John; Doe, Jane","2021","Nature","12","3","45-67","10.1000/xyz"';
+
 // ============================================================================
 // Registry: converter id → fixture spec
 //
@@ -232,6 +238,24 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   // HAR <-> curl
   "har-to-curl": { provider: () => text("test.har", JSON.stringify({log:{version:"1.2",entries:[{request:{method:"GET",url:"https://api.example.com/x",headers:[{name:"Accept",value:"application/json"}]}}]}}), "application/har+json"), env: "node" },
   "curl-to-har": { provider: () => text("test.sh", "curl https://api.example.com/users\ncurl -X POST 'https://api.example.com/x' -H 'Content-Type: application/json' -d '{\"a\":1}'\n", "text/plain"), env: "node" },
+
+  // Citation hub completion (CSL-JSON / EndNote XML / NBIB cross-pairs)
+  "csl-json-to-ris": { provider: () => text("test.json", F.cslJson, "application/json"), env: "node" },
+  "ris-to-csl-json": { provider: () => text("test.ris", F.ris, "application/x-research-info-systems"), env: "node" },
+  "csl-json-to-csv": { provider: () => text("test.json", F.cslJson, "application/json"), env: "node" },
+  "csv-to-csl-json": { provider: () => text("test.csv", CITATION_CSV, "text/csv"), env: "node" },
+  "csl-json-to-nbib": { provider: () => text("test.json", F.cslJson, "application/json"), env: "node" },
+  "nbib-to-csl-json": { provider: () => text("test.nbib", F.nbibRealPubMed, "application/x-research-info-systems"), env: "node" },
+  "csl-json-to-endnote-xml": { provider: () => text("test.json", F.cslJson, "application/json"), env: "node" },
+  "endnote-xml-to-csl-json": { provider: () => text("test.xml", F.endnoteXml, "application/xml"), env: "node" },
+  "endnote-xml-to-csv": { provider: () => text("test.xml", F.endnoteXml, "application/xml"), env: "node" },
+  "csv-to-endnote-xml": { provider: () => text("test.csv", CITATION_CSV, "text/csv"), env: "node" },
+  "endnote-xml-to-nbib": { provider: () => text("test.xml", F.endnoteXml, "application/xml"), env: "node" },
+  "nbib-to-endnote-xml": { provider: () => text("test.nbib", F.nbibRealPubMed, "application/x-research-info-systems"), env: "node" },
+  "nbib-to-csv": { provider: () => text("test.nbib", F.nbibRealPubMed, "application/x-research-info-systems"), env: "node" },
+  "csv-to-nbib": { provider: () => text("test.csv", CITATION_CSV, "text/csv"), env: "node" },
+  "endnote-xml-to-xlsx": { provider: () => text("test.xml", F.endnoteXml, "application/xml"), env: "node" },
+  "csl-json-to-xlsx": { provider: () => text("test.json", F.cslJson, "application/json"), env: "node" },
   "mp3-to-wav":  { provider: () => Promise.reject(new Error("mp3 fixture pending")), env: "browser" },
   "mp3-to-m4a":  { provider: () => Promise.reject(new Error("mp3 fixture pending")), env: "browser" },
   "mp3-to-flac": { provider: () => Promise.reject(new Error("mp3 fixture pending")), env: "browser" },

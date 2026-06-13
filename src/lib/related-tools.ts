@@ -209,6 +209,24 @@ const HAND_CURATED_RELATED: Record<string, string[]> = {
   "har-to-curl": ["curl-to-har", "json-to-yaml", "yaml-to-json"],
   "curl-to-har": ["har-to-curl", "json-to-yaml", "yaml-to-json"],
 
+  // ===== Citation hub completion (CSL-JSON / EndNote XML / NBIB) =====
+  "csl-json-to-ris": ["ris-to-csl-json","csl-json-to-bibtex","csl-json-to-csv"],
+  "ris-to-csl-json": ["csl-json-to-ris","ris-to-bibtex","ris-to-csv"],
+  "csl-json-to-csv": ["csv-to-csl-json","csl-json-to-ris","csl-json-to-xlsx"],
+  "csv-to-csl-json": ["csl-json-to-csv","csv-to-ris","csv-to-bibtex"],
+  "csl-json-to-nbib": ["nbib-to-csl-json","csl-json-to-ris","csl-json-to-bibtex"],
+  "nbib-to-csl-json": ["csl-json-to-nbib","nbib-to-ris","nbib-to-bibtex"],
+  "csl-json-to-endnote-xml": ["endnote-xml-to-csl-json","csl-json-to-ris","csl-json-to-bibtex"],
+  "endnote-xml-to-csl-json": ["csl-json-to-endnote-xml","endnote-xml-to-ris","endnote-xml-to-bibtex"],
+  "endnote-xml-to-csv": ["csv-to-endnote-xml","endnote-xml-to-xlsx","endnote-xml-to-ris"],
+  "csv-to-endnote-xml": ["endnote-xml-to-csv","csv-to-ris","csv-to-bibtex"],
+  "endnote-xml-to-nbib": ["nbib-to-endnote-xml","endnote-xml-to-ris","endnote-xml-to-csv"],
+  "nbib-to-endnote-xml": ["endnote-xml-to-nbib","nbib-to-ris","nbib-to-bibtex"],
+  "nbib-to-csv": ["csv-to-nbib","nbib-to-ris","nbib-to-bibtex"],
+  "csv-to-nbib": ["nbib-to-csv","csv-to-ris","csv-to-bibtex"],
+  "endnote-xml-to-xlsx": ["endnote-xml-to-csv","ris-to-xlsx","bibtex-to-xlsx"],
+  "csl-json-to-xlsx": ["csl-json-to-csv","ris-to-xlsx","bibtex-to-xlsx"],
+
   // ===== Chess (fen-to-png + pgn-to-fen rank well, sibling spread) =====
   "fen-to-pgn":  ["pgn-to-fen", "fen-to-png", "pgn-to-csv", "pgn-to-json"],
   "fen-to-png":  ["fen-to-pgn", "pgn-to-fen", "pgn-to-csv"],

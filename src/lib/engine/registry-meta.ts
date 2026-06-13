@@ -457,7 +457,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "video/mov"
     ],
     "toMime": "video/mp4",
-    "maxFileSizeBytes": 524288000
+    "maxFileSizeBytes": 4294967296
   },
   "webm-to-mp4": {
     "label": "WebM → MP4",
@@ -492,7 +492,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "video/mkv"
     ],
     "toMime": "video/mp4",
-    "maxFileSizeBytes": 524288000
+    "maxFileSizeBytes": 4294967296
   },
   "m4v-to-mp4": {
     "label": "M4V → MP4",
@@ -504,7 +504,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "video/mp4"
     ],
     "toMime": "video/mp4",
-    "maxFileSizeBytes": 524288000
+    "maxFileSizeBytes": 4294967296
   },
   "3gp-to-mp4": {
     "label": "3GP → MP4",
@@ -530,7 +530,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "video/flv"
     ],
     "toMime": "video/mp4",
-    "maxFileSizeBytes": 524288000
+    "maxFileSizeBytes": 4294967296
   },
   "wmv-to-mp4": {
     "label": "WMV → MP4",
@@ -542,7 +542,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "video/wmv"
     ],
     "toMime": "video/mp4",
-    "maxFileSizeBytes": 524288000
+    "maxFileSizeBytes": 4294967296
   },
   "mts-to-mp4": {
     "label": "MTS → MP4",
@@ -567,7 +567,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "video/mp4"
     ],
     "toMime": "video/webm",
-    "maxFileSizeBytes": 524288000
+    "maxFileSizeBytes": 4294967296
   },
   "mov-to-gif": {
     "label": "MOV → GIF",
@@ -996,6 +996,206 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     ],
     "toMime": "application/har+json",
     "maxFileSizeBytes": 52428800
+  },
+  "csl-json-to-ris": {
+    "label": "CSL-JSON → RIS",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/vnd.citationstyles.csl+json",
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "application/x-research-info-systems",
+    "maxFileSizeBytes": 104857600
+  },
+  "ris-to-csl-json": {
+    "label": "RIS → CSL-JSON",
+    "accept": [
+      ".ris"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "application/vnd.citationstyles.csl+json",
+    "maxFileSizeBytes": 104857600
+  },
+  "csl-json-to-csv": {
+    "label": "CSL-JSON → CSV",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/vnd.citationstyles.csl+json",
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "text/csv",
+    "maxFileSizeBytes": 104857600
+  },
+  "csv-to-csl-json": {
+    "label": "CSV → CSL-JSON",
+    "accept": [
+      ".csv"
+    ],
+    "fromMime": [
+      "text/csv",
+      "application/csv",
+      "text/plain"
+    ],
+    "toMime": "application/vnd.citationstyles.csl+json",
+    "maxFileSizeBytes": 104857600
+  },
+  "csl-json-to-nbib": {
+    "label": "CSL-JSON → NBIB",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/vnd.citationstyles.csl+json",
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "application/x-research-info-systems",
+    "maxFileSizeBytes": 104857600
+  },
+  "nbib-to-csl-json": {
+    "label": "NBIB → CSL-JSON",
+    "accept": [
+      ".nbib"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "application/vnd.citationstyles.csl+json",
+    "maxFileSizeBytes": 104857600
+  },
+  "csl-json-to-endnote-xml": {
+    "label": "CSL-JSON → EndNote XML",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/vnd.citationstyles.csl+json",
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "application/xml",
+    "maxFileSizeBytes": 104857600
+  },
+  "endnote-xml-to-csl-json": {
+    "label": "EndNote XML → CSL-JSON",
+    "accept": [
+      ".xml"
+    ],
+    "fromMime": [
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "application/vnd.citationstyles.csl+json",
+    "maxFileSizeBytes": 104857600
+  },
+  "endnote-xml-to-csv": {
+    "label": "EndNote XML → CSV",
+    "accept": [
+      ".xml"
+    ],
+    "fromMime": [
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "text/csv",
+    "maxFileSizeBytes": 104857600
+  },
+  "csv-to-endnote-xml": {
+    "label": "CSV → EndNote XML",
+    "accept": [
+      ".csv"
+    ],
+    "fromMime": [
+      "text/csv",
+      "application/csv",
+      "text/plain"
+    ],
+    "toMime": "application/xml",
+    "maxFileSizeBytes": 104857600
+  },
+  "endnote-xml-to-nbib": {
+    "label": "EndNote XML → NBIB",
+    "accept": [
+      ".xml"
+    ],
+    "fromMime": [
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "application/x-research-info-systems",
+    "maxFileSizeBytes": 104857600
+  },
+  "nbib-to-endnote-xml": {
+    "label": "NBIB → EndNote XML",
+    "accept": [
+      ".nbib"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "application/xml",
+    "maxFileSizeBytes": 104857600
+  },
+  "nbib-to-csv": {
+    "label": "NBIB → CSV",
+    "accept": [
+      ".nbib"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "text/csv",
+    "maxFileSizeBytes": 104857600
+  },
+  "csv-to-nbib": {
+    "label": "CSV → NBIB",
+    "accept": [
+      ".csv"
+    ],
+    "fromMime": [
+      "text/csv",
+      "application/csv",
+      "text/plain"
+    ],
+    "toMime": "application/x-research-info-systems",
+    "maxFileSizeBytes": 104857600
+  },
+  "endnote-xml-to-xlsx": {
+    "label": "EndNote XML → XLSX",
+    "accept": [
+      ".xml"
+    ],
+    "fromMime": [
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "maxFileSizeBytes": 104857600
+  },
+  "csl-json-to-xlsx": {
+    "label": "CSL-JSON → XLSX",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/vnd.citationstyles.csl+json",
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "maxFileSizeBytes": 104857600
   },
   "mp3-to-wav": {
     "label": "MP3 → WAV",
@@ -1654,7 +1854,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "application/epub+zip"
     ],
     "toMime": "text/plain",
-    "maxFileSizeBytes": 104857600
+    "maxFileSizeBytes": 1073741824
   },
   "epub-to-html": {
     "label": "EPUB → HTML",
@@ -1665,7 +1865,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "application/epub+zip"
     ],
     "toMime": "text/html",
-    "maxFileSizeBytes": 104857600
+    "maxFileSizeBytes": 1073741824
   },
   "epub-to-pdf": {
     "label": "EPUB → PDF",
@@ -1676,7 +1876,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "application/epub+zip"
     ],
     "toMime": "application/pdf",
-    "maxFileSizeBytes": 104857600
+    "maxFileSizeBytes": 1073741824
   },
   "ofx-to-csv": {
     "label": "OFX → CSV",
@@ -3219,7 +3419,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "video/mp4"
     ],
     "toMime": "video/x-msvideo",
-    "maxFileSizeBytes": 524288000
+    "maxFileSizeBytes": 4294967296
   },
   "mp4-to-mkv": {
     "label": "MP4 → MKV",
@@ -3231,7 +3431,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "video/mp4"
     ],
     "toMime": "video/x-matroska",
-    "maxFileSizeBytes": 524288000
+    "maxFileSizeBytes": 4294967296
   },
   "mp4-to-mov": {
     "label": "MP4 → MOV",
@@ -3243,7 +3443,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "video/mp4"
     ],
     "toMime": "video/quicktime",
-    "maxFileSizeBytes": 524288000
+    "maxFileSizeBytes": 4294967296
   },
   "gif-to-mp4": {
     "label": "GIF → MP4",

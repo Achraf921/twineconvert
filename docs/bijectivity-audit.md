@@ -1,14 +1,14 @@
 # Bijectivity Audit
 
-Generated 2026-06-06 from src/lib/engine/converters/.
+Generated 2026-06-13 from src/lib/engine/converters/.
 
 ## Summary
 
 | Classification | Count |
 |---|---:|
-| Total converters | 385 |
-| **Bijective candidates** (lossless, same-kind, both directions exist) | 178 |
-| **Bijective candidates missing reverse converter** | 20 |
+| Total converters | 401 |
+| **Bijective candidates** (lossless, same-kind, both directions exist) | 192 |
+| **Bijective candidates missing reverse converter** | 22 |
 | **Bijective candidates missing round-trip test** | 8 |
 | Lossy encoding (same kind, but lossy format) | 85 |
 | Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 49 |
@@ -26,8 +26,10 @@ These converters are lossless and could round-trip, but the reverse converter is
 |---|---|
 | `adif-to-kml` | `kml-to-adif` |
 | `bibtex-to-xlsx` | `xlsx-to-bibtex` |
+| `csl-json-to-xlsx` | `xlsx-to-csl-json` |
 | `dicom-to-json` | `json-to-dicom` |
 | `eml-to-csv` | `csv-to-eml` |
+| `endnote-xml-to-xlsx` | `xlsx-to-endnote-xml` |
 | `gedcom-to-xlsx` | `xlsx-to-gedcom` |
 | `hl7-to-csv` | `csv-to-hl7` |
 | `ics-to-json` | `json-to-ics` |
@@ -113,12 +115,19 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `color-name-to-hex` | cross-kind | ✓ | ✓ | color -> palette: cross-domain, inherently lossy |
 | `compress-pdf` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
 | `csl-json-to-bibtex` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `csl-json-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `csl-json-to-endnote-xml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `csl-json-to-nbib` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `csl-json-to-ris` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `csl-json-to-xlsx` | bijective-candidate | (`xlsx-to-csl-json` missing) | ✓ | both lossless data formats; should round-trip cleanly |
 | `csp-to-3dl` | bijective-candidate | ✓ | ✓ | both lossless lut formats; should round-trip cleanly |
 | `csp-to-cube` | bijective-candidate | ✓ | ✓ | both lossless lut formats; should round-trip cleanly |
 | `css-to-ase` | bijective-candidate | ✓ | ✓ | both lossless palette formats; should round-trip cleanly |
 | `csv-to-adif` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-bibtex` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `csv-to-csl-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-dat` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `csv-to-endnote-xml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-fhir-bundle` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-gedcom` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-html` | cross-kind | (`html-to-csv` missing) | n/a | data -> doc: cross-domain, inherently lossy |
@@ -127,6 +136,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `csv-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-jsonl` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-markdown-table` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `csv-to-nbib` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-ods` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-ofx` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-po` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
@@ -168,7 +178,11 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `eml-to-mbox` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `eml-to-pdf` | cross-kind | (`pdf-to-eml` missing) | ✓ | data -> doc: cross-domain, inherently lossy |
 | `endnote-xml-to-bibtex` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `endnote-xml-to-csl-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `endnote-xml-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `endnote-xml-to-nbib` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `endnote-xml-to-ris` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `endnote-xml-to-xlsx` | bijective-candidate | (`xlsx-to-endnote-xml` missing) | ✓ | both lossless data formats; should round-trip cleanly |
 | `env-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `epub-to-html` | lossy-encoding | (`html-to-epub` missing) | n/a | epub or html uses lossy encoding |
 | `epub-to-pdf` | lossy-encoding | (`pdf-to-epub` missing) | ✓ | epub or pdf uses lossy encoding |
@@ -325,6 +339,9 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `mxl-to-musicxml` | bijective-candidate | ✓ | ✓ | both lossless notation formats; should round-trip cleanly |
 | `mxl-to-svg` | cross-kind | (`svg-to-mxl` missing) | ✓ | notation -> vector: cross-domain, inherently lossy |
 | `nbib-to-bibtex` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `nbib-to-csl-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `nbib-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `nbib-to-endnote-xml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `nbib-to-ris` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `nbib-to-xlsx` | bijective-candidate | (`xlsx-to-nbib` missing) | n/a | both lossless data formats; should round-trip cleanly |
 | `numbers-to-pdf` | lossy-encoding | (`pdf-to-numbers` missing) | n/a | numbers or pdf uses lossy encoding |
@@ -377,6 +394,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `rgb-to-hsl` | lossy-encoding | ✓ | ✓ | rgb or hsl uses lossy encoding |
 | `rgb-to-oklch` | lossy-encoding | ✓ | n/a | rgb or oklch uses lossy encoding |
 | `ris-to-bibtex` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `ris-to-csl-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `ris-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `ris-to-endnote-xml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `ris-to-nbib` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |

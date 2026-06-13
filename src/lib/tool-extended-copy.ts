@@ -3151,6 +3151,150 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       },
     ],
   },
+  "csl-json-to-ris": {
+    whyConvert:
+      "CSL-JSON is the Citation Style Language JSON that Zotero, pandoc, and citeproc speak; RIS is the tagged format EndNote, Mendeley, RefWorks, and most journal databases import. This converts one to the other through a shared bibliographic model, so every field that round-trips (title, authors, year, journal, volume, pages, DOI) carries across without re-keying. Runs entirely in your browser, no upload.",
+    example:
+      "You have a Zotero or pandoc CSL-JSON file and your next tool wants RIS. Drop the file here and get a clean RIS file back in one step.",
+    troubleshooting: [
+      { problem: "Some references are missing fields after conversion.", solution: "Fields only carry across if the source CSL-JSON actually contained them. Open the source and confirm the field is populated; RIS cannot add data that was not there." },
+    ],
+  },
+  "ris-to-csl-json": {
+    whyConvert:
+      "RIS is the tagged format EndNote, Mendeley, RefWorks, and most journal databases import; CSL-JSON is the Citation Style Language JSON that Zotero, pandoc, and citeproc speak. This converts one to the other through a shared bibliographic model, so every field that round-trips (title, authors, year, journal, volume, pages, DOI) carries across without re-keying. Runs entirely in your browser, no upload.",
+    example:
+      "You have a .ris exported from a journal's \"cite\" button and your next tool wants CSL-JSON. Drop the file here and get a clean CSL-JSON file back in one step.",
+    troubleshooting: [
+      { problem: "Some references are missing fields after conversion.", solution: "Fields only carry across if the source RIS actually contained them. Open the source and confirm the field is populated; CSL-JSON cannot add data that was not there." },
+    ],
+  },
+  "csl-json-to-csv": {
+    whyConvert:
+      "CSL-JSON is the Citation Style Language JSON that Zotero, pandoc, and citeproc speak; CSV is a plain spreadsheet you can open in Excel, Sheets, or pandas. This converts one to the other through a shared bibliographic model, so every field that round-trips (title, authors, year, journal, volume, pages, DOI) carries across without re-keying. Runs entirely in your browser, no upload.",
+    example:
+      "You have a Zotero or pandoc CSL-JSON file and your next tool wants CSV. Drop the file here and get a clean CSV file back in one step.",
+    troubleshooting: [
+      { problem: "Some references are missing fields after conversion.", solution: "Fields only carry across if the source CSL-JSON actually contained them. Open the source and confirm the field is populated; CSV cannot add data that was not there." },
+    ],
+  },
+  "csv-to-csl-json": {
+    whyConvert:
+      "CSV is a plain spreadsheet you can open in Excel, Sheets, or pandas; CSL-JSON is the Citation Style Language JSON that Zotero, pandoc, and citeproc speak. This converts one to the other through a shared bibliographic model, so every field that round-trips (title, authors, year, journal, volume, pages, DOI) carries across without re-keying. Runs entirely in your browser, no upload.",
+    example:
+      "You have a spreadsheet of references and your next tool wants CSL-JSON. Drop the file here and get a clean CSL-JSON file back in one step.",
+    troubleshooting: [
+      { problem: "Some references are missing fields after conversion.", solution: "Fields only carry across if the source CSV actually contained them. Open the source and confirm the field is populated; CSL-JSON cannot add data that was not there." },
+    ],
+  },
+  "csl-json-to-nbib": {
+    whyConvert:
+      "CSL-JSON is the Citation Style Language JSON that Zotero, pandoc, and citeproc speak; NBIB is PubMed's MEDLINE/NBIB export. This converts one to the other through a shared bibliographic model, so every field that round-trips (title, authors, year, journal, volume, pages, DOI) carries across without re-keying. Runs entirely in your browser, no upload.",
+    example:
+      "You have a Zotero or pandoc CSL-JSON file and your next tool wants NBIB. Drop the file here and get a clean NBIB file back in one step.",
+    troubleshooting: [
+      { problem: "Some references are missing fields after conversion.", solution: "Fields only carry across if the source CSL-JSON actually contained them. Open the source and confirm the field is populated; NBIB cannot add data that was not there." },
+    ],
+  },
+  "nbib-to-csl-json": {
+    whyConvert:
+      "NBIB is PubMed's MEDLINE/NBIB export; CSL-JSON is the Citation Style Language JSON that Zotero, pandoc, and citeproc speak. This converts one to the other through a shared bibliographic model, so every field that round-trips (title, authors, year, journal, volume, pages, DOI) carries across without re-keying. Runs entirely in your browser, no upload.",
+    example:
+      "You have a PubMed export (Send to → Citation manager) and your next tool wants CSL-JSON. Drop the file here and get a clean CSL-JSON file back in one step.",
+    troubleshooting: [
+      { problem: "Some references are missing fields after conversion.", solution: "Fields only carry across if the source NBIB actually contained them. Open the source and confirm the field is populated; CSL-JSON cannot add data that was not there." },
+    ],
+  },
+  "csl-json-to-endnote-xml": {
+    whyConvert:
+      "CSL-JSON is the Citation Style Language JSON that Zotero, pandoc, and citeproc speak; EndNote XML is EndNote's XML library export. This converts one to the other through a shared bibliographic model, so every field that round-trips (title, authors, year, journal, volume, pages, DOI) carries across without re-keying. Runs entirely in your browser, no upload.",
+    example:
+      "You have a Zotero or pandoc CSL-JSON file and your next tool wants EndNote XML. Drop the file here and get a clean EndNote XML file back in one step.",
+    troubleshooting: [
+      { problem: "Some references are missing fields after conversion.", solution: "Fields only carry across if the source CSL-JSON actually contained them. Open the source and confirm the field is populated; EndNote XML cannot add data that was not there." },
+    ],
+  },
+  "endnote-xml-to-csl-json": {
+    whyConvert:
+      "EndNote XML is EndNote's XML library export; CSL-JSON is the Citation Style Language JSON that Zotero, pandoc, and citeproc speak. This converts one to the other through a shared bibliographic model, so every field that round-trips (title, authors, year, journal, volume, pages, DOI) carries across without re-keying. Runs entirely in your browser, no upload.",
+    example:
+      "You have an EndNote library exported as XML and your next tool wants CSL-JSON. Drop the file here and get a clean CSL-JSON file back in one step.",
+    troubleshooting: [
+      { problem: "Some references are missing fields after conversion.", solution: "Fields only carry across if the source EndNote XML actually contained them. Open the source and confirm the field is populated; CSL-JSON cannot add data that was not there." },
+    ],
+  },
+  "endnote-xml-to-csv": {
+    whyConvert:
+      "EndNote XML is EndNote's XML library export; CSV is a plain spreadsheet you can open in Excel, Sheets, or pandas. This converts one to the other through a shared bibliographic model, so every field that round-trips (title, authors, year, journal, volume, pages, DOI) carries across without re-keying. Runs entirely in your browser, no upload.",
+    example:
+      "You have an EndNote library exported as XML and your next tool wants CSV. Drop the file here and get a clean CSV file back in one step.",
+    troubleshooting: [
+      { problem: "Some references are missing fields after conversion.", solution: "Fields only carry across if the source EndNote XML actually contained them. Open the source and confirm the field is populated; CSV cannot add data that was not there." },
+    ],
+  },
+  "csv-to-endnote-xml": {
+    whyConvert:
+      "CSV is a plain spreadsheet you can open in Excel, Sheets, or pandas; EndNote XML is EndNote's XML library export. This converts one to the other through a shared bibliographic model, so every field that round-trips (title, authors, year, journal, volume, pages, DOI) carries across without re-keying. Runs entirely in your browser, no upload.",
+    example:
+      "You have a spreadsheet of references and your next tool wants EndNote XML. Drop the file here and get a clean EndNote XML file back in one step.",
+    troubleshooting: [
+      { problem: "Some references are missing fields after conversion.", solution: "Fields only carry across if the source CSV actually contained them. Open the source and confirm the field is populated; EndNote XML cannot add data that was not there." },
+    ],
+  },
+  "endnote-xml-to-nbib": {
+    whyConvert:
+      "EndNote XML is EndNote's XML library export; NBIB is PubMed's MEDLINE/NBIB export. This converts one to the other through a shared bibliographic model, so every field that round-trips (title, authors, year, journal, volume, pages, DOI) carries across without re-keying. Runs entirely in your browser, no upload.",
+    example:
+      "You have an EndNote library exported as XML and your next tool wants NBIB. Drop the file here and get a clean NBIB file back in one step.",
+    troubleshooting: [
+      { problem: "Some references are missing fields after conversion.", solution: "Fields only carry across if the source EndNote XML actually contained them. Open the source and confirm the field is populated; NBIB cannot add data that was not there." },
+    ],
+  },
+  "nbib-to-endnote-xml": {
+    whyConvert:
+      "NBIB is PubMed's MEDLINE/NBIB export; EndNote XML is EndNote's XML library export. This converts one to the other through a shared bibliographic model, so every field that round-trips (title, authors, year, journal, volume, pages, DOI) carries across without re-keying. Runs entirely in your browser, no upload.",
+    example:
+      "You have a PubMed export (Send to → Citation manager) and your next tool wants EndNote XML. Drop the file here and get a clean EndNote XML file back in one step.",
+    troubleshooting: [
+      { problem: "Some references are missing fields after conversion.", solution: "Fields only carry across if the source NBIB actually contained them. Open the source and confirm the field is populated; EndNote XML cannot add data that was not there." },
+    ],
+  },
+  "nbib-to-csv": {
+    whyConvert:
+      "NBIB is PubMed's MEDLINE/NBIB export; CSV is a plain spreadsheet you can open in Excel, Sheets, or pandas. This converts one to the other through a shared bibliographic model, so every field that round-trips (title, authors, year, journal, volume, pages, DOI) carries across without re-keying. Runs entirely in your browser, no upload.",
+    example:
+      "You have a PubMed export (Send to → Citation manager) and your next tool wants CSV. Drop the file here and get a clean CSV file back in one step.",
+    troubleshooting: [
+      { problem: "Some references are missing fields after conversion.", solution: "Fields only carry across if the source NBIB actually contained them. Open the source and confirm the field is populated; CSV cannot add data that was not there." },
+    ],
+  },
+  "csv-to-nbib": {
+    whyConvert:
+      "CSV is a plain spreadsheet you can open in Excel, Sheets, or pandas; NBIB is PubMed's MEDLINE/NBIB export. This converts one to the other through a shared bibliographic model, so every field that round-trips (title, authors, year, journal, volume, pages, DOI) carries across without re-keying. Runs entirely in your browser, no upload.",
+    example:
+      "You have a spreadsheet of references and your next tool wants NBIB. Drop the file here and get a clean NBIB file back in one step.",
+    troubleshooting: [
+      { problem: "Some references are missing fields after conversion.", solution: "Fields only carry across if the source CSV actually contained them. Open the source and confirm the field is populated; NBIB cannot add data that was not there." },
+    ],
+  },
+  "endnote-xml-to-xlsx": {
+    whyConvert:
+      "EndNote XML is EndNote's XML library export; Excel (XLSX) is a native Excel workbook. This converts one to the other through a shared bibliographic model, so every field that round-trips (title, authors, year, journal, volume, pages, DOI) carries across without re-keying. Runs entirely in your browser, no upload.",
+    example:
+      "You have an EndNote library exported as XML and your next tool wants Excel (XLSX). Drop the file here and get a clean Excel (XLSX) file back in one step.",
+    troubleshooting: [
+      { problem: "A column I expected is empty.", solution: "Only fields present in the source records are filled. If the source EndNote XML omits a field (no DOI, no pages), that cell stays blank; there is nothing to invent." },
+    ],
+  },
+  "csl-json-to-xlsx": {
+    whyConvert:
+      "CSL-JSON is the Citation Style Language JSON that Zotero, pandoc, and citeproc speak; Excel (XLSX) is a native Excel workbook. This converts one to the other through a shared bibliographic model, so every field that round-trips (title, authors, year, journal, volume, pages, DOI) carries across without re-keying. Runs entirely in your browser, no upload.",
+    example:
+      "You have a Zotero or pandoc CSL-JSON file and your next tool wants Excel (XLSX). Drop the file here and get a clean Excel (XLSX) file back in one step.",
+    troubleshooting: [
+      { problem: "A column I expected is empty.", solution: "Only fields present in the source records are filled. If the source CSL-JSON omits a field (no DOI, no pages), that cell stays blank; there is nothing to invent." },
+    ],
+  },
 };
 
 export function getExtendedCopy(toolId: string): ExtendedCopy | undefined {

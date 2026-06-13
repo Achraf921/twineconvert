@@ -455,6 +455,7 @@ const TEST_FILE_GLOBS = [
   "tests/converters-gis-binary.test.ts",
   "tests/converters-bio-bencode.test.ts",
   "tests/converters-docs-network.test.ts",
+  "tests/converters-citation-hub.test.ts",
 ];
 const browserTestFiles = (() => {
   try {
