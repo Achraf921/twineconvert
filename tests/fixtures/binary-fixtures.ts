@@ -438,6 +438,37 @@ export async function makeTinyXlsx(): Promise<Uint8Array> {
   return out instanceof Uint8Array ? out : new Uint8Array(out as ArrayBuffer);
 }
 
+/** A citation-shaped XLSX (columns title/authors/year/journal/doi) for the
+ *  spreadsheet -> citation routes (xlsx-to-ris, xlsx-to-bibtex, ...). */
+export async function makeTinyCitationXlsx(): Promise<Uint8Array> {
+  const XLSXModule = await import("xlsx");
+  const XLSX = XLSXModule.default ?? XLSXModule;
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.aoa_to_sheet([
+    ["title", "authors", "year", "journal", "doi"],
+    ["Vestibular function in aging", "Smith, John; Doe, Jane", 2006, "Journal of Neurology", "10.1007/s00415-006-0001-x"],
+    ["A Treatise on Things", "Roe, Richard", 2019, "", ""],
+  ]);
+  XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+  const out = XLSX.write(wb, { type: "array", bookType: "xlsx" });
+  return out instanceof Uint8Array ? out : new Uint8Array(out as ArrayBuffer);
+}
+
+/** A citation-shaped ODS, same data as makeTinyCitationXlsx(). */
+export async function makeTinyCitationOds(): Promise<Uint8Array> {
+  const XLSXModule = await import("xlsx");
+  const XLSX = XLSXModule.default ?? XLSXModule;
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.aoa_to_sheet([
+    ["title", "authors", "year", "journal", "doi"],
+    ["Vestibular function in aging", "Smith, John; Doe, Jane", 2006, "Journal of Neurology", "10.1007/s00415-006-0001-x"],
+    ["A Treatise on Things", "Roe, Richard", 2019, "", ""],
+  ]);
+  XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+  const out = XLSX.write(wb, { type: "array", bookType: "ods" });
+  return out instanceof Uint8Array ? out : new Uint8Array(out as ArrayBuffer);
+}
+
 /** A minimal valid ODS (OpenDocument spreadsheet). Same in-memory workbook
  *  as makeTinyXlsx() — SheetJS handles both formats from a single book model. */
 export async function makeTinyOds(): Promise<Uint8Array> {

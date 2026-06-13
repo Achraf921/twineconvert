@@ -113,6 +113,18 @@ export const registry: Record<string, ConverterLoader> = {
   "xlsx-to-html-table": () =>
     import("./converters/xlsx-to-html-table").then((m) => m.default),
 
+  // Spreadsheet -> citation bridge (researcher reference sheets -> RIS/BibTeX/...)
+  "xlsx-to-ris": () => import("./converters/xlsx-to-ris").then((m) => m.default),
+  "xlsx-to-bibtex": () => import("./converters/xlsx-to-bibtex").then((m) => m.default),
+  "xlsx-to-csl-json": () => import("./converters/xlsx-to-csl-json").then((m) => m.default),
+  "xlsx-to-endnote-xml": () => import("./converters/xlsx-to-endnote-xml").then((m) => m.default),
+  "xlsx-to-nbib": () => import("./converters/xlsx-to-nbib").then((m) => m.default),
+  "ods-to-ris": () => import("./converters/ods-to-ris").then((m) => m.default),
+  "ods-to-bibtex": () => import("./converters/ods-to-bibtex").then((m) => m.default),
+  "ods-to-csl-json": () => import("./converters/ods-to-csl-json").then((m) => m.default),
+  "ods-to-endnote-xml": () => import("./converters/ods-to-endnote-xml").then((m) => m.default),
+  "ods-to-nbib": () => import("./converters/ods-to-nbib").then((m) => m.default),
+
   // PDF family, pdfjs-dist for rendering, pdf-lib for assembly + manipulation
   "pdf-to-jpg": () =>
     import("./converters/pdf-to-jpg").then((m) => m.default),

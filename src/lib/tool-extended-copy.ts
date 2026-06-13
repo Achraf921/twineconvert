@@ -4357,6 +4357,96 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       { problem: "A column looks misaligned.", solution: "The converter uses the first row as headers. If your source has no header row, the first data row will be treated as headers; add one first." },
     ],
   },
+  "xlsx-to-ris": {
+    whyConvert:
+      "Researchers often keep references in a spreadsheet (one row per source, columns like title, author, year, journal, DOI). This reads your Excel sheet and writes RIS so you can import the whole library into EndNote, Mendeley, Zotero, or a journal submission system at once. Column headers are matched case- and alias-insensitively, so PubMed, Zotero, and Excel exports work without renaming anything. Runs in your browser, nothing is uploaded.",
+    example:
+      "You have a Excel sheet of papers (title, authors, year, DOI columns) and need to load them into EndNote, Mendeley, Zotero, or a journal submission system. Drop the sheet here and get a RIS file with every row as a reference.",
+    troubleshooting: [
+      { problem: "No references found, or fields are missing.", solution: "The first row must be headers naming the fields (title, author/authors, year, journal, doi, ...). If a column is missing from the output, rename its header to one of those names. Only the first sheet is read." },
+    ],
+  },
+  "xlsx-to-bibtex": {
+    whyConvert:
+      "Researchers often keep references in a spreadsheet (one row per source, columns like title, author, year, journal, DOI). This reads your Excel sheet and writes BibTeX so you can import the whole library into a LaTeX or Overleaf bibliography at once. Column headers are matched case- and alias-insensitively, so PubMed, Zotero, and Excel exports work without renaming anything. Runs in your browser, nothing is uploaded.",
+    example:
+      "You have a Excel sheet of papers (title, authors, year, DOI columns) and need to load them into a LaTeX or Overleaf bibliography. Drop the sheet here and get a BibTeX file with every row as a reference.",
+    troubleshooting: [
+      { problem: "No references found, or fields are missing.", solution: "The first row must be headers naming the fields (title, author/authors, year, journal, doi, ...). If a column is missing from the output, rename its header to one of those names. Only the first sheet is read." },
+    ],
+  },
+  "xlsx-to-csl-json": {
+    whyConvert:
+      "Researchers often keep references in a spreadsheet (one row per source, columns like title, author, year, journal, DOI). This reads your Excel sheet and writes CSL-JSON so you can import the whole library into Zotero or a pandoc workflow at once. Column headers are matched case- and alias-insensitively, so PubMed, Zotero, and Excel exports work without renaming anything. Runs in your browser, nothing is uploaded.",
+    example:
+      "You have a Excel sheet of papers (title, authors, year, DOI columns) and need to load them into Zotero or a pandoc workflow. Drop the sheet here and get a CSL-JSON file with every row as a reference.",
+    troubleshooting: [
+      { problem: "No references found, or fields are missing.", solution: "The first row must be headers naming the fields (title, author/authors, year, journal, doi, ...). If a column is missing from the output, rename its header to one of those names. Only the first sheet is read." },
+    ],
+  },
+  "xlsx-to-endnote-xml": {
+    whyConvert:
+      "Researchers often keep references in a spreadsheet (one row per source, columns like title, author, year, journal, DOI). This reads your Excel sheet and writes EndNote XML so you can import the whole library into an EndNote XML library at once. Column headers are matched case- and alias-insensitively, so PubMed, Zotero, and Excel exports work without renaming anything. Runs in your browser, nothing is uploaded.",
+    example:
+      "You have a Excel sheet of papers (title, authors, year, DOI columns) and need to load them into an EndNote XML library. Drop the sheet here and get a EndNote XML file with every row as a reference.",
+    troubleshooting: [
+      { problem: "No references found, or fields are missing.", solution: "The first row must be headers naming the fields (title, author/authors, year, journal, doi, ...). If a column is missing from the output, rename its header to one of those names. Only the first sheet is read." },
+    ],
+  },
+  "xlsx-to-nbib": {
+    whyConvert:
+      "Researchers often keep references in a spreadsheet (one row per source, columns like title, author, year, journal, DOI). This reads your Excel sheet and writes NBIB so you can import the whole library into a PubMed-style citation manager at once. Column headers are matched case- and alias-insensitively, so PubMed, Zotero, and Excel exports work without renaming anything. Runs in your browser, nothing is uploaded.",
+    example:
+      "You have a Excel sheet of papers (title, authors, year, DOI columns) and need to load them into a PubMed-style citation manager. Drop the sheet here and get a NBIB file with every row as a reference.",
+    troubleshooting: [
+      { problem: "No references found, or fields are missing.", solution: "The first row must be headers naming the fields (title, author/authors, year, journal, doi, ...). If a column is missing from the output, rename its header to one of those names. Only the first sheet is read." },
+    ],
+  },
+  "ods-to-ris": {
+    whyConvert:
+      "Researchers often keep references in a spreadsheet (one row per source, columns like title, author, year, journal, DOI). This reads your OpenDocument / LibreOffice Calc sheet and writes RIS so you can import the whole library into EndNote, Mendeley, Zotero, or a journal submission system at once. Column headers are matched case- and alias-insensitively, so PubMed, Zotero, and Excel exports work without renaming anything. Runs in your browser, nothing is uploaded.",
+    example:
+      "You have a OpenDocument / LibreOffice Calc sheet of papers (title, authors, year, DOI columns) and need to load them into EndNote, Mendeley, Zotero, or a journal submission system. Drop the sheet here and get a RIS file with every row as a reference.",
+    troubleshooting: [
+      { problem: "No references found, or fields are missing.", solution: "The first row must be headers naming the fields (title, author/authors, year, journal, doi, ...). If a column is missing from the output, rename its header to one of those names. Only the first sheet is read." },
+    ],
+  },
+  "ods-to-bibtex": {
+    whyConvert:
+      "Researchers often keep references in a spreadsheet (one row per source, columns like title, author, year, journal, DOI). This reads your OpenDocument / LibreOffice Calc sheet and writes BibTeX so you can import the whole library into a LaTeX or Overleaf bibliography at once. Column headers are matched case- and alias-insensitively, so PubMed, Zotero, and Excel exports work without renaming anything. Runs in your browser, nothing is uploaded.",
+    example:
+      "You have a OpenDocument / LibreOffice Calc sheet of papers (title, authors, year, DOI columns) and need to load them into a LaTeX or Overleaf bibliography. Drop the sheet here and get a BibTeX file with every row as a reference.",
+    troubleshooting: [
+      { problem: "No references found, or fields are missing.", solution: "The first row must be headers naming the fields (title, author/authors, year, journal, doi, ...). If a column is missing from the output, rename its header to one of those names. Only the first sheet is read." },
+    ],
+  },
+  "ods-to-csl-json": {
+    whyConvert:
+      "Researchers often keep references in a spreadsheet (one row per source, columns like title, author, year, journal, DOI). This reads your OpenDocument / LibreOffice Calc sheet and writes CSL-JSON so you can import the whole library into Zotero or a pandoc workflow at once. Column headers are matched case- and alias-insensitively, so PubMed, Zotero, and Excel exports work without renaming anything. Runs in your browser, nothing is uploaded.",
+    example:
+      "You have a OpenDocument / LibreOffice Calc sheet of papers (title, authors, year, DOI columns) and need to load them into Zotero or a pandoc workflow. Drop the sheet here and get a CSL-JSON file with every row as a reference.",
+    troubleshooting: [
+      { problem: "No references found, or fields are missing.", solution: "The first row must be headers naming the fields (title, author/authors, year, journal, doi, ...). If a column is missing from the output, rename its header to one of those names. Only the first sheet is read." },
+    ],
+  },
+  "ods-to-endnote-xml": {
+    whyConvert:
+      "Researchers often keep references in a spreadsheet (one row per source, columns like title, author, year, journal, DOI). This reads your OpenDocument / LibreOffice Calc sheet and writes EndNote XML so you can import the whole library into an EndNote XML library at once. Column headers are matched case- and alias-insensitively, so PubMed, Zotero, and Excel exports work without renaming anything. Runs in your browser, nothing is uploaded.",
+    example:
+      "You have a OpenDocument / LibreOffice Calc sheet of papers (title, authors, year, DOI columns) and need to load them into an EndNote XML library. Drop the sheet here and get a EndNote XML file with every row as a reference.",
+    troubleshooting: [
+      { problem: "No references found, or fields are missing.", solution: "The first row must be headers naming the fields (title, author/authors, year, journal, doi, ...). If a column is missing from the output, rename its header to one of those names. Only the first sheet is read." },
+    ],
+  },
+  "ods-to-nbib": {
+    whyConvert:
+      "Researchers often keep references in a spreadsheet (one row per source, columns like title, author, year, journal, DOI). This reads your OpenDocument / LibreOffice Calc sheet and writes NBIB so you can import the whole library into a PubMed-style citation manager at once. Column headers are matched case- and alias-insensitively, so PubMed, Zotero, and Excel exports work without renaming anything. Runs in your browser, nothing is uploaded.",
+    example:
+      "You have a OpenDocument / LibreOffice Calc sheet of papers (title, authors, year, DOI columns) and need to load them into a PubMed-style citation manager. Drop the sheet here and get a NBIB file with every row as a reference.",
+    troubleshooting: [
+      { problem: "No references found, or fields are missing.", solution: "The first row must be headers naming the fields (title, author/authors, year, journal, doi, ...). If a column is missing from the output, rename its header to one of those names. Only the first sheet is read." },
+    ],
+  },
 };
 
 export function getExtendedCopy(toolId: string): ExtendedCopy | undefined {

@@ -539,6 +539,126 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "text/html",
     "maxFileSizeBytes": 52428800
   },
+  "xlsx-to-ris": {
+    "label": "XLSX → RIS",
+    "accept": [
+      ".xlsx"
+    ],
+    "fromMime": [
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    ],
+    "toMime": "application/x-research-info-systems",
+    "maxFileSizeBytes": 104857600
+  },
+  "xlsx-to-bibtex": {
+    "label": "XLSX → BibTeX",
+    "accept": [
+      ".xlsx"
+    ],
+    "fromMime": [
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    ],
+    "toMime": "application/x-bibtex",
+    "maxFileSizeBytes": 104857600
+  },
+  "xlsx-to-csl-json": {
+    "label": "XLSX → CSL-JSON",
+    "accept": [
+      ".xlsx"
+    ],
+    "fromMime": [
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    ],
+    "toMime": "application/vnd.citationstyles.csl+json",
+    "maxFileSizeBytes": 104857600
+  },
+  "xlsx-to-endnote-xml": {
+    "label": "XLSX → EndNote XML",
+    "accept": [
+      ".xlsx"
+    ],
+    "fromMime": [
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    ],
+    "toMime": "application/xml",
+    "maxFileSizeBytes": 104857600
+  },
+  "xlsx-to-nbib": {
+    "label": "XLSX → NBIB",
+    "accept": [
+      ".xlsx"
+    ],
+    "fromMime": [
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    ],
+    "toMime": "application/x-research-info-systems",
+    "maxFileSizeBytes": 104857600
+  },
+  "ods-to-ris": {
+    "label": "ODS → RIS",
+    "accept": [
+      ".ods",
+      ".ots"
+    ],
+    "fromMime": [
+      "application/vnd.oasis.opendocument.spreadsheet",
+      "application/vnd.oasis.opendocument.spreadsheet-template"
+    ],
+    "toMime": "application/x-research-info-systems",
+    "maxFileSizeBytes": 104857600
+  },
+  "ods-to-bibtex": {
+    "label": "ODS → BibTeX",
+    "accept": [
+      ".ods",
+      ".ots"
+    ],
+    "fromMime": [
+      "application/vnd.oasis.opendocument.spreadsheet",
+      "application/vnd.oasis.opendocument.spreadsheet-template"
+    ],
+    "toMime": "application/x-bibtex",
+    "maxFileSizeBytes": 104857600
+  },
+  "ods-to-csl-json": {
+    "label": "ODS → CSL-JSON",
+    "accept": [
+      ".ods",
+      ".ots"
+    ],
+    "fromMime": [
+      "application/vnd.oasis.opendocument.spreadsheet",
+      "application/vnd.oasis.opendocument.spreadsheet-template"
+    ],
+    "toMime": "application/vnd.citationstyles.csl+json",
+    "maxFileSizeBytes": 104857600
+  },
+  "ods-to-endnote-xml": {
+    "label": "ODS → EndNote XML",
+    "accept": [
+      ".ods",
+      ".ots"
+    ],
+    "fromMime": [
+      "application/vnd.oasis.opendocument.spreadsheet",
+      "application/vnd.oasis.opendocument.spreadsheet-template"
+    ],
+    "toMime": "application/xml",
+    "maxFileSizeBytes": 104857600
+  },
+  "ods-to-nbib": {
+    "label": "ODS → NBIB",
+    "accept": [
+      ".ods",
+      ".ots"
+    ],
+    "fromMime": [
+      "application/vnd.oasis.opendocument.spreadsheet",
+      "application/vnd.oasis.opendocument.spreadsheet-template"
+    ],
+    "toMime": "application/x-research-info-systems",
+    "maxFileSizeBytes": 104857600
+  },
   "pdf-to-jpg": {
     "label": "PDF → JPG",
     "accept": [

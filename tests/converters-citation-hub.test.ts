@@ -11,6 +11,7 @@
 import { describe, it, expect } from "vitest";
 import { run } from "../src/lib/engine/runner";
 import { FIXTURES, fileFromText } from "./fixtures/text-fixtures";
+import { fileFromBytes, makeTinyCitationXlsx, makeTinyCitationOds, makeTinyXlsx } from "./fixtures/binary-fixtures";
 
 const F = FIXTURES;
 const CITATION_CSV =
@@ -524,6 +525,69 @@ describe("citation hub: MARCXML carries real data", () => {
     await expect(
       run("marcxml-to-bibtex", f("e.xml", '<collection xmlns="http://www.loc.gov/MARC21/slim"></collection>', "application/marcxml+xml")),
     ).rejects.toThrow(/No records found/);
+  });
+});
+
+describe("citation hub: spreadsheet -> citation bridge carries real data", () => {
+  const XLSX_MIME = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+  const xlsx = async () => fileFromBytes("refs.xlsx", await makeTinyCitationXlsx(), XLSX_MIME);
+  const ods = async () => fileFromBytes("refs.ods", await makeTinyCitationOds(), "application/vnd.oasis.opendocument.spreadsheet");
+
+  it("xlsx-to-ris keeps title, both authors, year, DOI", async () => {
+    const ris = await (await run("xlsx-to-ris", await xlsx())).blob.text();
+    expect(ris).toMatch(/TI\s+-\s+Vestibular function in aging/);
+    expect(ris).toMatch(/AU\s+-\s+Smith, John/);
+    expect(ris).toMatch(/AU\s+-\s+Doe, Jane/);
+    expect(ris).toMatch(/PY\s+-\s+2006/);
+    expect(ris).toContain("10.1007/s00415-006-0001-x");
+  });
+
+  it("xlsx-to-bibtex keeps title + DOI", async () => {
+    const bib = await (await run("xlsx-to-bibtex", await xlsx())).blob.text();
+    expect(bib).toContain("Vestibular function in aging");
+    expect(bib).toContain("10.1007/s00415-006-0001-x");
+  });
+
+  it("xlsx-to-csl-json emits a CSL array with the title + journal", async () => {
+    const arr = JSON.parse(await (await run("xlsx-to-csl-json", await xlsx())).blob.text());
+    expect(arr[0].title).toBe("Vestibular function in aging");
+    expect(arr[0]["container-title"]).toBe("Journal of Neurology");
+    expect(arr).toHaveLength(2);
+  });
+
+  it("ods-to-ris keeps the title from an OpenDocument sheet", async () => {
+    const ris = await (await run("ods-to-ris", await ods())).blob.text();
+    expect(ris).toMatch(/TI\s+-\s+Vestibular function in aging/);
+    expect(ris).toMatch(/PY\s+-\s+2006/);
+  });
+
+  it("ods-to-bibtex carries the title", async () => {
+    const bib = await (await run("ods-to-bibtex", await ods())).blob.text();
+    expect(bib).toContain("Vestibular function in aging");
+  });
+
+  it("xlsx-to-ris fails loudly on a non-citation spreadsheet", async () => {
+    const generic = fileFromBytes("data.xlsx", await makeTinyXlsx(), XLSX_MIME);
+    await expect(run("xlsx-to-ris", generic)).rejects.toThrow(
+      /no recognizable citation columns|No references found/i,
+    );
+  });
+
+  // Remaining spreadsheet->citation targets: assert the real title survives
+  // (also keeps these pairs out of the audit's untested bucket).
+  it("the rest of the spreadsheet -> citation targets carry the title", async () => {
+    const xlsxBytes = await makeTinyCitationXlsx();
+    const odsBytes = await makeTinyCitationOds();
+    const xf = () => fileFromBytes("r.xlsx", xlsxBytes, XLSX_MIME);
+    const of = () => fileFromBytes("r.ods", odsBytes, "application/vnd.oasis.opendocument.spreadsheet");
+    for (const id of ["xlsx-to-endnote-xml", "xlsx-to-nbib"] as const) {
+      const out = await (await run(id, xf())).blob.text();
+      expect(out).toContain("Vestibular function in aging");
+    }
+    for (const id of ["ods-to-csl-json", "ods-to-endnote-xml", "ods-to-nbib"] as const) {
+      const out = await (await run(id, of())).blob.text();
+      expect(out).toContain("Vestibular function in aging");
+    }
   });
 });
 

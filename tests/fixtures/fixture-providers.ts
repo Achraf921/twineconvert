@@ -31,6 +31,8 @@ import {
   makeTinyDicom,
   makeTinyDocx,
   makeTinyXlsx,
+  makeTinyCitationXlsx,
+  makeTinyCitationOds,
   makeTinyOds,
   makeTinyEpub,
   makeTiny3mf,
@@ -746,6 +748,18 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "html-table-to-xlsx": { provider: () => text("table.html", F.htmlTable, "text/html"), env: "node" },
   "xlsx-to-markdown-table": { provider: async () => fileFromBytes("test.xlsx", await makeTinyXlsx(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"), env: "node" },
   "xlsx-to-html-table": { provider: async () => fileFromBytes("test.xlsx", await makeTinyXlsx(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"), env: "node" },
+
+  // Spreadsheet -> citation bridge (citation-shaped sheets)
+  "xlsx-to-ris": { provider: async () => fileFromBytes("refs.xlsx", await makeTinyCitationXlsx(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"), env: "node" },
+  "xlsx-to-bibtex": { provider: async () => fileFromBytes("refs.xlsx", await makeTinyCitationXlsx(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"), env: "node" },
+  "xlsx-to-csl-json": { provider: async () => fileFromBytes("refs.xlsx", await makeTinyCitationXlsx(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"), env: "node" },
+  "xlsx-to-endnote-xml": { provider: async () => fileFromBytes("refs.xlsx", await makeTinyCitationXlsx(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"), env: "node" },
+  "xlsx-to-nbib": { provider: async () => fileFromBytes("refs.xlsx", await makeTinyCitationXlsx(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"), env: "node" },
+  "ods-to-ris": { provider: async () => fileFromBytes("refs.ods", await makeTinyCitationOds(), "application/vnd.oasis.opendocument.spreadsheet"), env: "node" },
+  "ods-to-bibtex": { provider: async () => fileFromBytes("refs.ods", await makeTinyCitationOds(), "application/vnd.oasis.opendocument.spreadsheet"), env: "node" },
+  "ods-to-csl-json": { provider: async () => fileFromBytes("refs.ods", await makeTinyCitationOds(), "application/vnd.oasis.opendocument.spreadsheet"), env: "node" },
+  "ods-to-endnote-xml": { provider: async () => fileFromBytes("refs.ods", await makeTinyCitationOds(), "application/vnd.oasis.opendocument.spreadsheet"), env: "node" },
+  "ods-to-nbib": { provider: async () => fileFromBytes("refs.ods", await makeTinyCitationOds(), "application/vnd.oasis.opendocument.spreadsheet"), env: "node" },
 
   // ===== SQL =====
   "csv-to-sql":  { provider: () => text("users.csv", F.genericCsv, "text/csv"), env: "node" },

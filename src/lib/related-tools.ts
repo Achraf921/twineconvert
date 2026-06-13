@@ -352,6 +352,18 @@ const HAND_CURATED_RELATED: Record<string, string[]> = {
   "xlsx-to-markdown-table": ["xlsx-to-csv","xlsx-to-json","markdown-table-to-xlsx"],
   "xlsx-to-html-table": ["xlsx-to-csv","xlsx-to-json","html-table-to-xlsx"],
 
+  // ===== Spreadsheet -> citation bridge =====
+  "xlsx-to-ris": ["xlsx-to-bibtex","csv-to-ris","ods-to-ris"],
+  "xlsx-to-bibtex": ["xlsx-to-ris","csv-to-bibtex","ods-to-bibtex"],
+  "xlsx-to-csl-json": ["xlsx-to-ris","xlsx-to-bibtex","csv-to-ris"],
+  "xlsx-to-endnote-xml": ["xlsx-to-ris","xlsx-to-bibtex","csv-to-ris"],
+  "xlsx-to-nbib": ["xlsx-to-ris","xlsx-to-bibtex","nbib-to-ris"],
+  "ods-to-ris": ["ods-to-bibtex","xlsx-to-ris","csv-to-ris"],
+  "ods-to-bibtex": ["ods-to-ris","xlsx-to-bibtex","csv-to-bibtex"],
+  "ods-to-csl-json": ["ods-to-ris","ods-to-bibtex","xlsx-to-csl-json"],
+  "ods-to-endnote-xml": ["ods-to-ris","ods-to-bibtex","xlsx-to-endnote-xml"],
+  "ods-to-nbib": ["ods-to-ris","ods-to-bibtex","xlsx-to-nbib"],
+
   // ===== Subtitle transcripts + matrix gaps =====
   "srt-to-txt": ["vtt-to-txt", "srt-to-vtt", "srt-to-ass"],
   "vtt-to-txt": ["srt-to-txt", "vtt-to-srt", "vtt-to-ass"],
