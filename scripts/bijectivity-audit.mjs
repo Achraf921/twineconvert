@@ -472,6 +472,7 @@ const TEST_FILE_GLOBS = [
   "tests/converters-references.test.ts",
   "tests/converters-pubmed.test.ts",
   "tests/converters-citation-family-extend.test.ts",
+  "tests/converters-citation-spreadsheet.test.ts",
 ];
 const browserTestFiles = (() => {
   try {

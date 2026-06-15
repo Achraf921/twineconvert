@@ -208,6 +208,7 @@ const HAND_CURATED_RELATED: Record<string, string[]> = {
   "pubmed-to-enw":        ["pubmed-to-endnote-xml", "pubmed-to-ris", "pubmed-to-csl-json"],
   "pubmed-to-endnote-xml": ["pubmed-to-enw", "pubmed-to-ris", "pubmed-to-nbib"],
   "pubmed-to-nbib":       ["pubmed-to-ris", "pubmed-to-bibtex", "nbib-to-bibtex"],
+  "pubmed-to-xlsx":       ["pubmed-to-csv", "pubmed-to-ris", "pubmed-to-bibtex"],
 
   // ===== Reference-list parsing (pasted bibliography -> citation formats) =====
   "references-to-ris":      ["references-to-bibtex", "references-to-csl-json", "csv-to-ris"],
@@ -216,6 +217,8 @@ const HAND_CURATED_RELATED: Record<string, string[]> = {
   "references-to-enw":         ["references-to-endnote-xml", "references-to-ris", "references-to-csl-json"],
   "references-to-endnote-xml": ["references-to-enw", "references-to-ris", "references-to-bibtex"],
   "references-to-nbib":        ["references-to-ris", "references-to-bibtex", "nbib-to-ris"],
+  "references-to-csv":         ["references-to-xlsx", "references-to-ris", "references-to-bibtex"],
+  "references-to-xlsx":        ["references-to-csv", "references-to-ris", "pubmed-to-xlsx"],
 
   // ===== Office + table conversions (RTF / XLSX / HTML table / CSV) =====
   "rtf-to-docx":     ["rtf-to-html", "rtf-to-markdown", "rtf-to-txt"],

@@ -5397,6 +5397,28 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "application/x-research-info-systems",
     "maxFileSizeBytes": 10485760
   },
+  "references-to-csv": {
+    "label": "Reference List → CSV",
+    "accept": [
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/csv",
+    "maxFileSizeBytes": 10485760
+  },
+  "references-to-xlsx": {
+    "label": "Reference List → XLSX",
+    "accept": [
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "maxFileSizeBytes": 10485760
+  },
   "pubmed-to-ris": {
     "label": "PubMed → RIS",
     "accept": [
@@ -5486,6 +5508,19 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "application/x-research-info-systems"
     ],
     "toMime": "application/x-research-info-systems",
+    "maxFileSizeBytes": 26214400
+  },
+  "pubmed-to-xlsx": {
+    "label": "PubMed → XLSX",
+    "accept": [
+      ".txt",
+      ".nbib"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-research-info-systems"
+    ],
+    "toMime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     "maxFileSizeBytes": 26214400
   },
   "bibtex-to-nbib": {
