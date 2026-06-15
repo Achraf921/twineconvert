@@ -17,7 +17,9 @@ const dicomToJpg: Converter = {
   id: "dicom-to-jpg",
   label: "DICOM → JPG",
   fromMime: ["application/dicom", "application/octet-stream"],
-  accept: [".dcm", ".dicom"],
+  // Real DICOM files are often extensionless / numerically named (IM1,
+  // I0000001); accept any file and validate by the DICM magic bytes.
+  accept: [".dcm", ".dicom", "*"],
   toMime: "image/jpeg",
   maxFileSizeBytes: 100 * 1024 * 1024,
 

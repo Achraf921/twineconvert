@@ -93,12 +93,19 @@ export function buildAdif(parsed: ParsedAdif): string {
     ...parsed.header,
   };
   for (const [k, v] of Object.entries(header)) {
-    out.push(`<${k}:${v.length}>${v}`);
+    if (v == null) continue;
+    const s = String(v);
+    out.push(`<${k}:${s.length}>${s}`);
   }
   out.push(`<EOH>\n`);
   for (const qso of parsed.qsos) {
     for (const [k, v] of Object.entries(qso.fields)) {
-      out.push(`<${k}:${v.length}>${v}`);
+      // Skip absent fields: a converter may build a record with optional
+      // fields undefined (e.g. a Cabrillo QSO line missing the received
+      // exchange), and `undefined.length` would otherwise crash the run.
+      if (v == null) continue;
+      const s = String(v);
+      out.push(`<${k}:${s.length}>${s}`);
     }
     out.push(`<EOR>\n`);
   }

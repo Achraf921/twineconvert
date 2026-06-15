@@ -97,10 +97,14 @@ describe("DICOM extensions: registry shape (browser-only end-to-end)", () => {
       expect(meta!.accept).toContain(".dcm");
       expect(meta!.accept).toContain(".dicom");
     });
-    it(`${id} runner rejects a .csv wrong-extension input`, async () => {
+    it(`${id} rejects a non-DICOM file by content, not extension`, async () => {
+      // DICOM tools accept any filename (real DICOM files are often
+      // extensionless, e.g. IM1) and validate by the DICM magic bytes, so
+      // a non-DICOM upload fails with a content error rather than an
+      // extension error.
       await expect(
-        run(id, fileFromText("wrong.csv", "not dicom", "text/csv")),
-      ).rejects.toThrow(/expects .* but got "wrong.csv"/);
+        run(id, fileFromText("wrong.csv", "not a dicom file ".repeat(20), "text/csv")),
+      ).rejects.toThrow(/DICOM|DICM/i);
     });
   }
   it("dicom-to-jpg targets image/jpeg", () => {

@@ -1236,7 +1236,8 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "label": "DICOM → JPG",
     "accept": [
       ".dcm",
-      ".dicom"
+      ".dicom",
+      "*"
     ],
     "fromMime": [
       "application/dicom",
@@ -1249,7 +1250,8 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "label": "DICOM → PDF",
     "accept": [
       ".dcm",
-      ".dicom"
+      ".dicom",
+      "*"
     ],
     "fromMime": [
       "application/dicom",
@@ -6191,7 +6193,8 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "label": "DICOM → JSON",
     "accept": [
       ".dcm",
-      ".dicom"
+      ".dicom",
+      "*"
     ],
     "fromMime": [
       "application/dicom",
@@ -6204,7 +6207,8 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "label": "DICOM → PNG",
     "accept": [
       ".dcm",
-      ".dicom"
+      ".dicom",
+      "*"
     ],
     "fromMime": [
       "application/dicom",

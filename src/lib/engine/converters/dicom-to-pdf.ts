@@ -17,7 +17,9 @@ const dicomToPdf: Converter = {
   id: "dicom-to-pdf",
   label: "DICOM → PDF",
   fromMime: ["application/dicom", "application/octet-stream"],
-  accept: [".dcm", ".dicom"],
+  // Real DICOM files are often extensionless / numerically named (IM1,
+  // I0000001); accept any file and validate by the DICM magic bytes.
+  accept: [".dcm", ".dicom", "*"],
   toMime: "application/pdf",
   maxFileSizeBytes: 100 * 1024 * 1024,
 

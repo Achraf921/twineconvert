@@ -17,7 +17,11 @@ const dicomToPng: Converter = {
   id: "dicom-to-png",
   label: "DICOM → PNG",
   fromMime: ["application/dicom", "application/octet-stream"],
-  accept: [".dcm", ".dicom"],
+  // Real DICOM files from CDs/PACS are often extensionless or numerically
+  // named (IM1, IM2, I0000001). Accept any file and validate by the DICM
+  // magic bytes in parseDicom, so those real-world files aren't rejected
+  // at the extension gate (PostHog: 54 failed IM* uploads, 0 successes).
+  accept: [".dcm", ".dicom", "*"],
   toMime: "image/png",
   maxFileSizeBytes: 100 * 1024 * 1024,
 
