@@ -126,6 +126,48 @@ describe("regression: cloud-sync placeholder file reads (OneDrive/Dropbox/iCloud
       /OneDrive, Dropbox, or iCloud/i,
     );
   });
+
+  // Real PostHog error (dxf-to-svg, 2026-06-15): the browser throws a
+  // NotReadableError when the picked file's reference went stale (moved,
+  // locked by another app, or expired on mobile). It can hit any converter,
+  // so the runner translates it centrally into actionable guidance.
+  const UNREADABLE_MSG =
+    "The requested file could not be read, typically due to permission problems that have occurred after a reference to a file was acquired.";
+
+  it("runner translates a DOMException NotReadableError into actionable guidance", async () => {
+    class UnreadableFile extends File {
+      constructor() {
+        super([new Uint8Array(0)], "refs.csv", { type: "text/csv" });
+      }
+      override async text(): Promise<string> {
+        const err = new Error(UNREADABLE_MSG);
+        err.name = "NotReadableError";
+        throw err;
+      }
+      override async arrayBuffer(): Promise<ArrayBuffer> {
+        const err = new Error(UNREADABLE_MSG);
+        err.name = "NotReadableError";
+        throw err;
+      }
+    }
+    await expect(run("csv-to-ris", new UnreadableFile())).rejects.toThrow(
+      /may have moved, been renamed or deleted, or changed since you selected it/i,
+    );
+  });
+
+  it("translates NotReadableError by message text even when the name is stripped", async () => {
+    class UnreadableFile extends File {
+      constructor() {
+        super([new Uint8Array(0)], "data.csv", { type: "text/csv" });
+      }
+      override async text(): Promise<string> {
+        throw new Error(UNREADABLE_MSG); // generic Error, no .name
+      }
+    }
+    await expect(run("csv-to-json", new UnreadableFile())).rejects.toThrow(
+      /Re-select the file and try again/i,
+    );
+  });
 });
 
 describe("regression: suppress noisy suggestion for ambiguous extensions", () => {

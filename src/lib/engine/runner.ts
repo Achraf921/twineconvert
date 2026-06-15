@@ -171,6 +171,26 @@ export async function run(
         err,
       );
     }
+    // Browser NotReadableError: the file reference went stale after the
+    // user picked it. The OS read fails with a DOMException "NotReadableError"
+    // (Chrome's message: "...could not be read, typically due to permission
+    // problems that have occurred after a reference to a file was acquired").
+    // This happens when the file was moved/renamed/deleted, another app is
+    // writing to it, or (common on mobile) the picker's reference expired.
+    // The raw message is opaque, so surface an actionable one.
+    const causeMsg = cause instanceof Error ? cause.message : "";
+    const unreadableRe = /could not be read, typically due to permission|the requested file could not be read/i;
+    const isUnreadable =
+      (err instanceof Error && err.name === "NotReadableError") ||
+      (cause instanceof Error && cause.name === "NotReadableError") ||
+      unreadableRe.test(rawMsg) ||
+      unreadableRe.test(causeMsg);
+    if (isUnreadable) {
+      throw new ConvertFailedError(
+        `Could not read "${input.name}". The file may have moved, been renamed or deleted, or changed since you selected it (this also happens when another app is writing to it, or on mobile when the file reference expires). Re-select the file and try again.`,
+        err,
+      );
+    }
     throw new ConvertFailedError(
       `${converter.label} failed: ${rawMsg}`,
       err,
