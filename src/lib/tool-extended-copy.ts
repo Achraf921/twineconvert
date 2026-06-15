@@ -1893,6 +1893,136 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       },
     ],
   },
+  "pubmed-to-csl-json": {
+    whyConvert:
+      "Zotero and many web citation tools ingest CSL-JSON natively. PubMed does not export it, so save your results as Format: PubMed (.txt) and convert here to get a clean CSL-JSON array of your articles.",
+    example:
+      "You manage references in Zotero and ran a PubMed search. Export as PubMed format, convert to CSL-JSON here, and import the array so each item arrives with title, authors, year, and DOI.",
+    troubleshooting: [
+      {
+        problem: "No records found.",
+        solution:
+          "The input must be the PubMed/MEDLINE tagged format (PMID-, TI-, AU- lines) or a .nbib file. The PubMed CSV export is a different shape; use a csv-based tool for that.",
+      },
+    ],
+  },
+  "pubmed-to-enw": {
+    whyConvert:
+      "EndNote imports the tagged .enw refer format. Turn a PubMed Format: PubMed (.txt) export into an .enw file so your search drops straight into an EndNote library.",
+    example:
+      "You keep your library in EndNote and exported 80 hits from PubMed. Convert to EndNote (.enw) here and import, so every record carries title, authors, journal, year, and DOI.",
+    troubleshooting: [
+      {
+        problem: "No records found.",
+        solution:
+          "Use PubMed's Save → Format: PubMed, or Send to → Citation manager for a .nbib file. Both work here; the CSV export does not.",
+      },
+    ],
+  },
+  "pubmed-to-endnote-xml": {
+    whyConvert:
+      "EndNote's XML format is the most complete way to move records between EndNote libraries and other tools. Convert a PubMed export to EndNote XML to preserve the full field set.",
+    example:
+      "You are merging a PubMed search into a shared EndNote library. Export as Format: PubMed, convert to EndNote XML here, and import the .xml so titles, authors, journal, year, and DOI map into the right EndNote fields.",
+    troubleshooting: [
+      {
+        problem: "No records found.",
+        solution:
+          "The file must be the PubMed/MEDLINE tagged export (PMID-/TI-/AU-) or a .nbib. If you have a CSV instead, use a csv-based citation tool.",
+      },
+    ],
+  },
+  "pubmed-to-nbib": {
+    whyConvert:
+      "NBIB is the standard PubMed citation-manager format. If a tool wants .nbib but you only saved the PubMed-format .txt, this normalizes it into a clean .nbib file.",
+    example:
+      "A reference manager asks for an .nbib import file. Convert your PubMed .txt export here and upload the resulting .nbib.",
+    troubleshooting: [
+      {
+        problem: "No records found.",
+        solution:
+          "The input must contain PMID-/TI-/AU- tagged lines (PubMed/MEDLINE format). Plain prose or a CSV will not be recognized.",
+      },
+    ],
+  },
+  "pubmed-to-xlsx": {
+    whyConvert:
+      "Screen a PubMed search in Excel for a systematic review. This turns the PubMed/MEDLINE export into an .xlsx workbook with one row per article so you can sort, filter, and tag inclusion decisions.",
+    example:
+      "For a PRISMA review you exported 300 PubMed hits as Format: PubMed. Convert to XLSX here, open in Excel, and add include/exclude columns next to the title, authors, year, journal, and DOI.",
+    troubleshooting: [
+      {
+        problem: "Some columns are empty.",
+        solution:
+          "Only fields PubMed included are filled; records vary (some omit volume or pages). Title, authors, year, journal, and DOI come through whenever present.",
+      },
+    ],
+  },
+  "references-to-enw": {
+    whyConvert:
+      "Move a paper's plain-text reference list into EndNote without retyping. This reads a numbered IEEE or APA bibliography and emits the tagged .enw format EndNote imports.",
+    example:
+      "A co-author sends references as a numbered text list. Convert to EndNote (.enw) here and import so each becomes a library record with title, authors, and year.",
+    troubleshooting: [
+      {
+        problem: "An entry was skipped or authors split oddly.",
+        solution:
+          "Free-text parsing is best-effort: title, year, and DOI are reliable; authors are a good attempt for IEEE and APA styles. Fix any unusual entries in EndNote after import.",
+      },
+    ],
+  },
+  "references-to-endnote-xml": {
+    whyConvert:
+      "Get a pasted bibliography into EndNote's richer XML format. Reads a numbered IEEE or APA reference list and writes EndNote XML you can import into a library.",
+    example:
+      "You have a reference list from a review article and want it in EndNote. Convert to EndNote XML here and import the .xml.",
+    troubleshooting: [
+      {
+        problem: "Fields are missing on some entries.",
+        solution:
+          "Extraction is best-effort from free text. Title, year, and DOI are reliable; entries without a clear title or year are skipped rather than guessed.",
+      },
+    ],
+  },
+  "references-to-nbib": {
+    whyConvert:
+      "Turn a plain-text reference list into the NBIB citation-manager format when a tool specifically wants .nbib. Reads numbered IEEE or APA entries.",
+    example:
+      "A manager imports .nbib but you only have a text bibliography. Convert here and upload the .nbib.",
+    troubleshooting: [
+      {
+        problem: "No references recognized.",
+        solution:
+          "Each entry needs a recognizable title and year. Numbered IEEE ([1] Author, \"Title,\" 2024) and APA (Author (2020). Title.) styles parse best.",
+      },
+    ],
+  },
+  "references-to-csv": {
+    whyConvert:
+      "Build a screening spreadsheet from a paper's reference list. Reads a numbered IEEE or APA bibliography and emits CSV with one row per reference for a systematic review or a literature matrix.",
+    example:
+      "You are extracting the works cited by a key review. Paste its reference list, convert to CSV here, open in Sheets, and add columns for relevance and notes alongside title, authors, and year.",
+    troubleshooting: [
+      {
+        problem: "Some rows have blank fields.",
+        solution:
+          "Only what is present in the text is extracted; title, year, and DOI are reliable. Reformat unusual entries (clear title + year) and convert again if needed.",
+      },
+    ],
+  },
+  "references-to-xlsx": {
+    whyConvert:
+      "Screen a pasted reference list in Excel. Reads a numbered IEEE or APA bibliography and writes an .xlsx workbook with one row per reference for systematic-review triage.",
+    example:
+      "You copied 60 references out of a PDF for a review. Convert to XLSX here and add include/exclude and reason columns in Excel next to the parsed title, authors, and year.",
+    troubleshooting: [
+      {
+        problem: "An entry is missing.",
+        solution:
+          "Lines without a clear title or author+year are skipped rather than turned into a broken row. Give the reference a clear title and year, then convert again.",
+      },
+    ],
+  },
   "references-to-ris": {
     whyConvert:
       "You have a paper's References section or a pasted bibliography as plain text and want it in Zotero, Mendeley, or EndNote without retyping every entry. This reads a numbered IEEE or APA reference list and produces RIS you can import.",
