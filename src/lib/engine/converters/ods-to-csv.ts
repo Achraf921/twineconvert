@@ -28,6 +28,11 @@ const odsToCsv: Converter = {
         err,
       );
     }
+    if (!csv.trim()) {
+      throw new ConvertFailedError(
+        "The spreadsheet's first sheet has no data. Check the file isn't empty or corrupt, and that your data is on the first sheet.",
+      );
+    }
     opts?.onProgress?.(1);
     return {
       blob: new Blob([csv], { type: "text/csv;charset=utf-8" }),
