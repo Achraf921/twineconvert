@@ -1476,6 +1476,136 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       },
     ],
   },
+  "pes-to-dst": {
+    whyConvert:
+      "PES is Brother and Baby Lock's embroidery format; DST (Tajima) is the universal format commercial and multi-needle machines accept. Convert PES to DST to stitch a Brother design on a machine that only reads DST.",
+    example:
+      "You bought a PES design but your commercial machine takes DST. Convert here and load the .dst; stitch points and color-change stops are preserved.",
+    troubleshooting: [
+      {
+        problem: "Thread colors disappeared.",
+        solution:
+          "DST has no thread-color table, only stitches and color-change stops. Re-assign the colors in your machine or software after loading. The stitch order is unchanged, so just set each block's thread.",
+      },
+    ],
+  },
+  "dst-to-jef": {
+    whyConvert:
+      "DST (Tajima) is the commercial-standard format; JEF is what Janome home machines read. Convert a DST design to JEF so it loads on your Janome.",
+    example:
+      "You downloaded a DST design and own a Janome. Convert to JEF here and stitch it; the design geometry transfers exactly.",
+    troubleshooting: [
+      {
+        problem: "Colors came in as defaults.",
+        solution:
+          "DST carries no thread colors, so the JEF gets placeholder colors at each stop. Set your actual threads in Janome's software or on the machine.",
+      },
+    ],
+  },
+  "dst-to-exp": {
+    whyConvert:
+      "DST (Tajima) is the most common shared format; EXP (Melco/Bernina) is what some Bernina and Melco machines expect. Convert DST to EXP for those machines.",
+    example:
+      "A DST design needs to run on a Bernina that prefers EXP. Convert here and load the .exp.",
+    troubleshooting: [
+      {
+        problem: "No colors in the EXP.",
+        solution:
+          "Neither DST nor EXP stores a full thread palette, so colors are set in software, not the file. Assign threads after importing.",
+      },
+    ],
+  },
+  "pes-to-jef": {
+    whyConvert:
+      "PES is Brother/Baby Lock; JEF is Janome. Convert a PES design to JEF so it stitches on a Janome machine without retyping anything.",
+    example:
+      "You have a Brother PES pattern but a Janome machine. Convert to JEF here and stitch.",
+    troubleshooting: [
+      {
+        problem: "Some colors shifted.",
+        solution:
+          "PES and JEF both carry colors, but their thread palettes differ, so the nearest match is used. Fine-tune thread assignments in your software if a shade matters.",
+      },
+    ],
+  },
+  "pes-to-exp": {
+    whyConvert:
+      "Convert a Brother/Baby Lock PES design to EXP (Melco/Bernina) so it loads on a machine in that ecosystem.",
+    example:
+      "Your PES design has to run on a Bernina that wants EXP. Convert here and load the .exp.",
+    troubleshooting: [
+      {
+        problem: "Colors not carried over.",
+        solution:
+          "EXP does not embed a thread palette like PES does, so colors are reassigned in software after import. Stitch data transfers intact.",
+      },
+    ],
+  },
+  "jef-to-pes": {
+    whyConvert:
+      "JEF is Janome's format; PES is Brother and Baby Lock's. Convert a JEF design to PES to stitch it on a Brother or Baby Lock machine.",
+    example:
+      "You bought a Janome JEF design and own a Brother. Convert to PES here and stitch it directly.",
+    troubleshooting: [
+      {
+        problem: "Thread shades look slightly off.",
+        solution:
+          "Both formats store colors but map to different thread brands, so the closest equivalent is chosen. Adjust in Brother's software if an exact shade matters.",
+      },
+    ],
+  },
+  "jef-to-exp": {
+    whyConvert:
+      "Convert a Janome JEF design to EXP (Melco/Bernina) for machines that read EXP.",
+    example:
+      "A JEF design needs to run on a Bernina that prefers EXP. Convert here and load it.",
+    troubleshooting: [
+      {
+        problem: "Colors are missing.",
+        solution:
+          "EXP does not carry a thread palette, so set colors in software after import. The stitch path is preserved exactly.",
+      },
+    ],
+  },
+  "exp-to-dst": {
+    whyConvert:
+      "EXP (Melco/Bernina) to DST (Tajima), the universal commercial format most machines accept. Convert to share a design widely or run it on a multi-needle machine.",
+    example:
+      "You have an EXP design and need the widely-compatible DST. Convert here and load the .dst anywhere.",
+    troubleshooting: [
+      {
+        problem: "Where did the colors go?",
+        solution:
+          "Both EXP and DST rely on software for thread colors rather than storing a palette. Assign threads after importing; the stitches and stops are intact.",
+      },
+    ],
+  },
+  "exp-to-pes": {
+    whyConvert:
+      "Convert an EXP (Melco/Bernina) design to PES so it stitches on a Brother or Baby Lock machine.",
+    example:
+      "Your EXP design has to run on a Brother. Convert to PES here and stitch.",
+    troubleshooting: [
+      {
+        problem: "The PES opened with default colors.",
+        solution:
+          "EXP does not store thread colors, so the generated PES uses placeholders. Set your real threads in Brother's software.",
+      },
+    ],
+  },
+  "exp-to-jef": {
+    whyConvert:
+      "Convert an EXP (Melco/Bernina) design to JEF so it loads on a Janome machine.",
+    example:
+      "You have an EXP design and a Janome machine. Convert to JEF here and stitch it.",
+    troubleshooting: [
+      {
+        problem: "Colors need setting.",
+        solution:
+          "EXP carries no thread palette, so the JEF arrives with placeholder colors. Assign your threads in Janome's software after importing.",
+      },
+    ],
+  },
   "bibtex-to-csv": {
     whyConvert:
       "BibTeX is LaTeX's bibliography format, great for compiling a paper, useless for a literature-review spreadsheet. Converting to CSV puts every reference in a row with title/author/year/journal columns you can sort, filter, dedupe, and share with non-LaTeX collaborators.",
