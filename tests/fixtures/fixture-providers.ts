@@ -528,6 +528,13 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "pubmed-to-ris":    { provider: () => text("pubmed.txt", "PMID- 30429114\nTI  - Vestibular function in older adults.\nAU  - Smith JK\nDP  - 2019\nJT  - J Vestib Res\nAID - 10.3233/VES-190001 [doi]\n", "text/plain"), env: "node" },
   "pubmed-to-bibtex": { provider: () => text("pubmed.txt", "PMID- 30429114\nTI  - Vestibular function in older adults.\nAU  - Smith JK\nDP  - 2019\nJT  - J Vestib Res\nAID - 10.3233/VES-190001 [doi]\n", "text/plain"), env: "node" },
   "pubmed-to-csv":    { provider: () => text("pubmed.txt", "PMID- 30429114\nTI  - Vestibular function in older adults.\nAU  - Smith JK\nDP  - 2019\nJT  - J Vestib Res\nAID - 10.3233/VES-190001 [doi]\n", "text/plain"), env: "node" },
+  "pubmed-to-csl-json":   { provider: () => text("pubmed.txt", "PMID- 30429114\nTI  - Vestibular function in older adults.\nAU  - Smith JK\nDP  - 2019\nJT  - J Vestib Res\nAID - 10.3233/VES-190001 [doi]\n", "text/plain"), env: "node" },
+  "pubmed-to-enw":        { provider: () => text("pubmed.txt", "PMID- 30429114\nTI  - Vestibular function in older adults.\nAU  - Smith JK\nDP  - 2019\nJT  - J Vestib Res\nAID - 10.3233/VES-190001 [doi]\n", "text/plain"), env: "node" },
+  "pubmed-to-endnote-xml": { provider: () => text("pubmed.txt", "PMID- 30429114\nTI  - Vestibular function in older adults.\nAU  - Smith JK\nDP  - 2019\nJT  - J Vestib Res\nAID - 10.3233/VES-190001 [doi]\n", "text/plain"), env: "node" },
+  "pubmed-to-nbib":       { provider: () => text("pubmed.txt", "PMID- 30429114\nTI  - Vestibular function in older adults.\nAU  - Smith JK\nDP  - 2019\nJT  - J Vestib Res\nAID - 10.3233/VES-190001 [doi]\n", "text/plain"), env: "node" },
+  "references-to-enw":         { provider: () => text("refs.txt", "[1] L. Tan and T. Zrnic, \"Valid Inference with Synthetic Data,\" JMLR, vol. 25, 2024.\n[2] K. Brown, \"A Study,\" Nature, 2019.", "text/plain"), env: "node" },
+  "references-to-endnote-xml": { provider: () => text("refs.txt", "[1] L. Tan and T. Zrnic, \"Valid Inference with Synthetic Data,\" JMLR, vol. 25, 2024.\n[2] K. Brown, \"A Study,\" Nature, 2019.", "text/plain"), env: "node" },
+  "references-to-nbib":        { provider: () => text("refs.txt", "[1] L. Tan and T. Zrnic, \"Valid Inference with Synthetic Data,\" JMLR, vol. 25, 2024.\n[2] K. Brown, \"A Study,\" Nature, 2019.", "text/plain"), env: "node" },
 
   // ===== EPUB =====
   "epub-to-text": { provider: async () => fileFromBytes("test.epub", await makeTinyEpub(), "application/epub+zip"), env: "node" },

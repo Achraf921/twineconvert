@@ -201,14 +201,21 @@ const HAND_CURATED_RELATED: Record<string, string[]> = {
   "json-to-bencode": ["bencode-to-json", "msgpack-to-json", "json-to-cbor"],
 
   // ===== PubMed / MEDLINE export parsing =====
-  "pubmed-to-ris":    ["pubmed-to-bibtex", "pubmed-to-csv", "nbib-to-ris"],
-  "pubmed-to-bibtex": ["pubmed-to-ris", "pubmed-to-csv", "nbib-to-bibtex"],
-  "pubmed-to-csv":    ["pubmed-to-ris", "pubmed-to-bibtex", "nbib-to-csv"],
+  "pubmed-to-ris":    ["pubmed-to-bibtex", "pubmed-to-csv", "pubmed-to-enw"],
+  "pubmed-to-bibtex": ["pubmed-to-ris", "pubmed-to-csv", "pubmed-to-endnote-xml"],
+  "pubmed-to-csv":    ["pubmed-to-ris", "pubmed-to-bibtex", "pubmed-to-csl-json"],
+  "pubmed-to-csl-json":   ["pubmed-to-ris", "pubmed-to-enw", "pubmed-to-bibtex"],
+  "pubmed-to-enw":        ["pubmed-to-endnote-xml", "pubmed-to-ris", "pubmed-to-csl-json"],
+  "pubmed-to-endnote-xml": ["pubmed-to-enw", "pubmed-to-ris", "pubmed-to-nbib"],
+  "pubmed-to-nbib":       ["pubmed-to-ris", "pubmed-to-bibtex", "nbib-to-bibtex"],
 
   // ===== Reference-list parsing (pasted bibliography -> citation formats) =====
   "references-to-ris":      ["references-to-bibtex", "references-to-csl-json", "csv-to-ris"],
   "references-to-bibtex":   ["references-to-ris", "references-to-csl-json", "csv-to-bibtex"],
-  "references-to-csl-json": ["references-to-ris", "references-to-bibtex", "csv-to-csl-json"],
+  "references-to-csl-json": ["references-to-ris", "references-to-bibtex", "references-to-enw"],
+  "references-to-enw":         ["references-to-endnote-xml", "references-to-ris", "references-to-csl-json"],
+  "references-to-endnote-xml": ["references-to-enw", "references-to-ris", "references-to-bibtex"],
+  "references-to-nbib":        ["references-to-ris", "references-to-bibtex", "nbib-to-ris"],
 
   // ===== Office + table conversions (RTF / XLSX / HTML table / CSV) =====
   "rtf-to-docx":     ["rtf-to-html", "rtf-to-markdown", "rtf-to-txt"],

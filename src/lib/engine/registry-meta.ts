@@ -5364,6 +5364,39 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "application/vnd.citationstyles.csl+json",
     "maxFileSizeBytes": 10485760
   },
+  "references-to-enw": {
+    "label": "Reference List → EndNote",
+    "accept": [
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "application/x-endnote-refer",
+    "maxFileSizeBytes": 10485760
+  },
+  "references-to-endnote-xml": {
+    "label": "Reference List → EndNote XML",
+    "accept": [
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "application/xml",
+    "maxFileSizeBytes": 10485760
+  },
+  "references-to-nbib": {
+    "label": "Reference List → NBIB",
+    "accept": [
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "application/x-research-info-systems",
+    "maxFileSizeBytes": 10485760
+  },
   "pubmed-to-ris": {
     "label": "PubMed → RIS",
     "accept": [
@@ -5401,6 +5434,58 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "application/x-research-info-systems"
     ],
     "toMime": "text/csv",
+    "maxFileSizeBytes": 26214400
+  },
+  "pubmed-to-csl-json": {
+    "label": "PubMed → CSL-JSON",
+    "accept": [
+      ".txt",
+      ".nbib"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-research-info-systems"
+    ],
+    "toMime": "application/vnd.citationstyles.csl+json",
+    "maxFileSizeBytes": 26214400
+  },
+  "pubmed-to-enw": {
+    "label": "PubMed → EndNote",
+    "accept": [
+      ".txt",
+      ".nbib"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-research-info-systems"
+    ],
+    "toMime": "application/x-endnote-refer",
+    "maxFileSizeBytes": 26214400
+  },
+  "pubmed-to-endnote-xml": {
+    "label": "PubMed → EndNote XML",
+    "accept": [
+      ".txt",
+      ".nbib"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-research-info-systems"
+    ],
+    "toMime": "application/xml",
+    "maxFileSizeBytes": 26214400
+  },
+  "pubmed-to-nbib": {
+    "label": "PubMed → NBIB",
+    "accept": [
+      ".txt",
+      ".nbib"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-research-info-systems"
+    ],
+    "toMime": "application/x-research-info-systems",
     "maxFileSizeBytes": 26214400
   },
   "bibtex-to-nbib": {

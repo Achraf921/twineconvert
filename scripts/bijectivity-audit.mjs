@@ -471,6 +471,7 @@ const TEST_FILE_GLOBS = [
   "tests/converters-office-table.test.ts",
   "tests/converters-references.test.ts",
   "tests/converters-pubmed.test.ts",
+  "tests/converters-citation-family-extend.test.ts",
 ];
 const browserTestFiles = (() => {
   try {
