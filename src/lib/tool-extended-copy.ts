@@ -3667,6 +3667,84 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       },
     ],
   },
+  "3dl-to-cube": {
+    whyConvert:
+      "3DL is an older 3D LUT format (Autodesk Lustre/Flame, Kodak); .cube is the modern standard DaVinci Resolve, Premiere, Photoshop, and most grading apps read. Convert 3DL to CUBE so a look loads in current software.",
+    example:
+      "You have a vintage film-emulation LUT as .3dl but grade in DaVinci Resolve. Convert to .cube here and drop it into a LUT folder or node.",
+    troubleshooting: [
+      {
+        problem: "The look is slightly stronger or softer than expected.",
+        solution:
+          "3DL and CUBE can use different grid sizes; values are interpolated to a standard cube grid. For a critical match, export the original at a 33 or 65 grid before converting.",
+      },
+    ],
+  },
+  "cube-to-3dl": {
+    whyConvert:
+      "Some Autodesk (Lustre, Flame, Smoke) and legacy hardware pipelines still expect .3dl. Convert a .cube LUT to 3DL so it loads in those tools.",
+    example:
+      "Your colorist sent a .cube but the finishing suite runs Flame and wants .3dl. Convert here and import.",
+    troubleshooting: [
+      {
+        problem: "The 3DL grid size looks fixed.",
+        solution:
+          "3DL uses a defined integer grid; the cube data is resampled to it. If your target app needs a specific grid (17 or 65), match it in your grading software on export.",
+      },
+    ],
+  },
+  "3dl-to-csp": {
+    whyConvert:
+      "Convert an Autodesk/Kodak .3dl LUT to Cinespace .csp for grading tools and on-set monitors that use the CSP format.",
+    example:
+      "An on-set look came as .3dl but your monitor LUT box takes .csp. Convert here and load it.",
+    troubleshooting: [
+      {
+        problem: "Shadows or highlights clip after converting.",
+        solution:
+          "CSP supports a shaper/input curve that 3DL does not; the conversion writes a linear shaper. If you see clipping, set the input range in your grading app rather than baking it into the LUT.",
+      },
+    ],
+  },
+  "csp-to-3dl": {
+    whyConvert:
+      "Convert a Cinespace .csp LUT to Autodesk .3dl for Lustre/Flame and legacy pipelines that read 3DL.",
+    example:
+      "You have a .csp on-set LUT and need it in a Flame finishing session. Convert to .3dl here and import.",
+    troubleshooting: [
+      {
+        problem: "The CSP shaper curve seems gone.",
+        solution:
+          "3DL has no shaper concept, so any CSP input curve is flattened into the 3D table. The visible result is preserved for standard ranges; rebuild a shaper in your app if you need one.",
+      },
+    ],
+  },
+  "cube-to-csp": {
+    whyConvert:
+      "Convert a .cube LUT (DaVinci Resolve, Premiere) to Cinespace .csp for on-set monitoring boxes and tools that expect CSP.",
+    example:
+      "Your show LUT is a .cube but the DIT cart's monitor LUT box takes .csp. Convert here and load it on set.",
+    troubleshooting: [
+      {
+        problem: "Colors differ slightly on the monitor.",
+        solution:
+          "CSP adds a shaper curve (written linear here) and may use a different grid; values are interpolated. For reference-critical monitoring, verify against the .cube in your grading app.",
+      },
+    ],
+  },
+  "csp-to-cube": {
+    whyConvert:
+      "Cinespace .csp is common on set; .cube is what DaVinci Resolve, Premiere, and Photoshop read. Convert CSP to CUBE to bring an on-set look into the grading suite.",
+    example:
+      "The DIT handed off a .csp look LUT. Convert to .cube here and apply it on a Resolve node to start the grade from the on-set reference.",
+    troubleshooting: [
+      {
+        problem: "The grade looks off compared to set.",
+        solution:
+          "A CSP input shaper is folded into the cube table during conversion. For an exact on-set match, also bring the original camera/transform settings into Resolve, not just the LUT.",
+      },
+    ],
+  },
   "asciidoc-to-html": {
     whyConvert:
       "AsciiDoc is the technical-writing source format behind Pro Git, the Spring reference docs, Eclipse, and many open-source project handbooks. To publish or preview the output you need HTML. This renders via Asciidoctor.js, the official reference implementation, so the output matches what readthedocs and AsciidoctorJ would produce.",
