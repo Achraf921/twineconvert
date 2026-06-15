@@ -1398,6 +1398,84 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       },
     ],
   },
+  "ris-to-csv": {
+    whyConvert:
+      "RIS is the interchange format EndNote, Zotero, and Mendeley export, but you cannot sort or filter it. Convert to CSV to get one row per reference with title, author, year, journal, and DOI columns for a literature-review spreadsheet.",
+    example:
+      "You exported a Zotero collection as RIS and need a screening sheet. Convert to CSV here, open in Excel or Sheets, and add relevance and notes columns next to each reference.",
+    troubleshooting: [
+      {
+        problem: "Authors landed in one cell.",
+        solution:
+          "Multiple authors are joined with a semicolon in a single column so the CSV stays one row per reference. Split that column in your spreadsheet if you need one author per cell.",
+      },
+    ],
+  },
+  "nbib-to-bibtex": {
+    whyConvert:
+      "PubMed and many library databases export .nbib (MEDLINE), but LaTeX and Overleaf need BibTeX. Convert .nbib to a .bib file so your PubMed results cite cleanly with \\cite{} keys.",
+    example:
+      "You sent PubMed results to a citation manager and got an .nbib file. Convert to BibTeX here, paste into references.bib, and cite in your LaTeX manuscript with title, authors, journal, year, and DOI intact.",
+    troubleshooting: [
+      {
+        problem: "Citation keys look generic.",
+        solution:
+          "Keys are generated from author and year when present. Rename them to your preferred scheme after import; the bibliographic fields are what matter for the entry.",
+      },
+    ],
+  },
+  "nbib-to-ris": {
+    whyConvert:
+      "Move a PubMed .nbib export into Zotero, Mendeley, or EndNote, which all take RIS. Converts the MEDLINE-tagged file into clean RIS without retyping.",
+    example:
+      "You downloaded an .nbib from PubMed but your manager prefers RIS. Convert here and import the .ris so each article arrives with title, authors, journal, year, and DOI.",
+    troubleshooting: [
+      {
+        problem: "No references found.",
+        solution:
+          "The input must be MEDLINE/.nbib (PMID-, TI-, AU- tagged lines). If you have the PubMed CSV export instead, use a csv-based citation tool.",
+      },
+    ],
+  },
+  "ris-to-bibtex": {
+    whyConvert:
+      "Your sources are in a RIS-based manager (EndNote, Zotero, Mendeley) but your paper is in LaTeX. Convert RIS to BibTeX to get a .bib file ready for Overleaf.",
+    example:
+      "Export your Zotero collection as RIS, convert to BibTeX here, drop the .bib into your Overleaf project, and cite with \\cite{} keys.",
+    troubleshooting: [
+      {
+        problem: "Special characters look wrong in the PDF.",
+        solution:
+          "Accents and symbols are kept as Unicode. If your LaTeX build is not UTF-8, add \\usepackage[utf8]{inputenc} or switch to XeLaTeX/LuaLaTeX.",
+      },
+    ],
+  },
+  "discord-chat-to-pdf": {
+    whyConvert:
+      "Keep a permanent, shareable copy of a Discord conversation for records, moderation, or evidence. Converts a Discord chat export into a clean PDF you can archive or print.",
+    example:
+      "You exported a Discord channel as JSON with a tool like DiscordChatExporter. Convert it to PDF here to get a readable, paginated transcript with authors and timestamps.",
+    troubleshooting: [
+      {
+        problem: "It expects JSON but I have HTML.",
+        solution:
+          "Export the channel in JSON format (DiscordChatExporter offers it). The JSON export carries the structured messages this tool reads; the HTML export is a different shape.",
+      },
+    ],
+  },
+  "jef-to-dst": {
+    whyConvert:
+      "JEF is Janome's embroidery format; DST (Tajima) is the most widely accepted format across commercial and home machines. Convert JEF to DST so a design stitches on a machine that does not read JEF.",
+    example:
+      "You bought a JEF design but your machine takes DST. Convert here and load the .dst onto your machine; stitch coordinates and color stops are preserved.",
+    troubleshooting: [
+      {
+        problem: "Colors look different after converting.",
+        solution:
+          "DST stores stitch data and color-change stops but not thread colors themselves (the format has no color table). Re-assign thread colors in your machine or software after loading.",
+      },
+    ],
+  },
   "bibtex-to-csv": {
     whyConvert:
       "BibTeX is LaTeX's bibliography format, great for compiling a paper, useless for a literature-review spreadsheet. Converting to CSV puts every reference in a row with title/author/year/journal columns you can sort, filter, dedupe, and share with non-LaTeX collaborators.",
