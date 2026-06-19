@@ -6,14 +6,14 @@ Generated 2026-06-19 from src/lib/engine/converters/.
 
 | Classification | Count |
 |---|---:|
-| Total converters | 645 |
+| Total converters | 655 |
 | **Bijective candidates** (lossless, same-kind, both directions exist) | 256 |
 | **Bijective candidates missing reverse converter** | 40 |
 | **Bijective candidates missing round-trip test** | 27 |
 | Lossy encoding (same kind, but lossy format) | 121 |
 | Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 79 |
 | Single-action (no reverse possible) | 53 |
-| Unknown formats (need to add to FORMATS table) | 96 |
+| Unknown formats (need to add to FORMATS table) | 106 |
 | Compound id (irregular pattern) | 0 |
 
 ## Action Items
@@ -72,6 +72,16 @@ The audit script doesn't know about these formats; add them to the FORMATS table
 - `nbib-to-mla` (unknown format: mla)
 - `nbib-to-nature` (unknown format: nature)
 - `nbib-to-vancouver` (unknown format: vancouver)
+- `ods-to-acs` (unknown format: acs)
+- `ods-to-ama` (unknown format: ama)
+- `ods-to-apa` (unknown format: apa)
+- `ods-to-asa` (unknown format: asa)
+- `ods-to-chicago` (unknown format: chicago)
+- `ods-to-harvard` (unknown format: harvard)
+- `ods-to-ieee` (unknown format: ieee)
+- `ods-to-mla` (unknown format: mla)
+- `ods-to-nature` (unknown format: nature)
+- `ods-to-vancouver` (unknown format: vancouver)
 - `pubmed-to-bibtex` (unknown format: pubmed)
 - `pubmed-to-csl-json` (unknown format: pubmed)
 - `pubmed-to-csv` (unknown format: pubmed)
@@ -619,12 +629,22 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `obj-to-3mf` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
 | `obj-to-glb` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
 | `obj-to-stl` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
+| `ods-to-acs` | unknown-format | (`acs-to-ods` missing) | n/a | unknown format: acs |
+| `ods-to-ama` | unknown-format | (`ama-to-ods` missing) | n/a | unknown format: ama |
+| `ods-to-apa` | unknown-format | (`apa-to-ods` missing) | ✓ | unknown format: apa |
+| `ods-to-asa` | unknown-format | (`asa-to-ods` missing) | n/a | unknown format: asa |
 | `ods-to-bibtex` | bijective-candidate | (`bibtex-to-ods` missing) | ✓ | both lossless data formats; should round-trip cleanly |
+| `ods-to-chicago` | unknown-format | (`chicago-to-ods` missing) | n/a | unknown format: chicago |
 | `ods-to-csl-json` | bijective-candidate | (`csl-json-to-ods` missing) | ✓ | both lossless data formats; should round-trip cleanly |
 | `ods-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `ods-to-endnote-xml` | bijective-candidate | (`endnote-xml-to-ods` missing) | ✓ | both lossless data formats; should round-trip cleanly |
+| `ods-to-harvard` | unknown-format | (`harvard-to-ods` missing) | n/a | unknown format: harvard |
+| `ods-to-ieee` | unknown-format | (`ieee-to-ods` missing) | n/a | unknown format: ieee |
+| `ods-to-mla` | unknown-format | (`mla-to-ods` missing) | n/a | unknown format: mla |
+| `ods-to-nature` | unknown-format | (`nature-to-ods` missing) | n/a | unknown format: nature |
 | `ods-to-nbib` | bijective-candidate | (`nbib-to-ods` missing) | ✓ | both lossless data formats; should round-trip cleanly |
 | `ods-to-ris` | bijective-candidate | (`ris-to-ods` missing) | ✓ | both lossless data formats; should round-trip cleanly |
+| `ods-to-vancouver` | unknown-format | (`vancouver-to-ods` missing) | ✓ | unknown format: vancouver |
 | `ods-to-xlsx` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `ofx-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `ofx-to-qif` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |

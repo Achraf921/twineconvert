@@ -1009,6 +1009,16 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "enw-to-acs":       { provider: () => text("refs.enw", ENW_SAMPLE, "application/x-endnote-refer"), env: "node" },
   "enw-to-asa":       { provider: () => text("refs.enw", ENW_SAMPLE, "application/x-endnote-refer"), env: "node" },
   "enw-to-vancouver": { provider: () => text("refs.enw", ENW_SAMPLE, "application/x-endnote-refer"), env: "node" },
+  "ods-to-apa":        { provider: async () => fileFromBytes("refs.ods", await makeTinyCitationOds(), "application/vnd.oasis.opendocument.spreadsheet"), env: "node" },
+  "ods-to-mla":        { provider: async () => fileFromBytes("refs.ods", await makeTinyCitationOds(), "application/vnd.oasis.opendocument.spreadsheet"), env: "node" },
+  "ods-to-chicago":    { provider: async () => fileFromBytes("refs.ods", await makeTinyCitationOds(), "application/vnd.oasis.opendocument.spreadsheet"), env: "node" },
+  "ods-to-harvard":    { provider: async () => fileFromBytes("refs.ods", await makeTinyCitationOds(), "application/vnd.oasis.opendocument.spreadsheet"), env: "node" },
+  "ods-to-ieee":       { provider: async () => fileFromBytes("refs.ods", await makeTinyCitationOds(), "application/vnd.oasis.opendocument.spreadsheet"), env: "node" },
+  "ods-to-ama":        { provider: async () => fileFromBytes("refs.ods", await makeTinyCitationOds(), "application/vnd.oasis.opendocument.spreadsheet"), env: "node" },
+  "ods-to-nature":     { provider: async () => fileFromBytes("refs.ods", await makeTinyCitationOds(), "application/vnd.oasis.opendocument.spreadsheet"), env: "node" },
+  "ods-to-acs":        { provider: async () => fileFromBytes("refs.ods", await makeTinyCitationOds(), "application/vnd.oasis.opendocument.spreadsheet"), env: "node" },
+  "ods-to-asa":        { provider: async () => fileFromBytes("refs.ods", await makeTinyCitationOds(), "application/vnd.oasis.opendocument.spreadsheet"), env: "node" },
+  "ods-to-vancouver":  { provider: async () => fileFromBytes("refs.ods", await makeTinyCitationOds(), "application/vnd.oasis.opendocument.spreadsheet"), env: "node" },
 };
 
 /** True if we have any fixture for this id (even if it requires browser). */

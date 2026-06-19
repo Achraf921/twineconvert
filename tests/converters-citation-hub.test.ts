@@ -1172,3 +1172,14 @@ describe("citation style output: EndNote (.enw) source", () => {
     expect(ie).toMatch(/^\[1\]\s+J\. A\. Smith and J\. Doe/);
   });
 });
+
+describe("citation style output: ODS source", () => {
+  it("ods-to-apa and ods-to-vancouver render from a LibreOffice spreadsheet", async () => {
+    const { makeTinyCitationOds } = await import("./fixtures/binary-fixtures");
+    const ods = await makeTinyCitationOds();
+    const apa = await (await run("ods-to-apa", fileFromBytes("refs.ods", ods, "application/vnd.oasis.opendocument.spreadsheet"))).blob.text();
+    expect(apa).toMatch(/\(\d{4}\)/);
+    const van = await (await run("ods-to-vancouver", fileFromBytes("refs.ods", ods, "application/vnd.oasis.opendocument.spreadsheet"))).blob.text();
+    expect(van.length).toBeGreaterThan(15);
+  });
+});

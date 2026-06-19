@@ -5074,6 +5074,116 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "text/plain",
     "maxFileSizeBytes": 104857600
   },
+  "ods-to-apa": {
+    "label": "ODS → APA",
+    "accept": [
+      ".ods"
+    ],
+    "fromMime": [
+      "application/vnd.oasis.opendocument.spreadsheet"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "ods-to-mla": {
+    "label": "ODS → MLA",
+    "accept": [
+      ".ods"
+    ],
+    "fromMime": [
+      "application/vnd.oasis.opendocument.spreadsheet"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "ods-to-chicago": {
+    "label": "ODS → Chicago",
+    "accept": [
+      ".ods"
+    ],
+    "fromMime": [
+      "application/vnd.oasis.opendocument.spreadsheet"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "ods-to-harvard": {
+    "label": "ODS → Harvard",
+    "accept": [
+      ".ods"
+    ],
+    "fromMime": [
+      "application/vnd.oasis.opendocument.spreadsheet"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "ods-to-ieee": {
+    "label": "ODS → IEEE",
+    "accept": [
+      ".ods"
+    ],
+    "fromMime": [
+      "application/vnd.oasis.opendocument.spreadsheet"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "ods-to-ama": {
+    "label": "ODS → AMA",
+    "accept": [
+      ".ods"
+    ],
+    "fromMime": [
+      "application/vnd.oasis.opendocument.spreadsheet"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "ods-to-nature": {
+    "label": "ODS → Nature",
+    "accept": [
+      ".ods"
+    ],
+    "fromMime": [
+      "application/vnd.oasis.opendocument.spreadsheet"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "ods-to-acs": {
+    "label": "ODS → ACS",
+    "accept": [
+      ".ods"
+    ],
+    "fromMime": [
+      "application/vnd.oasis.opendocument.spreadsheet"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "ods-to-asa": {
+    "label": "ODS → ASA",
+    "accept": [
+      ".ods"
+    ],
+    "fromMime": [
+      "application/vnd.oasis.opendocument.spreadsheet"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "ods-to-vancouver": {
+    "label": "ODS → Vancouver",
+    "accept": [
+      ".ods"
+    ],
+    "fromMime": [
+      "application/vnd.oasis.opendocument.spreadsheet"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
   "bibtex-to-xlsx": {
     "label": "BibTeX → XLSX",
     "accept": [
