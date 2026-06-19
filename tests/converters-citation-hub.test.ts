@@ -784,3 +784,35 @@ describe("csv-to-ris: recognizes reference-manager / database column names", () 
     expect(ris).toMatch(/JO\s+-\s+Cell Reports/);
   });
 });
+
+describe("csv-to-ris: redirects a citation FILE dropped into the CSV tool", () => {
+  // PostHog (06-18): a user uploaded an actual .ris file to csv-to-ris and
+  // got the cryptic "no recognizable citation columns" dead end. Detect
+  // tagged citation formats and point at the right reverse tool instead.
+  it("recognizes an actual RIS file and names ris-to-... tools", async () => {
+    const ris = "TY  - JOUR\nTI  - An Actual RIS File\nAU  - Doe J\nPY  - 2024\nER  -\n";
+    await expect(run("csv-to-ris", f("already.ris", ris, "text/csv"))).rejects.toThrow(
+      /already in RIS format[\s\S]*ris-to-csv/i,
+    );
+  });
+
+  it("recognizes a BibTeX file and names bibtex-to-... tools", async () => {
+    const bib = "@article{smith2024,\n  title = {A Paper},\n  author = {Smith, J},\n  year = {2024}\n}\n";
+    await expect(run("csv-to-ris", f("refs.bib", bib, "text/csv"))).rejects.toThrow(
+      /BibTeX file[\s\S]*bibtex-to-csv/i,
+    );
+  });
+
+  it("recognizes an EndNote ENW file and names enw-to-... tools", async () => {
+    const enw = "%0 Journal Article\n%T An EndNote Record\n%A Doe, Jane\n%D 2023\n";
+    await expect(run("csv-to-ris", f("export.enw", enw, "text/csv"))).rejects.toThrow(
+      /EndNote \(\.enw\) export[\s\S]*enw-to-csv/i,
+    );
+  });
+
+  it("still converts a real citation CSV (no false redirect)", async () => {
+    const csv = "title,authors,year,journal,doi\nReal Paper,Smith J,2024,Nature,10.1/x\n";
+    const out = await (await run("csv-to-ris", f("good.csv", csv, "text/csv"))).blob.text();
+    expect(out).toMatch(/TI\s+-\s+Real Paper/);
+  });
+});
