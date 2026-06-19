@@ -721,3 +721,35 @@ describe("csv-to-ris: recognizes academic database field-code exports", () => {
     );
   });
 });
+
+describe("csv-to-ris: skips database-export preamble lines", () => {
+  // PostHog (06-17..06-19): Ovid/EBSCO/EMBASE/Scopus exports prepend a
+  // search-strategy or "citation overview" metadata line before the real
+  // header. The reader now scans past the preamble to find the header.
+  it("skips an Ovid 'Search query:' preamble line", async () => {
+    const ovid = "Search query: Anemia\n\nTitle,Authors,Year,DOI\nIron studies,Smith J,2024,10.1/x\n";
+    const ris = await (await run("csv-to-ris", f("ovid.csv", ovid, "text/csv"))).blob.text();
+    expect(ris).toMatch(/TI\s+-\s+Iron studies/);
+    expect(ris).toMatch(/PY\s+-\s+2024/);
+  });
+
+  it("skips a search-strategy preamble above WoS field codes", async () => {
+    const ovid = "SEARCH QUERY,('exp urolithiasis' OR 'exp nephrolithiasis')\nAU,TI,PY,DI\nDoe R,Stone disease,2023,10.2/y\n";
+    const ris = await (await run("csv-to-ris", f("embase.csv", ovid, "text/csv"))).blob.text();
+    expect(ris).toMatch(/TI\s+-\s+Stone disease/);
+    expect(ris).toMatch(/AU\s+-\s+Doe R/);
+  });
+
+  it("skips a Scopus 'citation overview' preamble", async () => {
+    const scopus = "This is a citation overview for a set of 4 documents.\n\nAuthors,Title,Year\nLee C,Deep nets,2022\n";
+    const ris = await (await run("csv-to-ris", f("scopus.csv", scopus, "text/csv"))).blob.text();
+    expect(ris).toMatch(/TI\s+-\s+Deep nets/);
+  });
+
+  it("does not skip into a non-citation CSV (still rejected)", async () => {
+    const data = "Report generated 2026-06-19\n\nKabupaten,Jumlah\nJakarta,1000\n";
+    await expect(run("csv-to-ris", f("gov.csv", data, "text/csv"))).rejects.toThrow(
+      /no recognizable citation columns|references-to-ris/i,
+    );
+  });
+});

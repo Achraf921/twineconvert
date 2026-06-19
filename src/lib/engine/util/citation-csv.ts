@@ -14,6 +14,7 @@
  */
 
 import type { Citation, CitationType } from "./citation";
+import { sniffDelimiter } from "./csv-parse-flex";
 
 const CITATION_TYPES: CitationType[] = [
   "article", "book", "inbook", "incollection", "inproceedings",
@@ -117,6 +118,29 @@ export async function citationsFromCsv(text: string): Promise<Citation[]> {
   if (sepMatch) {
     delimiter = sepMatch[1] === "\\t" ? "\t" : sepMatch[1];
     body = body.slice(sepMatch[0].length);
+  }
+
+  // Database exports (Ovid, EBSCO, EMBASE, Scopus "citation overview")
+  // prepend metadata/search-strategy lines before the real header row, e.g.
+  // "Search query: Anemia\n\nAU,TI,PY,...". Scan the first few lines for the
+  // one whose columns map to citation fields and drop everything above it.
+  // Only fires when a real citation header is found, so non-citation CSVs
+  // still flow through unchanged and fail loudly below.
+  {
+    const lines = body.split(/\r?\n/);
+    for (let i = 0; i < Math.min(lines.length, 8); i++) {
+      const line = lines[i];
+      if (!line.trim()) continue;
+      const d = delimiter ?? sniffDelimiter(line);
+      const cells = line.split(d);
+      if (cells.length < 2) continue;
+      const isCitationHeader = cells.some((c) => FIELD_ALIASES[normaliseHeader(c)] !== undefined);
+      if (isCitationHeader) {
+        if (i > 0) body = lines.slice(i).join("\n");
+        if (!delimiter) delimiter = d;
+        break;
+      }
+    }
   }
 
   const parsed = Papa.parse<Record<string, string>>(body, {
