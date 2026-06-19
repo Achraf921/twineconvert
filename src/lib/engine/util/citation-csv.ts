@@ -76,6 +76,19 @@ const FIELD_ALIASES: Record<string, ReadableField> = {
   // abstract / keywords
   abstract: "abstract", abstractnote: "abstract", summary: "abstract",
   keywords: "keywords", keyword: "keywords", tags: "keywords", subject: "keywords",
+
+  // Web of Science tagged-export column codes (real PostHog footgun: a WoS
+  // CSV/TSV export uses 2-letter field codes, not human-readable headers).
+  au: "authors", af: "authors", ti: "title", so: "journal", ji: "journal",
+  j9: "journal", py: "year", vl: "volume", bp: "pages", ab: "abstract",
+  di: "doi", de: "keywords", dt: "type", pu: "publisher", pd: "date",
+  sn: "issn", ei: "issn", bn: "isbn",
+
+  // RIS field codes appearing as CSV column headers (a RIS export flattened
+  // into a spreadsheet). TY/T1/A1/Y1/JF/DO/SP etc.
+  ty: "type", t1: "title", a1: "authors", y1: "year", jf: "journal",
+  jo: "journal", ja: "journal", do: "doi", sp: "pages", kw: "keywords",
+  pb: "publisher", n2: "abstract", ur: "url",
 };
 
 /** Fields whose presence makes a CSV recognisably a citation table. */

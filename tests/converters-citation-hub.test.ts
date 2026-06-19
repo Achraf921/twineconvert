@@ -685,3 +685,39 @@ describe("csv-to-ris: smart redirect when the input is not really a CSV", () => 
     expect(ris).toMatch(/TI\s+-\s+Real Paper/);
   });
 });
+
+describe("csv-to-ris: recognizes academic database field-code exports", () => {
+  // PostHog (06-19): the flagship rejected Web of Science and RIS exports
+  // whose CSV columns are 2-letter field codes (AU/TI/PY..., TY/T1/A1...),
+  // not human-readable headers. The reader now aliases those codes.
+  it("parses a Web of Science tab-delimited export (AU/TI/SO/PY/DI codes)", async () => {
+    const wos = "AU\tTI\tSO\tPY\tVL\tDI\nSmith J\tDeep Learning for Vision\tNature\t2024\t12\t10.1038/x\n";
+    const ris = await (await run("csv-to-ris", f("savedrecs.csv", wos, "text/csv"))).blob.text();
+    expect(ris).toMatch(/TI\s+-\s+Deep Learning for Vision/);
+    expect(ris).toMatch(/AU\s+-\s+Smith J/);
+    expect(ris).toMatch(/PY\s+-\s+2024/);
+    expect(ris).toContain("10.1038/x");
+  });
+
+  it("parses a Web of Science comma export too", async () => {
+    const wos = "AU,TI,SO,PY,DI\nDoe R,Quantum Notes,Science,2023,10.1126/y\n";
+    const ris = await (await run("csv-to-ris", f("wos.csv", wos, "text/csv"))).blob.text();
+    expect(ris).toMatch(/TI\s+-\s+Quantum Notes/);
+    expect(ris).toMatch(/PY\s+-\s+2023/);
+  });
+
+  it("parses RIS field codes used as CSV column headers (TY/T1/A1/Y1/JF/DO)", async () => {
+    const risCols = "TY,T1,A1,Y1,JF,DO\nJOUR,A Study of Things,Brown K,2022,J. Things,10.1000/z\n";
+    const ris = await (await run("csv-to-ris", f("export.csv", risCols, "text/csv"))).blob.text();
+    expect(ris).toMatch(/TI\s+-\s+A Study of Things/);
+    expect(ris).toMatch(/AU\s+-\s+Brown K/);
+    expect(ris).toMatch(/PY\s+-\s+2022/);
+  });
+
+  it("still rejects a non-citation CSV that happens to have short headers", async () => {
+    const contacts = "name,email,phone\nBob,b@x.com,555-1234\n";
+    await expect(run("csv-to-ris", f("contacts.csv", contacts, "text/csv"))).rejects.toThrow(
+      /no recognizable citation columns|references-to-ris/i,
+    );
+  });
+});
