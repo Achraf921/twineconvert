@@ -999,6 +999,16 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "csv-to-vancouver":      { provider: () => text("refs.csv", CITATION_CSV_FIXTURE, "text/csv"), env: "node" },
   "xlsx-to-vancouver":     { provider: async () => fileFromBytes("refs.xlsx", await makeTinyCitationXlsx(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"), env: "node" },
   "references-to-vancouver": { provider: () => text("refs.txt", REFERENCE_LIST_FIXTURE, "text/plain"), env: "node" },
+  "enw-to-apa":       { provider: () => text("refs.enw", ENW_SAMPLE, "application/x-endnote-refer"), env: "node" },
+  "enw-to-mla":       { provider: () => text("refs.enw", ENW_SAMPLE, "application/x-endnote-refer"), env: "node" },
+  "enw-to-chicago":   { provider: () => text("refs.enw", ENW_SAMPLE, "application/x-endnote-refer"), env: "node" },
+  "enw-to-harvard":   { provider: () => text("refs.enw", ENW_SAMPLE, "application/x-endnote-refer"), env: "node" },
+  "enw-to-ieee":      { provider: () => text("refs.enw", ENW_SAMPLE, "application/x-endnote-refer"), env: "node" },
+  "enw-to-ama":       { provider: () => text("refs.enw", ENW_SAMPLE, "application/x-endnote-refer"), env: "node" },
+  "enw-to-nature":    { provider: () => text("refs.enw", ENW_SAMPLE, "application/x-endnote-refer"), env: "node" },
+  "enw-to-acs":       { provider: () => text("refs.enw", ENW_SAMPLE, "application/x-endnote-refer"), env: "node" },
+  "enw-to-asa":       { provider: () => text("refs.enw", ENW_SAMPLE, "application/x-endnote-refer"), env: "node" },
+  "enw-to-vancouver": { provider: () => text("refs.enw", ENW_SAMPLE, "application/x-endnote-refer"), env: "node" },
 };
 
 /** True if we have any fixture for this id (even if it requires browser). */

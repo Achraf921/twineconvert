@@ -6,14 +6,14 @@ Generated 2026-06-19 from src/lib/engine/converters/.
 
 | Classification | Count |
 |---|---:|
-| Total converters | 635 |
+| Total converters | 645 |
 | **Bijective candidates** (lossless, same-kind, both directions exist) | 256 |
 | **Bijective candidates missing reverse converter** | 40 |
 | **Bijective candidates missing round-trip test** | 27 |
 | Lossy encoding (same kind, but lossy format) | 121 |
 | Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 79 |
 | Single-action (no reverse possible) | 53 |
-| Unknown formats (need to add to FORMATS table) | 86 |
+| Unknown formats (need to add to FORMATS table) | 96 |
 | Compound id (irregular pattern) | 0 |
 
 ## Action Items
@@ -52,6 +52,16 @@ The audit script doesn't know about these formats; add them to the FORMATS table
 - `csv-to-mla` (unknown format: mla)
 - `csv-to-nature` (unknown format: nature)
 - `csv-to-vancouver` (unknown format: vancouver)
+- `enw-to-acs` (unknown format: acs)
+- `enw-to-ama` (unknown format: ama)
+- `enw-to-apa` (unknown format: apa)
+- `enw-to-asa` (unknown format: asa)
+- `enw-to-chicago` (unknown format: chicago)
+- `enw-to-harvard` (unknown format: harvard)
+- `enw-to-ieee` (unknown format: ieee)
+- `enw-to-mla` (unknown format: mla)
+- `enw-to-nature` (unknown format: nature)
+- `enw-to-vancouver` (unknown format: vancouver)
 - `nbib-to-acs` (unknown format: acs)
 - `nbib-to-ama` (unknown format: ama)
 - `nbib-to-apa` (unknown format: apa)
@@ -362,14 +372,24 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `endnote-xml-to-xlsx` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `endnote-xml-to-yaml` | bijective-candidate | (`yaml-to-endnote-xml` missing) | n/a | both lossless data formats; should round-trip cleanly |
 | `env-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `enw-to-acs` | unknown-format | (`acs-to-enw` missing) | n/a | unknown format: acs |
+| `enw-to-ama` | unknown-format | (`ama-to-enw` missing) | n/a | unknown format: ama |
+| `enw-to-apa` | unknown-format | (`apa-to-enw` missing) | ✓ | unknown format: apa |
+| `enw-to-asa` | unknown-format | (`asa-to-enw` missing) | n/a | unknown format: asa |
 | `enw-to-bibtex` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `enw-to-chicago` | unknown-format | (`chicago-to-enw` missing) | n/a | unknown format: chicago |
 | `enw-to-csl-json` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
 | `enw-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `enw-to-endnote-xml` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
+| `enw-to-harvard` | unknown-format | (`harvard-to-enw` missing) | n/a | unknown format: harvard |
 | `enw-to-html` | cross-kind | (`html-to-enw` missing) | n/a | data -> doc: cross-domain, inherently lossy |
+| `enw-to-ieee` | unknown-format | (`ieee-to-enw` missing) | ✓ | unknown format: ieee |
 | `enw-to-markdown` | cross-kind | (`markdown-to-enw` missing) | n/a | data -> doc: cross-domain, inherently lossy |
+| `enw-to-mla` | unknown-format | (`mla-to-enw` missing) | n/a | unknown format: mla |
+| `enw-to-nature` | unknown-format | (`nature-to-enw` missing) | n/a | unknown format: nature |
 | `enw-to-nbib` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
 | `enw-to-ris` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `enw-to-vancouver` | unknown-format | (`vancouver-to-enw` missing) | ✓ | unknown format: vancouver |
 | `enw-to-xlsx` | bijective-candidate | (`xlsx-to-enw` missing) | ✓ | both lossless data formats; should round-trip cleanly |
 | `enw-to-yaml` | bijective-candidate | (`yaml-to-enw` missing) | n/a | both lossless data formats; should round-trip cleanly |
 | `epub-to-html` | lossy-encoding | (`html-to-epub` missing) | n/a | epub or html uses lossy encoding |

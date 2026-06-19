@@ -1157,3 +1157,18 @@ describe("citation style output: Vancouver via citeproc", () => {
     expect(c).toMatch(/Smith J/);
   });
 });
+
+describe("citation style output: EndNote (.enw) source", () => {
+  const ENW = "%0 Journal Article\n%T Deep learning for vision\n%A Smith, John A.\n%A Doe, Jane\n%D 2024\n%J Nature Methods\n%V 12\n%N 3\n%P 45-67\n%R 10.1038/x\n";
+  it("enw-to-apa renders APA from an EndNote export", async () => {
+    const out = await (await run("enw-to-apa", f("a.enw", ENW, "application/x-endnote-refer"))).blob.text();
+    expect(out).toMatch(/Smith, J\. A\., & Doe, J\. \(2024\)\./);
+    expect(out).toMatch(/Nature Methods, 12\(3\), 45–67/);
+  });
+  it("enw-to-vancouver and enw-to-ieee render their styles", async () => {
+    const v = await (await run("enw-to-vancouver", f("a.enw", ENW, "application/x-endnote-refer"))).blob.text();
+    expect(v).toMatch(/^\[?1\]?\.?\s+Smith JA, Doe J\./);
+    const ie = await (await run("enw-to-ieee", f("a.enw", ENW, "application/x-endnote-refer"))).blob.text();
+    expect(ie).toMatch(/^\[1\]\s+J\. A\. Smith and J\. Doe/);
+  });
+});

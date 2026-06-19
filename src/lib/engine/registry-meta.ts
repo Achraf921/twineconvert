@@ -4954,6 +4954,126 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "text/plain",
     "maxFileSizeBytes": 10485760
   },
+  "enw-to-apa": {
+    "label": "EndNote → APA",
+    "accept": [
+      ".enw"
+    ],
+    "fromMime": [
+      "application/x-endnote-refer",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "enw-to-mla": {
+    "label": "EndNote → MLA",
+    "accept": [
+      ".enw"
+    ],
+    "fromMime": [
+      "application/x-endnote-refer",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "enw-to-chicago": {
+    "label": "EndNote → Chicago",
+    "accept": [
+      ".enw"
+    ],
+    "fromMime": [
+      "application/x-endnote-refer",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "enw-to-harvard": {
+    "label": "EndNote → Harvard",
+    "accept": [
+      ".enw"
+    ],
+    "fromMime": [
+      "application/x-endnote-refer",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "enw-to-ieee": {
+    "label": "EndNote → IEEE",
+    "accept": [
+      ".enw"
+    ],
+    "fromMime": [
+      "application/x-endnote-refer",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "enw-to-ama": {
+    "label": "EndNote → AMA",
+    "accept": [
+      ".enw"
+    ],
+    "fromMime": [
+      "application/x-endnote-refer",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "enw-to-nature": {
+    "label": "EndNote → Nature",
+    "accept": [
+      ".enw"
+    ],
+    "fromMime": [
+      "application/x-endnote-refer",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "enw-to-acs": {
+    "label": "EndNote → ACS",
+    "accept": [
+      ".enw"
+    ],
+    "fromMime": [
+      "application/x-endnote-refer",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "enw-to-asa": {
+    "label": "EndNote → ASA",
+    "accept": [
+      ".enw"
+    ],
+    "fromMime": [
+      "application/x-endnote-refer",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "enw-to-vancouver": {
+    "label": "EndNote → Vancouver",
+    "accept": [
+      ".enw"
+    ],
+    "fromMime": [
+      "application/x-endnote-refer",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
   "bibtex-to-xlsx": {
     "label": "BibTeX → XLSX",
     "accept": [
