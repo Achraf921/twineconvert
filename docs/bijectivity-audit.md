@@ -6,14 +6,14 @@ Generated 2026-06-19 from src/lib/engine/converters/.
 
 | Classification | Count |
 |---|---:|
-| Total converters | 600 |
+| Total converters | 607 |
 | **Bijective candidates** (lossless, same-kind, both directions exist) | 256 |
 | **Bijective candidates missing reverse converter** | 40 |
 | **Bijective candidates missing round-trip test** | 27 |
 | Lossy encoding (same kind, but lossy format) | 121 |
 | Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 79 |
 | Single-action (no reverse possible) | 53 |
-| Unknown formats (need to add to FORMATS table) | 51 |
+| Unknown formats (need to add to FORMATS table) | 58 |
 | Compound id (irregular pattern) | 0 |
 
 ## Action Items
@@ -22,21 +22,25 @@ Generated 2026-06-19 from src/lib/engine/converters/.
 
 The audit script doesn't know about these formats; add them to the FORMATS table in scripts/bijectivity-audit.mjs:
 
+- `bibtex-to-ama` (unknown format: ama)
 - `bibtex-to-apa` (unknown format: apa)
 - `bibtex-to-chicago` (unknown format: chicago)
 - `bibtex-to-harvard` (unknown format: harvard)
 - `bibtex-to-ieee` (unknown format: ieee)
 - `bibtex-to-mla` (unknown format: mla)
+- `csl-json-to-ama` (unknown format: ama)
 - `csl-json-to-apa` (unknown format: apa)
 - `csl-json-to-chicago` (unknown format: chicago)
 - `csl-json-to-harvard` (unknown format: harvard)
 - `csl-json-to-ieee` (unknown format: ieee)
 - `csl-json-to-mla` (unknown format: mla)
+- `csv-to-ama` (unknown format: ama)
 - `csv-to-apa` (unknown format: apa)
 - `csv-to-chicago` (unknown format: chicago)
 - `csv-to-harvard` (unknown format: harvard)
 - `csv-to-ieee` (unknown format: ieee)
 - `csv-to-mla` (unknown format: mla)
+- `nbib-to-ama` (unknown format: ama)
 - `nbib-to-apa` (unknown format: apa)
 - `nbib-to-chicago` (unknown format: chicago)
 - `nbib-to-harvard` (unknown format: harvard)
@@ -50,6 +54,7 @@ The audit script doesn't know about these formats; add them to the FORMATS table
 - `pubmed-to-nbib` (unknown format: pubmed)
 - `pubmed-to-ris` (unknown format: pubmed)
 - `pubmed-to-xlsx` (unknown format: pubmed)
+- `references-to-ama` (unknown format: references)
 - `references-to-apa` (unknown format: references)
 - `references-to-bibtex` (unknown format: references)
 - `references-to-chicago` (unknown format: references)
@@ -63,11 +68,13 @@ The audit script doesn't know about these formats; add them to the FORMATS table
 - `references-to-nbib` (unknown format: references)
 - `references-to-ris` (unknown format: references)
 - `references-to-xlsx` (unknown format: references)
+- `ris-to-ama` (unknown format: ama)
 - `ris-to-apa` (unknown format: apa)
 - `ris-to-chicago` (unknown format: chicago)
 - `ris-to-harvard` (unknown format: harvard)
 - `ris-to-ieee` (unknown format: ieee)
 - `ris-to-mla` (unknown format: mla)
+- `xlsx-to-ama` (unknown format: ama)
 - `xlsx-to-apa` (unknown format: apa)
 - `xlsx-to-chicago` (unknown format: chicago)
 - `xlsx-to-harvard` (unknown format: harvard)
@@ -186,6 +193,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `avif-to-webp` | lossy-encoding | ✓ | ✓ | avif or webp uses lossy encoding |
 | `base64-to-text` | bijective-candidate | ✓ | ✓ | both lossless encoding formats; should round-trip cleanly |
 | `bencode-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `bibtex-to-ama` | unknown-format | (`ama-to-bibtex` missing) | ✓ | unknown format: ama |
 | `bibtex-to-apa` | unknown-format | (`apa-to-bibtex` missing) | ✓ | unknown format: apa |
 | `bibtex-to-chicago` | unknown-format | (`chicago-to-bibtex` missing) | ✓ | unknown format: chicago |
 | `bibtex-to-csl-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
@@ -216,6 +224,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `cmyk-to-rgb` | lossy-encoding | ✓ | ✓ | cmyk or rgb uses lossy encoding |
 | `color-name-to-hex` | cross-kind | ✓ | ✓ | color -> palette: cross-domain, inherently lossy |
 | `compress-pdf` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
+| `csl-json-to-ama` | unknown-format | (`ama-to-csl-json` missing) | n/a | unknown format: ama |
 | `csl-json-to-apa` | unknown-format | (`apa-to-csl-json` missing) | ✓ | unknown format: apa |
 | `csl-json-to-bibtex` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csl-json-to-chicago` | unknown-format | (`chicago-to-csl-json` missing) | n/a | unknown format: chicago |
@@ -237,6 +246,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `csp-to-cube` | bijective-candidate | ✓ | ✓ | both lossless lut formats; should round-trip cleanly |
 | `css-to-ase` | bijective-candidate | ✓ | ✓ | both lossless palette formats; should round-trip cleanly |
 | `csv-to-adif` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `csv-to-ama` | unknown-format | (`ama-to-csv` missing) | ✓ | unknown format: ama |
 | `csv-to-apa` | unknown-format | (`apa-to-csv` missing) | ✓ | unknown format: apa |
 | `csv-to-bibtex` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-chicago` | unknown-format | (`chicago-to-csv` missing) | ✓ | unknown format: chicago |
@@ -523,6 +533,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `musicxml-to-svg` | cross-kind | (`svg-to-musicxml` missing) | ✓ | notation -> vector: cross-domain, inherently lossy |
 | `mxl-to-musicxml` | bijective-candidate | ✓ | ✓ | both lossless notation formats; should round-trip cleanly |
 | `mxl-to-svg` | cross-kind | (`svg-to-mxl` missing) | ✓ | notation -> vector: cross-domain, inherently lossy |
+| `nbib-to-ama` | unknown-format | (`ama-to-nbib` missing) | ✓ | unknown format: ama |
 | `nbib-to-apa` | unknown-format | (`apa-to-nbib` missing) | ✓ | unknown format: apa |
 | `nbib-to-bibtex` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `nbib-to-chicago` | unknown-format | (`chicago-to-nbib` missing) | ✓ | unknown format: chicago |
@@ -597,6 +608,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `qfx-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `qif-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `qif-to-ofx` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `references-to-ama` | unknown-format | (`ama-to-references` missing) | ✓ | unknown format: references |
 | `references-to-apa` | unknown-format | (`apa-to-references` missing) | ✓ | unknown format: references |
 | `references-to-bibtex` | unknown-format | (`bibtex-to-references` missing) | ✓ | unknown format: references |
 | `references-to-chicago` | unknown-format | (`chicago-to-references` missing) | ✓ | unknown format: references |
@@ -625,6 +637,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `rgb-to-hex` | cross-kind | ✓ | ✓ | color -> palette: cross-domain, inherently lossy |
 | `rgb-to-hsl` | lossy-encoding | ✓ | ✓ | rgb or hsl uses lossy encoding |
 | `rgb-to-oklch` | lossy-encoding | ✓ | n/a | rgb or oklch uses lossy encoding |
+| `ris-to-ama` | unknown-format | (`ama-to-ris` missing) | n/a | unknown format: ama |
 | `ris-to-apa` | unknown-format | (`apa-to-ris` missing) | ✓ | unknown format: apa |
 | `ris-to-bibtex` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `ris-to-chicago` | unknown-format | (`chicago-to-ris` missing) | n/a | unknown format: chicago |
@@ -723,6 +736,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `wos-to-ris` | lossy-encoding | (`ris-to-wos` missing) | ✓ | wos or ris uses lossy encoding |
 | `wos-to-xlsx` | lossy-encoding | (`xlsx-to-wos` missing) | ✓ | wos or xlsx uses lossy encoding |
 | `wos-to-yaml` | lossy-encoding | (`yaml-to-wos` missing) | n/a | wos or yaml uses lossy encoding |
+| `xlsx-to-ama` | unknown-format | (`ama-to-xlsx` missing) | n/a | unknown format: ama |
 | `xlsx-to-apa` | unknown-format | (`apa-to-xlsx` missing) | ✓ | unknown format: apa |
 | `xlsx-to-bibtex` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `xlsx-to-chicago` | unknown-format | (`chicago-to-xlsx` missing) | n/a | unknown format: chicago |

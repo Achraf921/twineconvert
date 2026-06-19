@@ -4524,6 +4524,92 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "text/plain",
     "maxFileSizeBytes": 10485760
   },
+  "bibtex-to-ama": {
+    "label": "BibTeX → AMA",
+    "accept": [
+      ".bib",
+      ".bibtex"
+    ],
+    "fromMime": [
+      "application/x-bibtex",
+      "text/x-bibtex",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "ris-to-ama": {
+    "label": "RIS → AMA",
+    "accept": [
+      ".ris"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "nbib-to-ama": {
+    "label": "NBIB → AMA",
+    "accept": [
+      ".nbib"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "csl-json-to-ama": {
+    "label": "CSL-JSON → AMA",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/vnd.citationstyles.csl+json",
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "csv-to-ama": {
+    "label": "CSV → AMA",
+    "accept": [
+      ".csv"
+    ],
+    "fromMime": [
+      "text/csv",
+      "application/csv",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "xlsx-to-ama": {
+    "label": "XLSX → AMA",
+    "accept": [
+      ".xlsx"
+    ],
+    "fromMime": [
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "references-to-ama": {
+    "label": "Reference List → AMA",
+    "accept": [
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 10485760
+  },
   "bibtex-to-xlsx": {
     "label": "BibTeX → XLSX",
     "accept": [

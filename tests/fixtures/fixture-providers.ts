@@ -964,6 +964,13 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "references-to-chicago": { provider: () => text("refs.txt", REFERENCE_LIST_FIXTURE, "text/plain"), env: "node" },
   "references-to-harvard": { provider: () => text("refs.txt", REFERENCE_LIST_FIXTURE, "text/plain"), env: "node" },
   "references-to-ieee":    { provider: () => text("refs.txt", REFERENCE_LIST_FIXTURE, "text/plain"), env: "node" },
+  "bibtex-to-ama":         { provider: () => text("refs.bib", F.bibtex, "application/x-bibtex"), env: "node" },
+  "ris-to-ama":            { provider: () => text("refs.ris", F.ris, "application/x-research-info-systems"), env: "node" },
+  "nbib-to-ama":           { provider: () => text("refs.nbib", F.nbibRealPubMed, "application/x-research-info-systems"), env: "node" },
+  "csl-json-to-ama":       { provider: () => text("refs.json", F.cslJson, "application/json"), env: "node" },
+  "csv-to-ama":            { provider: () => text("refs.csv", CITATION_CSV_FIXTURE, "text/csv"), env: "node" },
+  "xlsx-to-ama":           { provider: async () => fileFromBytes("refs.xlsx", await makeTinyCitationXlsx(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"), env: "node" },
+  "references-to-ama":     { provider: () => text("refs.txt", REFERENCE_LIST_FIXTURE, "text/plain"), env: "node" },
 };
 
 /** True if we have any fixture for this id (even if it requires browser). */

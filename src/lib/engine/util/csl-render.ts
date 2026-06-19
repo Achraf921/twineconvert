@@ -24,6 +24,7 @@ const STYLE_LOADERS: Record<string, () => Promise<string>> = {
   chicago: async () => (await import("./csl-data/chicago-author-date")).CSL_STYLE_CHICAGO,
   harvard: async () => (await import("./csl-data/harvard")).CSL_STYLE_HARVARD,
   ieee: async () => (await import("./csl-data/ieee")).CSL_STYLE_IEEE,
+  ama: async () => (await import("./csl-data/ama")).CSL_STYLE_AMA,
 };
 
 /** Human-readable name per style id (used in copy / error messages). */
@@ -33,6 +34,7 @@ export const STYLE_LABELS: Record<string, string> = {
   chicago: "Chicago (author-date)",
   harvard: "Harvard (Cite Them Right)",
   ieee: "IEEE",
+  ama: "AMA (American Medical Association)",
 };
 
 export function isCitationStyle(id: string): boolean {

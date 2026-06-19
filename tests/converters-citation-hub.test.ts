@@ -1058,3 +1058,26 @@ describe("reference-list parser: APA venue extraction", () => {
     expect(book.publisher).toBe("MIT Press");
   });
 });
+
+describe("citation style output: AMA via citeproc", () => {
+  it("bibtex-to-ama uses AMA shape (numbered, 'Smith J, Doe J.')", async () => {
+    const out = await (await run("bibtex-to-ama", f("a.bib", F.bibtex, "text/x-bibtex"))).blob.text();
+    expect(out).toMatch(/^1\.\s+Smith J, Doe J\./);
+    expect(out).toContain("Nature.");
+    expect(out).not.toContain("45--67");
+  });
+
+  it("nbib-to-ama has no duplicate author and renders AMA", async () => {
+    const out = await (await run("nbib-to-ama", f("a.nbib", F.nbibRealPubMed, "application/x-research-info-systems"))).blob.text();
+    expect(out).toMatch(/^1\./);
+    expect(out).not.toContain("0028-0836");
+  });
+
+  it("references-to-ama and csv-to-ama work", async () => {
+    const r = await (await run("references-to-ama", f("a.txt", "Smith, J., & Doe, J. (2024). A study of deep nets. Nature Methods, 12(3), 45-67.\n", "text/plain"))).blob.text();
+    expect(r).toMatch(/Nature Methods\. 2024;12\(3\):45-67/);
+    const csv = "title,authors,year,journal,volume,issue,pages\nA Paper,\"Smith, John; Doe, Jane\",2024,Nature,12,3,45-67\n";
+    const c = await (await run("csv-to-ama", f("a.csv", csv, "text/csv"))).blob.text();
+    expect(c).toMatch(/^1\.\s+Smith J, Doe J\./);
+  });
+});
