@@ -20,11 +20,15 @@ import { buildCslJson } from "./csl-json";
  *  by dropping its CSL file into csl-data/ and adding an entry here. */
 const STYLE_LOADERS: Record<string, () => Promise<string>> = {
   apa: async () => (await import("./csl-data/apa")).CSL_STYLE_APA,
+  mla: async () => (await import("./csl-data/mla")).CSL_STYLE_MLA,
+  chicago: async () => (await import("./csl-data/chicago-author-date")).CSL_STYLE_CHICAGO,
 };
 
 /** Human-readable name per style id (used in copy / error messages). */
 export const STYLE_LABELS: Record<string, string> = {
   apa: "APA (7th edition)",
+  mla: "MLA (9th edition)",
+  chicago: "Chicago (author-date)",
 };
 
 export function isCitationStyle(id: string): boolean {

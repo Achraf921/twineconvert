@@ -6,14 +6,14 @@ Generated 2026-06-19 from src/lib/engine/converters/.
 
 | Classification | Count |
 |---|---:|
-| Total converters | 569 |
+| Total converters | 577 |
 | **Bijective candidates** (lossless, same-kind, both directions exist) | 256 |
 | **Bijective candidates missing reverse converter** | 40 |
 | **Bijective candidates missing round-trip test** | 27 |
 | Lossy encoding (same kind, but lossy format) | 121 |
 | Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 79 |
 | Single-action (no reverse possible) | 53 |
-| Unknown formats (need to add to FORMATS table) | 20 |
+| Unknown formats (need to add to FORMATS table) | 28 |
 | Compound id (irregular pattern) | 0 |
 
 ## Action Items
@@ -23,8 +23,14 @@ Generated 2026-06-19 from src/lib/engine/converters/.
 The audit script doesn't know about these formats; add them to the FORMATS table in scripts/bijectivity-audit.mjs:
 
 - `bibtex-to-apa` (unknown format: apa)
+- `bibtex-to-chicago` (unknown format: chicago)
+- `bibtex-to-mla` (unknown format: mla)
 - `csl-json-to-apa` (unknown format: apa)
+- `csl-json-to-chicago` (unknown format: chicago)
+- `csl-json-to-mla` (unknown format: mla)
 - `nbib-to-apa` (unknown format: apa)
+- `nbib-to-chicago` (unknown format: chicago)
+- `nbib-to-mla` (unknown format: mla)
 - `pubmed-to-bibtex` (unknown format: pubmed)
 - `pubmed-to-csl-json` (unknown format: pubmed)
 - `pubmed-to-csv` (unknown format: pubmed)
@@ -42,6 +48,8 @@ The audit script doesn't know about these formats; add them to the FORMATS table
 - `references-to-ris` (unknown format: references)
 - `references-to-xlsx` (unknown format: references)
 - `ris-to-apa` (unknown format: apa)
+- `ris-to-chicago` (unknown format: chicago)
+- `ris-to-mla` (unknown format: mla)
 
 ### 2. Bijective converters MISSING their reverse pair
 
@@ -156,12 +164,14 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `base64-to-text` | bijective-candidate | ✓ | ✓ | both lossless encoding formats; should round-trip cleanly |
 | `bencode-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `bibtex-to-apa` | unknown-format | (`apa-to-bibtex` missing) | ✓ | unknown format: apa |
+| `bibtex-to-chicago` | unknown-format | (`chicago-to-bibtex` missing) | ✓ | unknown format: chicago |
 | `bibtex-to-csl-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `bibtex-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `bibtex-to-endnote-xml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `bibtex-to-enw` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
 | `bibtex-to-html` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
 | `bibtex-to-markdown` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
+| `bibtex-to-mla` | unknown-format | (`mla-to-bibtex` missing) | ✓ | unknown format: mla |
 | `bibtex-to-mods` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `bibtex-to-nbib` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `bibtex-to-refworks` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
@@ -183,11 +193,13 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `compress-pdf` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
 | `csl-json-to-apa` | unknown-format | (`apa-to-csl-json` missing) | ✓ | unknown format: apa |
 | `csl-json-to-bibtex` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `csl-json-to-chicago` | unknown-format | (`chicago-to-csl-json` missing) | n/a | unknown format: chicago |
 | `csl-json-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csl-json-to-endnote-xml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csl-json-to-enw` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
 | `csl-json-to-html` | cross-kind | (`html-to-csl-json` missing) | n/a | data -> doc: cross-domain, inherently lossy |
 | `csl-json-to-markdown` | cross-kind | (`markdown-to-csl-json` missing) | n/a | data -> doc: cross-domain, inherently lossy |
+| `csl-json-to-mla` | unknown-format | (`mla-to-csl-json` missing) | ✓ | unknown format: mla |
 | `csl-json-to-mods` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csl-json-to-nbib` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csl-json-to-refworks` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
@@ -481,12 +493,14 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `mxl-to-svg` | cross-kind | (`svg-to-mxl` missing) | ✓ | notation -> vector: cross-domain, inherently lossy |
 | `nbib-to-apa` | unknown-format | (`apa-to-nbib` missing) | ✓ | unknown format: apa |
 | `nbib-to-bibtex` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `nbib-to-chicago` | unknown-format | (`chicago-to-nbib` missing) | ✓ | unknown format: chicago |
 | `nbib-to-csl-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `nbib-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `nbib-to-endnote-xml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `nbib-to-enw` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
 | `nbib-to-html` | cross-kind | (`html-to-nbib` missing) | n/a | data -> doc: cross-domain, inherently lossy |
 | `nbib-to-markdown` | cross-kind | (`markdown-to-nbib` missing) | n/a | data -> doc: cross-domain, inherently lossy |
+| `nbib-to-mla` | unknown-format | (`mla-to-nbib` missing) | n/a | unknown format: mla |
 | `nbib-to-mods` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `nbib-to-refworks` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
 | `nbib-to-ris` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
@@ -574,12 +588,14 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `rgb-to-oklch` | lossy-encoding | ✓ | n/a | rgb or oklch uses lossy encoding |
 | `ris-to-apa` | unknown-format | (`apa-to-ris` missing) | ✓ | unknown format: apa |
 | `ris-to-bibtex` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `ris-to-chicago` | unknown-format | (`chicago-to-ris` missing) | n/a | unknown format: chicago |
 | `ris-to-csl-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `ris-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `ris-to-endnote-xml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `ris-to-enw` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `ris-to-html` | cross-kind | (`html-to-ris` missing) | n/a | data -> doc: cross-domain, inherently lossy |
 | `ris-to-markdown` | cross-kind | (`markdown-to-ris` missing) | n/a | data -> doc: cross-domain, inherently lossy |
+| `ris-to-mla` | unknown-format | (`mla-to-ris` missing) | ✓ | unknown format: mla |
 | `ris-to-mods` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `ris-to-nbib` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `ris-to-refworks` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |

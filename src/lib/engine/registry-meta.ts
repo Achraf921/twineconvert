@@ -4145,6 +4145,108 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "text/plain",
     "maxFileSizeBytes": 104857600
   },
+  "bibtex-to-mla": {
+    "label": "BibTeX → MLA",
+    "accept": [
+      ".bib",
+      ".bibtex"
+    ],
+    "fromMime": [
+      "application/x-bibtex",
+      "text/x-bibtex",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "ris-to-mla": {
+    "label": "RIS → MLA",
+    "accept": [
+      ".ris"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "nbib-to-mla": {
+    "label": "NBIB → MLA",
+    "accept": [
+      ".nbib"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "csl-json-to-mla": {
+    "label": "CSL-JSON → MLA",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/vnd.citationstyles.csl+json",
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "bibtex-to-chicago": {
+    "label": "BibTeX → Chicago",
+    "accept": [
+      ".bib",
+      ".bibtex"
+    ],
+    "fromMime": [
+      "application/x-bibtex",
+      "text/x-bibtex",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "ris-to-chicago": {
+    "label": "RIS → Chicago",
+    "accept": [
+      ".ris"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "nbib-to-chicago": {
+    "label": "NBIB → Chicago",
+    "accept": [
+      ".nbib"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "csl-json-to-chicago": {
+    "label": "CSL-JSON → Chicago",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/vnd.citationstyles.csl+json",
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
   "bibtex-to-xlsx": {
     "label": "BibTeX → XLSX",
     "accept": [

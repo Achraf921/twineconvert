@@ -921,6 +921,14 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "ris-to-apa":          { provider: () => text("refs.ris", F.ris, "application/x-research-info-systems"), env: "node" },
   "nbib-to-apa":         { provider: () => text("refs.nbib", F.nbibRealPubMed, "application/x-research-info-systems"), env: "node" },
   "csl-json-to-apa":     { provider: () => text("refs.json", F.cslJson, "application/json"), env: "node" },
+  "bibtex-to-mla":       { provider: () => text("refs.bib", F.bibtex, "application/x-bibtex"), env: "node" },
+  "ris-to-mla":          { provider: () => text("refs.ris", F.ris, "application/x-research-info-systems"), env: "node" },
+  "nbib-to-mla":         { provider: () => text("refs.nbib", F.nbibRealPubMed, "application/x-research-info-systems"), env: "node" },
+  "csl-json-to-mla":     { provider: () => text("refs.json", F.cslJson, "application/json"), env: "node" },
+  "bibtex-to-chicago":   { provider: () => text("refs.bib", F.bibtex, "application/x-bibtex"), env: "node" },
+  "ris-to-chicago":      { provider: () => text("refs.ris", F.ris, "application/x-research-info-systems"), env: "node" },
+  "nbib-to-chicago":     { provider: () => text("refs.nbib", F.nbibRealPubMed, "application/x-research-info-systems"), env: "node" },
+  "csl-json-to-chicago": { provider: () => text("refs.json", F.cslJson, "application/json"), env: "node" },
 };
 
 /** True if we have any fixture for this id (even if it requires browser). */

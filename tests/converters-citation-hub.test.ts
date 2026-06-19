@@ -896,3 +896,39 @@ describe("NBIB parser: PubMed tag-collision fixes", () => {
     expect(garcia.issue ?? "").not.toMatch(/0028-0836/);
   });
 });
+
+describe("citation style output: MLA + Chicago via citeproc", () => {
+  // Same citeproc engine, different official CSL styles. Assert each style's
+  // signature shape so a wrong style file or broken wiring is caught.
+  it("bibtex-to-mla uses MLA shape (full given names, vol./pp., quoted title)", async () => {
+    const out = await (await run("bibtex-to-mla", f("a.bib", F.bibtex, "text/x-bibtex"))).blob.text();
+    expect(out).toContain("Smith, John, and Jane Doe.");
+    expect(out).toMatch(/vol\. 123/);
+    expect(out).toMatch(/pp\. 45–67/);
+    expect(out).not.toContain("45--67");
+  });
+
+  it("ris-to-mla renders MLA too", async () => {
+    const out = await (await run("ris-to-mla", f("a.ris", F.ris, "application/x-research-info-systems"))).blob.text();
+    expect(out).toMatch(/vol\. 123/);
+    expect(out).toContain("“A Sample Paper.”");
+  });
+
+  it("bibtex-to-chicago uses Chicago author-date shape (year after author)", async () => {
+    const out = await (await run("bibtex-to-chicago", f("a.bib", F.bibtex, "text/x-bibtex"))).blob.text();
+    expect(out).toMatch(/Smith, John, and Jane Doe\. 2024\./);
+    expect(out).toMatch(/45–67/);
+    expect(out).not.toContain("45--67");
+  });
+
+  it("nbib-to-chicago has no duplicate author and renders Chicago", async () => {
+    const out = await (await run("nbib-to-chicago", f("a.nbib", F.nbibRealPubMed, "application/x-research-info-systems"))).blob.text();
+    expect(out).toContain("Garcia, Maria C. 2019.");
+    expect(out).not.toContain("0028-0836");
+  });
+
+  it("csl-json-to-mla alphabetizes (Brown before Smith)", async () => {
+    const out = await (await run("csl-json-to-mla", f("a.json", F.cslJson, "application/json"))).blob.text();
+    expect(out.indexOf("Brown")).toBeLessThan(out.indexOf("Smith"));
+  });
+});
