@@ -1,0 +1,63 @@
+{
+  "tool": "mp4-to-gif",
+  "title": "How to turn any MP4 video into a GIF (free, in your browser)",
+  "thumbnailHook": "MP4 to\nGIF?",
+  "thumbnailEmoji": "🎞️",
+  "thumbnailBadge": "FREE",
+  "segments": [
+    {
+      "voice": "Got a short video clip you want to share as a GIF?",
+      "scene": {
+        "type": "emoji-text",
+        "emoji": "🎞️",
+        "headline": "Want it as a GIF?",
+        "sub": "a short loop, no audio, plays everywhere"
+      }
+    },
+    {
+      "voice": "Slack threads, Discord servers, Reddit replies, project READMEs.",
+      "scene": {
+        "type": "emoji-text",
+        "emoji": "💬",
+        "headline": "Slack, Discord,\nReddit, README",
+        "sub": "places where MP4s don't autoplay or aren't allowed"
+      }
+    },
+    {
+      "voice": "Most converters online make you upload your file. Yours stays private here.",
+      "scene": {
+        "type": "emoji-text",
+        "emoji": "🔒",
+        "headline": "Your file\nstays on your device",
+        "sub": "nothing is uploaded to a server"
+      }
+    },
+    {
+      "voice": "Free. No signup. Nothing to install.",
+      "scene": {
+        "type": "centered-headline",
+        "headline": "Free. No signup.\nNo install.",
+        "sub": "everything happens in your browser"
+      }
+    },
+    {
+      "voice": "Go to twineconvert dot com slash mp4 to gif.",
+      "scene": {
+        "type": "url-card",
+        "url": "twineconvert.com/mp4-to-gif"
+      }
+    },
+    {
+      "voice": "Drop the video. Click convert. Download your GIF. Done.",
+      "scene": { "type": "demo-recording" }
+    },
+    {
+      "voice": "Link's in the bio, give it a try!",
+      "scene": {
+        "type": "cta",
+        "url": "Link in bio ↓",
+        "tagline": "Have fun converting!"
+      }
+    }
+  ]
+}

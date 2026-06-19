@@ -1,0 +1,63 @@
+{
+  "tool": "bibtex-to-csv",
+  "title": "How to convert BibTeX to CSV (free, in your browser)",
+  "thumbnailHook": "BibTeX to\nSpreadsheet",
+  "thumbnailEmoji": "📚",
+  "thumbnailBadge": "FREE",
+  "segments": [
+    {
+      "voice": "Got a BibTeX file from Zotero, Mendeley, or your advisor?",
+      "scene": {
+        "type": "emoji-text",
+        "emoji": "📚",
+        "headline": "BibTeX file\non your hands?",
+        "sub": "from Zotero, Mendeley, Overleaf, JabRef"
+      }
+    },
+    {
+      "voice": "But you need it in a spreadsheet, not a text file.",
+      "scene": {
+        "type": "emoji-text",
+        "emoji": "📊",
+        "headline": "Need it as\na spreadsheet",
+        "sub": "to filter, sort, or hand off to a non-LaTeX user"
+      }
+    },
+    {
+      "voice": "Convert it to CSV. Opens in Excel, Google Sheets, Numbers, anywhere.",
+      "scene": {
+        "type": "emoji-text",
+        "emoji": "✨",
+        "headline": "BibTeX to CSV",
+        "sub": "every entry becomes a row, every field a column"
+      }
+    },
+    {
+      "voice": "Your library stays on your computer. Nothing uploaded.",
+      "scene": {
+        "type": "centered-headline",
+        "headline": "Free. No signup.\nNothing uploaded.",
+        "sub": "everything happens in your browser"
+      }
+    },
+    {
+      "voice": "Go to twineconvert dot com slash bibtex to csv.",
+      "scene": {
+        "type": "url-card",
+        "url": "twineconvert.com/bibtex-to-csv"
+      }
+    },
+    {
+      "voice": "Drop your dot bib file. Click convert. Download your CSV. Done.",
+      "scene": { "type": "demo-recording" }
+    },
+    {
+      "voice": "Link's in the bio, give it a try!",
+      "scene": {
+        "type": "cta",
+        "url": "Link in bio ↓",
+        "tagline": "Have fun converting!"
+      }
+    }
+  ]
+}

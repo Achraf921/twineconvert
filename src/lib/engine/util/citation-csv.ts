@@ -42,12 +42,14 @@ const FIELD_ALIASES: Record<string, ReadableField> = {
   id: "id", key: "id", citationkey: "id", citekey: "id", refid: "id", referenceid: "id",
   // type
   type: "type", entrytype: "type", referencetype: "type", itemtype: "type",
+  documenttype: "type",
   // title (NOT bare "name" — too generic; matches contact/product CSVs)
   title: "title", titles: "title", articletitle: "title", primarytitle: "title",
   documenttitle: "title", papertitle: "title",
   // authors
   author: "authors", authors: "authors", authorname: "authors", authornames: "authors",
-  fullauthornames: "authors", creator: "authors", creators: "authors", by: "authors",
+  fullauthornames: "authors", authorfullnames: "authors", creator: "authors",
+  creators: "authors", by: "authors",
   // editors
   editor: "editors", editors: "editors",
   // year / date
@@ -60,6 +62,10 @@ const FIELD_ALIASES: Record<string, ReadableField> = {
   journalname: "journal", source: "journal", publication: "journal",
   publicationtitle: "journal", secondarytitle: "journal", container: "journal",
   containertitle: "journal", periodical: "journal",
+  // Scopus / Dimensions / EBSCO / Lens use "Source title"; Scopus also
+  // "Abbreviated Source Title"; Zotero uses "Journal Abbreviation".
+  sourcetitle: "journal", abbreviatedsourcetitle: "journal",
+  journalabbreviation: "journal", journalabbr: "journal",
   // booktitle
   booktitle: "booktitle", book: "booktitle", bookname: "booktitle",
   // publisher / address
@@ -77,6 +83,7 @@ const FIELD_ALIASES: Record<string, ReadableField> = {
   // abstract / keywords
   abstract: "abstract", abstractnote: "abstract", summary: "abstract",
   keywords: "keywords", keyword: "keywords", tags: "keywords", subject: "keywords",
+  authorkeywords: "keywords", indexkeywords: "keywords",
 
   // Web of Science tagged-export column codes (real PostHog footgun: a WoS
   // CSV/TSV export uses 2-letter field codes, not human-readable headers).

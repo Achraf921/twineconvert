@@ -753,3 +753,34 @@ describe("csv-to-ris: skips database-export preamble lines", () => {
     );
   });
 });
+
+describe("csv-to-ris: recognizes reference-manager / database column names", () => {
+  // Researchers export from Scopus, Dimensions, EBSCO and Zotero, whose
+  // journal/keyword/type columns use names the reader did not alias, so the
+  // venue and keywords silently dropped out of the RIS. These are the real
+  // header strings those tools emit.
+  it("maps Scopus columns (Source title, Author full names, Author Keywords, Document Type)", async () => {
+    const scopus =
+      'Authors,Author full names,Title,Year,Source title,Volume,DOI,Document Type,Author Keywords\n' +
+      'Smith J.,"Smith, John (123)",Deep Nets,2024,Nature Methods,12,10.1038/x,Article,deep learning\n';
+    const ris = await (await run("csv-to-ris", f("scopus.csv", scopus, "text/csv"))).blob.text();
+    expect(ris).toMatch(/JO\s+-\s+Nature Methods/);
+    expect(ris).toMatch(/KW\s+-\s+deep learning/);
+    expect(ris).toMatch(/^TY\s+-\s+JOUR/m); // Document Type "Article" -> article
+  });
+
+  it("maps a Zotero 'Journal Abbreviation' column to the venue", async () => {
+    const zotero =
+      "Key,Item Type,Title,Author,Publication Year,Journal Abbreviation,DOI\n" +
+      "ABC,journalArticle,Vision Study,Doe R,2023,J. Vis.,10.1167/y\n";
+    const ris = await (await run("csv-to-ris", f("zotero.csv", zotero, "text/csv"))).blob.text();
+    expect(ris).toMatch(/JO\s+-\s+J\. Vis\./);
+    expect(ris).toMatch(/AU\s+-\s+Doe R/);
+  });
+
+  it("maps a Dimensions 'Source title' column to the venue", async () => {
+    const dims = 'Title,Authors,Source title,PubYear,DOI\nGraph X,"Lee, A.; Park, B.",Cell Reports,2022,10.1016/z\n';
+    const ris = await (await run("csv-to-ris", f("dimensions.csv", dims, "text/csv"))).blob.text();
+    expect(ris).toMatch(/JO\s+-\s+Cell Reports/);
+  });
+});
