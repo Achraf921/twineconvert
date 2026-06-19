@@ -992,6 +992,13 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "csv-to-asa":            { provider: () => text("refs.csv", CITATION_CSV_FIXTURE, "text/csv"), env: "node" },
   "xlsx-to-asa":           { provider: async () => fileFromBytes("refs.xlsx", await makeTinyCitationXlsx(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"), env: "node" },
   "references-to-asa":     { provider: () => text("refs.txt", REFERENCE_LIST_FIXTURE, "text/plain"), env: "node" },
+  "bibtex-to-vancouver":   { provider: () => text("refs.bib", F.bibtex, "application/x-bibtex"), env: "node" },
+  "ris-to-vancouver":      { provider: () => text("refs.ris", F.ris, "application/x-research-info-systems"), env: "node" },
+  "nbib-to-vancouver":     { provider: () => text("refs.nbib", F.nbibRealPubMed, "application/x-research-info-systems"), env: "node" },
+  "csl-json-to-vancouver": { provider: () => text("refs.json", F.cslJson, "application/json"), env: "node" },
+  "csv-to-vancouver":      { provider: () => text("refs.csv", CITATION_CSV_FIXTURE, "text/csv"), env: "node" },
+  "xlsx-to-vancouver":     { provider: async () => fileFromBytes("refs.xlsx", await makeTinyCitationXlsx(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"), env: "node" },
+  "references-to-vancouver": { provider: () => text("refs.txt", REFERENCE_LIST_FIXTURE, "text/plain"), env: "node" },
 };
 
 /** True if we have any fixture for this id (even if it requires browser). */

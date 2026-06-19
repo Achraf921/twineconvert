@@ -6,14 +6,14 @@ Generated 2026-06-19 from src/lib/engine/converters/.
 
 | Classification | Count |
 |---|---:|
-| Total converters | 628 |
+| Total converters | 635 |
 | **Bijective candidates** (lossless, same-kind, both directions exist) | 256 |
 | **Bijective candidates missing reverse converter** | 40 |
 | **Bijective candidates missing round-trip test** | 27 |
 | Lossy encoding (same kind, but lossy format) | 121 |
 | Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 79 |
 | Single-action (no reverse possible) | 53 |
-| Unknown formats (need to add to FORMATS table) | 79 |
+| Unknown formats (need to add to FORMATS table) | 86 |
 | Compound id (irregular pattern) | 0 |
 
 ## Action Items
@@ -31,6 +31,7 @@ The audit script doesn't know about these formats; add them to the FORMATS table
 - `bibtex-to-ieee` (unknown format: ieee)
 - `bibtex-to-mla` (unknown format: mla)
 - `bibtex-to-nature` (unknown format: nature)
+- `bibtex-to-vancouver` (unknown format: vancouver)
 - `csl-json-to-acs` (unknown format: acs)
 - `csl-json-to-ama` (unknown format: ama)
 - `csl-json-to-apa` (unknown format: apa)
@@ -40,6 +41,7 @@ The audit script doesn't know about these formats; add them to the FORMATS table
 - `csl-json-to-ieee` (unknown format: ieee)
 - `csl-json-to-mla` (unknown format: mla)
 - `csl-json-to-nature` (unknown format: nature)
+- `csl-json-to-vancouver` (unknown format: vancouver)
 - `csv-to-acs` (unknown format: acs)
 - `csv-to-ama` (unknown format: ama)
 - `csv-to-apa` (unknown format: apa)
@@ -49,6 +51,7 @@ The audit script doesn't know about these formats; add them to the FORMATS table
 - `csv-to-ieee` (unknown format: ieee)
 - `csv-to-mla` (unknown format: mla)
 - `csv-to-nature` (unknown format: nature)
+- `csv-to-vancouver` (unknown format: vancouver)
 - `nbib-to-acs` (unknown format: acs)
 - `nbib-to-ama` (unknown format: ama)
 - `nbib-to-apa` (unknown format: apa)
@@ -58,6 +61,7 @@ The audit script doesn't know about these formats; add them to the FORMATS table
 - `nbib-to-ieee` (unknown format: ieee)
 - `nbib-to-mla` (unknown format: mla)
 - `nbib-to-nature` (unknown format: nature)
+- `nbib-to-vancouver` (unknown format: vancouver)
 - `pubmed-to-bibtex` (unknown format: pubmed)
 - `pubmed-to-csl-json` (unknown format: pubmed)
 - `pubmed-to-csv` (unknown format: pubmed)
@@ -82,6 +86,7 @@ The audit script doesn't know about these formats; add them to the FORMATS table
 - `references-to-nature` (unknown format: references)
 - `references-to-nbib` (unknown format: references)
 - `references-to-ris` (unknown format: references)
+- `references-to-vancouver` (unknown format: references)
 - `references-to-xlsx` (unknown format: references)
 - `ris-to-acs` (unknown format: acs)
 - `ris-to-ama` (unknown format: ama)
@@ -92,6 +97,7 @@ The audit script doesn't know about these formats; add them to the FORMATS table
 - `ris-to-ieee` (unknown format: ieee)
 - `ris-to-mla` (unknown format: mla)
 - `ris-to-nature` (unknown format: nature)
+- `ris-to-vancouver` (unknown format: vancouver)
 - `xlsx-to-acs` (unknown format: acs)
 - `xlsx-to-ama` (unknown format: ama)
 - `xlsx-to-apa` (unknown format: apa)
@@ -101,6 +107,7 @@ The audit script doesn't know about these formats; add them to the FORMATS table
 - `xlsx-to-ieee` (unknown format: ieee)
 - `xlsx-to-mla` (unknown format: mla)
 - `xlsx-to-nature` (unknown format: nature)
+- `xlsx-to-vancouver` (unknown format: vancouver)
 
 ### 2. Bijective converters MISSING their reverse pair
 
@@ -233,6 +240,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `bibtex-to-nbib` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `bibtex-to-refworks` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
 | `bibtex-to-ris` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `bibtex-to-vancouver` | unknown-format | (`vancouver-to-bibtex` missing) | ✓ | unknown format: vancouver |
 | `bibtex-to-xlsx` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
 | `bibtex-to-yaml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `bmp-to-avif` | lossy-encoding | ✓ | ✓ | bmp or avif uses lossy encoding |
@@ -267,6 +275,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `csl-json-to-nbib` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csl-json-to-refworks` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
 | `csl-json-to-ris` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `csl-json-to-vancouver` | unknown-format | (`vancouver-to-csl-json` missing) | n/a | unknown format: vancouver |
 | `csl-json-to-xlsx` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csl-json-to-yaml` | bijective-candidate | (`yaml-to-csl-json` missing) | n/a | both lossless data formats; should round-trip cleanly |
 | `csp-to-3dl` | bijective-candidate | ✓ | ✓ | both lossless lut formats; should round-trip cleanly |
@@ -307,6 +316,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `csv-to-ris` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-sql` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-tsv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `csv-to-vancouver` | unknown-format | (`vancouver-to-csv` missing) | ✓ | unknown format: vancouver |
 | `csv-to-vcf` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
 | `csv-to-xlsx` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-yaml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
@@ -582,6 +592,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `nbib-to-nature` | unknown-format | (`nature-to-nbib` missing) | ✓ | unknown format: nature |
 | `nbib-to-refworks` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
 | `nbib-to-ris` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `nbib-to-vancouver` | unknown-format | (`vancouver-to-nbib` missing) | ✓ | unknown format: vancouver |
 | `nbib-to-xlsx` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
 | `nbib-to-yaml` | bijective-candidate | (`yaml-to-nbib` missing) | n/a | both lossless data formats; should round-trip cleanly |
 | `numbers-to-pdf` | lossy-encoding | (`pdf-to-numbers` missing) | n/a | numbers or pdf uses lossy encoding |
@@ -657,6 +668,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `references-to-nature` | unknown-format | (`nature-to-references` missing) | ✓ | unknown format: references |
 | `references-to-nbib` | unknown-format | (`nbib-to-references` missing) | ✓ | unknown format: references |
 | `references-to-ris` | unknown-format | (`ris-to-references` missing) | ✓ | unknown format: references |
+| `references-to-vancouver` | unknown-format | (`vancouver-to-references` missing) | ✓ | unknown format: references |
 | `references-to-xlsx` | unknown-format | (`xlsx-to-references` missing) | ✓ | unknown format: references |
 | `refworks-to-bibtex` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `refworks-to-csl-json` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
@@ -692,6 +704,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `ris-to-nature` | unknown-format | (`nature-to-ris` missing) | n/a | unknown format: nature |
 | `ris-to-nbib` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `ris-to-refworks` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `ris-to-vancouver` | unknown-format | (`vancouver-to-ris` missing) | n/a | unknown format: vancouver |
 | `ris-to-xlsx` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
 | `ris-to-yaml` | bijective-candidate | (`yaml-to-ris` missing) | n/a | both lossless data formats; should round-trip cleanly |
 | `rtf-to-docx` | lossy-encoding | (`docx-to-rtf` missing) | ✓ | rtf or docx uses lossy encoding |
@@ -796,6 +809,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `xlsx-to-ods` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `xlsx-to-ris` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `xlsx-to-tsv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `xlsx-to-vancouver` | unknown-format | (`vancouver-to-xlsx` missing) | n/a | unknown format: vancouver |
 | `xml-to-csv` | bijective-candidate | (`csv-to-xml` missing) | n/a | both lossless data formats; should round-trip cleanly |
 | `xml-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `xml-to-toml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |

@@ -1135,3 +1135,25 @@ describe("reference-list parser: IEEE venue extraction", () => {
     expect(out).toMatch(/vol\. 12, no\. 3, pp\. 45–67/);
   });
 });
+
+describe("citation style output: Vancouver via citeproc", () => {
+  it("bibtex-to-vancouver uses Vancouver shape (numbered, 'Smith JA, Doe J.')", async () => {
+    const out = await (await run("bibtex-to-vancouver", f("a.bib", F.bibtex, "text/x-bibtex"))).blob.text();
+    expect(out).toMatch(/^\[?1\]?\.?\s+Smith J, Doe J\./);
+    expect(out).not.toContain("45--67");
+  });
+
+  it("nbib-to-vancouver has no duplicate author and no ISSN-as-issue", async () => {
+    const out = await (await run("nbib-to-vancouver", f("a.nbib", F.nbibRealPubMed, "application/x-research-info-systems"))).blob.text();
+    expect(out.length).toBeGreaterThan(20);
+    expect(out).not.toContain("0028-0836");
+  });
+
+  it("references-to-vancouver and csv-to-vancouver work", async () => {
+    const r = await (await run("references-to-vancouver", f("a.txt", "Smith, J., & Doe, J. (2024). A study. Nature Methods, 12(3), 45-67.\n", "text/plain"))).blob.text();
+    expect(r.length).toBeGreaterThan(15);
+    const csv = "title,authors,year,journal,volume,issue,pages\nA Paper,\"Smith, John; Doe, Jane\",2024,Nature,12,3,45-67\n";
+    const c = await (await run("csv-to-vancouver", f("a.csv", csv, "text/csv"))).blob.text();
+    expect(c).toMatch(/Smith J/);
+  });
+});
