@@ -5386,6 +5386,185 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       { problem: "The references are not in the order I entered them.", solution: "A Chicago reference list is alphabetical by author surname, which is the required order." },
     ],
   },
+
+  // ---- Harvard (Cite Them Right) style generators ------------------------
+
+  "bibtex-to-harvard": {
+    whyConvert:
+      "UK universities overwhelmingly require Harvard (Cite Them Right). This renders your .bib file into a Harvard reference list with the official Cite Them Right CSL style, matching what Zotero produces, so you do not reformat by hand.",
+    example:
+      "Your LaTeX project has refs.bib but your UK module wants Harvard. Drop the .bib here and paste the alphabetized Harvard reference list.",
+    troubleshooting: [
+      { problem: "There are several Harvard variants and mine looks different.", solution: "Harvard is not a single standard. This uses Cite Them Right (the most common UK university variant). Small punctuation differences from your institution's guide are expected." },
+      { problem: "A DOI shows as 'Available at:'.", solution: "That is correct Cite Them Right formatting for online sources; the DOI is presented as an 'Available at:' URL." },
+    ],
+  },
+  "ris-to-harvard": {
+    whyConvert:
+      "Convert a RIS export from Zotero, EndNote or a library database into a Harvard (Cite Them Right) reference list using the official CSL style, without importing into a reference manager first.",
+    example:
+      "You exported sources as .ris from your university library and need Harvard. Drop the .ris here and copy the formatted list.",
+    troubleshooting: [
+      { problem: "An entry is missing its access URL.", solution: "Cite Them Right shows a URL for online sources; make sure the .ris record has a UR/L1 field." },
+      { problem: "Punctuation differs from my handbook.", solution: "This follows Cite Them Right; if your institution uses a house variant, minor differences are normal." },
+    ],
+  },
+  "nbib-to-harvard": {
+    whyConvert:
+      "Render a PubMed .nbib (MEDLINE) export into a Harvard (Cite Them Right) reference list with the official CSL style, for UK health and nursing courses that ask for Harvard rather than Vancouver.",
+    example:
+      "You pulled citations from PubMed via Send to > Citation manager and your course wants Harvard. Drop the .nbib here and copy the list.",
+    troubleshooting: [
+      { problem: "An author appeared twice before.", solution: "PubMed lists each author twice (full FAU and abbreviated AU); the converter uses the full name and does not duplicate." },
+      { problem: "The journal name is the full title, not the abbreviation.", solution: "Cite Them Right uses the full journal title, which the converter prefers from MEDLINE's JT field." },
+    ],
+  },
+  "csl-json-to-harvard": {
+    whyConvert:
+      "Render a CSL-JSON bibliography (Zotero/Mendeley/Pandoc) into a Harvard (Cite Them Right) reference list using the official CSL style, with no reference-manager round-trip.",
+    example:
+      "Your Pandoc project uses references.json and you need Harvard for a UK submission. Drop the .json here and paste the result.",
+    troubleshooting: [
+      { problem: "The file would not parse.", solution: "CSL-JSON must be a top-level JSON array; unwrap any wrapper object to a bare [ ... ] array." },
+      { problem: "Which Harvard is this?", solution: "Cite Them Right, the most widely used UK university Harvard variant." },
+    ],
+  },
+  "csv-to-harvard": {
+    whyConvert:
+      "Turn a spreadsheet of references into a Harvard (Cite Them Right) reference list with the official CSL style. Lenient header matching means Scopus/Zotero/database CSV exports work without cleanup.",
+    example:
+      "Your sources live in a CSV and your UK course wants Harvard. Drop the .csv here for an alphabetized Harvard list.",
+    troubleshooting: [
+      { problem: "An article formatted like a generic document.", solution: "Add a 'type' column (article, book, chapter); otherwise the tool infers the type from the columns present." },
+      { problem: "I dropped a RIS/BibTeX file and got a message.", solution: "Use ris-to-harvard or bibtex-to-harvard for those; csv-to-harvard expects a spreadsheet with a header row." },
+    ],
+  },
+  "xlsx-to-harvard": {
+    whyConvert:
+      "Read an Excel (.xlsx) workbook of references and render a Harvard (Cite Them Right) reference list with the official CSL style, fully in-browser.",
+    example:
+      "Your team keeps sources in Excel and the assignment wants Harvard. Drop the .xlsx here and paste the list.",
+    troubleshooting: [
+      { problem: "Nothing was found.", solution: "The first sheet needs a header row with columns like title, authors, year, journal, doi. Remove a leading title/blank row above the headers." },
+      { problem: "Only one sheet was read.", solution: "The converter reads the first sheet; move your references there." },
+    ],
+  },
+
+  // ---- IEEE style generators ---------------------------------------------
+
+  "bibtex-to-ieee": {
+    whyConvert:
+      "Engineering and computer-science venues use IEEE. This renders your .bib file into an IEEE reference list (bracketed [1] numbering, initials before surnames) with the official IEEE CSL style, matching what Zotero produces.",
+    example:
+      "You wrote a paper in LaTeX with refs.bib and the conference wants an IEEE reference list in the body text. Drop the .bib here and paste the numbered list.",
+    troubleshooting: [
+      { problem: "References are numbered, but I wanted them alphabetical.", solution: "IEEE lists references in the order they are first cited; since a pasted file has no in-text citations, they keep input order with [n] numbers. That is standard IEEE." },
+      { problem: "Author initials look wrong.", solution: "IEEE shows 'J. Smith'. Ensure the BibTeX author field has given names (author = {Last, First})." },
+    ],
+  },
+  "ris-to-ieee": {
+    whyConvert:
+      "Convert a RIS export from Zotero, EndNote or a database into an IEEE reference list using the official IEEE CSL style, without importing into a reference manager first.",
+    example:
+      "You exported references as .ris and need an IEEE numbered list for a transactions submission. Drop the .ris here and copy the result.",
+    troubleshooting: [
+      { problem: "An entry is missing volume/issue.", solution: "IEEE shows 'vol. X, no. Y'; confirm the .ris has VL and IS fields. Ahead-of-print articles often omit them." },
+      { problem: "The numbering is not the order I want.", solution: "IEEE numbers in input order. Reorder the entries in the source file to control the numbering." },
+    ],
+  },
+  "nbib-to-ieee": {
+    whyConvert:
+      "Render a PubMed .nbib (MEDLINE) export into an IEEE reference list with the official IEEE CSL style, for biomedical engineering work that submits in IEEE.",
+    example:
+      "You collected references from PubMed via Send to > Citation manager and the journal is IEEE. Drop the .nbib here and copy the numbered list.",
+    troubleshooting: [
+      { problem: "A duplicate author appeared before.", solution: "PubMed lists full and abbreviated author forms; the converter uses the full name and does not duplicate." },
+      { problem: "The ISSN showed up as the issue in older exports.", solution: "MEDLINE's IS tag is the ISSN; the converter reads it as ISSN and uses IP for the issue." },
+    ],
+  },
+  "csl-json-to-ieee": {
+    whyConvert:
+      "Render a CSL-JSON bibliography (Zotero/Mendeley/Pandoc) into an IEEE reference list using the official IEEE CSL style, with no reference-manager round-trip.",
+    example:
+      "Your Pandoc project uses references.json and the venue wants IEEE. Drop the .json here and paste the numbered list.",
+    troubleshooting: [
+      { problem: "The file would not parse.", solution: "CSL-JSON must be a top-level JSON array; unwrap any wrapper object to a bare [ ... ] array." },
+      { problem: "DOIs render as plain text.", solution: "Output is plain text, so the DOI appears as 'doi: 10.xxxx/...'. Editors usually auto-link it after pasting." },
+    ],
+  },
+  "csv-to-ieee": {
+    whyConvert:
+      "Turn a spreadsheet of references into an IEEE reference list with the official IEEE CSL style. Lenient header matching means Scopus/Zotero/database CSV exports work without cleanup.",
+    example:
+      "Your sources live in a CSV and the conference wants IEEE. Drop the .csv here for a numbered IEEE list.",
+    troubleshooting: [
+      { problem: "An article looks like a generic document.", solution: "Add a 'type' column (article, book, chapter); otherwise the tool infers the type from the columns present." },
+      { problem: "I dropped a citation file and got a redirect message.", solution: "Use ris-to-ieee or bibtex-to-ieee for RIS/BibTeX files; csv-to-ieee expects a spreadsheet." },
+    ],
+  },
+  "xlsx-to-ieee": {
+    whyConvert:
+      "Read an Excel (.xlsx) workbook of references and render an IEEE reference list with the official IEEE CSL style, fully in-browser.",
+    example:
+      "Your lab tracks sources in Excel and the paper is IEEE. Drop the .xlsx here and paste the numbered list.",
+    troubleshooting: [
+      { problem: "Nothing was found.", solution: "The first sheet needs a header row with columns like title, authors, year, journal, doi." },
+      { problem: "Only the first sheet was used.", solution: "Put your references on sheet one, or copy them there." },
+    ],
+  },
+
+  // ---- Reference list (plain text) -> style ------------------------------
+
+  "references-to-apa": {
+    whyConvert:
+      "You have a rough reference list pasted from a paper or a draft and need it cleaned up into proper APA 7th. This parses the list and re-renders it with the official APA CSL style. Best-effort (free-text parsing is fuzzy), so skim the result, but it saves retyping.",
+    example:
+      "A collaborator sent references as a numbered list in an email. You need APA for your manuscript. Paste them into a .txt, drop it here, and get an APA reference list.",
+    troubleshooting: [
+      { problem: "An entry lost its journal or page numbers.", solution: "The parser reads APA-style tails ('Journal, 12(3), 45-67'). If a reference is formatted unusually, those fields may not be detected; add them in the source line." },
+      { problem: "Nothing was recognized.", solution: "Each reference needs at least a title and a year. Put one reference per line (or use [1]/[2] numbering) so they can be split apart." },
+    ],
+  },
+  "references-to-mla": {
+    whyConvert:
+      "Reformat a rough plain-text reference list into an MLA 9th works-cited list with the official MLA CSL style. Useful when you inherited references in the wrong style and need MLA.",
+    example:
+      "Your sources are a numbered list from a draft and your essay needs MLA. Paste them into a .txt, drop it here, and copy the works-cited list.",
+    troubleshooting: [
+      { problem: "Container title is missing.", solution: "Free-text parsing best detects APA-shaped tails; if a journal or book title is not picked up, add it clearly after the title in the source." },
+      { problem: "Nothing was recognized.", solution: "Use one reference per line or numbered entries; each needs a title and a year." },
+    ],
+  },
+  "references-to-chicago": {
+    whyConvert:
+      "Reformat a rough plain-text reference list into a Chicago author-date reference list using the official Chicago CSL style.",
+    example:
+      "You pasted references from a draft and the journal wants Chicago author-date. Save as .txt, drop it here, and copy the result.",
+    troubleshooting: [
+      { problem: "A book is missing its publisher.", solution: "The parser reads a trailing 'Publisher.' for books; if it is formatted differently it may be missed. Add the publisher after the title in the source." },
+      { problem: "I needed footnotes.", solution: "This is Chicago author-date (parenthetical), not notes-bibliography; it produces a reference list, not footnotes." },
+    ],
+  },
+  "references-to-harvard": {
+    whyConvert:
+      "Reformat a rough plain-text reference list into a Harvard (Cite Them Right) reference list using the official CSL style, for UK courses that require Harvard.",
+    example:
+      "You have references as a numbered list and your UK module wants Harvard. Save as .txt, drop it here, and copy the formatted list.",
+    troubleshooting: [
+      { problem: "Punctuation differs from my handbook.", solution: "This uses Cite Them Right, the common UK Harvard variant; small differences from a house style are expected." },
+      { problem: "An entry lost its details.", solution: "Free-text parsing best detects APA-shaped tails; add missing journal/volume/pages after the title in the source line." },
+    ],
+  },
+  "references-to-ieee": {
+    whyConvert:
+      "Reformat a rough plain-text reference list into an IEEE reference list (bracketed numbering) using the official IEEE CSL style, for engineering and computer-science submissions.",
+    example:
+      "You inherited references as an APA-style list and the conference wants IEEE. Save as .txt, drop it here, and copy the numbered list.",
+    troubleshooting: [
+      { problem: "The numbering is not the order I want.", solution: "IEEE numbers in the order entries appear; reorder them in the source to control the numbering." },
+      { problem: "Volume/issue is missing.", solution: "The parser reads APA-style tails ('Journal, 12(3), 45-67'); if a reference is shaped differently those fields may be missed." },
+    ],
+  },
 };
 
 export function getExtendedCopy(toolId: string): ExtendedCopy | undefined {
