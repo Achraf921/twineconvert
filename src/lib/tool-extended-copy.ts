@@ -5196,6 +5196,133 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       { problem: "TOML conversion failed.", solution: "TOML 1.0 cannot represent every shape (e.g. null values, or arrays mixing types). Remove or normalise those fields in the source, then reconvert." },
     ],
   },
+
+  // ---- Citation style generators (APA / MLA / Chicago) -------------------
+  // Output is a real reference list rendered by citeproc-js with the
+  // official CSL style, so it matches Zotero/Mendeley. Plain text on purpose.
+
+  "bibtex-to-apa": {
+    whyConvert:
+      "You keep your references in a .bib file for LaTeX, but the journal, your professor, or a Word-based co-author wants an APA 7th reference list. This renders your BibTeX into APA using the official CSL style (the same engine Zotero uses), so the formatting is correct rather than hand-approximated.",
+    example:
+      "You finished a paper in Overleaf and exported references.bib. The target journal wants APA. Drop the .bib here and get an alphabetized APA reference list as plain text you can paste straight into the manuscript.",
+    troubleshooting: [
+      { problem: "An author shows only a last name, or initials look wrong.", solution: "APA uses initials, so the source needs full given names. In BibTeX write author = {Last, First Middle} (or {First Last}); an entry with only a surname can only render a surname." },
+      { problem: "The page range collapsed or looks odd.", solution: "BibTeX writes ranges as pages = {45--67} with a double hyphen. The converter normalizes that to a proper en dash. If a page comes out single, the source only had one page number." },
+    ],
+  },
+  "ris-to-apa": {
+    whyConvert:
+      "RIS is what Zotero, Mendeley, EndNote and most library databases export. This turns that .ris file into a finished APA 7th reference list with citeproc and the official APA CSL style, so you get publication-ready references without importing into a reference manager first.",
+    example:
+      "You exported 30 references from your university library as a .ris file. You need them as an APA bibliography for a nursing assignment. Drop the .ris here and paste the alphabetized APA list into your document.",
+    troubleshooting: [
+      { problem: "Some entries are missing the journal or year.", solution: "APA needs those fields to format fully. Open the .ris and confirm each record has T2/JO (journal) and PY/Y1 (year); database exports sometimes omit them for preprints or datasets." },
+      { problem: "The references are not in the order I added them.", solution: "An APA reference list is sorted alphabetically by author surname; that is the required order, not a bug." },
+    ],
+  },
+  "nbib-to-apa": {
+    whyConvert:
+      "PubMed's 'Send to > Citation manager' gives you an .nbib (MEDLINE) file. This renders it directly into an APA 7th reference list using the official CSL style, so clinicians and biomedical researchers can go from a PubMed search to APA references in one step.",
+    example:
+      "You ran a PubMed search, selected 15 results, and used Send to > Citation manager to download citations.nbib. Drop it here and get an APA reference list for your systematic review's bibliography.",
+    troubleshooting: [
+      { problem: "An author appeared twice or looked garbled before.", solution: "PubMed lists each author twice (full name FAU and abbreviated AU). The converter uses the full name and does not duplicate; if you still see oddities, the .nbib may be truncated mid-record." },
+      { problem: "A long journal name shows abbreviated (or vice versa).", solution: "MEDLINE carries both the full title (JT) and the ISO abbreviation (TA). The converter prefers the full journal title, which is what APA wants." },
+    ],
+  },
+  "csl-json-to-apa": {
+    whyConvert:
+      "CSL-JSON is the native interchange format for Zotero, Mendeley and Pandoc. This renders it into an APA 7th reference list with the official CSL style, which is handy when you have a .json bibliography from Pandoc or a Zotero export and need plain APA text.",
+    example:
+      "Your Pandoc workflow uses a references.json bibliography. You need the same sources as an APA list to drop into a non-Pandoc document. Drop the .json here and copy the APA output.",
+    troubleshooting: [
+      { problem: "The file would not parse.", solution: "CSL-JSON must be a JSON array of entry objects at the top level. A single object, or a Zotero 'Better CSL JSON' wrapper, needs to be unwrapped to a bare [ ... ] array first." },
+      { problem: "Dates render as just a year.", solution: "APA reference lists use the year for most types; the month/day are only shown for sources like newspaper articles. A year-only entry is expected behaviour." },
+    ],
+  },
+
+  "bibtex-to-mla": {
+    whyConvert:
+      "Humanities courses and journals usually require MLA, but your references may live in a .bib file from a shared LaTeX project or a Zotero export. This renders BibTeX into an MLA 9th works-cited list using the official MLA CSL style.",
+    example:
+      "You collaborated on a literature paper in LaTeX and have a refs.bib, but the assignment wants MLA. Drop the .bib here and paste the MLA works-cited list into your essay.",
+    troubleshooting: [
+      { problem: "Author names show as initials instead of full first names.", solution: "MLA spells out full given names, so the source must contain them. In BibTeX use author = {Last, First}; an abbreviated source can only produce abbreviated names." },
+      { problem: "The list is titled differently than I expected.", solution: "The converter outputs only the formatted entries (no heading), so you can add your own 'Works Cited' heading in the exact style your instructor wants." },
+    ],
+  },
+  "ris-to-mla": {
+    whyConvert:
+      "RIS exports from Zotero, EndNote and library databases can be turned straight into an MLA 9th works-cited list here, using the official MLA CSL style, without first importing them into a citation manager.",
+    example:
+      "You saved sources for an English essay as a .ris file from your library. Drop it here to get an MLA works-cited list, alphabetized by author, ready to paste.",
+    troubleshooting: [
+      { problem: "A web source is missing its URL or access date.", solution: "MLA includes the URL for online sources; make sure the .ris record has a UR/L1 field. Access dates are not stored in RIS, so add them manually if your instructor requires them." },
+      { problem: "Container titles are not italicized.", solution: "Output is plain text so it pastes anywhere; apply italics to journal and book titles in your word processor after pasting." },
+    ],
+  },
+  "nbib-to-mla": {
+    whyConvert:
+      "Turn a PubMed .nbib (MEDLINE) export into an MLA 9th works-cited list with the official MLA CSL style. Useful when a health-humanities or interdisciplinary course wants MLA rather than a biomedical style.",
+    example:
+      "You pulled citations from PubMed via Send to > Citation manager and need them in MLA for a medical-humanities paper. Drop the .nbib here and copy the MLA list.",
+    troubleshooting: [
+      { problem: "An author is listed once but the paper has many.", solution: "MLA lists the first author then 'et al.' for sources with three or more authors; that is the MLA 9th rule, not a dropped author." },
+      { problem: "The issue number is missing.", solution: "MEDLINE stores issue in IP; if a record omits it (common for ahead-of-print articles) MLA simply leaves it out." },
+    ],
+  },
+  "csl-json-to-mla": {
+    whyConvert:
+      "Render a CSL-JSON bibliography (Zotero/Mendeley/Pandoc) into an MLA 9th works-cited list using the official MLA CSL style, without round-tripping through a reference manager.",
+    example:
+      "You have a references.json from a Pandoc project and need MLA for a separate humanities submission. Drop the .json here and paste the MLA output.",
+    troubleshooting: [
+      { problem: "The file would not parse.", solution: "CSL-JSON must be a top-level JSON array of entries. Unwrap any surrounding object to a bare [ ... ] array and reconvert." },
+      { problem: "Titles are not italicized in the output.", solution: "The output is plain text by design; add italics to container titles in your editor, or keep the plain version if your submission portal strips formatting anyway." },
+    ],
+  },
+
+  "bibtex-to-chicago": {
+    whyConvert:
+      "History, business and many social-science venues use Chicago. This renders a .bib file into a Chicago author-date reference list with the official Chicago CSL style, matching what Zotero produces, so you do not have to reformat by hand.",
+    example:
+      "Your LaTeX project has a refs.bib but the journal requires Chicago author-date. Drop the .bib here and paste the alphabetized Chicago reference list.",
+    troubleshooting: [
+      { problem: "I needed notes-bibliography (footnote) style, not this.", solution: "This tool outputs Chicago author-date (the parenthetical year style). The notes-bibliography variant is a different CSL style; this converter does not produce footnotes." },
+      { problem: "The year appears right after the author.", solution: "That is correct for Chicago author-date: Author. Year. Title. The year placement distinguishes it from APA and MLA." },
+    ],
+  },
+  "ris-to-chicago": {
+    whyConvert:
+      "Convert a RIS export from Zotero, EndNote or a database into a Chicago author-date reference list using the official Chicago CSL style, without importing it into a reference manager first.",
+    example:
+      "You exported sources for a history paper as .ris from your library. Drop it here to get a Chicago author-date reference list, alphabetized and ready to paste.",
+    troubleshooting: [
+      { problem: "Publisher or place is missing for a book.", solution: "Chicago shows publisher and place for books; confirm the .ris record has PB (publisher) and CY (place). Database exports often omit these for journal articles, which do not need them." },
+      { problem: "The entries are not in citation order.", solution: "A Chicago reference list is alphabetical by author surname, which is the required order." },
+    ],
+  },
+  "nbib-to-chicago": {
+    whyConvert:
+      "Render a PubMed .nbib (MEDLINE) export into a Chicago author-date reference list with the official Chicago CSL style. Useful for social-science or interdisciplinary work that draws on biomedical literature but submits in Chicago.",
+    example:
+      "You gathered references from PubMed with Send to > Citation manager and your department wants Chicago author-date. Drop the .nbib here and copy the formatted list.",
+    troubleshooting: [
+      { problem: "The ISSN showed up where the issue should be (in older exports).", solution: "MEDLINE's IS tag is the ISSN, not the issue; the converter now reads it as ISSN and uses IP for the issue, so the issue number formats correctly." },
+      { problem: "A DOI is not linked.", solution: "Output is plain text, so the DOI appears as a full https://doi.org/ URL rather than a clickable link. Most editors auto-link it once pasted." },
+    ],
+  },
+  "csl-json-to-chicago": {
+    whyConvert:
+      "Render a CSL-JSON bibliography (Zotero/Mendeley/Pandoc) into a Chicago author-date reference list using the official Chicago CSL style, without a reference-manager round-trip.",
+    example:
+      "Your Pandoc setup uses references.json and you need Chicago author-date for a separate submission. Drop the .json here and paste the result.",
+    troubleshooting: [
+      { problem: "The file would not parse.", solution: "CSL-JSON must be a top-level JSON array. Unwrap any wrapper object to a bare [ ... ] array and reconvert." },
+      { problem: "I expected footnotes.", solution: "This is Chicago author-date (parenthetical), not notes-bibliography. It produces a reference list, not footnotes." },
+    ],
+  },
 };
 
 export function getExtendedCopy(toolId: string): ExtendedCopy | undefined {
