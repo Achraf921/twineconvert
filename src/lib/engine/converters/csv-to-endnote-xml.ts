@@ -2,6 +2,7 @@ import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
 import { citationsFromCsv } from "../util/citation-csv";
+import { citationInputHint } from "../util/citation-input-hint";
 import { buildEndnoteXml } from "../util/endnote-xml-build";
 
 /**
@@ -20,15 +21,16 @@ const csvToEndnoteXml: Converter = {
 
   async convert(input, opts) {
     opts?.onProgress?.(0.1);
+    const text = await input.text();
     let out: string;
     try {
-      const text = await input.text();
       const citations = await citationsFromCsv(text);
       if (citations.length === 0) throw new Error("No references found in the CSV file");
       out = buildEndnoteXml(citations);
     } catch (err) {
+      const hint = citationInputHint(text, "references-to-endnote-xml", "pubmed-to-ris");
       throw new ConvertFailedError(
-        err instanceof Error ? err.message : "Could not convert CSV to EndNote XML",
+        hint ?? (err instanceof Error ? err.message : "Could not convert CSV to EndNote XML"),
         err,
       );
     }

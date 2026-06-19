@@ -816,3 +816,28 @@ describe("csv-to-ris: redirects a citation FILE dropped into the CSV tool", () =
     expect(out).toMatch(/TI\s+-\s+Real Paper/);
   });
 });
+
+describe("csv-to-* citation family: consistent RIS-file redirect", () => {
+  // The whole csv-to-<citation> family shares citationInputHint, so dropping
+  // an actual RIS file into ANY of them gives the same helpful redirect
+  // (not just the three flagship tools that originally had it).
+  const FAMILY = [
+    "csv-to-nbib", "csv-to-endnote-xml", "csv-to-enw", "csv-to-mods", "csv-to-refworks",
+  ] as const;
+  const RIS_FILE = "TY  - JOUR\nTI  - An Actual RIS File\nAU  - Doe J\nPY  - 2024\nER  -\n";
+  const GOOD_CSV = "title,authors,year,journal,doi\nReal Paper,Smith J,2024,Nature,10.1/x\n";
+
+  for (const id of FAMILY) {
+    it(`${id} redirects a RIS file instead of a cryptic error`, async () => {
+      await expect(run(id, f("already.ris", RIS_FILE, "text/csv"))).rejects.toThrow(
+        /already in RIS format/i,
+      );
+    });
+
+    it(`${id} still converts a real citation CSV`, async () => {
+      const r = await run(id, f("good.csv", GOOD_CSV, "text/csv"));
+      const out = await r.blob.text();
+      expect(out).toContain("Real Paper");
+    });
+  }
+});

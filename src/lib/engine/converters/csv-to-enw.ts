@@ -2,6 +2,7 @@ import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
 import { citationsFromCsv } from "../util/citation-csv";
+import { citationInputHint } from "../util/citation-input-hint";
 import { buildEnw } from "../util/enw";
 
 /**
@@ -18,15 +19,16 @@ const csvToEnw: Converter = {
 
   async convert(input, opts) {
     opts?.onProgress?.(0.1);
+    const text = await input.text();
     let out: string;
     try {
-      const text = await input.text();
       const citations = await citationsFromCsv(text);
       if (citations.length === 0) throw new Error("No references found in the CSV file");
       out = buildEnw(citations);
     } catch (err) {
+      const hint = citationInputHint(text, "references-to-enw", "pubmed-to-ris");
       throw new ConvertFailedError(
-        err instanceof Error ? err.message : "Could not convert CSV to EndNote ENW",
+        hint ?? (err instanceof Error ? err.message : "Could not convert CSV to EndNote ENW"),
         err,
       );
     }
