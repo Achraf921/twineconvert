@@ -1116,3 +1116,22 @@ describe("citation style output: Nature + ACS + ASA via citeproc", () => {
     expect(c).toMatch(/Smith, John, and Jane Doe\. 2024\./);
   });
 });
+
+describe("reference-list parser: IEEE venue extraction", () => {
+  it("extracts journal/volume/issue/pages from IEEE-style prose", async () => {
+    const { parseReferenceList } = await import("../src/lib/engine/util/reference-list");
+    const c = parseReferenceList(
+      '[1] J. A. Smith and J. Doe, "Valid inference with synthetic data," IEEE Trans. Image Process., vol. 12, no. 3, pp. 45-67, 2024.\n',
+    );
+    expect(c[0].volume).toBe("12");
+    expect(c[0].issue).toBe("3");
+    expect(c[0].pages).toBe("45-67");
+    expect(c[0].journal).toMatch(/IEEE Trans/);
+    expect(c[0].year).toBe("2024");
+  });
+
+  it("references-to-ieee round-trips an IEEE list keeping vol/no/pp", async () => {
+    const out = await (await run("references-to-ieee", f("a.txt", '[1] J. A. Smith and J. Doe, "Valid inference," IEEE Trans. Image Process., vol. 12, no. 3, pp. 45-67, 2024.\n', "text/plain"))).blob.text();
+    expect(out).toMatch(/vol\. 12, no\. 3, pp\. 45–67/);
+  });
+});

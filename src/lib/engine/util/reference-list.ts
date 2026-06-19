@@ -109,6 +109,30 @@ function parseApaVenue(rest: string, ref: Citation, type: CitationType): void {
   }
 }
 
+/**
+ * Pull venue details from IEEE-style prose that follows a quoted title:
+ *   '..., IEEE Trans. Image Process., vol. 12, no. 3, pp. 45-67, 2024.'
+ * IEEE uses vol./no./pp. keywords, so it is parsed separately from APA.
+ */
+function parseIeeeVenue(rest: string, ref: Citation): void {
+  const r = rest.replace(/^[\s,]+/, "").trim();
+  if (!r) return;
+  const vol = r.match(/\bvol\.\s*(\d+)/i);
+  if (vol) ref.volume = vol[1];
+  const no = r.match(/\bno\.\s*(\d+)/i);
+  if (no) ref.issue = no[1];
+  const pp = r.match(/\bpp?\.\s*(\d+\s*[-–—]\s*\d+|\d+)/i);
+  if (pp) ref.pages = pp[1].replace(/\s*[-–—]\s*/, "-");
+  // Journal is the run before the first vol./no./pp. keyword or a bare year.
+  const cut = r.search(/,\s*(?:vol\.|no\.|pp?\.|\(?(?:1[5-9]\d{2}|20\d{2})\)?(?:\.|,|$))/i);
+  if (cut > 0) {
+    const jr = r.slice(0, cut).replace(/[*_]/g, "").replace(/[.,;]+$/, "").trim();
+    if (jr.length > 1 && /[A-Za-z]/.test(jr) && !/^https?:/i.test(jr) && !/^(?:vol|no|pp)\b/i.test(jr)) {
+      ref.journal = jr;
+    }
+  }
+}
+
 function inferType(entry: string): CitationType {
   if (/\b(proc\.|proceedings|conf\.|conference|symposium|workshop|in\s+proc)/i.test(entry)) {
     return "inproceedings";
@@ -140,6 +164,7 @@ export function parseReferenceList(text: string): Citation[] {
     if (q) {
       ref.title = q[1].replace(/[.,]\s*$/, "").trim();
       beforeTitle = entry.slice(0, entry.indexOf(q[0]));
+      parseIeeeVenue(entry.slice(entry.indexOf(q[0]) + q[0].length), ref);
     } else {
       // APA: Authors (Year). Title. Rest...
       const apa = entry.match(/^(.*?)\(\s*(\d{4})\s*[a-z]?\s*\)\.\s*(.+?)\.\s/);
