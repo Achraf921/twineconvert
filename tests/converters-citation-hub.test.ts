@@ -1081,3 +1081,38 @@ describe("citation style output: AMA via citeproc", () => {
     expect(c).toMatch(/^1\.\s+Smith J, Doe J\./);
   });
 });
+
+describe("citation style output: Nature + ACS + ASA via citeproc", () => {
+  it("bibtex-to-nature uses Nature shape", async () => {
+    const out = await (await run("bibtex-to-nature", f("a.bib", F.bibtex, "text/x-bibtex"))).blob.text();
+    expect(out).toMatch(/^1\.\s+Smith, J\. & Doe, J\./);
+    expect(out).toMatch(/\(2024\)/);
+    expect(out).not.toContain("45--67");
+  });
+
+  it("bibtex-to-acs uses ACS shape (parenthesized number, semicolon authors)", async () => {
+    const out = await (await run("bibtex-to-acs", f("a.bib", F.bibtex, "text/x-bibtex"))).blob.text();
+    expect(out).toMatch(/^\(1\)\s+Smith, J\.; Doe, J\./);
+  });
+
+  it("bibtex-to-asa uses ASA shape (year after author)", async () => {
+    const out = await (await run("bibtex-to-asa", f("a.bib", F.bibtex, "text/x-bibtex"))).blob.text();
+    expect(out).toMatch(/Smith, John, and Jane Doe\. 2024\./);
+  });
+
+  it("nbib-to-nature/acs/asa render with no duplicate author", async () => {
+    for (const id of ["nbib-to-nature", "nbib-to-acs", "nbib-to-asa"]) {
+      const out = await (await run(id, f("a.nbib", F.nbibRealPubMed, "application/x-research-info-systems"))).blob.text();
+      expect(out.length).toBeGreaterThan(20);
+      expect(out).not.toContain("0028-0836");
+    }
+  });
+
+  it("references-to-nature and csv-to-asa work from text/spreadsheet", async () => {
+    const r = await (await run("references-to-nature", f("a.txt", "Smith, J., & Doe, J. (2024). A study. Nature Methods, 12(3), 45-67.\n", "text/plain"))).blob.text();
+    expect(r.length).toBeGreaterThan(15);
+    const csv = "title,authors,year,journal,volume,issue,pages\nA Paper,\"Smith, John; Doe, Jane\",2024,Nature,12,3,45-67\n";
+    const c = await (await run("csv-to-asa", f("a.csv", csv, "text/csv"))).blob.text();
+    expect(c).toMatch(/Smith, John, and Jane Doe\. 2024\./);
+  });
+});
