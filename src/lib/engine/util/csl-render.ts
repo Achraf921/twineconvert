@@ -22,6 +22,8 @@ const STYLE_LOADERS: Record<string, () => Promise<string>> = {
   apa: async () => (await import("./csl-data/apa")).CSL_STYLE_APA,
   mla: async () => (await import("./csl-data/mla")).CSL_STYLE_MLA,
   chicago: async () => (await import("./csl-data/chicago-author-date")).CSL_STYLE_CHICAGO,
+  harvard: async () => (await import("./csl-data/harvard")).CSL_STYLE_HARVARD,
+  ieee: async () => (await import("./csl-data/ieee")).CSL_STYLE_IEEE,
 };
 
 /** Human-readable name per style id (used in copy / error messages). */
@@ -29,6 +31,8 @@ export const STYLE_LABELS: Record<string, string> = {
   apa: "APA (7th edition)",
   mla: "MLA (9th edition)",
   chicago: "Chicago (author-date)",
+  harvard: "Harvard (Cite Them Right)",
+  ieee: "IEEE",
 };
 
 export function isCitationStyle(id: string): boolean {

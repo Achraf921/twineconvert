@@ -6,14 +6,14 @@ Generated 2026-06-19 from src/lib/engine/converters/.
 
 | Classification | Count |
 |---|---:|
-| Total converters | 583 |
+| Total converters | 595 |
 | **Bijective candidates** (lossless, same-kind, both directions exist) | 256 |
 | **Bijective candidates missing reverse converter** | 40 |
 | **Bijective candidates missing round-trip test** | 27 |
 | Lossy encoding (same kind, but lossy format) | 121 |
 | Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 79 |
 | Single-action (no reverse possible) | 53 |
-| Unknown formats (need to add to FORMATS table) | 34 |
+| Unknown formats (need to add to FORMATS table) | 46 |
 | Compound id (irregular pattern) | 0 |
 
 ## Action Items
@@ -24,15 +24,23 @@ The audit script doesn't know about these formats; add them to the FORMATS table
 
 - `bibtex-to-apa` (unknown format: apa)
 - `bibtex-to-chicago` (unknown format: chicago)
+- `bibtex-to-harvard` (unknown format: harvard)
+- `bibtex-to-ieee` (unknown format: ieee)
 - `bibtex-to-mla` (unknown format: mla)
 - `csl-json-to-apa` (unknown format: apa)
 - `csl-json-to-chicago` (unknown format: chicago)
+- `csl-json-to-harvard` (unknown format: harvard)
+- `csl-json-to-ieee` (unknown format: ieee)
 - `csl-json-to-mla` (unknown format: mla)
 - `csv-to-apa` (unknown format: apa)
 - `csv-to-chicago` (unknown format: chicago)
+- `csv-to-harvard` (unknown format: harvard)
+- `csv-to-ieee` (unknown format: ieee)
 - `csv-to-mla` (unknown format: mla)
 - `nbib-to-apa` (unknown format: apa)
 - `nbib-to-chicago` (unknown format: chicago)
+- `nbib-to-harvard` (unknown format: harvard)
+- `nbib-to-ieee` (unknown format: ieee)
 - `nbib-to-mla` (unknown format: mla)
 - `pubmed-to-bibtex` (unknown format: pubmed)
 - `pubmed-to-csl-json` (unknown format: pubmed)
@@ -52,9 +60,13 @@ The audit script doesn't know about these formats; add them to the FORMATS table
 - `references-to-xlsx` (unknown format: references)
 - `ris-to-apa` (unknown format: apa)
 - `ris-to-chicago` (unknown format: chicago)
+- `ris-to-harvard` (unknown format: harvard)
+- `ris-to-ieee` (unknown format: ieee)
 - `ris-to-mla` (unknown format: mla)
 - `xlsx-to-apa` (unknown format: apa)
 - `xlsx-to-chicago` (unknown format: chicago)
+- `xlsx-to-harvard` (unknown format: harvard)
+- `xlsx-to-ieee` (unknown format: ieee)
 - `xlsx-to-mla` (unknown format: mla)
 
 ### 2. Bijective converters MISSING their reverse pair
@@ -175,7 +187,9 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `bibtex-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `bibtex-to-endnote-xml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `bibtex-to-enw` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
+| `bibtex-to-harvard` | unknown-format | (`harvard-to-bibtex` missing) | ✓ | unknown format: harvard |
 | `bibtex-to-html` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
+| `bibtex-to-ieee` | unknown-format | (`ieee-to-bibtex` missing) | ✓ | unknown format: ieee |
 | `bibtex-to-markdown` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
 | `bibtex-to-mla` | unknown-format | (`mla-to-bibtex` missing) | ✓ | unknown format: mla |
 | `bibtex-to-mods` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
@@ -203,7 +217,9 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `csl-json-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csl-json-to-endnote-xml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csl-json-to-enw` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
+| `csl-json-to-harvard` | unknown-format | (`harvard-to-csl-json` missing) | n/a | unknown format: harvard |
 | `csl-json-to-html` | cross-kind | (`html-to-csl-json` missing) | n/a | data -> doc: cross-domain, inherently lossy |
+| `csl-json-to-ieee` | unknown-format | (`ieee-to-csl-json` missing) | n/a | unknown format: ieee |
 | `csl-json-to-markdown` | cross-kind | (`markdown-to-csl-json` missing) | n/a | data -> doc: cross-domain, inherently lossy |
 | `csl-json-to-mla` | unknown-format | (`mla-to-csl-json` missing) | ✓ | unknown format: mla |
 | `csl-json-to-mods` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
@@ -225,9 +241,11 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `csv-to-enw` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-fhir-bundle` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-gedcom` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `csv-to-harvard` | unknown-format | (`harvard-to-csv` missing) | ✓ | unknown format: harvard |
 | `csv-to-html` | cross-kind | ✓ | ✓ | data -> doc: cross-domain, inherently lossy |
 | `csv-to-html-table` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-ics` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
+| `csv-to-ieee` | unknown-format | (`ieee-to-csv` missing) | n/a | unknown format: ieee |
 | `csv-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-jsonl` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-markdown-table` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
@@ -507,7 +525,9 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `nbib-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `nbib-to-endnote-xml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `nbib-to-enw` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
+| `nbib-to-harvard` | unknown-format | (`harvard-to-nbib` missing) | n/a | unknown format: harvard |
 | `nbib-to-html` | cross-kind | (`html-to-nbib` missing) | n/a | data -> doc: cross-domain, inherently lossy |
+| `nbib-to-ieee` | unknown-format | (`ieee-to-nbib` missing) | ✓ | unknown format: ieee |
 | `nbib-to-markdown` | cross-kind | (`markdown-to-nbib` missing) | n/a | data -> doc: cross-domain, inherently lossy |
 | `nbib-to-mla` | unknown-format | (`mla-to-nbib` missing) | n/a | unknown format: mla |
 | `nbib-to-mods` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
@@ -602,7 +622,9 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `ris-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `ris-to-endnote-xml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `ris-to-enw` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `ris-to-harvard` | unknown-format | (`harvard-to-ris` missing) | n/a | unknown format: harvard |
 | `ris-to-html` | cross-kind | (`html-to-ris` missing) | n/a | data -> doc: cross-domain, inherently lossy |
+| `ris-to-ieee` | unknown-format | (`ieee-to-ris` missing) | n/a | unknown format: ieee |
 | `ris-to-markdown` | cross-kind | (`markdown-to-ris` missing) | n/a | data -> doc: cross-domain, inherently lossy |
 | `ris-to-mla` | unknown-format | (`mla-to-ris` missing) | ✓ | unknown format: mla |
 | `ris-to-mods` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
@@ -697,8 +719,10 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `xlsx-to-csl-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `xlsx-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `xlsx-to-endnote-xml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `xlsx-to-harvard` | unknown-format | (`harvard-to-xlsx` missing) | n/a | unknown format: harvard |
 | `xlsx-to-html` | cross-kind | ✓ | ✓ | data -> doc: cross-domain, inherently lossy |
 | `xlsx-to-html-table` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `xlsx-to-ieee` | unknown-format | (`ieee-to-xlsx` missing) | ✓ | unknown format: ieee |
 | `xlsx-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `xlsx-to-markdown-table` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `xlsx-to-mla` | unknown-format | (`mla-to-xlsx` missing) | n/a | unknown format: mla |

@@ -941,6 +941,18 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "xlsx-to-apa":         { provider: async () => fileFromBytes("refs.xlsx", await makeTinyCitationXlsx(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"), env: "node" },
   "xlsx-to-mla":         { provider: async () => fileFromBytes("refs.xlsx", await makeTinyCitationXlsx(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"), env: "node" },
   "xlsx-to-chicago":     { provider: async () => fileFromBytes("refs.xlsx", await makeTinyCitationXlsx(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"), env: "node" },
+  "bibtex-to-harvard":   { provider: () => text("refs.bib", F.bibtex, "application/x-bibtex"), env: "node" },
+  "ris-to-harvard":      { provider: () => text("refs.ris", F.ris, "application/x-research-info-systems"), env: "node" },
+  "nbib-to-harvard":     { provider: () => text("refs.nbib", F.nbibRealPubMed, "application/x-research-info-systems"), env: "node" },
+  "csl-json-to-harvard": { provider: () => text("refs.json", F.cslJson, "application/json"), env: "node" },
+  "csv-to-harvard":      { provider: () => text("refs.csv", CITATION_CSV_FIXTURE, "text/csv"), env: "node" },
+  "xlsx-to-harvard":     { provider: async () => fileFromBytes("refs.xlsx", await makeTinyCitationXlsx(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"), env: "node" },
+  "bibtex-to-ieee":      { provider: () => text("refs.bib", F.bibtex, "application/x-bibtex"), env: "node" },
+  "ris-to-ieee":         { provider: () => text("refs.ris", F.ris, "application/x-research-info-systems"), env: "node" },
+  "nbib-to-ieee":        { provider: () => text("refs.nbib", F.nbibRealPubMed, "application/x-research-info-systems"), env: "node" },
+  "csl-json-to-ieee":    { provider: () => text("refs.json", F.cslJson, "application/json"), env: "node" },
+  "csv-to-ieee":         { provider: () => text("refs.csv", CITATION_CSV_FIXTURE, "text/csv"), env: "node" },
+  "xlsx-to-ieee":        { provider: async () => fileFromBytes("refs.xlsx", await makeTinyCitationXlsx(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"), env: "node" },
 };
 
 /** True if we have any fixture for this id (even if it requires browser). */

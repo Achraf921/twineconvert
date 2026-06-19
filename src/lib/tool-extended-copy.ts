@@ -5323,6 +5323,69 @@ export const EXTENDED_COPY: Record<string, ExtendedCopy> = {
       { problem: "I expected footnotes.", solution: "This is Chicago author-date (parenthetical), not notes-bibliography. It produces a reference list, not footnotes." },
     ],
   },
+
+  // ---- Spreadsheet -> citation style (excel/csv to apa/mla/chicago) ------
+
+  "csv-to-apa": {
+    whyConvert:
+      "If you track sources in a spreadsheet (a column each for title, authors, year, journal, DOI), this turns that CSV straight into an APA 7th reference list with citeproc and the official APA CSL style. Headers are matched leniently, so a Scopus, Zotero or PubMed CSV export works without renaming columns first.",
+    example:
+      "You exported a Scopus search as CSV. You need the results as an APA reference list for a literature review. Drop the .csv here and paste the alphabetized APA list into your document.",
+    troubleshooting: [
+      { problem: "A journal article formatted like a generic document.", solution: "The converter infers article/book/chapter from the columns present (a journal column means a journal article). To force a type, add a 'type' column with values like article, book, chapter, or thesis." },
+      { problem: "I got a message saying the file is already RIS/BibTeX.", solution: "You dropped a citation FILE into the CSV tool. Use ris-to-apa or bibtex-to-apa for those formats; csv-to-apa expects a spreadsheet with a header row." },
+    ],
+  },
+  "csv-to-mla": {
+    whyConvert:
+      "Turn a spreadsheet of sources into an MLA 9th works-cited list using the official MLA CSL style. Column headers are matched leniently, so library-database, Zotero and Scopus CSV exports work without cleanup.",
+    example:
+      "You kept sources for an essay in Excel and saved as CSV. Drop it here to get an MLA works-cited list, alphabetized by author, ready to paste.",
+    troubleshooting: [
+      { problem: "Author shows initials instead of full names.", solution: "MLA spells out given names; put the full first name in the authors column (e.g. 'Smith, John' not 'Smith, J')." },
+      { problem: "Container titles are not italicized.", solution: "Output is plain text so it pastes anywhere; italicize journal and book titles in your word processor after pasting." },
+    ],
+  },
+  "csv-to-chicago": {
+    whyConvert:
+      "Convert a spreadsheet of references into a Chicago author-date reference list with the official Chicago CSL style. Lenient header matching means Scopus/Zotero/database CSV exports work as-is.",
+    example:
+      "Your history sources live in a CSV. Drop it here for a Chicago author-date reference list, alphabetized and ready to paste.",
+    troubleshooting: [
+      { problem: "Publisher or place missing for a book.", solution: "Chicago shows publisher and place for books; add publisher and address (place) columns. Add a 'type' column set to book if a row is being treated as an article." },
+      { problem: "I needed footnote style.", solution: "This is Chicago author-date (parenthetical). The notes-bibliography (footnote) variant is a different style and is not produced here." },
+    ],
+  },
+  "xlsx-to-apa": {
+    whyConvert:
+      "Many people search 'excel to apa'. This reads the first sheet of an .xlsx workbook of references and renders an APA 7th reference list with the official APA CSL style, all in your browser, so the spreadsheet never leaves your machine.",
+    example:
+      "Your supervisor keeps the team's sources in an Excel file. You need them as APA for a grant report. Drop the .xlsx here and copy the APA list.",
+    troubleshooting: [
+      { problem: "Nothing was found in the spreadsheet.", solution: "The first sheet needs a header row with recognizable columns (title, authors/author, year, journal, doi). Move your data to the first sheet, or delete a leading blank/title row above the headers." },
+      { problem: "An article looks like a generic document.", solution: "Add a 'type' column (article, book, chapter, thesis). Without it the tool infers the type from the columns present." },
+    ],
+  },
+  "xlsx-to-mla": {
+    whyConvert:
+      "Read an Excel (.xlsx) workbook of references and render an MLA 9th works-cited list with the official MLA CSL style, fully in-browser. Useful when your sources live in a shared spreadsheet rather than a reference manager.",
+    example:
+      "You collected sources for a paper in Excel. Drop the .xlsx here to get an MLA works-cited list, alphabetized by author.",
+    troubleshooting: [
+      { problem: "Only the first sheet was used.", solution: "The converter reads sheet one. Put your references there, or copy them to a new first sheet." },
+      { problem: "Full author names are missing.", solution: "MLA needs full given names; store them as 'Last, First' in the authors column." },
+    ],
+  },
+  "xlsx-to-chicago": {
+    whyConvert:
+      "Read an Excel (.xlsx) workbook of references and render a Chicago author-date reference list with the official Chicago CSL style, fully in-browser.",
+    example:
+      "Your department tracks sources in Excel and wants Chicago author-date. Drop the .xlsx here and paste the formatted list.",
+    troubleshooting: [
+      { problem: "A book is missing its publisher.", solution: "Add publisher and place (address) columns; Chicago shows them for books. Set a 'type' column to book if a row is treated as an article." },
+      { problem: "The references are not in the order I entered them.", solution: "A Chicago reference list is alphabetical by author surname, which is the required order." },
+    ],
+  },
 };
 
 export function getExtendedCopy(toolId: string): ExtendedCopy | undefined {

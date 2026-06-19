@@ -4319,6 +4319,156 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "text/plain",
     "maxFileSizeBytes": 104857600
   },
+  "bibtex-to-harvard": {
+    "label": "BibTeX → Harvard",
+    "accept": [
+      ".bib",
+      ".bibtex"
+    ],
+    "fromMime": [
+      "application/x-bibtex",
+      "text/x-bibtex",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "ris-to-harvard": {
+    "label": "RIS → Harvard",
+    "accept": [
+      ".ris"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "nbib-to-harvard": {
+    "label": "NBIB → Harvard",
+    "accept": [
+      ".nbib"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "csl-json-to-harvard": {
+    "label": "CSL-JSON → Harvard",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/vnd.citationstyles.csl+json",
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "csv-to-harvard": {
+    "label": "CSV → Harvard",
+    "accept": [
+      ".csv"
+    ],
+    "fromMime": [
+      "text/csv",
+      "application/csv",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "xlsx-to-harvard": {
+    "label": "XLSX → Harvard",
+    "accept": [
+      ".xlsx"
+    ],
+    "fromMime": [
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "bibtex-to-ieee": {
+    "label": "BibTeX → IEEE",
+    "accept": [
+      ".bib",
+      ".bibtex"
+    ],
+    "fromMime": [
+      "application/x-bibtex",
+      "text/x-bibtex",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "ris-to-ieee": {
+    "label": "RIS → IEEE",
+    "accept": [
+      ".ris"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "nbib-to-ieee": {
+    "label": "NBIB → IEEE",
+    "accept": [
+      ".nbib"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "csl-json-to-ieee": {
+    "label": "CSL-JSON → IEEE",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/vnd.citationstyles.csl+json",
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "csv-to-ieee": {
+    "label": "CSV → IEEE",
+    "accept": [
+      ".csv"
+    ],
+    "fromMime": [
+      "text/csv",
+      "application/csv",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "xlsx-to-ieee": {
+    "label": "XLSX → IEEE",
+    "accept": [
+      ".xlsx"
+    ],
+    "fromMime": [
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
   "bibtex-to-xlsx": {
     "label": "BibTeX → XLSX",
     "accept": [

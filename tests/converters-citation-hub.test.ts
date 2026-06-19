@@ -988,3 +988,32 @@ describe("citation-csv: type inference and Zotero/CSL type words", () => {
     expect(c[0].type).toBe("book");
   });
 });
+
+describe("citation style output: Harvard + IEEE via citeproc", () => {
+  it("bibtex-to-harvard uses Harvard shape ('Available at:' for the DOI)", async () => {
+    const out = await (await run("bibtex-to-harvard", f("a.bib", F.bibtex, "text/x-bibtex"))).blob.text();
+    expect(out).toMatch(/Smith, J\. and Doe, J\. \(2024\)/);
+    expect(out).toContain("Available at:");
+    expect(out).not.toContain("45--67");
+  });
+
+  it("bibtex-to-ieee uses IEEE shape (bracketed number, initials before surname)", async () => {
+    const out = await (await run("bibtex-to-ieee", f("a.bib", F.bibtex, "text/x-bibtex"))).blob.text();
+    expect(out).toMatch(/^\[1\]\s+J\. Smith and J\. Doe/);
+    expect(out).toMatch(/vol\. 123/);
+  });
+
+  it("nbib-to-ieee has no duplicate author and renders IEEE", async () => {
+    const out = await (await run("nbib-to-ieee", f("a.nbib", F.nbibRealPubMed, "application/x-research-info-systems"))).blob.text();
+    expect(out).toMatch(/^\[1\]/);
+    expect(out).not.toContain("0028-0836");
+  });
+
+  it("csv-to-harvard and xlsx-to-ieee work from spreadsheets", async () => {
+    const csv = "title,authors,year,journal,volume,pages,doi\nA Sample Paper,\"Smith, John; Doe, Jane\",2024,Nature,123,45-67,10.1038/x\n";
+    const h = await (await run("csv-to-harvard", f("a.csv", csv, "text/csv"))).blob.text();
+    expect(h).toContain("Available at:");
+    const x = await (await run("xlsx-to-ieee", fileFromBytes("a.xlsx", await makeTinyCitationXlsx(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))).blob.text();
+    expect(x).toMatch(/^\[1\]/);
+  });
+});
