@@ -5184,6 +5184,566 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "text/plain",
     "maxFileSizeBytes": 104857600
   },
+  "refworks-to-apa": {
+    "label": "RefWorks → APA",
+    "accept": [
+      ".txt",
+      ".rwt"
+    ],
+    "fromMime": [
+      "text/plain",
+      "text/x-refworks"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "refworks-to-mla": {
+    "label": "RefWorks → MLA",
+    "accept": [
+      ".txt",
+      ".rwt"
+    ],
+    "fromMime": [
+      "text/plain",
+      "text/x-refworks"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "refworks-to-chicago": {
+    "label": "RefWorks → Chicago",
+    "accept": [
+      ".txt",
+      ".rwt"
+    ],
+    "fromMime": [
+      "text/plain",
+      "text/x-refworks"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "refworks-to-harvard": {
+    "label": "RefWorks → Harvard",
+    "accept": [
+      ".txt",
+      ".rwt"
+    ],
+    "fromMime": [
+      "text/plain",
+      "text/x-refworks"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "refworks-to-ieee": {
+    "label": "RefWorks → IEEE",
+    "accept": [
+      ".txt",
+      ".rwt"
+    ],
+    "fromMime": [
+      "text/plain",
+      "text/x-refworks"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "refworks-to-ama": {
+    "label": "RefWorks → AMA",
+    "accept": [
+      ".txt",
+      ".rwt"
+    ],
+    "fromMime": [
+      "text/plain",
+      "text/x-refworks"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "refworks-to-nature": {
+    "label": "RefWorks → Nature",
+    "accept": [
+      ".txt",
+      ".rwt"
+    ],
+    "fromMime": [
+      "text/plain",
+      "text/x-refworks"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "refworks-to-acs": {
+    "label": "RefWorks → ACS",
+    "accept": [
+      ".txt",
+      ".rwt"
+    ],
+    "fromMime": [
+      "text/plain",
+      "text/x-refworks"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "refworks-to-asa": {
+    "label": "RefWorks → ASA",
+    "accept": [
+      ".txt",
+      ".rwt"
+    ],
+    "fromMime": [
+      "text/plain",
+      "text/x-refworks"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "refworks-to-vancouver": {
+    "label": "RefWorks → Vancouver",
+    "accept": [
+      ".txt",
+      ".rwt"
+    ],
+    "fromMime": [
+      "text/plain",
+      "text/x-refworks"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "wos-to-apa": {
+    "label": "Web of Science → APA",
+    "accept": [
+      ".txt",
+      ".ciw",
+      ".isi"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-inst-for-scientific-info"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "wos-to-mla": {
+    "label": "Web of Science → MLA",
+    "accept": [
+      ".txt",
+      ".ciw",
+      ".isi"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-inst-for-scientific-info"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "wos-to-chicago": {
+    "label": "Web of Science → Chicago",
+    "accept": [
+      ".txt",
+      ".ciw",
+      ".isi"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-inst-for-scientific-info"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "wos-to-harvard": {
+    "label": "Web of Science → Harvard",
+    "accept": [
+      ".txt",
+      ".ciw",
+      ".isi"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-inst-for-scientific-info"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "wos-to-ieee": {
+    "label": "Web of Science → IEEE",
+    "accept": [
+      ".txt",
+      ".ciw",
+      ".isi"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-inst-for-scientific-info"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "wos-to-ama": {
+    "label": "Web of Science → AMA",
+    "accept": [
+      ".txt",
+      ".ciw",
+      ".isi"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-inst-for-scientific-info"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "wos-to-nature": {
+    "label": "Web of Science → Nature",
+    "accept": [
+      ".txt",
+      ".ciw",
+      ".isi"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-inst-for-scientific-info"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "wos-to-acs": {
+    "label": "Web of Science → ACS",
+    "accept": [
+      ".txt",
+      ".ciw",
+      ".isi"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-inst-for-scientific-info"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "wos-to-asa": {
+    "label": "Web of Science → ASA",
+    "accept": [
+      ".txt",
+      ".ciw",
+      ".isi"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-inst-for-scientific-info"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "wos-to-vancouver": {
+    "label": "Web of Science → Vancouver",
+    "accept": [
+      ".txt",
+      ".ciw",
+      ".isi"
+    ],
+    "fromMime": [
+      "text/plain",
+      "application/x-inst-for-scientific-info"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "mods-to-apa": {
+    "label": "MODS → APA",
+    "accept": [
+      ".xml",
+      ".mods"
+    ],
+    "fromMime": [
+      "application/mods+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "mods-to-mla": {
+    "label": "MODS → MLA",
+    "accept": [
+      ".xml",
+      ".mods"
+    ],
+    "fromMime": [
+      "application/mods+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "mods-to-chicago": {
+    "label": "MODS → Chicago",
+    "accept": [
+      ".xml",
+      ".mods"
+    ],
+    "fromMime": [
+      "application/mods+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "mods-to-harvard": {
+    "label": "MODS → Harvard",
+    "accept": [
+      ".xml",
+      ".mods"
+    ],
+    "fromMime": [
+      "application/mods+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "mods-to-ieee": {
+    "label": "MODS → IEEE",
+    "accept": [
+      ".xml",
+      ".mods"
+    ],
+    "fromMime": [
+      "application/mods+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "mods-to-ama": {
+    "label": "MODS → AMA",
+    "accept": [
+      ".xml",
+      ".mods"
+    ],
+    "fromMime": [
+      "application/mods+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "mods-to-nature": {
+    "label": "MODS → Nature",
+    "accept": [
+      ".xml",
+      ".mods"
+    ],
+    "fromMime": [
+      "application/mods+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "mods-to-acs": {
+    "label": "MODS → ACS",
+    "accept": [
+      ".xml",
+      ".mods"
+    ],
+    "fromMime": [
+      "application/mods+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "mods-to-asa": {
+    "label": "MODS → ASA",
+    "accept": [
+      ".xml",
+      ".mods"
+    ],
+    "fromMime": [
+      "application/mods+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "mods-to-vancouver": {
+    "label": "MODS → Vancouver",
+    "accept": [
+      ".xml",
+      ".mods"
+    ],
+    "fromMime": [
+      "application/mods+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "marcxml-to-apa": {
+    "label": "MARCXML → APA",
+    "accept": [
+      ".xml",
+      ".marcxml",
+      ".mrcx"
+    ],
+    "fromMime": [
+      "application/marcxml+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "marcxml-to-mla": {
+    "label": "MARCXML → MLA",
+    "accept": [
+      ".xml",
+      ".marcxml",
+      ".mrcx"
+    ],
+    "fromMime": [
+      "application/marcxml+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "marcxml-to-chicago": {
+    "label": "MARCXML → Chicago",
+    "accept": [
+      ".xml",
+      ".marcxml",
+      ".mrcx"
+    ],
+    "fromMime": [
+      "application/marcxml+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "marcxml-to-harvard": {
+    "label": "MARCXML → Harvard",
+    "accept": [
+      ".xml",
+      ".marcxml",
+      ".mrcx"
+    ],
+    "fromMime": [
+      "application/marcxml+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "marcxml-to-ieee": {
+    "label": "MARCXML → IEEE",
+    "accept": [
+      ".xml",
+      ".marcxml",
+      ".mrcx"
+    ],
+    "fromMime": [
+      "application/marcxml+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "marcxml-to-ama": {
+    "label": "MARCXML → AMA",
+    "accept": [
+      ".xml",
+      ".marcxml",
+      ".mrcx"
+    ],
+    "fromMime": [
+      "application/marcxml+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "marcxml-to-nature": {
+    "label": "MARCXML → Nature",
+    "accept": [
+      ".xml",
+      ".marcxml",
+      ".mrcx"
+    ],
+    "fromMime": [
+      "application/marcxml+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "marcxml-to-acs": {
+    "label": "MARCXML → ACS",
+    "accept": [
+      ".xml",
+      ".marcxml",
+      ".mrcx"
+    ],
+    "fromMime": [
+      "application/marcxml+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "marcxml-to-asa": {
+    "label": "MARCXML → ASA",
+    "accept": [
+      ".xml",
+      ".marcxml",
+      ".mrcx"
+    ],
+    "fromMime": [
+      "application/marcxml+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "marcxml-to-vancouver": {
+    "label": "MARCXML → Vancouver",
+    "accept": [
+      ".xml",
+      ".marcxml",
+      ".mrcx"
+    ],
+    "fromMime": [
+      "application/marcxml+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
   "bibtex-to-xlsx": {
     "label": "BibTeX → XLSX",
     "accept": [

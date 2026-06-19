@@ -1183,3 +1183,21 @@ describe("citation style output: ODS source", () => {
     expect(van.length).toBeGreaterThan(15);
   });
 });
+
+describe("citation style output: RefWorks/WoS/MODS/MARCXML sources", () => {
+  it("refworks-to-apa and wos-to-vancouver render real data", async () => {
+    const { FIXTURE_PROVIDERS } = await import("./fixtures/fixture-providers");
+    const rw = await (await run("refworks-to-apa", await FIXTURE_PROVIDERS["refworks-to-apa"].provider())).blob.text();
+    expect(rw).toMatch(/Vestibular function in aging adults/);
+    const wv = await (await run("wos-to-vancouver", await FIXTURE_PROVIDERS["wos-to-vancouver"].provider())).blob.text();
+    expect(wv).toMatch(/^\[?1\]?\.?\s+\S/);
+    expect(wv).toMatch(/Vestibular function in aging adults/);
+  });
+  it("mods-to-ieee and marcxml-to-apa render real data", async () => {
+    const { FIXTURE_PROVIDERS } = await import("./fixtures/fixture-providers");
+    const mi = await (await run("mods-to-ieee", await FIXTURE_PROVIDERS["mods-to-ieee"].provider())).blob.text();
+    expect(mi).toMatch(/^\[1\]/);
+    const ma = await (await run("marcxml-to-apa", await FIXTURE_PROVIDERS["marcxml-to-apa"].provider())).blob.text();
+    expect(ma).toMatch(/\(\d{4}\)/);
+  });
+});

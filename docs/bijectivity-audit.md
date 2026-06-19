@@ -6,14 +6,14 @@ Generated 2026-06-19 from src/lib/engine/converters/.
 
 | Classification | Count |
 |---|---:|
-| Total converters | 655 |
+| Total converters | 695 |
 | **Bijective candidates** (lossless, same-kind, both directions exist) | 256 |
 | **Bijective candidates missing reverse converter** | 40 |
 | **Bijective candidates missing round-trip test** | 27 |
 | Lossy encoding (same kind, but lossy format) | 121 |
 | Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 79 |
 | Single-action (no reverse possible) | 53 |
-| Unknown formats (need to add to FORMATS table) | 106 |
+| Unknown formats (need to add to FORMATS table) | 146 |
 | Compound id (irregular pattern) | 0 |
 
 ## Action Items
@@ -62,6 +62,26 @@ The audit script doesn't know about these formats; add them to the FORMATS table
 - `enw-to-mla` (unknown format: mla)
 - `enw-to-nature` (unknown format: nature)
 - `enw-to-vancouver` (unknown format: vancouver)
+- `marcxml-to-acs` (unknown format: acs)
+- `marcxml-to-ama` (unknown format: ama)
+- `marcxml-to-apa` (unknown format: apa)
+- `marcxml-to-asa` (unknown format: asa)
+- `marcxml-to-chicago` (unknown format: chicago)
+- `marcxml-to-harvard` (unknown format: harvard)
+- `marcxml-to-ieee` (unknown format: ieee)
+- `marcxml-to-mla` (unknown format: mla)
+- `marcxml-to-nature` (unknown format: nature)
+- `marcxml-to-vancouver` (unknown format: vancouver)
+- `mods-to-acs` (unknown format: acs)
+- `mods-to-ama` (unknown format: ama)
+- `mods-to-apa` (unknown format: apa)
+- `mods-to-asa` (unknown format: asa)
+- `mods-to-chicago` (unknown format: chicago)
+- `mods-to-harvard` (unknown format: harvard)
+- `mods-to-ieee` (unknown format: ieee)
+- `mods-to-mla` (unknown format: mla)
+- `mods-to-nature` (unknown format: nature)
+- `mods-to-vancouver` (unknown format: vancouver)
 - `nbib-to-acs` (unknown format: acs)
 - `nbib-to-ama` (unknown format: ama)
 - `nbib-to-apa` (unknown format: apa)
@@ -108,6 +128,16 @@ The audit script doesn't know about these formats; add them to the FORMATS table
 - `references-to-ris` (unknown format: references)
 - `references-to-vancouver` (unknown format: references)
 - `references-to-xlsx` (unknown format: references)
+- `refworks-to-acs` (unknown format: acs)
+- `refworks-to-ama` (unknown format: ama)
+- `refworks-to-apa` (unknown format: apa)
+- `refworks-to-asa` (unknown format: asa)
+- `refworks-to-chicago` (unknown format: chicago)
+- `refworks-to-harvard` (unknown format: harvard)
+- `refworks-to-ieee` (unknown format: ieee)
+- `refworks-to-mla` (unknown format: mla)
+- `refworks-to-nature` (unknown format: nature)
+- `refworks-to-vancouver` (unknown format: vancouver)
 - `ris-to-acs` (unknown format: acs)
 - `ris-to-ama` (unknown format: ama)
 - `ris-to-apa` (unknown format: apa)
@@ -118,6 +148,16 @@ The audit script doesn't know about these formats; add them to the FORMATS table
 - `ris-to-mla` (unknown format: mla)
 - `ris-to-nature` (unknown format: nature)
 - `ris-to-vancouver` (unknown format: vancouver)
+- `wos-to-acs` (unknown format: acs)
+- `wos-to-ama` (unknown format: ama)
+- `wos-to-apa` (unknown format: apa)
+- `wos-to-asa` (unknown format: asa)
+- `wos-to-chicago` (unknown format: chicago)
+- `wos-to-harvard` (unknown format: harvard)
+- `wos-to-ieee` (unknown format: ieee)
+- `wos-to-mla` (unknown format: mla)
+- `wos-to-nature` (unknown format: nature)
+- `wos-to-vancouver` (unknown format: vancouver)
 - `xlsx-to-acs` (unknown format: acs)
 - `xlsx-to-ama` (unknown format: ama)
 - `xlsx-to-apa` (unknown format: apa)
@@ -543,14 +583,24 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `lrc-to-vtt` | bijective-candidate | (`vtt-to-lrc` missing) | n/a | both lossless data formats; should round-trip cleanly |
 | `m4a-to-mp3` | lossy-encoding | ✓ | ✓ | m4a or mp3 uses lossy encoding |
 | `m4v-to-mp4` | lossy-encoding | (`mp4-to-m4v` missing) | ✓ | m4v or mp4 uses lossy encoding |
+| `marcxml-to-acs` | unknown-format | (`acs-to-marcxml` missing) | n/a | unknown format: acs |
+| `marcxml-to-ama` | unknown-format | (`ama-to-marcxml` missing) | n/a | unknown format: ama |
+| `marcxml-to-apa` | unknown-format | (`apa-to-marcxml` missing) | ✓ | unknown format: apa |
+| `marcxml-to-asa` | unknown-format | (`asa-to-marcxml` missing) | n/a | unknown format: asa |
 | `marcxml-to-bibtex` | lossy-encoding | (`bibtex-to-marcxml` missing) | ✓ | marcxml or bibtex uses lossy encoding |
+| `marcxml-to-chicago` | unknown-format | (`chicago-to-marcxml` missing) | n/a | unknown format: chicago |
 | `marcxml-to-csl-json` | lossy-encoding | (`csl-json-to-marcxml` missing) | ✓ | marcxml or csl-json uses lossy encoding |
 | `marcxml-to-csv` | lossy-encoding | (`csv-to-marcxml` missing) | ✓ | marcxml or csv uses lossy encoding |
 | `marcxml-to-endnote-xml` | lossy-encoding | (`endnote-xml-to-marcxml` missing) | n/a | marcxml or endnote-xml uses lossy encoding |
+| `marcxml-to-harvard` | unknown-format | (`harvard-to-marcxml` missing) | n/a | unknown format: harvard |
 | `marcxml-to-html` | cross-kind | (`html-to-marcxml` missing) | n/a | data -> doc: cross-domain, inherently lossy |
+| `marcxml-to-ieee` | unknown-format | (`ieee-to-marcxml` missing) | n/a | unknown format: ieee |
 | `marcxml-to-markdown` | cross-kind | (`markdown-to-marcxml` missing) | n/a | data -> doc: cross-domain, inherently lossy |
+| `marcxml-to-mla` | unknown-format | (`mla-to-marcxml` missing) | n/a | unknown format: mla |
+| `marcxml-to-nature` | unknown-format | (`nature-to-marcxml` missing) | n/a | unknown format: nature |
 | `marcxml-to-nbib` | lossy-encoding | (`nbib-to-marcxml` missing) | n/a | marcxml or nbib uses lossy encoding |
 | `marcxml-to-ris` | lossy-encoding | (`ris-to-marcxml` missing) | ✓ | marcxml or ris uses lossy encoding |
+| `marcxml-to-vancouver` | unknown-format | (`vancouver-to-marcxml` missing) | n/a | unknown format: vancouver |
 | `marcxml-to-xlsx` | lossy-encoding | (`xlsx-to-marcxml` missing) | ✓ | marcxml or xlsx uses lossy encoding |
 | `marcxml-to-yaml` | lossy-encoding | (`yaml-to-marcxml` missing) | n/a | marcxml or yaml uses lossy encoding |
 | `markdown-table-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
@@ -566,14 +616,24 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `mbox-to-pdf` | cross-kind | (`pdf-to-mbox` missing) | ✓ | data -> doc: cross-domain, inherently lossy |
 | `midi-to-musicxml` | lossy-encoding | ✓ | n/a | midi or musicxml uses lossy encoding |
 | `mkv-to-mp4` | lossy-encoding | ✓ | ✓ | mkv or mp4 uses lossy encoding |
+| `mods-to-acs` | unknown-format | (`acs-to-mods` missing) | n/a | unknown format: acs |
+| `mods-to-ama` | unknown-format | (`ama-to-mods` missing) | n/a | unknown format: ama |
+| `mods-to-apa` | unknown-format | (`apa-to-mods` missing) | n/a | unknown format: apa |
+| `mods-to-asa` | unknown-format | (`asa-to-mods` missing) | n/a | unknown format: asa |
 | `mods-to-bibtex` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `mods-to-chicago` | unknown-format | (`chicago-to-mods` missing) | n/a | unknown format: chicago |
 | `mods-to-csl-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `mods-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `mods-to-endnote-xml` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
+| `mods-to-harvard` | unknown-format | (`harvard-to-mods` missing) | n/a | unknown format: harvard |
 | `mods-to-html` | cross-kind | (`html-to-mods` missing) | n/a | data -> doc: cross-domain, inherently lossy |
+| `mods-to-ieee` | unknown-format | (`ieee-to-mods` missing) | ✓ | unknown format: ieee |
 | `mods-to-markdown` | cross-kind | (`markdown-to-mods` missing) | n/a | data -> doc: cross-domain, inherently lossy |
+| `mods-to-mla` | unknown-format | (`mla-to-mods` missing) | n/a | unknown format: mla |
+| `mods-to-nature` | unknown-format | (`nature-to-mods` missing) | n/a | unknown format: nature |
 | `mods-to-nbib` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `mods-to-ris` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `mods-to-vancouver` | unknown-format | (`vancouver-to-mods` missing) | n/a | unknown format: vancouver |
 | `mods-to-xlsx` | bijective-candidate | (`xlsx-to-mods` missing) | ✓ | both lossless data formats; should round-trip cleanly |
 | `mods-to-yaml` | bijective-candidate | (`yaml-to-mods` missing) | n/a | both lossless data formats; should round-trip cleanly |
 | `mov-to-gif` | cross-kind | (`gif-to-mov` missing) | ✓ | video -> raster: cross-domain, inherently lossy |
@@ -710,14 +770,24 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `references-to-ris` | unknown-format | (`ris-to-references` missing) | ✓ | unknown format: references |
 | `references-to-vancouver` | unknown-format | (`vancouver-to-references` missing) | ✓ | unknown format: references |
 | `references-to-xlsx` | unknown-format | (`xlsx-to-references` missing) | ✓ | unknown format: references |
+| `refworks-to-acs` | unknown-format | (`acs-to-refworks` missing) | n/a | unknown format: acs |
+| `refworks-to-ama` | unknown-format | (`ama-to-refworks` missing) | n/a | unknown format: ama |
+| `refworks-to-apa` | unknown-format | (`apa-to-refworks` missing) | ✓ | unknown format: apa |
+| `refworks-to-asa` | unknown-format | (`asa-to-refworks` missing) | n/a | unknown format: asa |
 | `refworks-to-bibtex` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `refworks-to-chicago` | unknown-format | (`chicago-to-refworks` missing) | n/a | unknown format: chicago |
 | `refworks-to-csl-json` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
 | `refworks-to-csv` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
 | `refworks-to-endnote-xml` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
+| `refworks-to-harvard` | unknown-format | (`harvard-to-refworks` missing) | n/a | unknown format: harvard |
 | `refworks-to-html` | cross-kind | (`html-to-refworks` missing) | n/a | data -> doc: cross-domain, inherently lossy |
+| `refworks-to-ieee` | unknown-format | (`ieee-to-refworks` missing) | n/a | unknown format: ieee |
 | `refworks-to-markdown` | cross-kind | (`markdown-to-refworks` missing) | n/a | data -> doc: cross-domain, inherently lossy |
+| `refworks-to-mla` | unknown-format | (`mla-to-refworks` missing) | n/a | unknown format: mla |
+| `refworks-to-nature` | unknown-format | (`nature-to-refworks` missing) | n/a | unknown format: nature |
 | `refworks-to-nbib` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
 | `refworks-to-ris` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `refworks-to-vancouver` | unknown-format | (`vancouver-to-refworks` missing) | n/a | unknown format: vancouver |
 | `refworks-to-xlsx` | bijective-candidate | (`xlsx-to-refworks` missing) | n/a | both lossless data formats; should round-trip cleanly |
 | `refworks-to-yaml` | bijective-candidate | (`yaml-to-refworks` missing) | n/a | both lossless data formats; should round-trip cleanly |
 | `remove-background` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
@@ -818,14 +888,24 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `wma-to-mp3` | lossy-encoding | (`mp3-to-wma` missing) | n/a | wma or mp3 uses lossy encoding |
 | `wmv-to-mp4` | lossy-encoding | (`mp4-to-wmv` missing) | n/a | wmv or mp4 uses lossy encoding |
 | `woff-to-ttf` | bijective-candidate | ✓ | ✗ MISSING | both lossless font formats; should round-trip cleanly |
+| `wos-to-acs` | unknown-format | (`acs-to-wos` missing) | n/a | unknown format: acs |
+| `wos-to-ama` | unknown-format | (`ama-to-wos` missing) | n/a | unknown format: ama |
+| `wos-to-apa` | unknown-format | (`apa-to-wos` missing) | n/a | unknown format: apa |
+| `wos-to-asa` | unknown-format | (`asa-to-wos` missing) | n/a | unknown format: asa |
 | `wos-to-bibtex` | lossy-encoding | (`bibtex-to-wos` missing) | ✓ | wos or bibtex uses lossy encoding |
+| `wos-to-chicago` | unknown-format | (`chicago-to-wos` missing) | n/a | unknown format: chicago |
 | `wos-to-csl-json` | lossy-encoding | (`csl-json-to-wos` missing) | ✓ | wos or csl-json uses lossy encoding |
 | `wos-to-csv` | lossy-encoding | (`csv-to-wos` missing) | ✓ | wos or csv uses lossy encoding |
 | `wos-to-endnote-xml` | lossy-encoding | (`endnote-xml-to-wos` missing) | n/a | wos or endnote-xml uses lossy encoding |
+| `wos-to-harvard` | unknown-format | (`harvard-to-wos` missing) | n/a | unknown format: harvard |
 | `wos-to-html` | cross-kind | (`html-to-wos` missing) | n/a | data -> doc: cross-domain, inherently lossy |
+| `wos-to-ieee` | unknown-format | (`ieee-to-wos` missing) | n/a | unknown format: ieee |
 | `wos-to-markdown` | cross-kind | (`markdown-to-wos` missing) | n/a | data -> doc: cross-domain, inherently lossy |
+| `wos-to-mla` | unknown-format | (`mla-to-wos` missing) | n/a | unknown format: mla |
+| `wos-to-nature` | unknown-format | (`nature-to-wos` missing) | n/a | unknown format: nature |
 | `wos-to-nbib` | lossy-encoding | (`nbib-to-wos` missing) | n/a | wos or nbib uses lossy encoding |
 | `wos-to-ris` | lossy-encoding | (`ris-to-wos` missing) | ✓ | wos or ris uses lossy encoding |
+| `wos-to-vancouver` | unknown-format | (`vancouver-to-wos` missing) | ✓ | unknown format: vancouver |
 | `wos-to-xlsx` | lossy-encoding | (`xlsx-to-wos` missing) | ✓ | wos or xlsx uses lossy encoding |
 | `wos-to-yaml` | lossy-encoding | (`yaml-to-wos` missing) | n/a | wos or yaml uses lossy encoding |
 | `xlsx-to-acs` | unknown-format | (`acs-to-xlsx` missing) | n/a | unknown format: acs |
