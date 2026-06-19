@@ -68,6 +68,26 @@ const DUP_RIS_FIXTURE =
   "TY  - JOUR\nTI  - Deep Nets.\nAU  - Smith, J.\nPY  - 2024\nDO  - 10.1/X\nER  -\n" +
   "TY  - JOUR\nTI  - Another paper\nAU  - Doe, Jane\nPY  - 2023\nDO  - 10.2/y\nER  -\n";
 
+/** A citation CSV with a duplicate (same DOI) row for the dedupe fixture. */
+const DUP_CSV_FIXTURE =
+  "title,authors,year,journal,doi\n" +
+  "Deep nets,Smith J,2024,Nature,10.1/x\n" +
+  "Deep Nets.,Smith John,2024,Nature,10.1/X\n" +
+  "Another paper,Doe J,2023,Cell,10.2/y\n";
+
+/** A CSL-JSON array with a duplicate (same DOI) for the dedupe fixture. */
+const DUP_CSL_JSON_FIXTURE = JSON.stringify([
+  { id: "a1", type: "article-journal", title: "Deep nets", DOI: "10.1/x", issued: { "date-parts": [[2024]] } },
+  { id: "a2", type: "article-journal", title: "Deep Nets.", DOI: "10.1/X", issued: { "date-parts": [[2024]] } },
+  { id: "b1", type: "article-journal", title: "Another paper", DOI: "10.2/y", issued: { "date-parts": [[2023]] } },
+]);
+
+/** An EndNote .enw library with a duplicate (same DOI) for the dedupe fixture. */
+const DUP_ENW_FIXTURE =
+  "%0 Journal Article\n%T Deep nets\n%A Smith, John\n%D 2024\n%R 10.1/x\n\n" +
+  "%0 Journal Article\n%T Deep Nets.\n%A Smith, J.\n%D 2024\n%R 10.1/X\n\n" +
+  "%0 Journal Article\n%T Another paper\n%A Doe, Jane\n%D 2023\n%R 10.2/y\n";
+
 /** A small plain-text reference list (APA + numbered entries) for the
  *  references-to-<style> generator fixtures. */
 const REFERENCE_LIST_FIXTURE =
@@ -1073,6 +1093,10 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "marcxml-to-vancouver": { provider: () => text("catalog.marcxml", MARC_SAMPLE, "application/marcxml+xml"), env: "node" },
   "bibtex-dedupe": { provider: () => text("lib.bib", DUP_BIBTEX_FIXTURE, "application/x-bibtex"), env: "node" },
   "ris-dedupe": { provider: () => text("lib.ris", DUP_RIS_FIXTURE, "application/x-research-info-systems"), env: "node" },
+  "csv-dedupe": { provider: () => text("lib.csv", DUP_CSV_FIXTURE, "text/csv"), env: "node" },
+  "nbib-dedupe": { provider: () => text("lib.nbib", DUP_RIS_FIXTURE, "application/x-research-info-systems"), env: "node" },
+  "csl-json-dedupe": { provider: () => text("lib.json", DUP_CSL_JSON_FIXTURE, "application/json"), env: "node" },
+  "enw-dedupe": { provider: () => text("lib.enw", DUP_ENW_FIXTURE, "application/x-endnote-refer"), env: "node" },
 };
 
 /** True if we have any fixture for this id (even if it requires browser). */

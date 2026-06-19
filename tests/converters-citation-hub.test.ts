@@ -1252,3 +1252,28 @@ describe("citation de-duplication", () => {
     expect((out.match(/^TY {2}- /gm) ?? []).length).toBe(2);
   });
 });
+
+describe("citation de-duplication: more formats", () => {
+  it("csv-dedupe, nbib-dedupe, csl-json-dedupe, enw-dedupe each drop a duplicate", async () => {
+    const csv = "title,authors,year,journal,doi\nDeep nets,Smith J,2024,Nature,10.1/x\nDeep Nets.,Smith John,2024,Nature,10.1/X\nOther,Doe J,2023,Cell,10.2/y\n";
+    const csvOut = await (await run("csv-dedupe", f("l.csv", csv, "text/csv"))).blob.text();
+    expect(csvOut.trim().split("\n").length).toBe(3); // header + 2 unique rows
+
+    const ris = "TY  - JOUR\nTI  - Deep nets\nDO  - 10.1/x\nPY  - 2024\nER  -\nTY  - JOUR\nTI  - Deep nets\nDO  - 10.1/x\nPY  - 2024\nER  -\nTY  - JOUR\nTI  - Other\nDO  - 10.2/y\nPY  - 2023\nER  -\n";
+    const nbibOut = await (await run("nbib-dedupe", f("l.nbib", ris, "application/x-research-info-systems"))).blob.text();
+    expect((nbibOut.match(/^PMID-|^TI {2}- /gm) ?? []).length).toBeGreaterThanOrEqual(2);
+    expect(nbibOut).toContain("Other");
+
+    const csl = JSON.stringify([
+      { id: "a", type: "article-journal", title: "Deep nets", DOI: "10.1/x" },
+      { id: "b", type: "article-journal", title: "Deep nets", DOI: "10.1/x" },
+      { id: "c", type: "article-journal", title: "Other", DOI: "10.2/y" },
+    ]);
+    const cslOut = JSON.parse(await (await run("csl-json-dedupe", f("l.json", csl, "application/json"))).blob.text());
+    expect(cslOut).toHaveLength(2);
+
+    const enw = "%0 Journal Article\n%T Deep nets\n%R 10.1/x\n\n%0 Journal Article\n%T Deep nets\n%R 10.1/x\n\n%0 Journal Article\n%T Other\n%R 10.2/y\n";
+    const enwOut = await (await run("enw-dedupe", f("l.enw", enw, "application/x-endnote-refer"))).blob.text();
+    expect((enwOut.match(/%0 /g) ?? []).length).toBe(2);
+  });
+});

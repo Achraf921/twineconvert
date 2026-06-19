@@ -6,7 +6,7 @@ Generated 2026-06-19 from src/lib/engine/converters/.
 
 | Classification | Count |
 |---|---:|
-| Total converters | 697 |
+| Total converters | 701 |
 | **Bijective candidates** (lossless, same-kind, both directions exist) | 256 |
 | **Bijective candidates missing reverse converter** | 40 |
 | **Bijective candidates missing round-trip test** | 27 |
@@ -14,7 +14,7 @@ Generated 2026-06-19 from src/lib/engine/converters/.
 | Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 79 |
 | Single-action (no reverse possible) | 53 |
 | Unknown formats (need to add to FORMATS table) | 146 |
-| Compound id (irregular pattern) | 2 |
+| Compound id (irregular pattern) | 6 |
 
 ## Action Items
 
@@ -317,6 +317,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `cmyk-to-rgb` | lossy-encoding | ✓ | ✓ | cmyk or rgb uses lossy encoding |
 | `color-name-to-hex` | cross-kind | ✓ | ✓ | color -> palette: cross-domain, inherently lossy |
 | `compress-pdf` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
+| `csl-json-dedupe` | compound | n/a | ✓ | irregular id pattern |
 | `csl-json-to-acs` | unknown-format | (`acs-to-csl-json` missing) | n/a | unknown format: acs |
 | `csl-json-to-ama` | unknown-format | (`ama-to-csl-json` missing) | n/a | unknown format: ama |
 | `csl-json-to-apa` | unknown-format | (`apa-to-csl-json` missing) | ✓ | unknown format: apa |
@@ -342,6 +343,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `csp-to-3dl` | bijective-candidate | ✓ | ✓ | both lossless lut formats; should round-trip cleanly |
 | `csp-to-cube` | bijective-candidate | ✓ | ✓ | both lossless lut formats; should round-trip cleanly |
 | `css-to-ase` | bijective-candidate | ✓ | ✓ | both lossless palette formats; should round-trip cleanly |
+| `csv-dedupe` | compound | n/a | ✓ | irregular id pattern |
 | `csv-to-acs` | unknown-format | (`acs-to-csv` missing) | n/a | unknown format: acs |
 | `csv-to-adif` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-ama` | unknown-format | (`ama-to-csv` missing) | ✓ | unknown format: ama |
@@ -423,6 +425,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `endnote-xml-to-xlsx` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `endnote-xml-to-yaml` | bijective-candidate | (`yaml-to-endnote-xml` missing) | n/a | both lossless data formats; should round-trip cleanly |
 | `env-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `enw-dedupe` | compound | n/a | ✓ | irregular id pattern |
 | `enw-to-acs` | unknown-format | (`acs-to-enw` missing) | n/a | unknown format: acs |
 | `enw-to-ama` | unknown-format | (`ama-to-enw` missing) | n/a | unknown format: ama |
 | `enw-to-apa` | unknown-format | (`apa-to-enw` missing) | ✓ | unknown format: apa |
@@ -664,6 +667,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `musicxml-to-svg` | cross-kind | (`svg-to-musicxml` missing) | ✓ | notation -> vector: cross-domain, inherently lossy |
 | `mxl-to-musicxml` | bijective-candidate | ✓ | ✓ | both lossless notation formats; should round-trip cleanly |
 | `mxl-to-svg` | cross-kind | (`svg-to-mxl` missing) | ✓ | notation -> vector: cross-domain, inherently lossy |
+| `nbib-dedupe` | compound | n/a | ✓ | irregular id pattern |
 | `nbib-to-acs` | unknown-format | (`acs-to-nbib` missing) | ✓ | unknown format: acs |
 | `nbib-to-ama` | unknown-format | (`ama-to-nbib` missing) | ✓ | unknown format: ama |
 | `nbib-to-apa` | unknown-format | (`apa-to-nbib` missing) | ✓ | unknown format: apa |

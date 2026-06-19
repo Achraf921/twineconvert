@@ -5770,6 +5770,56 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "application/x-research-info-systems",
     "maxFileSizeBytes": 104857600
   },
+  "csv-dedupe": {
+    "label": "CSV Deduplicate",
+    "accept": [
+      ".csv"
+    ],
+    "fromMime": [
+      "text/csv",
+      "application/csv",
+      "text/plain"
+    ],
+    "toMime": "text/csv",
+    "maxFileSizeBytes": 104857600
+  },
+  "nbib-dedupe": {
+    "label": "NBIB Deduplicate",
+    "accept": [
+      ".nbib"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "application/x-research-info-systems",
+    "maxFileSizeBytes": 104857600
+  },
+  "csl-json-dedupe": {
+    "label": "CSL-JSON Deduplicate",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/vnd.citationstyles.csl+json",
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "application/json",
+    "maxFileSizeBytes": 104857600
+  },
+  "enw-dedupe": {
+    "label": "EndNote Deduplicate",
+    "accept": [
+      ".enw"
+    ],
+    "fromMime": [
+      "application/x-endnote-refer",
+      "text/plain"
+    ],
+    "toMime": "application/x-endnote-refer",
+    "maxFileSizeBytes": 104857600
+  },
   "bibtex-to-xlsx": {
     "label": "BibTeX → XLSX",
     "accept": [
