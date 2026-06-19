@@ -36,6 +36,7 @@
     "bencode": "^4.0.1",
     "cbor-x": "^1.6.4",
     "chess.js": "^1.4.0",
+    "citeproc": "^2.4.63",
     "culori": "^4.0.2",
     "docx": "^9.6.1",
     "dompurify": "^3.4.2",

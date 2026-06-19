@@ -66,7 +66,10 @@ const REVERSE_TYPE_MAP: Record<CitationType, string> = {
 const NBIB_TO_RIS: Record<string, string> = {
   TI: "TI",
   AU: "AU",
-  FAU: "AU",
+  // FAU (full author name) is intentionally NOT mapped to AU. PubMed lists
+  // both forms per author ("FAU - Smith, John A" then "AU - Smith JA"), so
+  // collapsing them duplicated every author. FAU is handled separately and
+  // preferred over AU at flush time.
   AD: "AD",
   TA: "JO",
   JT: "T2",
@@ -109,6 +112,7 @@ function pubMedPtToType(pt: string): CitationType | undefined {
 
 type CurrentRecord = Partial<Citation> & {
   _authors: string[];
+  _fau: string[];
   _keywords: string[];
 };
 
@@ -119,7 +123,7 @@ export function parseRis(text: string): Citation[] {
 
   const ensureRecord = () => {
     if (!current) {
-      current = { _authors: [], _keywords: [] };
+      current = { _authors: [], _fau: [], _keywords: [] };
     }
   };
 
@@ -132,7 +136,9 @@ export function parseRis(text: string): Citation[] {
    */
   const flushCurrent = () => {
     if (!current) return;
-    const authors = current._authors;
+    // Prefer full author names (FAU) over abbreviated (AU) when PubMed
+    // supplied both; otherwise fall back to whatever author lines existed.
+    const authors = current._fau.length ? current._fau : current._authors;
     const keywords = current._keywords;
     const hasContent = !!(
       current.title ||
@@ -261,6 +267,11 @@ export function parseRis(text: string): Citation[] {
       case "A2":
         current!._authors.push(value);
         break;
+      case "FAU":
+        // PubMed full author name ("Last, First"). Preferred over the
+        // abbreviated AU form for the same author; see NBIB_TO_RIS note.
+        current!._fau.push(value);
+        break;
       case "TI":
       case "T1":
         current!.title = value;
@@ -278,7 +289,19 @@ export function parseRis(text: string): Citation[] {
       case "VL":
         current!.volume = value;
         break;
-      case "IS":
+      case "IS": {
+        // Tag collision: RIS "IS" means issue, but MEDLINE "IS" means ISSN
+        // (e.g. "0028-0836 (Electronic)"). Disambiguate by shape: an ISSN is
+        // four digits, a hyphen, three digits and a check digit, optionally
+        // followed by a "(Print)"/"(Electronic)" qualifier. Anything else is
+        // an issue number.
+        if (/^\d{4}-\d{3}[\dxX](\s*\((Print|Electronic|Linking)\))?\s*$/.test(value)) {
+          current!.issn = value.replace(/\s*\((Print|Electronic|Linking)\)\s*$/i, "").trim();
+        } else {
+          current!.issue = value;
+        }
+        break;
+      }
       case "CP":
         current!.issue = value;
         break;

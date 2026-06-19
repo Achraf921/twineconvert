@@ -917,6 +917,10 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "yaml-to-bibtex":      { provider: () => text("refs.yaml", F.cslYaml, "application/x-yaml"), env: "node" },
   "bibtex-to-markdown":  { provider: () => text("refs.bib", F.bibtex, "application/x-bibtex"), env: "node" },
   "bibtex-to-html":      { provider: () => text("refs.bib", F.bibtex, "application/x-bibtex"), env: "node" },
+  "bibtex-to-apa":       { provider: () => text("refs.bib", F.bibtex, "application/x-bibtex"), env: "node" },
+  "ris-to-apa":          { provider: () => text("refs.ris", F.ris, "application/x-research-info-systems"), env: "node" },
+  "nbib-to-apa":         { provider: () => text("refs.nbib", F.nbibRealPubMed, "application/x-research-info-systems"), env: "node" },
+  "csl-json-to-apa":     { provider: () => text("refs.json", F.cslJson, "application/json"), env: "node" },
 };
 
 /** True if we have any fixture for this id (even if it requires browser). */

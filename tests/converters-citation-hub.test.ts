@@ -10,6 +10,7 @@
 
 import { describe, it, expect } from "vitest";
 import { run } from "../src/lib/engine/runner";
+import { parseRis } from "../src/lib/engine/util/ris";
 import { FIXTURES, fileFromText } from "./fixtures/text-fixtures";
 import { fileFromBytes, makeTinyCitationXlsx, makeTinyCitationOds, makeTinyXlsx } from "./fixtures/binary-fixtures";
 
@@ -840,4 +841,58 @@ describe("csv-to-* citation family: consistent RIS-file redirect", () => {
       expect(out).toContain("Real Paper");
     });
   }
+});
+
+describe("citation style output: APA via citeproc (correct by construction)", () => {
+  // These routes render a real APA 7th-edition reference list with the
+  // official CSL style + citeproc-js. We assert the canonical APA shape,
+  // not just "non-empty", since wrong citations are worse than none for an
+  // academic audience.
+  it("bibtex-to-apa renders APA and normalizes the LaTeX page dash", async () => {
+    const out = await (await run("bibtex-to-apa", f("a.bib", F.bibtex, "text/x-bibtex"))).blob.text();
+    expect(out).toMatch(/Smith, J\., & Doe, J\. \(2024\)\./);
+    expect(out).toContain("A Sample Paper");
+    expect(out).toMatch(/45–67/); // en-dash, not "45--67"
+    expect(out).not.toContain("45--67");
+  });
+
+  it("ris-to-apa renders the same canonical APA entry", async () => {
+    const out = await (await run("ris-to-apa", f("a.ris", F.ris, "application/x-research-info-systems"))).blob.text();
+    expect(out).toMatch(/Smith, J\., & Doe, J\. \(2024\)\./);
+    expect(out).toMatch(/45–67/);
+  });
+
+  it("csl-json-to-apa formats and alphabetizes entries", async () => {
+    const out = await (await run("csl-json-to-apa", f("a.json", F.cslJson, "application/json"))).blob.text();
+    expect(out).toContain("Brown, A. (2023).");
+    expect(out).toMatch(/Smith, J\., & Doe, J\. \(2024\)\./);
+    // APA sorts by author surname: Brown before Smith.
+    expect(out.indexOf("Brown")).toBeLessThan(out.indexOf("Smith"));
+  });
+
+  it("nbib-to-apa renders clean APA with no duplicate author and no ISSN-as-issue", async () => {
+    const out = await (await run("nbib-to-apa", f("a.nbib", F.nbibRealPubMed, "application/x-research-info-systems"))).blob.text();
+    expect(out).toContain("Garcia, M. C.");
+    expect(out).not.toContain("MC, G."); // the old FAU/AU duplication
+    expect(out).not.toContain("0028-0836"); // ISSN must not leak into the issue slot
+    expect(out).toMatch(/Nature, 565, 234–241/);
+  });
+});
+
+describe("NBIB parser: PubMed tag-collision fixes", () => {
+  it("prefers the full author name (FAU) and does not duplicate authors", () => {
+    const c = parseRis(F.nbibRealPubMed);
+    const garcia = c.find((x) => x.authors?.some((a) => a.startsWith("Garcia")));
+    expect(garcia).toBeDefined();
+    // Exactly one Garcia author, in full "Last, First" form (not "Garcia MC").
+    expect(garcia!.authors).toContain("Garcia, Maria C");
+    expect(garcia!.authors!.filter((a) => a.toLowerCase().includes("garcia")).length).toBe(1);
+  });
+
+  it("reads MEDLINE IS as ISSN, not as the issue number", () => {
+    const c = parseRis(F.nbibRealPubMed);
+    const garcia = c.find((x) => x.authors?.some((a) => a.startsWith("Garcia")))!;
+    expect(garcia.issn).toMatch(/0028-0836/);
+    expect(garcia.issue ?? "").not.toMatch(/0028-0836/);
+  });
 });
