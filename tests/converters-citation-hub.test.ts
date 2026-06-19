@@ -932,3 +932,59 @@ describe("citation style output: MLA + Chicago via citeproc", () => {
     expect(out.indexOf("Brown")).toBeLessThan(out.indexOf("Smith"));
   });
 });
+
+describe("citation style output: CSV + XLSX sources (excel/csv to apa/mla/chicago)", () => {
+  // Researchers keep references in spreadsheets and search "excel to apa".
+  // The CSV reader's alias coverage (Scopus/Zotero) flows straight into the
+  // style renderer. A row with a journal but no explicit type must render as
+  // a journal article, not a generic "In <journal>" document.
+  const CSV =
+    "title,authors,year,journal,volume,pages,doi\n" +
+    'A Sample Paper,"Smith, John; Doe, Jane",2024,Nature,123,45-67,10.1038/x\n';
+
+  it("csv-to-apa renders a journal article (inferred type), not a document", async () => {
+    const out = await (await run("csv-to-apa", f("a.csv", CSV, "text/csv"))).blob.text();
+    expect(out).toMatch(/Smith, J\., & Doe, J\. \(2024\)\. A Sample Paper\. Nature, 123, 45–67\./);
+    expect(out).not.toMatch(/In Nature/); // would mean it formatted as a chapter/document
+  });
+
+  it("csv-to-mla and csv-to-chicago render their styles", async () => {
+    const mla = await (await run("csv-to-mla", f("a.csv", CSV, "text/csv"))).blob.text();
+    expect(mla).toContain("Smith, John, and Jane Doe.");
+    expect(mla).toMatch(/vol\. 123/);
+    const chi = await (await run("csv-to-chicago", f("a.csv", CSV, "text/csv"))).blob.text();
+    expect(chi).toMatch(/Smith, John, and Jane Doe\. 2024\./);
+  });
+
+  it("csv-to-apa redirects a RIS file dropped into it", async () => {
+    const ris = "TY  - JOUR\nTI  - Already RIS\nAU  - Doe J\nER  -\n";
+    await expect(run("csv-to-apa", f("x.ris", ris, "text/csv"))).rejects.toThrow(/already in RIS format/i);
+  });
+
+  it("xlsx-to-apa reads a spreadsheet of references and renders APA", async () => {
+    const r = await run("xlsx-to-apa", fileFromBytes("refs.xlsx", await makeTinyCitationXlsx(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+    const out = await r.blob.text();
+    expect(out.length).toBeGreaterThan(20);
+    expect(out).toMatch(/\(\d{4}\)/); // an APA year appears
+  });
+});
+
+describe("citation-csv: type inference and Zotero/CSL type words", () => {
+  it("infers article from a journal column when no type is given", async () => {
+    const { citationsFromCsv } = await import("../src/lib/engine/util/citation-csv");
+    const c = await citationsFromCsv("title,authors,year,journal\nT,Smith J,2024,Nature\n");
+    expect(c[0].type).toBe("article");
+  });
+
+  it("maps Zotero 'journalArticle' item type to article", async () => {
+    const { citationsFromCsv } = await import("../src/lib/engine/util/citation-csv");
+    const c = await citationsFromCsv("Item Type,Title,Author,Publication Year\njournalArticle,T,Doe R,2023\n");
+    expect(c[0].type).toBe("article");
+  });
+
+  it("infers book from publisher/ISBN when no journal", async () => {
+    const { citationsFromCsv } = await import("../src/lib/engine/util/citation-csv");
+    const c = await citationsFromCsv("title,authors,year,publisher,isbn\nA Book,Brown A,2023,MIT Press,978-0-262\n");
+    expect(c[0].type).toBe("book");
+  });
+});

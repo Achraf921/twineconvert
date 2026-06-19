@@ -22,6 +22,23 @@ const CITATION_TYPES: CitationType[] = [
 ];
 
 /**
+ * Real-world type strings (Zotero "Item Type", Scopus "Document Type", CSL
+ * types) that are not our canonical names. Keyed by the value lowercased
+ * with non-letters stripped, so "journalArticle", "Journal Article" and
+ * "journal-article" all collapse to "journalarticle".
+ */
+const TYPE_WORD_MAP: Record<string, CitationType> = {
+  journalarticle: "article", magazinearticle: "article", newspaperarticle: "article",
+  articlejournal: "article", review: "article", letter: "article",
+  booksection: "inbook", bookchapter: "inbook", chapter: "inbook",
+  conferencepaper: "inproceedings", conferenceproceedings: "inproceedings",
+  proceedings: "inproceedings", paperconference: "inproceedings",
+  dissertation: "thesis", phdthesis: "thesis", mastersthesis: "thesis",
+  techreport: "report", workingpaper: "report",
+  webpage: "online", website: "online", blogpost: "online",
+};
+
+/**
  * Canonical citation fields we read from a row, plus the synthetic
  * "date" column (parsed for a 4-digit year when no explicit year
  * column exists).
@@ -206,8 +223,21 @@ export async function citationsFromCsv(text: string): Promise<Citation[]> {
     if (!row || typeof row !== "object") continue;
 
     const id = (get(row, "id") || `cite-${idx}`).trim();
-    const typeRaw = (get(row, "type") ?? "misc").toLowerCase() as CitationType;
-    const type: CitationType = CITATION_TYPES.includes(typeRaw) ? typeRaw : "misc";
+    const typeRaw = (get(row, "type") ?? "").toLowerCase().replace(/[^a-z]/g, "");
+    let type: CitationType;
+    if (CITATION_TYPES.includes(typeRaw as CitationType)) {
+      type = typeRaw as CitationType;
+    } else if (TYPE_WORD_MAP[typeRaw]) {
+      type = TYPE_WORD_MAP[typeRaw];
+    } else {
+      // No usable type column: infer from the fields present so the record
+      // formats correctly (a row with a journal is a journal article, not a
+      // generic "misc"/document). Matters most for the to-style renderers.
+      if (get(row, "journal")) type = "article";
+      else if (get(row, "booktitle")) type = "inbook";
+      else if (get(row, "isbn") || get(row, "publisher")) type = "book";
+      else type = "misc";
+    }
 
     // Year: explicit year column wins; otherwise pull the first 4-digit
     // run out of a date column ("2006-03-01" / "Mar 2006" → "2006").

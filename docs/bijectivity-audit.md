@@ -6,14 +6,14 @@ Generated 2026-06-19 from src/lib/engine/converters/.
 
 | Classification | Count |
 |---|---:|
-| Total converters | 577 |
+| Total converters | 583 |
 | **Bijective candidates** (lossless, same-kind, both directions exist) | 256 |
 | **Bijective candidates missing reverse converter** | 40 |
 | **Bijective candidates missing round-trip test** | 27 |
 | Lossy encoding (same kind, but lossy format) | 121 |
 | Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 79 |
 | Single-action (no reverse possible) | 53 |
-| Unknown formats (need to add to FORMATS table) | 28 |
+| Unknown formats (need to add to FORMATS table) | 34 |
 | Compound id (irregular pattern) | 0 |
 
 ## Action Items
@@ -28,6 +28,9 @@ The audit script doesn't know about these formats; add them to the FORMATS table
 - `csl-json-to-apa` (unknown format: apa)
 - `csl-json-to-chicago` (unknown format: chicago)
 - `csl-json-to-mla` (unknown format: mla)
+- `csv-to-apa` (unknown format: apa)
+- `csv-to-chicago` (unknown format: chicago)
+- `csv-to-mla` (unknown format: mla)
 - `nbib-to-apa` (unknown format: apa)
 - `nbib-to-chicago` (unknown format: chicago)
 - `nbib-to-mla` (unknown format: mla)
@@ -50,6 +53,9 @@ The audit script doesn't know about these formats; add them to the FORMATS table
 - `ris-to-apa` (unknown format: apa)
 - `ris-to-chicago` (unknown format: chicago)
 - `ris-to-mla` (unknown format: mla)
+- `xlsx-to-apa` (unknown format: apa)
+- `xlsx-to-chicago` (unknown format: chicago)
+- `xlsx-to-mla` (unknown format: mla)
 
 ### 2. Bijective converters MISSING their reverse pair
 
@@ -210,7 +216,9 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `csp-to-cube` | bijective-candidate | ✓ | ✓ | both lossless lut formats; should round-trip cleanly |
 | `css-to-ase` | bijective-candidate | ✓ | ✓ | both lossless palette formats; should round-trip cleanly |
 | `csv-to-adif` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `csv-to-apa` | unknown-format | (`apa-to-csv` missing) | ✓ | unknown format: apa |
 | `csv-to-bibtex` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `csv-to-chicago` | unknown-format | (`chicago-to-csv` missing) | ✓ | unknown format: chicago |
 | `csv-to-csl-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-dat` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-endnote-xml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
@@ -223,6 +231,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `csv-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-jsonl` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-markdown-table` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `csv-to-mla` | unknown-format | (`mla-to-csv` missing) | ✓ | unknown format: mla |
 | `csv-to-mods` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-nbib` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-ods` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
@@ -682,7 +691,9 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `wos-to-ris` | lossy-encoding | (`ris-to-wos` missing) | ✓ | wos or ris uses lossy encoding |
 | `wos-to-xlsx` | lossy-encoding | (`xlsx-to-wos` missing) | ✓ | wos or xlsx uses lossy encoding |
 | `wos-to-yaml` | lossy-encoding | (`yaml-to-wos` missing) | n/a | wos or yaml uses lossy encoding |
+| `xlsx-to-apa` | unknown-format | (`apa-to-xlsx` missing) | ✓ | unknown format: apa |
 | `xlsx-to-bibtex` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `xlsx-to-chicago` | unknown-format | (`chicago-to-xlsx` missing) | n/a | unknown format: chicago |
 | `xlsx-to-csl-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `xlsx-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `xlsx-to-endnote-xml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
@@ -690,6 +701,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `xlsx-to-html-table` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `xlsx-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `xlsx-to-markdown-table` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `xlsx-to-mla` | unknown-format | (`mla-to-xlsx` missing) | n/a | unknown format: mla |
 | `xlsx-to-nbib` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `xlsx-to-ods` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `xlsx-to-ris` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |

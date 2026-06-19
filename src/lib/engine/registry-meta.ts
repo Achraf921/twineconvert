@@ -4247,6 +4247,78 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "text/plain",
     "maxFileSizeBytes": 104857600
   },
+  "csv-to-apa": {
+    "label": "CSV → APA",
+    "accept": [
+      ".csv"
+    ],
+    "fromMime": [
+      "text/csv",
+      "application/csv",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "csv-to-mla": {
+    "label": "CSV → MLA",
+    "accept": [
+      ".csv"
+    ],
+    "fromMime": [
+      "text/csv",
+      "application/csv",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "csv-to-chicago": {
+    "label": "CSV → Chicago",
+    "accept": [
+      ".csv"
+    ],
+    "fromMime": [
+      "text/csv",
+      "application/csv",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "xlsx-to-apa": {
+    "label": "XLSX → APA",
+    "accept": [
+      ".xlsx"
+    ],
+    "fromMime": [
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "xlsx-to-mla": {
+    "label": "XLSX → MLA",
+    "accept": [
+      ".xlsx"
+    ],
+    "fromMime": [
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
+  "xlsx-to-chicago": {
+    "label": "XLSX → Chicago",
+    "accept": [
+      ".xlsx"
+    ],
+    "fromMime": [
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 104857600
+  },
   "bibtex-to-xlsx": {
     "label": "BibTeX → XLSX",
     "accept": [

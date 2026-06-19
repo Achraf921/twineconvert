@@ -50,6 +50,12 @@ import {
   makeTinyBencode,
 } from "./binary-fixtures";
 
+/** A small, valid citation CSV (real title/author/year/journal columns) for
+ *  the csv-to-<style> generator fixtures, which need parseable references. */
+const CITATION_CSV_FIXTURE =
+  "title,authors,year,journal,volume,pages,doi\n" +
+  'A Sample Paper,"Smith, John; Doe, Jane",2024,Nature,123,45-67,10.1038/sample.2024.001\n';
+
 export type FixtureProvider = () => Promise<File>;
 
 /** Whether the converter requires a real browser environment to test
@@ -929,6 +935,12 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "ris-to-chicago":      { provider: () => text("refs.ris", F.ris, "application/x-research-info-systems"), env: "node" },
   "nbib-to-chicago":     { provider: () => text("refs.nbib", F.nbibRealPubMed, "application/x-research-info-systems"), env: "node" },
   "csl-json-to-chicago": { provider: () => text("refs.json", F.cslJson, "application/json"), env: "node" },
+  "csv-to-apa":          { provider: () => text("refs.csv", CITATION_CSV_FIXTURE, "text/csv"), env: "node" },
+  "csv-to-mla":          { provider: () => text("refs.csv", CITATION_CSV_FIXTURE, "text/csv"), env: "node" },
+  "csv-to-chicago":      { provider: () => text("refs.csv", CITATION_CSV_FIXTURE, "text/csv"), env: "node" },
+  "xlsx-to-apa":         { provider: async () => fileFromBytes("refs.xlsx", await makeTinyCitationXlsx(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"), env: "node" },
+  "xlsx-to-mla":         { provider: async () => fileFromBytes("refs.xlsx", await makeTinyCitationXlsx(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"), env: "node" },
+  "xlsx-to-chicago":     { provider: async () => fileFromBytes("refs.xlsx", await makeTinyCitationXlsx(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"), env: "node" },
 };
 
 /** True if we have any fixture for this id (even if it requires browser). */
