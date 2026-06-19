@@ -6,14 +6,14 @@ Generated 2026-06-19 from src/lib/engine/converters/.
 
 | Classification | Count |
 |---|---:|
-| Total converters | 595 |
+| Total converters | 600 |
 | **Bijective candidates** (lossless, same-kind, both directions exist) | 256 |
 | **Bijective candidates missing reverse converter** | 40 |
 | **Bijective candidates missing round-trip test** | 27 |
 | Lossy encoding (same kind, but lossy format) | 121 |
 | Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 79 |
 | Single-action (no reverse possible) | 53 |
-| Unknown formats (need to add to FORMATS table) | 46 |
+| Unknown formats (need to add to FORMATS table) | 51 |
 | Compound id (irregular pattern) | 0 |
 
 ## Action Items
@@ -50,11 +50,16 @@ The audit script doesn't know about these formats; add them to the FORMATS table
 - `pubmed-to-nbib` (unknown format: pubmed)
 - `pubmed-to-ris` (unknown format: pubmed)
 - `pubmed-to-xlsx` (unknown format: pubmed)
+- `references-to-apa` (unknown format: references)
 - `references-to-bibtex` (unknown format: references)
+- `references-to-chicago` (unknown format: references)
 - `references-to-csl-json` (unknown format: references)
 - `references-to-csv` (unknown format: references)
 - `references-to-endnote-xml` (unknown format: references)
 - `references-to-enw` (unknown format: references)
+- `references-to-harvard` (unknown format: references)
+- `references-to-ieee` (unknown format: references)
+- `references-to-mla` (unknown format: references)
 - `references-to-nbib` (unknown format: references)
 - `references-to-ris` (unknown format: references)
 - `references-to-xlsx` (unknown format: references)
@@ -592,11 +597,16 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `qfx-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `qif-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `qif-to-ofx` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `references-to-apa` | unknown-format | (`apa-to-references` missing) | ✓ | unknown format: references |
 | `references-to-bibtex` | unknown-format | (`bibtex-to-references` missing) | ✓ | unknown format: references |
+| `references-to-chicago` | unknown-format | (`chicago-to-references` missing) | ✓ | unknown format: references |
 | `references-to-csl-json` | unknown-format | (`csl-json-to-references` missing) | ✓ | unknown format: references |
 | `references-to-csv` | unknown-format | (`csv-to-references` missing) | ✓ | unknown format: references |
 | `references-to-endnote-xml` | unknown-format | (`endnote-xml-to-references` missing) | ✓ | unknown format: references |
 | `references-to-enw` | unknown-format | (`enw-to-references` missing) | ✓ | unknown format: references |
+| `references-to-harvard` | unknown-format | (`harvard-to-references` missing) | ✓ | unknown format: references |
+| `references-to-ieee` | unknown-format | (`ieee-to-references` missing) | ✓ | unknown format: references |
+| `references-to-mla` | unknown-format | (`mla-to-references` missing) | n/a | unknown format: references |
 | `references-to-nbib` | unknown-format | (`nbib-to-references` missing) | ✓ | unknown format: references |
 | `references-to-ris` | unknown-format | (`ris-to-references` missing) | ✓ | unknown format: references |
 | `references-to-xlsx` | unknown-format | (`xlsx-to-references` missing) | ✓ | unknown format: references |

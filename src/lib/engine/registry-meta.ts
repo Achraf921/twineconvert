@@ -4469,6 +4469,61 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "text/plain",
     "maxFileSizeBytes": 104857600
   },
+  "references-to-apa": {
+    "label": "Reference List → APA",
+    "accept": [
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 10485760
+  },
+  "references-to-mla": {
+    "label": "Reference List → MLA",
+    "accept": [
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 10485760
+  },
+  "references-to-chicago": {
+    "label": "Reference List → Chicago",
+    "accept": [
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 10485760
+  },
+  "references-to-harvard": {
+    "label": "Reference List → Harvard",
+    "accept": [
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 10485760
+  },
+  "references-to-ieee": {
+    "label": "Reference List → IEEE",
+    "accept": [
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 10485760
+  },
   "bibtex-to-xlsx": {
     "label": "BibTeX → XLSX",
     "accept": [

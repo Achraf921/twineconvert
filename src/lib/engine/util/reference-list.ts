@@ -78,6 +78,37 @@ function parseAuthors(raw: string): string[] | undefined {
   return cleaned.length ? cleaned : undefined;
 }
 
+/**
+ * Pull APA-style venue details from the text that follows the title:
+ *   "Nature Methods, 12(3), 45-67."  -> journal/volume/issue/pages
+ *   "MIT Press."                     -> publisher (books only)
+ * Conservative: only sets fields on a confident match. Call this ONLY for
+ * APA-shaped entries, not IEEE ones (IEEE uses "vol."/"no."/"pp." keywords
+ * that this would mis-parse).
+ */
+function parseApaVenue(rest: string, ref: Citation, type: CitationType): void {
+  const r = rest.replace(/^[\s,.;]+/, "").trim();
+  if (!r) return;
+  // "<Journal>, <volume>(<issue>), <pages>" with issue and pages optional.
+  const m = r.match(
+    /^(.+?),\s*(\d+)\s*(?:\(([^)]+)\))?(?:,\s*([A-Za-z]?\d+(?:\s*[-–—]\s*[A-Za-z]?\d+)?))?/,
+  );
+  if (m) {
+    const jr = m[1].replace(/[*_]/g, "").trim();
+    if (jr.length > 1 && /[A-Za-z]/.test(jr) && !/^https?:/i.test(jr)) ref.journal = jr;
+    ref.volume = m[2];
+    if (m[3]) ref.issue = m[3].trim();
+    if (m[4]) ref.pages = m[4].replace(/\s*[-–—]\s*/, "-").trim();
+    return;
+  }
+  if (type === "book") {
+    const pub = r.split(/\.\s/)[0].replace(/[.,;]+$/, "").trim();
+    if (pub.length >= 2 && pub.length <= 60 && /[A-Za-z]/.test(pub) && !/\d/.test(pub) && !/^https?:/i.test(pub)) {
+      ref.publisher = pub;
+    }
+  }
+}
+
 function inferType(entry: string): CitationType {
   if (/\b(proc\.|proceedings|conf\.|conference|symposium|workshop|in\s+proc)/i.test(entry)) {
     return "inproceedings";
@@ -116,6 +147,8 @@ export function parseReferenceList(text: string): Citation[] {
         beforeTitle = apa[1];
         ref.title = apa[3].trim();
         if (!ref.year) ref.year = apa[2];
+        const rest = entry.slice((apa.index ?? 0) + apa[0].length);
+        parseApaVenue(rest, ref, inferType(entry));
       }
     }
 

@@ -56,6 +56,12 @@ const CITATION_CSV_FIXTURE =
   "title,authors,year,journal,volume,pages,doi\n" +
   'A Sample Paper,"Smith, John; Doe, Jane",2024,Nature,123,45-67,10.1038/sample.2024.001\n';
 
+/** A small plain-text reference list (APA + numbered entries) for the
+ *  references-to-<style> generator fixtures. */
+const REFERENCE_LIST_FIXTURE =
+  "Smith, J., & Doe, J. (2024). A study of deep nets. Nature Methods, 12(3), 45-67. https://doi.org/10.1038/x\n" +
+  "Brown, A. (2023). A Book on Things. MIT Press.\n";
+
 export type FixtureProvider = () => Promise<File>;
 
 /** Whether the converter requires a real browser environment to test
@@ -953,6 +959,11 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "csl-json-to-ieee":    { provider: () => text("refs.json", F.cslJson, "application/json"), env: "node" },
   "csv-to-ieee":         { provider: () => text("refs.csv", CITATION_CSV_FIXTURE, "text/csv"), env: "node" },
   "xlsx-to-ieee":        { provider: async () => fileFromBytes("refs.xlsx", await makeTinyCitationXlsx(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"), env: "node" },
+  "references-to-apa":     { provider: () => text("refs.txt", REFERENCE_LIST_FIXTURE, "text/plain"), env: "node" },
+  "references-to-mla":     { provider: () => text("refs.txt", REFERENCE_LIST_FIXTURE, "text/plain"), env: "node" },
+  "references-to-chicago": { provider: () => text("refs.txt", REFERENCE_LIST_FIXTURE, "text/plain"), env: "node" },
+  "references-to-harvard": { provider: () => text("refs.txt", REFERENCE_LIST_FIXTURE, "text/plain"), env: "node" },
+  "references-to-ieee":    { provider: () => text("refs.txt", REFERENCE_LIST_FIXTURE, "text/plain"), env: "node" },
 };
 
 /** True if we have any fixture for this id (even if it requires browser). */

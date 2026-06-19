@@ -1017,3 +1017,44 @@ describe("citation style output: Harvard + IEEE via citeproc", () => {
     expect(x).toMatch(/^\[1\]/);
   });
 });
+
+describe("references-to-<style>: reformat a pasted reference list", () => {
+  const TXT =
+    "Smith, J., & Doe, J. (2024). A study of deep nets. Nature Methods, 12(3), 45-67. https://doi.org/10.1038/x\n" +
+    "Brown, A. (2023). A Book on Things. MIT Press.\n";
+
+  it("references-to-apa keeps the journal and the book publisher", async () => {
+    const out = await (await run("references-to-apa", f("a.txt", TXT, "text/plain"))).blob.text();
+    expect(out).toMatch(/Smith, J\., & Doe, J\. \(2024\)\. A study of deep nets\. Nature Methods/);
+    expect(out).toContain("MIT Press.");
+  });
+
+  it("references-to-ieee carries volume/issue/pages parsed from the prose", async () => {
+    const out = await (await run("references-to-ieee", f("a.txt", TXT, "text/plain"))).blob.text();
+    expect(out).toMatch(/Nature Methods, vol\. 12, no\. 3, pp\. 45–67/);
+  });
+
+  it("references-to-chicago and -harvard render their styles", async () => {
+    const chi = await (await run("references-to-chicago", f("a.txt", TXT, "text/plain"))).blob.text();
+    expect(chi).toMatch(/Smith, J\., and J\. Doe\. 2024\./);
+    const harv = await (await run("references-to-harvard", f("a.txt", TXT, "text/plain"))).blob.text();
+    expect(harv).toMatch(/Smith, J\. and Doe, J\. \(2024\)/);
+  });
+});
+
+describe("reference-list parser: APA venue extraction", () => {
+  it("extracts journal/volume/issue/pages from APA prose and publisher for books", async () => {
+    const { parseReferenceList } = await import("../src/lib/engine/util/reference-list");
+    const c = parseReferenceList(
+      "Smith, J., & Doe, J. (2024). A study of deep nets. Nature Methods, 12(3), 45-67.\n" +
+      "Brown, A. (2023). A Book on Things. MIT Press.\n",
+    );
+    const art = c.find((x) => x.type === "article")!;
+    expect(art.journal).toBe("Nature Methods");
+    expect(art.volume).toBe("12");
+    expect(art.issue).toBe("3");
+    expect(art.pages).toBe("45-67");
+    const book = c.find((x) => x.type === "book")!;
+    expect(book.publisher).toBe("MIT Press");
+  });
+});
