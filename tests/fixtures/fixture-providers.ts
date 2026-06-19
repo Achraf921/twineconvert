@@ -56,6 +56,18 @@ const CITATION_CSV_FIXTURE =
   "title,authors,year,journal,volume,pages,doi\n" +
   'A Sample Paper,"Smith, John; Doe, Jane",2024,Nature,123,45-67,10.1038/sample.2024.001\n';
 
+/** A BibTeX library containing a duplicate (same DOI) for the dedupe fixture. */
+const DUP_BIBTEX_FIXTURE =
+  "@article{a1,\n  title={Deep nets},\n  author={Smith, John},\n  year={2024},\n  doi={10.1/x}\n}\n" +
+  "@article{a2,\n  title={Deep Nets.},\n  author={Smith, J.},\n  year={2024},\n  doi={10.1/X}\n}\n" +
+  "@article{b1,\n  title={Another paper},\n  author={Doe, Jane},\n  year={2023},\n  doi={10.2/y}\n}\n";
+
+/** A RIS library with a duplicate (same DOI) for the dedupe fixture. */
+const DUP_RIS_FIXTURE =
+  "TY  - JOUR\nTI  - Deep nets\nAU  - Smith, John\nPY  - 2024\nDO  - 10.1/x\nER  -\n" +
+  "TY  - JOUR\nTI  - Deep Nets.\nAU  - Smith, J.\nPY  - 2024\nDO  - 10.1/X\nER  -\n" +
+  "TY  - JOUR\nTI  - Another paper\nAU  - Doe, Jane\nPY  - 2023\nDO  - 10.2/y\nER  -\n";
+
 /** A small plain-text reference list (APA + numbered entries) for the
  *  references-to-<style> generator fixtures. */
 const REFERENCE_LIST_FIXTURE =
@@ -1059,6 +1071,8 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "marcxml-to-acs":      { provider: () => text("catalog.marcxml", MARC_SAMPLE, "application/marcxml+xml"), env: "node" },
   "marcxml-to-asa":      { provider: () => text("catalog.marcxml", MARC_SAMPLE, "application/marcxml+xml"), env: "node" },
   "marcxml-to-vancouver": { provider: () => text("catalog.marcxml", MARC_SAMPLE, "application/marcxml+xml"), env: "node" },
+  "bibtex-dedupe": { provider: () => text("lib.bib", DUP_BIBTEX_FIXTURE, "application/x-bibtex"), env: "node" },
+  "ris-dedupe": { provider: () => text("lib.ris", DUP_RIS_FIXTURE, "application/x-research-info-systems"), env: "node" },
 };
 
 /** True if we have any fixture for this id (even if it requires browser). */

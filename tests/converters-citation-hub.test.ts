@@ -1201,3 +1201,54 @@ describe("citation style output: RefWorks/WoS/MODS/MARCXML sources", () => {
     expect(ma).toMatch(/\(\d{4}\)/);
   });
 });
+
+describe("citation de-duplication", () => {
+  const DUP_BIB =
+    "@article{a1,\n  title={Deep nets},\n  author={Smith, John},\n  year={2024},\n  doi={10.1/x}\n}\n" +
+    "@article{a2,\n  title={Deep Nets.},\n  author={Smith, J.},\n  year={2024},\n  doi={10.1/X}\n}\n" +
+    "@article{b1,\n  title={Another paper},\n  author={Doe, Jane},\n  year={2023},\n  doi={10.2/y}\n}\n";
+
+  it("dedupeCitations removes same-DOI and same-title+year duplicates", async () => {
+    const { dedupeCitations } = await import("../src/lib/engine/util/citation-dedupe");
+    const byDoi = dedupeCitations([
+      { id: "1", type: "article", title: "A", doi: "10.1/x" },
+      { id: "2", type: "article", title: "A variant title", doi: "10.1/X" }, // same DOI, different case
+      { id: "3", type: "article", title: "B", doi: "10.2/y" },
+    ]);
+    expect(byDoi.removed).toBe(1);
+    expect(byDoi.citations).toHaveLength(2);
+
+    const byTitle = dedupeCitations([
+      { id: "1", type: "article", title: "Deep Nets!", year: "2024" },
+      { id: "2", type: "article", title: "deep   nets", year: "2024" }, // same normalized title+year
+      { id: "3", type: "article", title: "Deep Nets", year: "2023" }, // different year -> kept
+    ]);
+    expect(byTitle.removed).toBe(1);
+    expect(byTitle.citations).toHaveLength(2);
+  });
+
+  it("never drops records with no DOI and no title", async () => {
+    const { dedupeCitations } = await import("../src/lib/engine/util/citation-dedupe");
+    const r = dedupeCitations([
+      { id: "1", type: "misc" },
+      { id: "2", type: "misc" },
+    ]);
+    expect(r.removed).toBe(0);
+    expect(r.citations).toHaveLength(2);
+  });
+
+  it("bibtex-dedupe collapses a 3-entry library with one duplicate to 2 entries", async () => {
+    const out = await (await run("bibtex-dedupe", f("lib.bib", DUP_BIB, "application/x-bibtex"))).blob.text();
+    expect((out.match(/@\w+\{/g) ?? []).length).toBe(2);
+    expect(out).toContain("Another paper");
+  });
+
+  it("ris-dedupe keeps both distinct refs and drops the duplicate", async () => {
+    const ris =
+      "TY  - JOUR\nTI  - Deep nets\nDO  - 10.1/x\nPY  - 2024\nER  -\n" +
+      "TY  - JOUR\nTI  - Deep nets\nDO  - 10.1/x\nPY  - 2024\nER  -\n" +
+      "TY  - JOUR\nTI  - Other\nDO  - 10.2/y\nPY  - 2023\nER  -\n";
+    const out = await (await run("ris-dedupe", f("lib.ris", ris, "application/x-research-info-systems"))).blob.text();
+    expect((out.match(/^TY {2}- /gm) ?? []).length).toBe(2);
+  });
+});
