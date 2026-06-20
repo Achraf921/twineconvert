@@ -6060,6 +6060,162 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "application/x-bibtex",
     "maxFileSizeBytes": 104857600
   },
+  "bibtex-to-apa-html": {
+    "label": "BibTeX -> APA (HTML)",
+    "accept": [
+      ".bib",
+      ".bibtex"
+    ],
+    "fromMime": [
+      "application/x-bibtex",
+      "text/x-bibtex",
+      "text/plain"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 104857600
+  },
+  "bibtex-to-mla-html": {
+    "label": "BibTeX -> MLA (HTML)",
+    "accept": [
+      ".bib",
+      ".bibtex"
+    ],
+    "fromMime": [
+      "application/x-bibtex",
+      "text/x-bibtex",
+      "text/plain"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 104857600
+  },
+  "bibtex-to-chicago-html": {
+    "label": "BibTeX -> Chicago (HTML)",
+    "accept": [
+      ".bib",
+      ".bibtex"
+    ],
+    "fromMime": [
+      "application/x-bibtex",
+      "text/x-bibtex",
+      "text/plain"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 104857600
+  },
+  "bibtex-to-harvard-html": {
+    "label": "BibTeX -> Harvard (HTML)",
+    "accept": [
+      ".bib",
+      ".bibtex"
+    ],
+    "fromMime": [
+      "application/x-bibtex",
+      "text/x-bibtex",
+      "text/plain"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 104857600
+  },
+  "ris-to-apa-html": {
+    "label": "RIS -> APA (HTML)",
+    "accept": [
+      ".ris"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 104857600
+  },
+  "ris-to-mla-html": {
+    "label": "RIS -> MLA (HTML)",
+    "accept": [
+      ".ris"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 104857600
+  },
+  "ris-to-chicago-html": {
+    "label": "RIS -> Chicago (HTML)",
+    "accept": [
+      ".ris"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 104857600
+  },
+  "ris-to-harvard-html": {
+    "label": "RIS -> Harvard (HTML)",
+    "accept": [
+      ".ris"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 104857600
+  },
+  "csl-json-to-apa-html": {
+    "label": "CSL-JSON -> APA (HTML)",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/vnd.citationstyles.csl+json",
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 104857600
+  },
+  "csl-json-to-mla-html": {
+    "label": "CSL-JSON -> MLA (HTML)",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/vnd.citationstyles.csl+json",
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 104857600
+  },
+  "csl-json-to-chicago-html": {
+    "label": "CSL-JSON -> Chicago (HTML)",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/vnd.citationstyles.csl+json",
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 104857600
+  },
+  "csl-json-to-harvard-html": {
+    "label": "CSL-JSON -> Harvard (HTML)",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/vnd.citationstyles.csl+json",
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 104857600
+  },
   "bibtex-validate": {
     "label": "BibTeX Completeness Check",
     "accept": [

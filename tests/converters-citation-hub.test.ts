@@ -1429,3 +1429,22 @@ describe("bibtex-sort", () => {
     expect(out.indexOf("app2019")).toBeLessThan(out.indexOf("zeb2020"));
   });
 });
+
+describe("formatted HTML bibliography output", () => {
+  it("bibtex-to-apa-html produces a full HTML doc with italics preserved", async () => {
+    const out = await (await run("bibtex-to-apa-html", f("a.bib", F.bibtex, "text/x-bibtex"))).blob.text();
+    expect(out).toMatch(/^<!DOCTYPE html>/);
+    expect(out).toContain('<div class="csl-entry">');
+    expect(out).toMatch(/<i>Nature<\/i>/); // journal italicized
+    expect(out).toContain("Smith, J., &#38; Doe, J. (2024)");
+    expect(out).toContain("</html>");
+  });
+  it("csl-json-to-mla-html and ris-to-chicago-html render their styles as HTML", async () => {
+    const mla = await (await run("csl-json-to-mla-html", f("a.json", F.cslJson, "application/json"))).blob.text();
+    expect(mla).toContain('<div class="csl-entry">');
+    expect(mla).toMatch(/<i>Nature<\/i>/);
+    const chi = await (await run("ris-to-chicago-html", f("a.ris", F.ris, "application/x-research-info-systems"))).blob.text();
+    expect(chi).toMatch(/^<!DOCTYPE html>/);
+    expect(chi).toMatch(/Smith, John, and Jane Doe\. 2024\./);
+  });
+});

@@ -106,6 +106,38 @@ export async function renderCitationStyle(
 }
 
 /**
+ * Render a full, self-contained HTML bibliography document in the given style.
+ * Unlike the plain-text output, this keeps citeproc's italics (journal/book
+ * titles) and applies a standard hanging indent, so it pastes into Word, Google
+ * Docs or a web page with the formatting intact.
+ */
+export async function renderCitationStyleHtml(
+  citations: Citation[],
+  styleId: string,
+): Promise<string> {
+  const entries = await renderCitationStyle(citations, styleId, "html");
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>References</title>
+  <style>
+    body { font-family: Georgia, "Times New Roman", serif; max-width: 820px; margin: 2em auto; padding: 0 1em; line-height: 1.6; color: #1a1a1a; }
+    h1 { font-size: 1.4em; border-bottom: 1px solid #ccc; padding-bottom: 0.25em; }
+    .csl-entry { margin-bottom: 0.8em; padding-left: 2em; text-indent: -2em; }
+    a { color: #0066cc; text-decoration: none; word-break: break-all; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <h1>References</h1>
+${entries.trimEnd()}
+</body>
+</html>
+`;
+}
+
+/**
  * Render the IN-TEXT citation for each reference, in input order, using the
  * official CSL style (e.g. APA -> "(Smith & Doe, 2024)", IEEE -> "[1]").
  * Numeric styles are numbered sequentially across the list, so [1], [2], ...

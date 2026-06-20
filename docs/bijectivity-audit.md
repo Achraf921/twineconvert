@@ -6,14 +6,14 @@ Generated 2026-06-20 from src/lib/engine/converters/.
 
 | Classification | Count |
 |---|---:|
-| Total converters | 730 |
+| Total converters | 742 |
 | **Bijective candidates** (lossless, same-kind, both directions exist) | 256 |
 | **Bijective candidates missing reverse converter** | 40 |
 | **Bijective candidates missing round-trip test** | 27 |
 | Lossy encoding (same kind, but lossy format) | 121 |
 | Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 79 |
 | Single-action (no reverse possible) | 53 |
-| Unknown formats (need to add to FORMATS table) | 170 |
+| Unknown formats (need to add to FORMATS table) | 182 |
 | Compound id (irregular pattern) | 11 |
 
 ## Action Items
@@ -24,28 +24,36 @@ The audit script doesn't know about these formats; add them to the FORMATS table
 
 - `bibtex-to-acs` (unknown format: acs)
 - `bibtex-to-ama` (unknown format: ama)
+- `bibtex-to-apa-html` (unknown format: apa-html)
 - `bibtex-to-apa-intext` (unknown format: apa-intext)
 - `bibtex-to-apa` (unknown format: apa)
 - `bibtex-to-asa` (unknown format: asa)
+- `bibtex-to-chicago-html` (unknown format: chicago-html)
 - `bibtex-to-chicago-intext` (unknown format: chicago-intext)
 - `bibtex-to-chicago` (unknown format: chicago)
+- `bibtex-to-harvard-html` (unknown format: harvard-html)
 - `bibtex-to-harvard-intext` (unknown format: harvard-intext)
 - `bibtex-to-harvard` (unknown format: harvard)
 - `bibtex-to-ieee` (unknown format: ieee)
+- `bibtex-to-mla-html` (unknown format: mla-html)
 - `bibtex-to-mla-intext` (unknown format: mla-intext)
 - `bibtex-to-mla` (unknown format: mla)
 - `bibtex-to-nature` (unknown format: nature)
 - `bibtex-to-vancouver` (unknown format: vancouver)
 - `csl-json-to-acs` (unknown format: acs)
 - `csl-json-to-ama` (unknown format: ama)
+- `csl-json-to-apa-html` (unknown format: apa-html)
 - `csl-json-to-apa-intext` (unknown format: apa-intext)
 - `csl-json-to-apa` (unknown format: apa)
 - `csl-json-to-asa` (unknown format: asa)
+- `csl-json-to-chicago-html` (unknown format: chicago-html)
 - `csl-json-to-chicago-intext` (unknown format: chicago-intext)
 - `csl-json-to-chicago` (unknown format: chicago)
+- `csl-json-to-harvard-html` (unknown format: harvard-html)
 - `csl-json-to-harvard-intext` (unknown format: harvard-intext)
 - `csl-json-to-harvard` (unknown format: harvard)
 - `csl-json-to-ieee` (unknown format: ieee)
+- `csl-json-to-mla-html` (unknown format: mla-html)
 - `csl-json-to-mla-intext` (unknown format: mla-intext)
 - `csl-json-to-mla` (unknown format: mla)
 - `csl-json-to-nature` (unknown format: nature)
@@ -156,14 +164,18 @@ The audit script doesn't know about these formats; add them to the FORMATS table
 - `refworks-to-vancouver` (unknown format: vancouver)
 - `ris-to-acs` (unknown format: acs)
 - `ris-to-ama` (unknown format: ama)
+- `ris-to-apa-html` (unknown format: apa-html)
 - `ris-to-apa-intext` (unknown format: apa-intext)
 - `ris-to-apa` (unknown format: apa)
 - `ris-to-asa` (unknown format: asa)
+- `ris-to-chicago-html` (unknown format: chicago-html)
 - `ris-to-chicago-intext` (unknown format: chicago-intext)
 - `ris-to-chicago` (unknown format: chicago)
+- `ris-to-harvard-html` (unknown format: harvard-html)
 - `ris-to-harvard-intext` (unknown format: harvard-intext)
 - `ris-to-harvard` (unknown format: harvard)
 - `ris-to-ieee` (unknown format: ieee)
+- `ris-to-mla-html` (unknown format: mla-html)
 - `ris-to-mla-intext` (unknown format: mla-intext)
 - `ris-to-mla` (unknown format: mla)
 - `ris-to-nature` (unknown format: nature)
@@ -311,20 +323,24 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `bibtex-to-acs` | unknown-format | (`acs-to-bibtex` missing) | ✓ | unknown format: acs |
 | `bibtex-to-ama` | unknown-format | (`ama-to-bibtex` missing) | ✓ | unknown format: ama |
 | `bibtex-to-apa` | unknown-format | (`apa-to-bibtex` missing) | ✓ | unknown format: apa |
+| `bibtex-to-apa-html` | unknown-format | (`apa-html-to-bibtex` missing) | ✓ | unknown format: apa-html |
 | `bibtex-to-apa-intext` | unknown-format | (`apa-intext-to-bibtex` missing) | ✓ | unknown format: apa-intext |
 | `bibtex-to-asa` | unknown-format | (`asa-to-bibtex` missing) | ✓ | unknown format: asa |
 | `bibtex-to-chicago` | unknown-format | (`chicago-to-bibtex` missing) | ✓ | unknown format: chicago |
+| `bibtex-to-chicago-html` | unknown-format | (`chicago-html-to-bibtex` missing) | n/a | unknown format: chicago-html |
 | `bibtex-to-chicago-intext` | unknown-format | (`chicago-intext-to-bibtex` missing) | n/a | unknown format: chicago-intext |
 | `bibtex-to-csl-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `bibtex-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `bibtex-to-endnote-xml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `bibtex-to-enw` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
 | `bibtex-to-harvard` | unknown-format | (`harvard-to-bibtex` missing) | ✓ | unknown format: harvard |
+| `bibtex-to-harvard-html` | unknown-format | (`harvard-html-to-bibtex` missing) | n/a | unknown format: harvard-html |
 | `bibtex-to-harvard-intext` | unknown-format | (`harvard-intext-to-bibtex` missing) | ✓ | unknown format: harvard-intext |
 | `bibtex-to-html` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
 | `bibtex-to-ieee` | unknown-format | (`ieee-to-bibtex` missing) | ✓ | unknown format: ieee |
 | `bibtex-to-markdown` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
 | `bibtex-to-mla` | unknown-format | (`mla-to-bibtex` missing) | ✓ | unknown format: mla |
+| `bibtex-to-mla-html` | unknown-format | (`mla-html-to-bibtex` missing) | n/a | unknown format: mla-html |
 | `bibtex-to-mla-intext` | unknown-format | (`mla-intext-to-bibtex` missing) | n/a | unknown format: mla-intext |
 | `bibtex-to-mods` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `bibtex-to-nature` | unknown-format | (`nature-to-bibtex` missing) | ✓ | unknown format: nature |
@@ -352,20 +368,24 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `csl-json-to-acs` | unknown-format | (`acs-to-csl-json` missing) | n/a | unknown format: acs |
 | `csl-json-to-ama` | unknown-format | (`ama-to-csl-json` missing) | n/a | unknown format: ama |
 | `csl-json-to-apa` | unknown-format | (`apa-to-csl-json` missing) | ✓ | unknown format: apa |
+| `csl-json-to-apa-html` | unknown-format | (`apa-html-to-csl-json` missing) | n/a | unknown format: apa-html |
 | `csl-json-to-apa-intext` | unknown-format | (`apa-intext-to-csl-json` missing) | n/a | unknown format: apa-intext |
 | `csl-json-to-asa` | unknown-format | (`asa-to-csl-json` missing) | n/a | unknown format: asa |
 | `csl-json-to-bibtex` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csl-json-to-chicago` | unknown-format | (`chicago-to-csl-json` missing) | n/a | unknown format: chicago |
+| `csl-json-to-chicago-html` | unknown-format | (`chicago-html-to-csl-json` missing) | n/a | unknown format: chicago-html |
 | `csl-json-to-chicago-intext` | unknown-format | (`chicago-intext-to-csl-json` missing) | ✓ | unknown format: chicago-intext |
 | `csl-json-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csl-json-to-endnote-xml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csl-json-to-enw` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
 | `csl-json-to-harvard` | unknown-format | (`harvard-to-csl-json` missing) | n/a | unknown format: harvard |
+| `csl-json-to-harvard-html` | unknown-format | (`harvard-html-to-csl-json` missing) | n/a | unknown format: harvard-html |
 | `csl-json-to-harvard-intext` | unknown-format | (`harvard-intext-to-csl-json` missing) | n/a | unknown format: harvard-intext |
 | `csl-json-to-html` | cross-kind | (`html-to-csl-json` missing) | n/a | data -> doc: cross-domain, inherently lossy |
 | `csl-json-to-ieee` | unknown-format | (`ieee-to-csl-json` missing) | n/a | unknown format: ieee |
 | `csl-json-to-markdown` | cross-kind | (`markdown-to-csl-json` missing) | n/a | data -> doc: cross-domain, inherently lossy |
 | `csl-json-to-mla` | unknown-format | (`mla-to-csl-json` missing) | ✓ | unknown format: mla |
+| `csl-json-to-mla-html` | unknown-format | (`mla-html-to-csl-json` missing) | ✓ | unknown format: mla-html |
 | `csl-json-to-mla-intext` | unknown-format | (`mla-intext-to-csl-json` missing) | n/a | unknown format: mla-intext |
 | `csl-json-to-mods` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csl-json-to-nature` | unknown-format | (`nature-to-csl-json` missing) | n/a | unknown format: nature |
@@ -848,21 +868,25 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `ris-to-acs` | unknown-format | (`acs-to-ris` missing) | n/a | unknown format: acs |
 | `ris-to-ama` | unknown-format | (`ama-to-ris` missing) | n/a | unknown format: ama |
 | `ris-to-apa` | unknown-format | (`apa-to-ris` missing) | ✓ | unknown format: apa |
+| `ris-to-apa-html` | unknown-format | (`apa-html-to-ris` missing) | n/a | unknown format: apa-html |
 | `ris-to-apa-intext` | unknown-format | (`apa-intext-to-ris` missing) | n/a | unknown format: apa-intext |
 | `ris-to-asa` | unknown-format | (`asa-to-ris` missing) | n/a | unknown format: asa |
 | `ris-to-bibtex` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `ris-to-chicago` | unknown-format | (`chicago-to-ris` missing) | n/a | unknown format: chicago |
+| `ris-to-chicago-html` | unknown-format | (`chicago-html-to-ris` missing) | ✓ | unknown format: chicago-html |
 | `ris-to-chicago-intext` | unknown-format | (`chicago-intext-to-ris` missing) | n/a | unknown format: chicago-intext |
 | `ris-to-csl-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `ris-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `ris-to-endnote-xml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `ris-to-enw` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `ris-to-harvard` | unknown-format | (`harvard-to-ris` missing) | n/a | unknown format: harvard |
+| `ris-to-harvard-html` | unknown-format | (`harvard-html-to-ris` missing) | n/a | unknown format: harvard-html |
 | `ris-to-harvard-intext` | unknown-format | (`harvard-intext-to-ris` missing) | n/a | unknown format: harvard-intext |
 | `ris-to-html` | cross-kind | (`html-to-ris` missing) | n/a | data -> doc: cross-domain, inherently lossy |
 | `ris-to-ieee` | unknown-format | (`ieee-to-ris` missing) | n/a | unknown format: ieee |
 | `ris-to-markdown` | cross-kind | (`markdown-to-ris` missing) | n/a | data -> doc: cross-domain, inherently lossy |
 | `ris-to-mla` | unknown-format | (`mla-to-ris` missing) | ✓ | unknown format: mla |
+| `ris-to-mla-html` | unknown-format | (`mla-html-to-ris` missing) | n/a | unknown format: mla-html |
 | `ris-to-mla-intext` | unknown-format | (`mla-intext-to-ris` missing) | ✓ | unknown format: mla-intext |
 | `ris-to-mods` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `ris-to-nature` | unknown-format | (`nature-to-ris` missing) | n/a | unknown format: nature |
