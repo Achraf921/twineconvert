@@ -1392,3 +1392,19 @@ describe("bibtex-rekey", () => {
     expect(new Set(keys).size).toBe(2); // unique
   });
 });
+
+describe("ris-sort", () => {
+  it("alphabetizes RIS records by author then year, non-lossy", async () => {
+    const ris =
+      "TY  - JOUR\nTI  - Zebra paper\nAU  - Young, Tim\nPY  - 2020\nER  -\n" +
+      "TY  - JOUR\nTI  - Apple study\nAU  - Adams, Amy\nPY  - 2019\nER  -\n" +
+      "TY  - JOUR\nTI  - Middle\nAU  - Adams, Amy\nPY  - 2015\nER  -\n";
+    const out = await (await run("ris-sort", f("lib.ris", ris, "application/x-research-info-systems"))).blob.text();
+    const order = [...out.matchAll(/^TI {2}- (.*)$/gm)].map((m) => m[1]);
+    expect(order).toEqual(["Middle", "Apple study", "Zebra paper"]);
+    // non-lossy: same set of records (every TI/AU/PY line preserved)
+    const orig = ris.match(/^(TI|AU|PY) {2}- .*$/gm)!.slice().sort();
+    const got = out.match(/^(TI|AU|PY) {2}- .*$/gm)!.slice().sort();
+    expect(got).toEqual(orig);
+  });
+});

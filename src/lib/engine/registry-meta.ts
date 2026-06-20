@@ -6034,6 +6034,18 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "application/x-bibtex",
     "maxFileSizeBytes": 104857600
   },
+  "ris-sort": {
+    "label": "RIS Sort",
+    "accept": [
+      ".ris"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "application/x-research-info-systems",
+    "maxFileSizeBytes": 104857600
+  },
   "bibtex-validate": {
     "label": "BibTeX Completeness Check",
     "accept": [

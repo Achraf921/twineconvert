@@ -6,7 +6,7 @@ Generated 2026-06-20 from src/lib/engine/converters/.
 
 | Classification | Count |
 |---|---:|
-| Total converters | 728 |
+| Total converters | 729 |
 | **Bijective candidates** (lossless, same-kind, both directions exist) | 256 |
 | **Bijective candidates missing reverse converter** | 40 |
 | **Bijective candidates missing round-trip test** | 27 |
@@ -14,7 +14,7 @@ Generated 2026-06-20 from src/lib/engine/converters/.
 | Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 79 |
 | Single-action (no reverse possible) | 53 |
 | Unknown formats (need to add to FORMATS table) | 170 |
-| Compound id (irregular pattern) | 9 |
+| Compound id (irregular pattern) | 10 |
 
 ## Action Items
 
@@ -843,6 +843,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `rgb-to-hsl` | lossy-encoding | ✓ | ✓ | rgb or hsl uses lossy encoding |
 | `rgb-to-oklch` | lossy-encoding | ✓ | n/a | rgb or oklch uses lossy encoding |
 | `ris-dedupe` | compound | n/a | ✓ | irregular id pattern |
+| `ris-sort` | compound | n/a | ✓ | irregular id pattern |
 | `ris-to-acs` | unknown-format | (`acs-to-ris` missing) | n/a | unknown format: acs |
 | `ris-to-ama` | unknown-format | (`ama-to-ris` missing) | n/a | unknown format: ama |
 | `ris-to-apa` | unknown-format | (`apa-to-ris` missing) | ✓ | unknown format: apa |
