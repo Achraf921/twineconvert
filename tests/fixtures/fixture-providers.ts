@@ -1171,6 +1171,7 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "cff-to-bibtex":       { provider: () => text("CITATION.cff", CFF_FIXTURE, "application/x-yaml"), env: "node" },
   "cff-to-ris":          { provider: () => text("CITATION.cff", CFF_FIXTURE, "application/x-yaml"), env: "node" },
   "cff-to-csl-json":     { provider: () => text("CITATION.cff", CFF_FIXTURE, "application/x-yaml"), env: "node" },
+  "cff-validate":        { provider: () => text("CITATION.cff", CFF_FIXTURE, "application/x-yaml"), env: "node" },
   "bibtex-validate": { provider: () => text("lib.bib", F.bibtex, "application/x-bibtex"), env: "node" },
   "ris-validate": { provider: () => text("lib.ris", F.ris, "application/x-research-info-systems"), env: "node" },
   "references-to-apa-intext": { provider: () => text("refs.txt", REFERENCE_LIST_FIXTURE, "text/plain"), env: "node" },

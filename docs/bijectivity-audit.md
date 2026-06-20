@@ -6,7 +6,7 @@ Generated 2026-06-20 from src/lib/engine/converters/.
 
 | Classification | Count |
 |---|---:|
-| Total converters | 766 |
+| Total converters | 767 |
 | **Bijective candidates** (lossless, same-kind, both directions exist) | 256 |
 | **Bijective candidates missing reverse converter** | 40 |
 | **Bijective candidates missing round-trip test** | 27 |
@@ -14,7 +14,7 @@ Generated 2026-06-20 from src/lib/engine/converters/.
 | Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 79 |
 | Single-action (no reverse possible) | 53 |
 | Unknown formats (need to add to FORMATS table) | 206 |
-| Compound id (irregular pattern) | 11 |
+| Compound id (irregular pattern) | 12 |
 
 ## Action Items
 
@@ -394,6 +394,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `cff-to-bibtex` | unknown-format | ✓ | ✓ | unknown format: cff |
 | `cff-to-csl-json` | unknown-format | ✓ | ✓ | unknown format: cff |
 | `cff-to-ris` | unknown-format | ✓ | ✓ | unknown format: cff |
+| `cff-validate` | compound | n/a | ✓ | irregular id pattern |
 | `cmyk-to-hex` | cross-kind | ✓ | ✓ | color -> palette: cross-domain, inherently lossy |
 | `cmyk-to-rgb` | lossy-encoding | ✓ | ✓ | cmyk or rgb uses lossy encoding |
 | `color-name-to-hex` | cross-kind | ✓ | ✓ | color -> palette: cross-domain, inherently lossy |

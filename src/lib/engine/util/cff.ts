@@ -114,6 +114,59 @@ export async function parseCff(text: string): Promise<Citation[]> {
   return [citation];
 }
 
+/**
+ * Validate a CITATION.cff document against the fields the spec requires
+ * (cff-version, message, title, authors with at least one entry). Returns a
+ * plain-text report listing what is present and what is missing, the same
+ * check GitHub runs before it shows the "Cite this repository" widget. The
+ * input is not modified.
+ */
+export async function validateCff(text: string): Promise<string> {
+  const yaml = (await import("js-yaml")).default;
+  let doc: CffDoc;
+  try {
+    doc = (yaml.load(text) ?? {}) as CffDoc;
+  } catch (e) {
+    return `Invalid: CITATION.cff is not valid YAML (${e instanceof Error ? e.message : String(e)}).\n`;
+  }
+  if (!doc || typeof doc !== "object" || Array.isArray(doc)) {
+    return "Invalid: CITATION.cff must be a YAML mapping (key: value pairs).\n";
+  }
+
+  const missing: string[] = [];
+  if (!doc["cff-version"]) missing.push("cff-version");
+  if (!doc.message) missing.push("message");
+  if (!doc.title) missing.push("title");
+  const hasAuthor =
+    Array.isArray(doc.authors) &&
+    doc.authors.some((a) => a && (a.name || a["family-names"] || a["given-names"]));
+  if (!hasAuthor) missing.push("authors (at least one)");
+
+  const lines: string[] = [];
+  if (missing.length === 0) {
+    lines.push("Valid: this CITATION.cff has all required fields.");
+  } else {
+    lines.push(`Invalid: missing ${missing.length} required field${missing.length === 1 ? "" : "s"}.`);
+  }
+  lines.push("");
+  lines.push(`cff-version: ${doc["cff-version"] ? `present (${doc["cff-version"]})` : "MISSING"}`);
+  lines.push(`message: ${doc.message ? "present" : "MISSING"}`);
+  lines.push(`title: ${doc.title ? `present (${doc.title})` : "MISSING"}`);
+  lines.push(
+    `authors: ${hasAuthor ? `present (${(doc.authors as CffAuthor[]).length})` : "MISSING"}`,
+  );
+  // Recommended-but-optional fields, surfaced as hints.
+  const optional: string[] = [];
+  if (!doc.version) optional.push("version");
+  if (!doc["date-released"]) optional.push("date-released");
+  if (!doc.doi) optional.push("doi");
+  if (optional.length) {
+    lines.push("");
+    lines.push(`Optional fields not set: ${optional.join(", ")}.`);
+  }
+  return lines.join("\n") + "\n";
+}
+
 /** Build a CITATION.cff document from the first citation (CFF describes one
  *  primary work). */
 export async function buildCff(citations: Citation[]): Promise<string> {

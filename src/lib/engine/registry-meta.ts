@@ -6534,6 +6534,21 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "application/json",
     "maxFileSizeBytes": 104857600
   },
+  "cff-validate": {
+    "label": "CFF Validate",
+    "accept": [
+      ".cff",
+      ".yaml",
+      ".yml"
+    ],
+    "fromMime": [
+      "application/x-yaml",
+      "text/yaml",
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 26214400
+  },
   "bibtex-validate": {
     "label": "BibTeX Completeness Check",
     "accept": [

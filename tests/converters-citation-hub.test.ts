@@ -1517,3 +1517,26 @@ describe("CFF (Citation File Format / CITATION.cff)", () => {
     await expect(run("cff-to-bibtex", f("x.yaml", "foo: bar\nbaz: 1\n", "application/x-yaml"))).rejects.toThrow(/does not look like a CITATION\.cff/i);
   });
 });
+
+describe("cff-validate", () => {
+  it("reports a complete CITATION.cff as valid", async () => {
+    const cff = "cff-version: 1.2.0\nmessage: cite it\ntitle: My Software\nauthors:\n  - family-names: Smith\n    given-names: John\n";
+    const out = await (await run("cff-validate", f("CITATION.cff", cff, "application/x-yaml"))).blob.text();
+    expect(out).toMatch(/^Valid:/);
+    expect(out).toMatch(/cff-version: present/);
+    expect(out).toMatch(/authors: present/);
+  });
+  it("lists the missing required fields", async () => {
+    const cff = "title: Only A Title\n";
+    const out = await (await run("cff-validate", f("CITATION.cff", cff, "application/x-yaml"))).blob.text();
+    expect(out).toMatch(/^Invalid:/);
+    expect(out).toMatch(/cff-version: MISSING/);
+    expect(out).toMatch(/message: MISSING/);
+    expect(out).toMatch(/authors: MISSING/);
+    expect(out).toMatch(/title: present/);
+  });
+  it("reports invalid YAML clearly", async () => {
+    const out = await (await run("cff-validate", f("x.cff", "key: [unclosed\n", "application/x-yaml"))).blob.text();
+    expect(out).toMatch(/^Invalid:/);
+  });
+});
