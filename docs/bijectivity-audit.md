@@ -6,7 +6,7 @@ Generated 2026-06-20 from src/lib/engine/converters/.
 
 | Classification | Count |
 |---|---:|
-| Total converters | 727 |
+| Total converters | 728 |
 | **Bijective candidates** (lossless, same-kind, both directions exist) | 256 |
 | **Bijective candidates missing reverse converter** | 40 |
 | **Bijective candidates missing round-trip test** | 27 |
@@ -14,7 +14,7 @@ Generated 2026-06-20 from src/lib/engine/converters/.
 | Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 79 |
 | Single-action (no reverse possible) | 53 |
 | Unknown formats (need to add to FORMATS table) | 170 |
-| Compound id (irregular pattern) | 8 |
+| Compound id (irregular pattern) | 9 |
 
 ## Action Items
 
@@ -306,6 +306,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `base64-to-text` | bijective-candidate | ✓ | ✓ | both lossless encoding formats; should round-trip cleanly |
 | `bencode-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `bibtex-dedupe` | compound | n/a | ✓ | irregular id pattern |
+| `bibtex-rekey` | compound | n/a | ✓ | irregular id pattern |
 | `bibtex-to-acs` | unknown-format | (`acs-to-bibtex` missing) | ✓ | unknown format: acs |
 | `bibtex-to-ama` | unknown-format | (`ama-to-bibtex` missing) | ✓ | unknown format: ama |
 | `bibtex-to-apa` | unknown-format | (`apa-to-bibtex` missing) | ✓ | unknown format: apa |

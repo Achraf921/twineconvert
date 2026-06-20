@@ -1373,3 +1373,22 @@ describe("citation completeness validator", () => {
     expect(r[0].missing).not.toContain("year");
   });
 });
+
+describe("bibtex-rekey", () => {
+  it("regenerates keys to AuthorYear form while preserving every field", async () => {
+    const bib = "@article{OLD1,\n  title={Deep Nets},\n  author={Smith, John},\n  journal={Nature},\n  year={2024},\n  note={keep me}\n}\n@book{x2,\n  title={A Book},\n  author={Doe, Jane},\n  year={2023}\n}\n";
+    const out = await (await run("bibtex-rekey", f("lib.bib", bib, "application/x-bibtex"))).blob.text();
+    expect(out).toMatch(/@article\{smith2024_deep,/);
+    expect(out).toMatch(/@book\{doe2023_a,/);
+    expect(out).not.toContain("{OLD1,");
+    expect(out).not.toContain("{x2,");
+    expect(out).toContain("note={keep me}"); // unmodeled field preserved (non-lossy)
+    expect(out).toContain("journal={Nature}");
+  });
+  it("disambiguates duplicate generated keys", async () => {
+    const bib = "@article{a,\n title={X},\n author={Smith, J},\n journal={N},\n year={2024}\n}\n@article{b,\n title={X},\n author={Smith, J},\n journal={N},\n year={2024}\n}\n";
+    const out = await (await run("bibtex-rekey", f("lib.bib", bib, "application/x-bibtex"))).blob.text();
+    const keys = [...out.matchAll(/@article\{([^,]+),/g)].map((m) => m[1]);
+    expect(new Set(keys).size).toBe(2); // unique
+  });
+});
