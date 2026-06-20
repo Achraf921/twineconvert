@@ -1302,3 +1302,25 @@ describe("in-text citation generator", () => {
     expect(await renderInTextCitations(cites, "apa")).toEqual(["(Smith, 2024)", "(Doe, 2023)", "(Lee, 2022)"]);
   });
 });
+
+describe("identifier extraction from text", () => {
+  const TXT =
+    "Smith J. A study. https://doi.org/10.1038/s41586-019-0001-2 (2024). Repeat 10.1038/s41586-019-0001-2.\n" +
+    "Doe J. doi:10.1016/j.cell.2020.01.001. PMID: 30000001 and PMID 29999999. Random 12345 is not a PMID.\n" +
+    "Preprints arXiv:2401.01234 and arXiv:2401.01234v2 and arXiv:math/0309136.\n";
+  it("text-to-dois extracts unique DOIs, trailing punctuation trimmed", async () => {
+    const out = (await (await run("text-to-dois", f("a.txt", TXT, "text/plain"))).blob.text()).trim().split("\n");
+    expect(out).toEqual(["10.1038/s41586-019-0001-2", "10.1016/j.cell.2020.01.001"]);
+  });
+  it("text-to-pmids extracts only labelled PMIDs (not the random number)", async () => {
+    const out = (await (await run("text-to-pmids", f("a.txt", TXT, "text/plain"))).blob.text()).trim().split("\n");
+    expect(out).toEqual(["30000001", "29999999"]);
+  });
+  it("text-to-arxiv-ids handles new, versioned and old-style ids", async () => {
+    const out = (await (await run("text-to-arxiv-ids", f("a.txt", TXT, "text/plain"))).blob.text()).trim().split("\n");
+    expect(out).toEqual(["2401.01234", "2401.01234v2", "math/0309136"]);
+  });
+  it("throws a clear error when no identifiers are present", async () => {
+    await expect(run("text-to-dois", f("a.txt", "just some prose with no identifiers", "text/plain"))).rejects.toThrow(/No DOIs found/i);
+  });
+});

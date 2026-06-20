@@ -56,6 +56,11 @@ const CITATION_CSV_FIXTURE =
   "title,authors,year,journal,volume,pages,doi\n" +
   'A Sample Paper,"Smith, John; Doe, Jane",2024,Nature,123,45-67,10.1038/sample.2024.001\n';
 
+/** A text blob with DOIs, a labelled PMID, and an arXiv id for the extractor fixtures. */
+const IDENTIFIER_TEXT_FIXTURE =
+  "Smith J. A study. https://doi.org/10.1038/s41586-019-0001-2 (2024). PMID: 30000001.\n" +
+  "Doe J. Another. doi:10.1/abc. Preprint arXiv:2401.01234.\n";
+
 /** A BibTeX library containing a duplicate (same DOI) for the dedupe fixture. */
 const DUP_BIBTEX_FIXTURE =
   "@article{a1,\n  title={Deep nets},\n  author={Smith, John},\n  year={2024},\n  doi={10.1/x}\n}\n" +
@@ -1109,6 +1114,9 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "csl-json-to-mla-intext":    { provider: () => text("refs.json", F.cslJson, "application/json"), env: "node" },
   "csl-json-to-chicago-intext": { provider: () => text("refs.json", F.cslJson, "application/json"), env: "node" },
   "csl-json-to-harvard-intext": { provider: () => text("refs.json", F.cslJson, "application/json"), env: "node" },
+  "text-to-dois": { provider: () => text("refs.txt", IDENTIFIER_TEXT_FIXTURE, "text/plain"), env: "node" },
+  "text-to-pmids": { provider: () => text("refs.txt", IDENTIFIER_TEXT_FIXTURE, "text/plain"), env: "node" },
+  "text-to-arxiv-ids": { provider: () => text("refs.txt", IDENTIFIER_TEXT_FIXTURE, "text/plain"), env: "node" },
 };
 
 /** True if we have any fixture for this id (even if it requires browser). */

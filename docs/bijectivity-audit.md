@@ -6,14 +6,14 @@ Generated 2026-06-20 from src/lib/engine/converters/.
 
 | Classification | Count |
 |---|---:|
-| Total converters | 713 |
+| Total converters | 716 |
 | **Bijective candidates** (lossless, same-kind, both directions exist) | 256 |
 | **Bijective candidates missing reverse converter** | 40 |
 | **Bijective candidates missing round-trip test** | 27 |
 | Lossy encoding (same kind, but lossy format) | 121 |
 | Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 79 |
 | Single-action (no reverse possible) | 53 |
-| Unknown formats (need to add to FORMATS table) | 158 |
+| Unknown formats (need to add to FORMATS table) | 161 |
 | Compound id (irregular pattern) | 6 |
 
 ## Action Items
@@ -160,6 +160,9 @@ The audit script doesn't know about these formats; add them to the FORMATS table
 - `ris-to-mla` (unknown format: mla)
 - `ris-to-nature` (unknown format: nature)
 - `ris-to-vancouver` (unknown format: vancouver)
+- `text-to-arxiv-ids` (unknown format: arxiv-ids)
+- `text-to-dois` (unknown format: dois)
+- `text-to-pmids` (unknown format: pmids)
 - `wos-to-acs` (unknown format: acs)
 - `wos-to-ama` (unknown format: ama)
 - `wos-to-apa` (unknown format: apa)
@@ -872,8 +875,11 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `svg-to-jpg` | cross-kind | (`jpg-to-svg` missing) | ✓ | vector -> raster: cross-domain, inherently lossy |
 | `svg-to-png` | cross-kind | (`png-to-svg` missing) | ✓ | vector -> raster: cross-domain, inherently lossy |
 | `svg-to-webp` | cross-kind | (`webp-to-svg` missing) | ✓ | vector -> raster: cross-domain, inherently lossy |
+| `text-to-arxiv-ids` | unknown-format | (`arxiv-ids-to-text` missing) | ✓ | unknown format: arxiv-ids |
 | `text-to-base64` | bijective-candidate | ✓ | ✓ | both lossless encoding formats; should round-trip cleanly |
+| `text-to-dois` | unknown-format | (`dois-to-text` missing) | ✓ | unknown format: dois |
 | `text-to-hex` | cross-kind | ✓ | ✓ | encoding -> palette: cross-domain, inherently lossy |
+| `text-to-pmids` | unknown-format | (`pmids-to-text` missing) | ✓ | unknown format: pmids |
 | `text-to-url-encoded` | bijective-candidate | ✓ | ✓ | both lossless encoding formats; should round-trip cleanly |
 | `tiff-to-jpg` | lossy-encoding | (`jpg-to-tiff` missing) | ✓ | tiff or jpg uses lossy encoding |
 | `tiff-to-pdf` | cross-kind | (`pdf-to-tiff` missing) | ✓ | raster -> doc: cross-domain, inherently lossy |
