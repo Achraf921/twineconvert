@@ -104,3 +104,62 @@ export async function renderCitationStyle(
   }
   return entries.join("\n\n") + "\n";
 }
+
+/**
+ * Render the IN-TEXT citation for each reference, in input order, using the
+ * official CSL style (e.g. APA -> "(Smith & Doe, 2024)", IEEE -> "[1]").
+ * Numeric styles are numbered sequentially across the list, so [1], [2], ...
+ * Returns one string per citation, aligned with the input array.
+ */
+export async function renderInTextCitations(
+  citations: Citation[],
+  styleId: string,
+): Promise<string[]> {
+  if (citations.length === 0) {
+    throw new Error("No references found to format.");
+  }
+  const loader = STYLE_LOADERS[styleId];
+  if (!loader) throw new Error(`Unsupported citation style: ${styleId}`);
+
+  const [mod, styleXml, localeMod] = await Promise.all([
+    import("citeproc"),
+    loader(),
+    import("./csl-data/locale-en-us"),
+  ]);
+  const CSL = mod.default;
+  const localeXml = localeMod.CSL_LOCALE_EN_US;
+
+  const cslArray = JSON.parse(buildCslJson(citations)) as Array<Record<string, unknown>>;
+  const items: Record<string, unknown> = {};
+  const ids: string[] = [];
+  cslArray.forEach((entry, i) => {
+    const id = `ITEM-${i}`;
+    entry.id = id;
+    items[id] = entry;
+    ids.push(id);
+  });
+
+  const sys = {
+    retrieveLocale: () => localeXml,
+    retrieveItem: (id: string) => items[id],
+  };
+  const engine = new CSL.Engine(sys, styleXml, "en-US");
+  engine.setOutputFormat("text");
+  engine.updateItems(ids);
+
+  // Process each reference as its own citation cluster, in order, passing the
+  // prior clusters as context so numeric styles number 1, 2, 3, ... correctly.
+  const out = new Array<string>(ids.length).fill("");
+  const pre: Array<[string, number]> = [];
+  ids.forEach((id, i) => {
+    const citationID = `c${i}`;
+    const cluster = { citationID, citationItems: [{ id }], properties: { noteIndex: 0 } };
+    const res = engine.processCitationCluster(cluster, pre.slice(), []);
+    for (const entry of res[1]) {
+      const idx = entry[0] as number;
+      out[idx] = String(entry[1]).trim();
+    }
+    pre.push([citationID, 0]);
+  });
+  return out;
+}

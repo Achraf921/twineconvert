@@ -1277,3 +1277,28 @@ describe("citation de-duplication: more formats", () => {
     expect((enwOut.match(/%0 /g) ?? []).length).toBe(2);
   });
 });
+
+describe("in-text citation generator", () => {
+  it("bibtex-to-apa-intext pairs an APA in-text cite with the title", async () => {
+    const out = await (await run("bibtex-to-apa-intext", f("a.bib", F.bibtex, "text/x-bibtex"))).blob.text();
+    expect(out).toMatch(/\(Smith & Doe, 2024\)\tA Sample Paper/);
+  });
+  it("each author-date style renders its distinct in-text form", async () => {
+    const mla = await (await run("ris-to-mla-intext", f("a.ris", F.ris, "application/x-research-info-systems"))).blob.text();
+    expect(mla).toMatch(/\(Smith and Doe\)/); // MLA: author only
+    const chi = await (await run("csl-json-to-chicago-intext", f("a.json", F.cslJson, "application/json"))).blob.text();
+    expect(chi).toMatch(/\(Smith and Doe 2024\)/); // Chicago: author year, no comma
+    const harv = await (await run("bibtex-to-harvard-intext", f("a.bib", F.bibtex, "text/x-bibtex"))).blob.text();
+    expect(harv).toMatch(/\(Smith and Doe, 2024\)/); // Harvard: author, year
+  });
+  it("renderInTextCitations numbers numeric styles sequentially", async () => {
+    const { renderInTextCitations } = await import("../src/lib/engine/util/csl-render");
+    const cites = [
+      { id: "1", type: "article" as const, title: "A", authors: ["Smith, J"], year: "2024" },
+      { id: "2", type: "article" as const, title: "B", authors: ["Doe, J"], year: "2023" },
+      { id: "3", type: "article" as const, title: "C", authors: ["Lee, K"], year: "2022" },
+    ];
+    expect(await renderInTextCitations(cites, "ieee")).toEqual(["[1]", "[2]", "[3]"]);
+    expect(await renderInTextCitations(cites, "apa")).toEqual(["(Smith, 2024)", "(Doe, 2023)", "(Lee, 2022)"]);
+  });
+});

@@ -1097,6 +1097,18 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "nbib-dedupe": { provider: () => text("lib.nbib", DUP_RIS_FIXTURE, "application/x-research-info-systems"), env: "node" },
   "csl-json-dedupe": { provider: () => text("lib.json", DUP_CSL_JSON_FIXTURE, "application/json"), env: "node" },
   "enw-dedupe": { provider: () => text("lib.enw", DUP_ENW_FIXTURE, "application/x-endnote-refer"), env: "node" },
+  "bibtex-to-apa-intext":      { provider: () => text("refs.bib", F.bibtex, "application/x-bibtex"), env: "node" },
+  "bibtex-to-mla-intext":      { provider: () => text("refs.bib", F.bibtex, "application/x-bibtex"), env: "node" },
+  "bibtex-to-chicago-intext":  { provider: () => text("refs.bib", F.bibtex, "application/x-bibtex"), env: "node" },
+  "bibtex-to-harvard-intext":  { provider: () => text("refs.bib", F.bibtex, "application/x-bibtex"), env: "node" },
+  "ris-to-apa-intext":         { provider: () => text("refs.ris", F.ris, "application/x-research-info-systems"), env: "node" },
+  "ris-to-mla-intext":         { provider: () => text("refs.ris", F.ris, "application/x-research-info-systems"), env: "node" },
+  "ris-to-chicago-intext":     { provider: () => text("refs.ris", F.ris, "application/x-research-info-systems"), env: "node" },
+  "ris-to-harvard-intext":     { provider: () => text("refs.ris", F.ris, "application/x-research-info-systems"), env: "node" },
+  "csl-json-to-apa-intext":    { provider: () => text("refs.json", F.cslJson, "application/json"), env: "node" },
+  "csl-json-to-mla-intext":    { provider: () => text("refs.json", F.cslJson, "application/json"), env: "node" },
+  "csl-json-to-chicago-intext": { provider: () => text("refs.json", F.cslJson, "application/json"), env: "node" },
+  "csl-json-to-harvard-intext": { provider: () => text("refs.json", F.cslJson, "application/json"), env: "node" },
 };
 
 /** True if we have any fixture for this id (even if it requires browser). */
