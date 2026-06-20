@@ -1349,3 +1349,27 @@ describe("in-text generator: references + csv sources", () => {
     expect(out).toMatch(/\(Smith and Doe\)\tA Paper/);
   });
 });
+
+describe("citation completeness validator", () => {
+  it("bibtex-validate reports entries missing required fields by type", async () => {
+    const bib =
+      "@article{ok1,\n title={Complete},\n author={Smith, J},\n journal={Nature},\n year={2024}\n}\n" +
+      "@article{bad1,\n title={No Journal},\n author={Doe, J},\n year={2023}\n}\n" +
+      "@book{bad2,\n title={No Publisher},\n author={Lee, K}\n}\n";
+    const out = await (await run("bibtex-validate", f("lib.bib", bib, "application/x-bibtex"))).blob.text();
+    expect(out).toMatch(/Checked 3 references: 1 complete, 2 with missing fields/);
+    expect(out).toMatch(/ok1 \(article\): OK/);
+    expect(out).toMatch(/bad1 \(article\): missing journal/);
+    expect(out).toMatch(/bad2 \(book\): missing .*publisher/);
+    expect(out).toMatch(/bad2 \(book\): missing .*year/);
+  });
+  it("validateCitations flags missing authors and title", async () => {
+    const { validateCitations } = await import("../src/lib/engine/util/citation-validate");
+    const r = validateCitations([
+      { id: "x", type: "article", year: "2024", journal: "Nature" },
+    ]);
+    expect(r[0].missing).toContain("authors");
+    expect(r[0].missing).toContain("title");
+    expect(r[0].missing).not.toContain("year");
+  });
+});

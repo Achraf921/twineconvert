@@ -6,7 +6,7 @@ Generated 2026-06-20 from src/lib/engine/converters/.
 
 | Classification | Count |
 |---|---:|
-| Total converters | 725 |
+| Total converters | 727 |
 | **Bijective candidates** (lossless, same-kind, both directions exist) | 256 |
 | **Bijective candidates missing reverse converter** | 40 |
 | **Bijective candidates missing round-trip test** | 27 |
@@ -14,7 +14,7 @@ Generated 2026-06-20 from src/lib/engine/converters/.
 | Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 79 |
 | Single-action (no reverse possible) | 53 |
 | Unknown formats (need to add to FORMATS table) | 170 |
-| Compound id (irregular pattern) | 6 |
+| Compound id (irregular pattern) | 8 |
 
 ## Action Items
 
@@ -332,6 +332,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `bibtex-to-vancouver` | unknown-format | (`vancouver-to-bibtex` missing) | ✓ | unknown format: vancouver |
 | `bibtex-to-xlsx` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
 | `bibtex-to-yaml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `bibtex-validate` | compound | n/a | ✓ | irregular id pattern |
 | `bmp-to-avif` | lossy-encoding | ✓ | ✓ | bmp or avif uses lossy encoding |
 | `bmp-to-gif` | bijective-candidate | ✓ | ✓ | both lossless raster formats; should round-trip cleanly |
 | `bmp-to-jpg` | lossy-encoding | ✓ | ✓ | bmp or jpg uses lossy encoding |
@@ -867,6 +868,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `ris-to-vancouver` | unknown-format | (`vancouver-to-ris` missing) | n/a | unknown format: vancouver |
 | `ris-to-xlsx` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
 | `ris-to-yaml` | bijective-candidate | (`yaml-to-ris` missing) | n/a | both lossless data formats; should round-trip cleanly |
+| `ris-validate` | compound | n/a | n/a | irregular id pattern |
 | `rtf-to-docx` | lossy-encoding | (`docx-to-rtf` missing) | ✓ | rtf or docx uses lossy encoding |
 | `rtf-to-html` | lossy-encoding | (`html-to-rtf` missing) | n/a | rtf or html uses lossy encoding |
 | `rtf-to-markdown` | lossy-encoding | (`markdown-to-rtf` missing) | ✓ | rtf or markdown uses lossy encoding |
