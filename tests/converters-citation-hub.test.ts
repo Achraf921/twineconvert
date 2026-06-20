@@ -1448,3 +1448,21 @@ describe("formatted HTML bibliography output", () => {
     expect(chi).toMatch(/Smith, John, and Jane Doe\. 2024\./);
   });
 });
+
+describe("formatted HTML bibliography: IEEE/Vancouver/AMA", () => {
+  it("bibtex-to-ieee-html renders a numbered IEEE bibliography as HTML", async () => {
+    const out = await (await run("bibtex-to-ieee-html", f("a.bib", F.bibtex, "text/x-bibtex"))).blob.text();
+    expect(out).toMatch(/^<!DOCTYPE html>/);
+    expect(out).toContain('<div class="csl-entry">');
+    expect(out).toMatch(/\[1\]/);
+    expect(out).toContain("</html>");
+  });
+  it("ris-to-vancouver-html and csl-json-to-ama-html produce full HTML docs", async () => {
+    const v = await (await run("ris-to-vancouver-html", f("a.ris", F.ris, "application/x-research-info-systems"))).blob.text();
+    expect(v).toMatch(/^<!DOCTYPE html>/);
+    expect(v).toContain('<div class="csl-entry">');
+    const a = await (await run("csl-json-to-ama-html", f("a.json", F.cslJson, "application/json"))).blob.text();
+    expect(a).toMatch(/^<!DOCTYPE html>/);
+    expect(a).toContain('class="csl-entry"');
+  });
+});

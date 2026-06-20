@@ -6216,6 +6216,123 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "text/html",
     "maxFileSizeBytes": 104857600
   },
+  "bibtex-to-ieee-html": {
+    "label": "BibTeX -> IEEE (HTML)",
+    "accept": [
+      ".bib",
+      ".bibtex"
+    ],
+    "fromMime": [
+      "application/x-bibtex",
+      "text/x-bibtex",
+      "text/plain"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 104857600
+  },
+  "bibtex-to-vancouver-html": {
+    "label": "BibTeX -> Vancouver (HTML)",
+    "accept": [
+      ".bib",
+      ".bibtex"
+    ],
+    "fromMime": [
+      "application/x-bibtex",
+      "text/x-bibtex",
+      "text/plain"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 104857600
+  },
+  "bibtex-to-ama-html": {
+    "label": "BibTeX -> AMA (HTML)",
+    "accept": [
+      ".bib",
+      ".bibtex"
+    ],
+    "fromMime": [
+      "application/x-bibtex",
+      "text/x-bibtex",
+      "text/plain"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 104857600
+  },
+  "ris-to-ieee-html": {
+    "label": "RIS -> IEEE (HTML)",
+    "accept": [
+      ".ris"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 104857600
+  },
+  "ris-to-vancouver-html": {
+    "label": "RIS -> Vancouver (HTML)",
+    "accept": [
+      ".ris"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 104857600
+  },
+  "ris-to-ama-html": {
+    "label": "RIS -> AMA (HTML)",
+    "accept": [
+      ".ris"
+    ],
+    "fromMime": [
+      "application/x-research-info-systems",
+      "text/plain"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 104857600
+  },
+  "csl-json-to-ieee-html": {
+    "label": "CSL-JSON -> IEEE (HTML)",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/vnd.citationstyles.csl+json",
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 104857600
+  },
+  "csl-json-to-vancouver-html": {
+    "label": "CSL-JSON -> Vancouver (HTML)",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/vnd.citationstyles.csl+json",
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 104857600
+  },
+  "csl-json-to-ama-html": {
+    "label": "CSL-JSON -> AMA (HTML)",
+    "accept": [
+      ".json"
+    ],
+    "fromMime": [
+      "application/vnd.citationstyles.csl+json",
+      "application/json",
+      "text/plain"
+    ],
+    "toMime": "text/html",
+    "maxFileSizeBytes": 104857600
+  },
   "bibtex-validate": {
     "label": "BibTeX Completeness Check",
     "accept": [
