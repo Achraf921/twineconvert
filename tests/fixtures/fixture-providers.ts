@@ -1118,6 +1118,14 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "text-to-pmids": { provider: () => text("refs.txt", IDENTIFIER_TEXT_FIXTURE, "text/plain"), env: "node" },
   "text-to-arxiv-ids": { provider: () => text("refs.txt", IDENTIFIER_TEXT_FIXTURE, "text/plain"), env: "node" },
   "text-to-isbns": { provider: () => text("refs.txt", "Book ISBN 978-0-13-468599-1 and ISBN-10: 0-306-40615-2.", "text/plain"), env: "node" },
+  "references-to-apa-intext": { provider: () => text("refs.txt", REFERENCE_LIST_FIXTURE, "text/plain"), env: "node" },
+  "references-to-mla-intext": { provider: () => text("refs.txt", REFERENCE_LIST_FIXTURE, "text/plain"), env: "node" },
+  "references-to-chicago-intext": { provider: () => text("refs.txt", REFERENCE_LIST_FIXTURE, "text/plain"), env: "node" },
+  "references-to-harvard-intext": { provider: () => text("refs.txt", REFERENCE_LIST_FIXTURE, "text/plain"), env: "node" },
+  "csv-to-apa-intext": { provider: () => text("refs.csv", CITATION_CSV_FIXTURE, "text/csv"), env: "node" },
+  "csv-to-mla-intext": { provider: () => text("refs.csv", CITATION_CSV_FIXTURE, "text/csv"), env: "node" },
+  "csv-to-chicago-intext": { provider: () => text("refs.csv", CITATION_CSV_FIXTURE, "text/csv"), env: "node" },
+  "csv-to-harvard-intext": { provider: () => text("refs.csv", CITATION_CSV_FIXTURE, "text/csv"), env: "node" },
 };
 
 /** True if we have any fixture for this id (even if it requires browser). */

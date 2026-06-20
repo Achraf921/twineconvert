@@ -1336,3 +1336,16 @@ describe("ISBN extraction from text", () => {
     await expect(run("text-to-isbns", f("a.txt", "no isbns here, just 555-0100 and 1234567890123", "text/plain"))).rejects.toThrow(/No valid ISBNs/i);
   });
 });
+
+describe("in-text generator: references + csv sources", () => {
+  it("references-to-apa-intext renders in-text cites from a pasted list", async () => {
+    const txt = "Smith, J., & Doe, J. (2024). A study of deep nets. Nature Methods, 12(3), 45-67.\n";
+    const out = await (await run("references-to-apa-intext", f("a.txt", txt, "text/plain"))).blob.text();
+    expect(out).toMatch(/\(Smith & Doe, 2024\)\tA study of deep nets/);
+  });
+  it("csv-to-mla-intext renders in-text cites from a spreadsheet", async () => {
+    const csv = "title,authors,year,journal\nA Paper,\"Smith, John; Doe, Jane\",2024,Nature\n";
+    const out = await (await run("csv-to-mla-intext", f("a.csv", csv, "text/csv"))).blob.text();
+    expect(out).toMatch(/\(Smith and Doe\)\tA Paper/);
+  });
+});

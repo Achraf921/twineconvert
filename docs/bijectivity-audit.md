@@ -6,14 +6,14 @@ Generated 2026-06-20 from src/lib/engine/converters/.
 
 | Classification | Count |
 |---|---:|
-| Total converters | 717 |
+| Total converters | 725 |
 | **Bijective candidates** (lossless, same-kind, both directions exist) | 256 |
 | **Bijective candidates missing reverse converter** | 40 |
 | **Bijective candidates missing round-trip test** | 27 |
 | Lossy encoding (same kind, but lossy format) | 121 |
 | Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 79 |
 | Single-action (no reverse possible) | 53 |
-| Unknown formats (need to add to FORMATS table) | 162 |
+| Unknown formats (need to add to FORMATS table) | 170 |
 | Compound id (irregular pattern) | 6 |
 
 ## Action Items
@@ -52,11 +52,15 @@ The audit script doesn't know about these formats; add them to the FORMATS table
 - `csl-json-to-vancouver` (unknown format: vancouver)
 - `csv-to-acs` (unknown format: acs)
 - `csv-to-ama` (unknown format: ama)
+- `csv-to-apa-intext` (unknown format: apa-intext)
 - `csv-to-apa` (unknown format: apa)
 - `csv-to-asa` (unknown format: asa)
+- `csv-to-chicago-intext` (unknown format: chicago-intext)
 - `csv-to-chicago` (unknown format: chicago)
+- `csv-to-harvard-intext` (unknown format: harvard-intext)
 - `csv-to-harvard` (unknown format: harvard)
 - `csv-to-ieee` (unknown format: ieee)
+- `csv-to-mla-intext` (unknown format: mla-intext)
 - `csv-to-mla` (unknown format: mla)
 - `csv-to-nature` (unknown format: nature)
 - `csv-to-vancouver` (unknown format: vancouver)
@@ -120,16 +124,20 @@ The audit script doesn't know about these formats; add them to the FORMATS table
 - `pubmed-to-xlsx` (unknown format: pubmed)
 - `references-to-acs` (unknown format: references)
 - `references-to-ama` (unknown format: references)
+- `references-to-apa-intext` (unknown format: references)
 - `references-to-apa` (unknown format: references)
 - `references-to-asa` (unknown format: references)
 - `references-to-bibtex` (unknown format: references)
+- `references-to-chicago-intext` (unknown format: references)
 - `references-to-chicago` (unknown format: references)
 - `references-to-csl-json` (unknown format: references)
 - `references-to-csv` (unknown format: references)
 - `references-to-endnote-xml` (unknown format: references)
 - `references-to-enw` (unknown format: references)
+- `references-to-harvard-intext` (unknown format: references)
 - `references-to-harvard` (unknown format: references)
 - `references-to-ieee` (unknown format: references)
+- `references-to-mla-intext` (unknown format: references)
 - `references-to-mla` (unknown format: references)
 - `references-to-nature` (unknown format: references)
 - `references-to-nbib` (unknown format: references)
@@ -372,9 +380,11 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `csv-to-adif` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-ama` | unknown-format | (`ama-to-csv` missing) | ✓ | unknown format: ama |
 | `csv-to-apa` | unknown-format | (`apa-to-csv` missing) | ✓ | unknown format: apa |
+| `csv-to-apa-intext` | unknown-format | (`apa-intext-to-csv` missing) | n/a | unknown format: apa-intext |
 | `csv-to-asa` | unknown-format | (`asa-to-csv` missing) | ✓ | unknown format: asa |
 | `csv-to-bibtex` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-chicago` | unknown-format | (`chicago-to-csv` missing) | ✓ | unknown format: chicago |
+| `csv-to-chicago-intext` | unknown-format | (`chicago-intext-to-csv` missing) | n/a | unknown format: chicago-intext |
 | `csv-to-csl-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-dat` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-endnote-xml` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
@@ -382,6 +392,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `csv-to-fhir-bundle` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-gedcom` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-harvard` | unknown-format | (`harvard-to-csv` missing) | ✓ | unknown format: harvard |
+| `csv-to-harvard-intext` | unknown-format | (`harvard-intext-to-csv` missing) | n/a | unknown format: harvard-intext |
 | `csv-to-html` | cross-kind | ✓ | ✓ | data -> doc: cross-domain, inherently lossy |
 | `csv-to-html-table` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-ics` | bijective-candidate | ✓ | ✗ MISSING | both lossless data formats; should round-trip cleanly |
@@ -390,6 +401,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `csv-to-jsonl` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-markdown-table` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-mla` | unknown-format | (`mla-to-csv` missing) | ✓ | unknown format: mla |
+| `csv-to-mla-intext` | unknown-format | (`mla-intext-to-csv` missing) | ✓ | unknown format: mla-intext |
 | `csv-to-mods` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `csv-to-nature` | unknown-format | (`nature-to-csv` missing) | n/a | unknown format: nature |
 | `csv-to-nbib` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
@@ -784,16 +796,20 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `references-to-acs` | unknown-format | (`acs-to-references` missing) | n/a | unknown format: references |
 | `references-to-ama` | unknown-format | (`ama-to-references` missing) | ✓ | unknown format: references |
 | `references-to-apa` | unknown-format | (`apa-to-references` missing) | ✓ | unknown format: references |
+| `references-to-apa-intext` | unknown-format | (`apa-intext-to-references` missing) | ✓ | unknown format: references |
 | `references-to-asa` | unknown-format | (`asa-to-references` missing) | n/a | unknown format: references |
 | `references-to-bibtex` | unknown-format | (`bibtex-to-references` missing) | ✓ | unknown format: references |
 | `references-to-chicago` | unknown-format | (`chicago-to-references` missing) | ✓ | unknown format: references |
+| `references-to-chicago-intext` | unknown-format | (`chicago-intext-to-references` missing) | n/a | unknown format: references |
 | `references-to-csl-json` | unknown-format | (`csl-json-to-references` missing) | ✓ | unknown format: references |
 | `references-to-csv` | unknown-format | (`csv-to-references` missing) | ✓ | unknown format: references |
 | `references-to-endnote-xml` | unknown-format | (`endnote-xml-to-references` missing) | ✓ | unknown format: references |
 | `references-to-enw` | unknown-format | (`enw-to-references` missing) | ✓ | unknown format: references |
 | `references-to-harvard` | unknown-format | (`harvard-to-references` missing) | ✓ | unknown format: references |
+| `references-to-harvard-intext` | unknown-format | (`harvard-intext-to-references` missing) | n/a | unknown format: references |
 | `references-to-ieee` | unknown-format | (`ieee-to-references` missing) | ✓ | unknown format: references |
 | `references-to-mla` | unknown-format | (`mla-to-references` missing) | n/a | unknown format: references |
+| `references-to-mla-intext` | unknown-format | (`mla-intext-to-references` missing) | n/a | unknown format: references |
 | `references-to-nature` | unknown-format | (`nature-to-references` missing) | ✓ | unknown format: references |
 | `references-to-nbib` | unknown-format | (`nbib-to-references` missing) | ✓ | unknown format: references |
 | `references-to-ris` | unknown-format | (`ris-to-references` missing) | ✓ | unknown format: references |
