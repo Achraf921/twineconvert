@@ -6046,6 +6046,20 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "application/x-research-info-systems",
     "maxFileSizeBytes": 104857600
   },
+  "bibtex-sort": {
+    "label": "BibTeX Sort",
+    "accept": [
+      ".bib",
+      ".bibtex"
+    ],
+    "fromMime": [
+      "application/x-bibtex",
+      "text/x-bibtex",
+      "text/plain"
+    ],
+    "toMime": "application/x-bibtex",
+    "maxFileSizeBytes": 104857600
+  },
   "bibtex-validate": {
     "label": "BibTeX Completeness Check",
     "accept": [

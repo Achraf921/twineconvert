@@ -1408,3 +1408,24 @@ describe("ris-sort", () => {
     expect(got).toEqual(orig);
   });
 });
+
+describe("bibtex-sort", () => {
+  it("sorts entries in place, non-lossy, keeping @string/@comment/preamble", async () => {
+    const bib =
+      "% preamble note\n" +
+      "@string{ NAT = {Nature} }\n" +
+      "@comment{ keep me }\n" +
+      "@book{zeb2020,\n  title = {The {DNA} Helix},\n  author = {Young, Tim},\n  year = {2020}\n}\n\n" +
+      "@article{app2019,\n  title = \"A } brace in quotes\",\n  author = {Adams, Amy and Bee, Bob},\n  journal = NAT,\n  year = {2019}\n}\n";
+    const out = await (await run("bibtex-sort", f("lib.bib", bib, "application/x-bibtex"))).blob.text();
+    expect(out.length).toBe(bib.length); // non-lossy: byte count identical
+    expect(out.startsWith("% preamble note")).toBe(true);
+    expect(out).toContain("@string{ NAT = {Nature} }");
+    expect(out).toContain("@comment{ keep me }");
+    expect(out).toContain("{The {DNA} Helix}");
+    expect(out).toContain('"A } brace in quotes"');
+    // @string before the entries; Adams (2019) before Young (2020)
+    expect(out.indexOf("@string")).toBeLessThan(out.indexOf("@article"));
+    expect(out.indexOf("app2019")).toBeLessThan(out.indexOf("zeb2020"));
+  });
+});

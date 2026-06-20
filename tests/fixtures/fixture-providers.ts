@@ -1120,6 +1120,7 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "text-to-isbns": { provider: () => text("refs.txt", "Book ISBN 978-0-13-468599-1 and ISBN-10: 0-306-40615-2.", "text/plain"), env: "node" },
   "bibtex-rekey": { provider: () => text("lib.bib", F.bibtex, "application/x-bibtex"), env: "node" },
   "ris-sort": { provider: () => text("lib.ris", F.ris, "application/x-research-info-systems"), env: "node" },
+  "bibtex-sort": { provider: () => text("lib.bib", F.bibtex, "application/x-bibtex"), env: "node" },
   "bibtex-validate": { provider: () => text("lib.bib", F.bibtex, "application/x-bibtex"), env: "node" },
   "ris-validate": { provider: () => text("lib.ris", F.ris, "application/x-research-info-systems"), env: "node" },
   "references-to-apa-intext": { provider: () => text("refs.txt", REFERENCE_LIST_FIXTURE, "text/plain"), env: "node" },
