@@ -61,6 +61,20 @@ const IDENTIFIER_TEXT_FIXTURE =
   "Smith J. A study. https://doi.org/10.1038/s41586-019-0001-2 (2024). PMID: 30000001.\n" +
   "Doe J. Another. doi:10.1/abc. Preprint arXiv:2401.01234.\n";
 
+/** A minimal valid CITATION.cff (YAML) for the CFF reader fixtures. */
+const CFF_FIXTURE =
+  "cff-version: 1.2.0\n" +
+  "message: If you use this software, please cite it.\n" +
+  "title: My Research Software\n" +
+  "version: 1.2.0\n" +
+  "date-released: 2024-03-01\n" +
+  "doi: 10.5281/zenodo.1234567\n" +
+  "authors:\n" +
+  "  - family-names: Smith\n" +
+  "    given-names: John A.\n" +
+  "  - family-names: Doe\n" +
+  "    given-names: Jane\n";
+
 /** A BibTeX library containing a duplicate (same DOI) for the dedupe fixture. */
 const DUP_BIBTEX_FIXTURE =
   "@article{a1,\n  title={Deep nets},\n  author={Smith, John},\n  year={2024},\n  doi={10.1/x}\n}\n" +
@@ -1151,6 +1165,12 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "csl-json-to-nature-html":   { provider: () => text("refs.json", F.cslJson, "application/json"), env: "node" },
   "csl-json-to-acs-html":      { provider: () => text("refs.json", F.cslJson, "application/json"), env: "node" },
   "csl-json-to-asa-html":      { provider: () => text("refs.json", F.cslJson, "application/json"), env: "node" },
+  "bibtex-to-cff":       { provider: () => text("refs.bib", F.bibtex, "application/x-bibtex"), env: "node" },
+  "ris-to-cff":          { provider: () => text("refs.ris", F.ris, "application/x-research-info-systems"), env: "node" },
+  "csl-json-to-cff":     { provider: () => text("refs.json", F.cslJson, "application/json"), env: "node" },
+  "cff-to-bibtex":       { provider: () => text("CITATION.cff", CFF_FIXTURE, "application/x-yaml"), env: "node" },
+  "cff-to-ris":          { provider: () => text("CITATION.cff", CFF_FIXTURE, "application/x-yaml"), env: "node" },
+  "cff-to-csl-json":     { provider: () => text("CITATION.cff", CFF_FIXTURE, "application/x-yaml"), env: "node" },
   "bibtex-validate": { provider: () => text("lib.bib", F.bibtex, "application/x-bibtex"), env: "node" },
   "ris-validate": { provider: () => text("lib.ris", F.ris, "application/x-research-info-systems"), env: "node" },
   "references-to-apa-intext": { provider: () => text("refs.txt", REFERENCE_LIST_FIXTURE, "text/plain"), env: "node" },

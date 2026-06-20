@@ -6,14 +6,14 @@ Generated 2026-06-20 from src/lib/engine/converters/.
 
 | Classification | Count |
 |---|---:|
-| Total converters | 760 |
+| Total converters | 766 |
 | **Bijective candidates** (lossless, same-kind, both directions exist) | 256 |
 | **Bijective candidates missing reverse converter** | 40 |
 | **Bijective candidates missing round-trip test** | 27 |
 | Lossy encoding (same kind, but lossy format) | 121 |
 | Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 79 |
 | Single-action (no reverse possible) | 53 |
-| Unknown formats (need to add to FORMATS table) | 200 |
+| Unknown formats (need to add to FORMATS table) | 206 |
 | Compound id (irregular pattern) | 11 |
 
 ## Action Items
@@ -31,6 +31,7 @@ The audit script doesn't know about these formats; add them to the FORMATS table
 - `bibtex-to-apa` (unknown format: apa)
 - `bibtex-to-asa-html` (unknown format: asa-html)
 - `bibtex-to-asa` (unknown format: asa)
+- `bibtex-to-cff` (unknown format: cff)
 - `bibtex-to-chicago-html` (unknown format: chicago-html)
 - `bibtex-to-chicago-intext` (unknown format: chicago-intext)
 - `bibtex-to-chicago` (unknown format: chicago)
@@ -46,6 +47,9 @@ The audit script doesn't know about these formats; add them to the FORMATS table
 - `bibtex-to-nature` (unknown format: nature)
 - `bibtex-to-vancouver-html` (unknown format: vancouver-html)
 - `bibtex-to-vancouver` (unknown format: vancouver)
+- `cff-to-bibtex` (unknown format: cff)
+- `cff-to-csl-json` (unknown format: cff)
+- `cff-to-ris` (unknown format: cff)
 - `csl-json-to-acs-html` (unknown format: acs-html)
 - `csl-json-to-acs` (unknown format: acs)
 - `csl-json-to-ama-html` (unknown format: ama-html)
@@ -55,6 +59,7 @@ The audit script doesn't know about these formats; add them to the FORMATS table
 - `csl-json-to-apa` (unknown format: apa)
 - `csl-json-to-asa-html` (unknown format: asa-html)
 - `csl-json-to-asa` (unknown format: asa)
+- `csl-json-to-cff` (unknown format: cff)
 - `csl-json-to-chicago-html` (unknown format: chicago-html)
 - `csl-json-to-chicago-intext` (unknown format: chicago-intext)
 - `csl-json-to-chicago` (unknown format: chicago)
@@ -183,6 +188,7 @@ The audit script doesn't know about these formats; add them to the FORMATS table
 - `ris-to-apa` (unknown format: apa)
 - `ris-to-asa-html` (unknown format: asa-html)
 - `ris-to-asa` (unknown format: asa)
+- `ris-to-cff` (unknown format: cff)
 - `ris-to-chicago-html` (unknown format: chicago-html)
 - `ris-to-chicago-intext` (unknown format: chicago-intext)
 - `ris-to-chicago` (unknown format: chicago)
@@ -347,6 +353,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `bibtex-to-apa-intext` | unknown-format | (`apa-intext-to-bibtex` missing) | ✓ | unknown format: apa-intext |
 | `bibtex-to-asa` | unknown-format | (`asa-to-bibtex` missing) | ✓ | unknown format: asa |
 | `bibtex-to-asa-html` | unknown-format | (`asa-html-to-bibtex` missing) | n/a | unknown format: asa-html |
+| `bibtex-to-cff` | unknown-format | ✓ | ✓ | unknown format: cff |
 | `bibtex-to-chicago` | unknown-format | (`chicago-to-bibtex` missing) | ✓ | unknown format: chicago |
 | `bibtex-to-chicago-html` | unknown-format | (`chicago-html-to-bibtex` missing) | n/a | unknown format: chicago-html |
 | `bibtex-to-chicago-intext` | unknown-format | (`chicago-intext-to-bibtex` missing) | n/a | unknown format: chicago-intext |
@@ -384,6 +391,9 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `cbor-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `ccda-to-html` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
 | `ccda-to-json` | single-action | n/a | ✓ | no reverse possible (X has no canonical inverse) |
+| `cff-to-bibtex` | unknown-format | ✓ | ✓ | unknown format: cff |
+| `cff-to-csl-json` | unknown-format | ✓ | ✓ | unknown format: cff |
+| `cff-to-ris` | unknown-format | ✓ | ✓ | unknown format: cff |
 | `cmyk-to-hex` | cross-kind | ✓ | ✓ | color -> palette: cross-domain, inherently lossy |
 | `cmyk-to-rgb` | lossy-encoding | ✓ | ✓ | cmyk or rgb uses lossy encoding |
 | `color-name-to-hex` | cross-kind | ✓ | ✓ | color -> palette: cross-domain, inherently lossy |
@@ -399,6 +409,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `csl-json-to-asa` | unknown-format | (`asa-to-csl-json` missing) | n/a | unknown format: asa |
 | `csl-json-to-asa-html` | unknown-format | (`asa-html-to-csl-json` missing) | ✓ | unknown format: asa-html |
 | `csl-json-to-bibtex` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `csl-json-to-cff` | unknown-format | ✓ | n/a | unknown format: cff |
 | `csl-json-to-chicago` | unknown-format | (`chicago-to-csl-json` missing) | n/a | unknown format: chicago |
 | `csl-json-to-chicago-html` | unknown-format | (`chicago-html-to-csl-json` missing) | n/a | unknown format: chicago-html |
 | `csl-json-to-chicago-intext` | unknown-format | (`chicago-intext-to-csl-json` missing) | ✓ | unknown format: chicago-intext |
@@ -905,6 +916,7 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `ris-to-asa` | unknown-format | (`asa-to-ris` missing) | n/a | unknown format: asa |
 | `ris-to-asa-html` | unknown-format | (`asa-html-to-ris` missing) | n/a | unknown format: asa-html |
 | `ris-to-bibtex` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `ris-to-cff` | unknown-format | ✓ | n/a | unknown format: cff |
 | `ris-to-chicago` | unknown-format | (`chicago-to-ris` missing) | n/a | unknown format: chicago |
 | `ris-to-chicago-html` | unknown-format | (`chicago-html-to-ris` missing) | ✓ | unknown format: chicago-html |
 | `ris-to-chicago-intext` | unknown-format | (`chicago-intext-to-ris` missing) | n/a | unknown format: chicago-intext |

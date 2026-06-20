@@ -1480,3 +1480,40 @@ describe("formatted HTML bibliography: Nature/ACS/ASA (completes 10-style HTML)"
     }
   });
 });
+
+describe("CFF (Citation File Format / CITATION.cff)", () => {
+  const CFF =
+    "cff-version: 1.2.0\nmessage: cite it\ntitle: My Research Software\nversion: 1.2.0\n" +
+    "date-released: 2024-03-01\ndoi: 10.5281/zenodo.1234567\nauthors:\n" +
+    "  - family-names: Smith\n    given-names: John A.\n  - family-names: Doe\n    given-names: Jane\n";
+
+  it("bibtex-to-cff emits a valid CITATION.cff with family/given names", async () => {
+    const out = await (await run("bibtex-to-cff", f("a.bib", F.bibtex, "text/x-bibtex"))).blob.text();
+    expect(out).toMatch(/cff-version:\s*1\.2\.0/);
+    expect(out).toContain("title: A Sample Paper");
+    expect(out).toMatch(/family-names:\s*Smith/);
+    expect(out).toMatch(/given-names:\s*John/);
+    expect(out).toContain("10.1038/sample.2024.001");
+  });
+
+  it("cff-to-bibtex parses authors, year (from date-released), and doi", async () => {
+    const out = await (await run("cff-to-bibtex", f("CITATION.cff", CFF, "application/x-yaml"))).blob.text();
+    expect(out).toContain("Smith, John A. and Doe, Jane");
+    expect(out).toMatch(/title = \{My Research Software\}/);
+    expect(out).toMatch(/year = \{2024\}/);
+    expect(out).toContain("10.5281/zenodo.1234567");
+  });
+
+  it("cff-to-ris and cff-to-csl-json carry the title and authors", async () => {
+    const ris = await (await run("cff-to-ris", f("CITATION.cff", CFF, "application/x-yaml"))).blob.text();
+    expect(ris).toMatch(/TI {2}- My Research Software/);
+    expect(ris).toMatch(/AU {2}- Smith, John A\./);
+    const arr = JSON.parse(await (await run("cff-to-csl-json", f("CITATION.cff", CFF, "application/json"))).blob.text());
+    expect(arr[0].title).toBe("My Research Software");
+    expect(arr[0].DOI).toBe("10.5281/zenodo.1234567");
+  });
+
+  it("rejects YAML that is not a CITATION.cff", async () => {
+    await expect(run("cff-to-bibtex", f("x.yaml", "foo: bar\nbaz: 1\n", "application/x-yaml"))).rejects.toThrow(/does not look like a CITATION\.cff/i);
+  });
+});
