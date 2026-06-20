@@ -1117,6 +1117,7 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "text-to-dois": { provider: () => text("refs.txt", IDENTIFIER_TEXT_FIXTURE, "text/plain"), env: "node" },
   "text-to-pmids": { provider: () => text("refs.txt", IDENTIFIER_TEXT_FIXTURE, "text/plain"), env: "node" },
   "text-to-arxiv-ids": { provider: () => text("refs.txt", IDENTIFIER_TEXT_FIXTURE, "text/plain"), env: "node" },
+  "text-to-isbns": { provider: () => text("refs.txt", "Book ISBN 978-0-13-468599-1 and ISBN-10: 0-306-40615-2.", "text/plain"), env: "node" },
 };
 
 /** True if we have any fixture for this id (even if it requires browser). */

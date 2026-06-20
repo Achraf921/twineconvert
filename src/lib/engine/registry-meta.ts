@@ -6009,6 +6009,17 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "text/plain",
     "maxFileSizeBytes": 26214400
   },
+  "text-to-isbns": {
+    "label": "Text → ISBNs",
+    "accept": [
+      ".txt"
+    ],
+    "fromMime": [
+      "text/plain"
+    ],
+    "toMime": "text/plain",
+    "maxFileSizeBytes": 26214400
+  },
   "bibtex-to-xlsx": {
     "label": "BibTeX → XLSX",
     "accept": [

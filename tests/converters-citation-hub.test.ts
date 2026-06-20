@@ -1324,3 +1324,15 @@ describe("identifier extraction from text", () => {
     await expect(run("text-to-dois", f("a.txt", "just some prose with no identifiers", "text/plain"))).rejects.toThrow(/No DOIs found/i);
   });
 });
+
+describe("ISBN extraction from text", () => {
+  it("text-to-isbns extracts valid ISBN-10/13 and rejects bad/foreign numbers", async () => {
+    const txt = "ISBN 978-0-13-468599-1 and ISBN-10: 0-306-40615-2. Bare 978-3-16-148410-0.\n" +
+      "Invalid 978-0-13-468599-9 (bad check). Phone 555-0100. Random 1234567890123.\n";
+    const out = (await (await run("text-to-isbns", f("a.txt", txt, "text/plain"))).blob.text()).trim().split("\n");
+    expect(out).toEqual(["9780134685991", "0306406152", "9783161484100"]);
+  });
+  it("throws when no valid ISBN is present", async () => {
+    await expect(run("text-to-isbns", f("a.txt", "no isbns here, just 555-0100 and 1234567890123", "text/plain"))).rejects.toThrow(/No valid ISBNs/i);
+  });
+});

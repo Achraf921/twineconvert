@@ -43,3 +43,44 @@ export function extractArxivIds(text: string): string[] {
   );
   return dedupeKeepFirst(raw);
 }
+
+/** Validate an ISBN-10 or ISBN-13 by its check digit (separators removed). */
+export function isValidIsbn(candidate: string): boolean {
+  const s = candidate.toUpperCase().replace(/[^0-9X]/g, "");
+  if (s.length === 10) {
+    let sum = 0;
+    for (let i = 0; i < 10; i++) {
+      const ch = s[i];
+      if (ch === "X" && i !== 9) return false;
+      const d = ch === "X" ? 10 : Number(ch);
+      if (Number.isNaN(d)) return false;
+      sum += d * (10 - i);
+    }
+    return sum % 11 === 0;
+  }
+  if (s.length === 13) {
+    if (!/^\d{13}$/.test(s)) return false;
+    let sum = 0;
+    for (let i = 0; i < 13; i++) sum += Number(s[i]) * (i % 2 ? 3 : 1);
+    return sum % 10 === 0;
+  }
+  return false;
+}
+
+/** ISBNs: accepted only when "ISBN" labelled OR a bare 978/979 ISBN-13, and
+ *  always validated by check digit, so phone numbers and random digit runs
+ *  are not mistaken for ISBNs. Output is the separator-stripped form. */
+export function extractIsbns(text: string): string[] {
+  const out: string[] = [];
+  for (const m of text.matchAll(
+    /ISBN(?:-1[03])?:?\s*((?:97[89][-\s]?)?[0-9][0-9\-\s]{7,16}[0-9Xx])/gi,
+  )) {
+    const c = m[1].replace(/[-\s]/g, "").toUpperCase();
+    if (isValidIsbn(c)) out.push(c);
+  }
+  for (const m of text.matchAll(/\b(97[89](?:[-\s]?[0-9]){10})\b/g)) {
+    const c = m[1].replace(/[-\s]/g, "");
+    if (isValidIsbn(c)) out.push(c);
+  }
+  return dedupeKeepFirst(out);
+}
