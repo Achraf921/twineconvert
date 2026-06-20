@@ -1466,3 +1466,17 @@ describe("formatted HTML bibliography: IEEE/Vancouver/AMA", () => {
     expect(a).toContain('class="csl-entry"');
   });
 });
+
+describe("formatted HTML bibliography: Nature/ACS/ASA (completes 10-style HTML)", () => {
+  it("renders full HTML docs for nature/acs/asa", async () => {
+    for (const id of ["bibtex-to-nature-html", "ris-to-acs-html", "csl-json-to-asa-html"]) {
+      const input = id.startsWith("csl-json") ? f("a.json", F.cslJson, "application/json")
+        : id.startsWith("ris") ? f("a.ris", F.ris, "application/x-research-info-systems")
+        : f("a.bib", F.bibtex, "text/x-bibtex");
+      const out = await (await run(id, input)).blob.text();
+      expect(out).toMatch(/^<!DOCTYPE html>/);
+      expect(out).toContain('class="csl-entry"');
+      expect(out).toContain("</html>");
+    }
+  });
+});
