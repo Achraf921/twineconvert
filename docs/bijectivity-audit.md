@@ -1,19 +1,19 @@
 # Bijectivity Audit
 
-Generated 2026-06-20 from src/lib/engine/converters/.
+Generated 2026-07-14 from src/lib/engine/converters/.
 
 ## Summary
 
 | Classification | Count |
 |---|---:|
-| Total converters | 767 |
-| **Bijective candidates** (lossless, same-kind, both directions exist) | 256 |
-| **Bijective candidates missing reverse converter** | 40 |
+| Total converters | 803 |
+| **Bijective candidates** (lossless, same-kind, both directions exist) | 262 |
+| **Bijective candidates missing reverse converter** | 41 |
 | **Bijective candidates missing round-trip test** | 27 |
 | Lossy encoding (same kind, but lossy format) | 121 |
 | Cross-kind (raster→doc, video→audio, etc., inherently lossy) | 79 |
 | Single-action (no reverse possible) | 53 |
-| Unknown formats (need to add to FORMATS table) | 206 |
+| Unknown formats (need to add to FORMATS table) | 235 |
 | Compound id (irregular pattern) | 12 |
 
 ## Action Items
@@ -22,6 +22,11 @@ Generated 2026-06-20 from src/lib/engine/converters/.
 
 The audit script doesn't know about these formats; add them to the FORMATS table in scripts/bijectivity-audit.mjs:
 
+- `3ds-to-glb` (unknown format: 3ds)
+- `3ds-to-gltf` (unknown format: 3ds)
+- `3ds-to-obj` (unknown format: 3ds)
+- `3ds-to-ply` (unknown format: 3ds)
+- `3ds-to-stl` (unknown format: 3ds)
 - `bibtex-to-acs-html` (unknown format: acs-html)
 - `bibtex-to-acs` (unknown format: acs)
 - `bibtex-to-ama-html` (unknown format: ama-html)
@@ -89,6 +94,12 @@ The audit script doesn't know about these formats; add them to the FORMATS table
 - `csv-to-mla` (unknown format: mla)
 - `csv-to-nature` (unknown format: nature)
 - `csv-to-vancouver` (unknown format: vancouver)
+- `dae-to-glb` (unknown format: dae)
+- `dae-to-gltf` (unknown format: dae)
+- `dae-to-obj` (unknown format: dae)
+- `dae-to-ply` (unknown format: dae)
+- `dae-to-stl` (unknown format: dae)
+- `dae-to-usdz` (unknown format: dae)
 - `enw-to-acs` (unknown format: acs)
 - `enw-to-ama` (unknown format: ama)
 - `enw-to-apa` (unknown format: apa)
@@ -99,6 +110,16 @@ The audit script doesn't know about these formats; add them to the FORMATS table
 - `enw-to-mla` (unknown format: mla)
 - `enw-to-nature` (unknown format: nature)
 - `enw-to-vancouver` (unknown format: vancouver)
+- `fbx-to-glb` (unknown format: fbx)
+- `fbx-to-gltf` (unknown format: fbx)
+- `fbx-to-obj` (unknown format: fbx)
+- `fbx-to-ply` (unknown format: fbx)
+- `fbx-to-stl` (unknown format: fbx)
+- `fbx-to-usdz` (unknown format: fbx)
+- `glb-to-ply` (unknown format: ply)
+- `glb-to-usdz` (unknown format: usdz)
+- `gltf-to-ply` (unknown format: ply)
+- `gltf-to-usdz` (unknown format: usdz)
 - `marcxml-to-acs` (unknown format: acs)
 - `marcxml-to-ama` (unknown format: ama)
 - `marcxml-to-apa` (unknown format: apa)
@@ -129,6 +150,8 @@ The audit script doesn't know about these formats; add them to the FORMATS table
 - `nbib-to-mla` (unknown format: mla)
 - `nbib-to-nature` (unknown format: nature)
 - `nbib-to-vancouver` (unknown format: vancouver)
+- `obj-to-ply` (unknown format: ply)
+- `obj-to-usdz` (unknown format: usdz)
 - `ods-to-acs` (unknown format: acs)
 - `ods-to-ama` (unknown format: ama)
 - `ods-to-apa` (unknown format: apa)
@@ -139,6 +162,10 @@ The audit script doesn't know about these formats; add them to the FORMATS table
 - `ods-to-mla` (unknown format: mla)
 - `ods-to-nature` (unknown format: nature)
 - `ods-to-vancouver` (unknown format: vancouver)
+- `ply-to-glb` (unknown format: ply)
+- `ply-to-gltf` (unknown format: ply)
+- `ply-to-obj` (unknown format: ply)
+- `ply-to-stl` (unknown format: ply)
 - `pubmed-to-bibtex` (unknown format: pubmed)
 - `pubmed-to-csl-json` (unknown format: pubmed)
 - `pubmed-to-csv` (unknown format: pubmed)
@@ -204,6 +231,8 @@ The audit script doesn't know about these formats; add them to the FORMATS table
 - `ris-to-nature` (unknown format: nature)
 - `ris-to-vancouver-html` (unknown format: vancouver-html)
 - `ris-to-vancouver` (unknown format: vancouver)
+- `stl-to-ply` (unknown format: ply)
+- `stl-to-usdz` (unknown format: usdz)
 - `text-to-arxiv-ids` (unknown format: arxiv-ids)
 - `text-to-dois` (unknown format: dois)
 - `text-to-isbns` (unknown format: isbns)
@@ -243,6 +272,7 @@ These converters are lossless and could round-trip, but the reverse converter is
 | `enw-to-xlsx` | `xlsx-to-enw` |
 | `enw-to-yaml` | `yaml-to-enw` |
 | `gedcom-to-xlsx` | `xlsx-to-gedcom` |
+| `glb-to-3mf` | `3mf-to-glb` |
 | `hl7-to-csv` | `csv-to-hl7` |
 | `ico-to-bmp` | `bmp-to-ico` |
 | `ico-to-gif` | `gif-to-ico` |
@@ -306,6 +336,11 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 |---|---|---|---|---|
 | `3dl-to-csp` | bijective-candidate | ✓ | ✓ | both lossless lut formats; should round-trip cleanly |
 | `3dl-to-cube` | bijective-candidate | ✓ | ✓ | both lossless lut formats; should round-trip cleanly |
+| `3ds-to-glb` | unknown-format | (`glb-to-3ds` missing) | n/a | unknown format: 3ds |
+| `3ds-to-gltf` | unknown-format | (`gltf-to-3ds` missing) | n/a | unknown format: 3ds |
+| `3ds-to-obj` | unknown-format | (`obj-to-3ds` missing) | n/a | unknown format: 3ds |
+| `3ds-to-ply` | unknown-format | (`ply-to-3ds` missing) | n/a | unknown format: 3ds |
+| `3ds-to-stl` | unknown-format | (`stl-to-3ds` missing) | n/a | unknown format: 3ds |
 | `3gp-to-mp4` | lossy-encoding | (`mp4-to-3gp` missing) | n/a | 3gp or mp4 uses lossy encoding |
 | `3mf-to-obj` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
 | `3mf-to-stl` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
@@ -487,6 +522,12 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `cube-to-3dl` | bijective-candidate | ✓ | ✓ | both lossless lut formats; should round-trip cleanly |
 | `cube-to-csp` | bijective-candidate | ✓ | ✓ | both lossless lut formats; should round-trip cleanly |
 | `curl-to-har` | cross-kind | ✓ | ✓ | markup -> data: cross-domain, inherently lossy |
+| `dae-to-glb` | unknown-format | (`glb-to-dae` missing) | n/a | unknown format: dae |
+| `dae-to-gltf` | unknown-format | (`gltf-to-dae` missing) | n/a | unknown format: dae |
+| `dae-to-obj` | unknown-format | (`obj-to-dae` missing) | n/a | unknown format: dae |
+| `dae-to-ply` | unknown-format | (`ply-to-dae` missing) | n/a | unknown format: dae |
+| `dae-to-stl` | unknown-format | (`stl-to-dae` missing) | n/a | unknown format: dae |
+| `dae-to-usdz` | unknown-format | (`usdz-to-dae` missing) | n/a | unknown format: dae |
 | `dat-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `der-to-pem` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `dicom-to-jpg` | cross-kind | (`jpg-to-dicom` missing) | n/a | data -> raster: cross-domain, inherently lossy |
@@ -556,6 +597,12 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `facebook-archive-to-html` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
 | `fasta-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `fastq-to-json` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
+| `fbx-to-glb` | unknown-format | (`glb-to-fbx` missing) | n/a | unknown format: fbx |
+| `fbx-to-gltf` | unknown-format | (`gltf-to-fbx` missing) | n/a | unknown format: fbx |
+| `fbx-to-obj` | unknown-format | (`obj-to-fbx` missing) | n/a | unknown format: fbx |
+| `fbx-to-ply` | unknown-format | (`ply-to-fbx` missing) | n/a | unknown format: fbx |
+| `fbx-to-stl` | unknown-format | (`stl-to-fbx` missing) | n/a | unknown format: fbx |
+| `fbx-to-usdz` | unknown-format | (`usdz-to-fbx` missing) | n/a | unknown format: fbx |
 | `fen-to-pgn` | lossy-encoding | ✓ | n/a | fen or pgn uses lossy encoding |
 | `fen-to-png` | cross-kind | (`png-to-fen` missing) | ✓ | data -> raster: cross-domain, inherently lossy |
 | `fhir-bundle-to-csv` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
@@ -580,8 +627,17 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `gif-to-mp4` | cross-kind | ✓ | ✓ | raster -> video: cross-domain, inherently lossy |
 | `gif-to-png` | bijective-candidate | ✓ | ✓ | both lossless raster formats; should round-trip cleanly |
 | `gif-to-webp` | lossy-encoding | ✓ | ✓ | gif or webp uses lossy encoding |
+| `glb-to-3mf` | bijective-candidate | (`3mf-to-glb` missing) | n/a | both lossless mesh formats; should round-trip cleanly |
+| `glb-to-gltf` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
 | `glb-to-obj` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
+| `glb-to-ply` | unknown-format | ✓ | ✓ | unknown format: ply |
 | `glb-to-stl` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
+| `glb-to-usdz` | unknown-format | (`usdz-to-glb` missing) | n/a | unknown format: usdz |
+| `gltf-to-glb` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
+| `gltf-to-obj` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
+| `gltf-to-ply` | unknown-format | ✓ | ✓ | unknown format: ply |
+| `gltf-to-stl` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
+| `gltf-to-usdz` | unknown-format | (`usdz-to-gltf` missing) | n/a | unknown format: usdz |
 | `gpl-to-aco` | bijective-candidate | ✓ | ✓ | both lossless palette formats; should round-trip cleanly |
 | `gpl-to-ase` | bijective-candidate | ✓ | ✓ | both lossless palette formats; should round-trip cleanly |
 | `gpl-to-hex` | bijective-candidate | ✓ | ✓ | both lossless palette formats; should round-trip cleanly |
@@ -794,7 +850,10 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `numbers-to-pdf` | lossy-encoding | (`pdf-to-numbers` missing) | n/a | numbers or pdf uses lossy encoding |
 | `obj-to-3mf` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
 | `obj-to-glb` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
+| `obj-to-gltf` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
+| `obj-to-ply` | unknown-format | ✓ | ✓ | unknown format: ply |
 | `obj-to-stl` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
+| `obj-to-usdz` | unknown-format | (`usdz-to-obj` missing) | n/a | unknown format: usdz |
 | `ods-to-acs` | unknown-format | (`acs-to-ods` missing) | n/a | unknown format: acs |
 | `ods-to-ama` | unknown-format | (`ama-to-ods` missing) | n/a | unknown format: ama |
 | `ods-to-apa` | unknown-format | (`apa-to-ods` missing) | ✓ | unknown format: apa |
@@ -833,6 +892,10 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `pgn-to-csv` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
 | `pgn-to-fen` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
 | `pgn-to-json` | single-action | n/a | n/a | no reverse possible (X has no canonical inverse) |
+| `ply-to-glb` | unknown-format | ✓ | ✓ | unknown format: ply |
+| `ply-to-gltf` | unknown-format | ✓ | ✓ | unknown format: ply |
+| `ply-to-obj` | unknown-format | ✓ | ✓ | unknown format: ply |
+| `ply-to-stl` | unknown-format | ✓ | ✓ | unknown format: ply |
 | `png-to-avif` | lossy-encoding | ✓ | ✓ | png or avif uses lossy encoding |
 | `png-to-bmp` | bijective-candidate | ✓ | ✓ | both lossless raster formats; should round-trip cleanly |
 | `png-to-gif` | bijective-candidate | ✓ | ✓ | both lossless raster formats; should round-trip cleanly |
@@ -963,7 +1026,10 @@ Both directions exist and are theoretically lossless, but no round-trip test ver
 | `srt-to-vtt` | bijective-candidate | ✓ | ✓ | both lossless data formats; should round-trip cleanly |
 | `stl-to-3mf` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
 | `stl-to-glb` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
+| `stl-to-gltf` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
 | `stl-to-obj` | bijective-candidate | ✓ | ✓ | both lossless mesh formats; should round-trip cleanly |
+| `stl-to-ply` | unknown-format | ✓ | ✓ | unknown format: ply |
+| `stl-to-usdz` | unknown-format | (`usdz-to-stl` missing) | n/a | unknown format: usdz |
 | `svg-to-avif` | cross-kind | (`avif-to-svg` missing) | ✓ | vector -> raster: cross-domain, inherently lossy |
 | `svg-to-bmp` | cross-kind | (`bmp-to-svg` missing) | ✓ | vector -> raster: cross-domain, inherently lossy |
 | `svg-to-gif` | cross-kind | (`gif-to-svg` missing) | ✓ | vector -> raster: cross-domain, inherently lossy |

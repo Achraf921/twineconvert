@@ -16,6 +16,13 @@
 
 import { FIXTURES, fileFromText } from "./text-fixtures";
 import {
+  CUBE_DAE,
+  CUBE_FBX_ASCII,
+  makeCube3ds,
+  makeCubeGltfJson,
+  makeCubePlyBinary,
+} from "./mesh3d-fixtures";
+import {
   fileFromBytes,
   TINY_PNG_BYTES,
   TINY_JPEG_BYTES,
@@ -912,6 +919,46 @@ export const FIXTURE_PROVIDERS: Record<string, FixtureSpec> = {
   "glb-to-stl": { provider: () => Promise.resolve(fileFromBytes("cube.glb", makeTinyGlb(), "model/gltf-binary")), env: "node" },
   "obj-to-glb": { provider: () => text("cube.obj", makeTinyObj(), "model/obj"), env: "node" },
   "glb-to-obj": { provider: () => Promise.resolve(fileFromBytes("cube.glb", makeTinyGlb(), "model/gltf-binary")), env: "node" },
+
+  // ===== Game-engine / DCC 3D formats (FBX, DAE, 3DS, PLY, glTF, USDZ) =====
+  // All fixtures are hand-written encodings of the same cube; the mesh3d
+  // converter tests additionally verify geometry volume on every route.
+  "fbx-to-obj":   { provider: () => text("cube.fbx", CUBE_FBX_ASCII, "application/octet-stream"), env: "node" },
+  "fbx-to-stl":   { provider: () => text("cube.fbx", CUBE_FBX_ASCII, "application/octet-stream"), env: "node" },
+  "fbx-to-glb":   { provider: () => text("cube.fbx", CUBE_FBX_ASCII, "application/octet-stream"), env: "node" },
+  "fbx-to-gltf":  { provider: () => text("cube.fbx", CUBE_FBX_ASCII, "application/octet-stream"), env: "node" },
+  "fbx-to-ply":   { provider: () => text("cube.fbx", CUBE_FBX_ASCII, "application/octet-stream"), env: "node" },
+  "fbx-to-usdz":  { provider: () => text("cube.fbx", CUBE_FBX_ASCII, "application/octet-stream"), env: "node" },
+  "dae-to-obj":   { provider: () => text("cube.dae", CUBE_DAE, "model/vnd.collada+xml"), env: "node" },
+  "dae-to-stl":   { provider: () => text("cube.dae", CUBE_DAE, "model/vnd.collada+xml"), env: "node" },
+  "dae-to-glb":   { provider: () => text("cube.dae", CUBE_DAE, "model/vnd.collada+xml"), env: "node" },
+  "dae-to-gltf":  { provider: () => text("cube.dae", CUBE_DAE, "model/vnd.collada+xml"), env: "node" },
+  "dae-to-ply":   { provider: () => text("cube.dae", CUBE_DAE, "model/vnd.collada+xml"), env: "node" },
+  "dae-to-usdz":  { provider: () => text("cube.dae", CUBE_DAE, "model/vnd.collada+xml"), env: "node" },
+  "3ds-to-obj":   { provider: () => Promise.resolve(fileFromBytes("cube.3ds", makeCube3ds(), "application/x-3ds")), env: "node" },
+  "3ds-to-stl":   { provider: () => Promise.resolve(fileFromBytes("cube.3ds", makeCube3ds(), "application/x-3ds")), env: "node" },
+  "3ds-to-glb":   { provider: () => Promise.resolve(fileFromBytes("cube.3ds", makeCube3ds(), "application/x-3ds")), env: "node" },
+  "3ds-to-gltf":  { provider: () => Promise.resolve(fileFromBytes("cube.3ds", makeCube3ds(), "application/x-3ds")), env: "node" },
+  "3ds-to-ply":   { provider: () => Promise.resolve(fileFromBytes("cube.3ds", makeCube3ds(), "application/x-3ds")), env: "node" },
+  "ply-to-obj":   { provider: () => Promise.resolve(fileFromBytes("cube.ply", makeCubePlyBinary(), "application/octet-stream")), env: "node" },
+  "ply-to-stl":   { provider: () => Promise.resolve(fileFromBytes("cube.ply", makeCubePlyBinary(), "application/octet-stream")), env: "node" },
+  "ply-to-glb":   { provider: () => Promise.resolve(fileFromBytes("cube.ply", makeCubePlyBinary(), "application/octet-stream")), env: "node" },
+  "ply-to-gltf":  { provider: () => Promise.resolve(fileFromBytes("cube.ply", makeCubePlyBinary(), "application/octet-stream")), env: "node" },
+  "obj-to-ply":   { provider: () => text("cube.obj", makeTinyObj(), "model/obj"), env: "node" },
+  "stl-to-ply":   { provider: () => Promise.resolve(fileFromBytes("cube.stl", makeTinyStl(), "model/stl")), env: "node" },
+  "glb-to-ply":   { provider: () => Promise.resolve(fileFromBytes("cube.glb", makeTinyGlb(), "model/gltf-binary")), env: "node" },
+  "gltf-to-ply":  { provider: () => text("cube.gltf", makeCubeGltfJson(), "model/gltf+json"), env: "node" },
+  "gltf-to-obj":  { provider: () => text("cube.gltf", makeCubeGltfJson(), "model/gltf+json"), env: "node" },
+  "gltf-to-stl":  { provider: () => text("cube.gltf", makeCubeGltfJson(), "model/gltf+json"), env: "node" },
+  "obj-to-gltf":  { provider: () => text("cube.obj", makeTinyObj(), "model/obj"), env: "node" },
+  "stl-to-gltf":  { provider: () => Promise.resolve(fileFromBytes("cube.stl", makeTinyStl(), "model/stl")), env: "node" },
+  "gltf-to-glb":  { provider: () => text("cube.gltf", makeCubeGltfJson(), "model/gltf+json"), env: "node" },
+  "glb-to-gltf":  { provider: () => Promise.resolve(fileFromBytes("cube.glb", makeTinyGlb(), "model/gltf-binary")), env: "node" },
+  "obj-to-usdz":  { provider: () => text("cube.obj", makeTinyObj(), "model/obj"), env: "node" },
+  "stl-to-usdz":  { provider: () => Promise.resolve(fileFromBytes("cube.stl", makeTinyStl(), "model/stl")), env: "node" },
+  "glb-to-usdz":  { provider: () => Promise.resolve(fileFromBytes("cube.glb", makeTinyGlb(), "model/gltf-binary")), env: "node" },
+  "gltf-to-usdz": { provider: () => text("cube.gltf", makeCubeGltfJson(), "model/gltf+json"), env: "node" },
+  "glb-to-3mf":   { provider: () => Promise.resolve(fileFromBytes("cube.glb", makeTinyGlb(), "model/gltf-binary")), env: "node" },
 
   // ===== CSS named colors =====
   "color-name-to-hex": { provider: () => text("colors.txt", F.colorNames, "text/plain"), env: "node" },

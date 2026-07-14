@@ -464,6 +464,56 @@ const PROFILES: Record<string, FormatProfile> = {
     primaryUse: "3D mesh interchange between modeling/rendering applications.",
     binary: false,
   },
+  fbx: {
+    name: "FBX",
+    fullName: "Autodesk Filmbox",
+    description:
+      "FBX is Autodesk's proprietary 3D interchange format, originally built for Kaydara's FilmBox motion-capture tool (hence the name) and acquired by Autodesk in 2006. It carries meshes, materials, rigs, skeletal animation, blend shapes, cameras, and lights in one file, which made it the de facto asset format for game engines: Unreal Engine, Unity, and Epic's Fab marketplace all ingest FBX as a first-class citizen. Two encodings exist, binary (common) and ASCII, both versioned; modern tools write FBX 7.x.",
+    howToOpen:
+      "Unreal Engine and Unity import FBX directly. Blender opens it via File > Import > FBX. Autodesk's free FBX Review (Windows/macOS) previews files without a full DCC install. Maya, 3ds Max, Cinema 4D, and Houdini all read and write it natively.",
+    primaryUse: "Shipping rigged, animated 3D assets into game engines and between DCC tools.",
+    binary: true,
+  },
+  ply: {
+    name: "PLY",
+    fullName: "Polygon File Format (Stanford Triangle Format)",
+    description:
+      "PLY was designed at Stanford's 3D scanning lab by Greg Turk (1994) to store scanned geometry, and it remains the standard output of 3D scanners and photogrammetry pipelines (Meshroom, RealityCapture, COLMAP). A fully self-describing header declares elements and typed properties, so files can carry per-vertex normals, colors, and confidence values alongside positions. Three encodings exist and all are common: ascii, binary little-endian, and binary big-endian. Blender imports and exports PLY natively.",
+    howToOpen:
+      "Blender (File > Import > Stanford PLY), MeshLab, and CloudCompare all open PLY, including point-cloud-only files. Windows 3D Viewer reads mesh PLYs. The ascii flavor is inspectable in any text editor.",
+    primaryUse: "3D scan and photogrammetry output, both meshes and point clouds.",
+    binary: true,
+  },
+  dae: {
+    name: "DAE",
+    fullName: "COLLADA (Collaborative Design Activity)",
+    description:
+      "DAE is the file extension of COLLADA, the XML-based 3D asset exchange schema Sony and the Khronos Group standardized in the mid-2000s (ISO/PAS 17506). It stores scenes, geometry, materials, physics, and animation as human-readable XML. COLLADA was the neutral interchange format of its era, used by Google Earth and SketchUp models and early game pipelines, before glTF took over that role. A great deal of legacy content still ships as .dae, which is why every major DCC tool keeps an importer.",
+    howToOpen:
+      "Blender (File > Import > Collada), SketchUp, Cinema 4D, and MeshLab open DAE directly. macOS Preview and Xcode render .dae natively (SceneKit's editor format). Because it is XML, any text editor shows the structure.",
+    primaryUse: "Legacy 3D scene and model exchange, especially SketchUp/Google Earth era content.",
+    binary: false,
+  },
+  "3ds": {
+    name: "3DS",
+    fullName: "3D Studio Mesh",
+    description:
+      "3DS is the binary mesh format of Autodesk 3D Studio for DOS (1990), one of the oldest 3D formats still circulating. Its chunk-based structure stores triangle meshes, basic materials, and keyframe data, with hard legacy limits: 16-bit vertex indices cap each mesh at 65,536 vertices and object names at 10 characters. Despite its age, enormous archives of stock models and game mods still ship as .3ds, so modern tools keep read support.",
+    howToOpen:
+      "Blender imports 3DS via File > Import > 3D Studio. 3ds Max, Cinema 4D, MeshLab, and most asset managers read it. Converting to a modern format is recommended before further editing.",
+    primaryUse: "Opening legacy stock models and archives from the 3D Studio era.",
+    binary: true,
+  },
+  usdz: {
+    name: "USDZ",
+    fullName: "Universal Scene Description (zip archive)",
+    description:
+      "USDZ is Apple's packaging of Pixar's USD (Universal Scene Description): a single uncompressed zip archive holding a .usda/.usdc scene plus its textures, with 64-byte data alignment so the file can be memory-mapped. It is the native format of AR Quick Look, meaning iPhones and iPads can place a USDZ model in the room straight from Safari with no app install. Announced at WWDC 2018 and now the standard for web AR product previews on Apple devices.",
+    howToOpen:
+      "On iPhone/iPad, tapping a USDZ link opens AR Quick Look automatically. On macOS, Preview and Quick Look render it. Reality Composer (Apple) and Blender 4.x (via USD) can edit the contents; usdzip and usdview ship with Pixar's USD toolset.",
+    primaryUse: "AR Quick Look product previews on iOS and macOS.",
+    binary: true,
+  },
   "3mf": {
     name: "3MF",
     fullName: "3D Manufacturing Format",

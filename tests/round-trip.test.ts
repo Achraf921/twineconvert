@@ -27,6 +27,7 @@ import { describe, it, expect } from "vitest";
 import { run } from "../src/lib/engine/runner";
 import { fileFromText, FIXTURES } from "./fixtures/text-fixtures";
 import { fileFromBytes, makeTinyAse, makeTinyAco, makeTinyDst, makeTinyPes, makeTinyJef, makeTinyExp, makeTinyStl, makeTinyGlb, makeTinyObj, makeTiny3mf, makeTinyXlsx } from "./fixtures/binary-fixtures";
+import { CUBE_PLY_ASCII, makeCubeGltfJson } from "./fixtures/mesh3d-fixtures";
 
 /** Convert a Blob/File chain. The output of run() is { blob, filename };
  *  this just wraps it back into a File so the next converter accepts it. */
@@ -186,6 +187,75 @@ describe("round-trip: 3D mesh formats", () => {
     // duplicates; this assertion fails fast if that ever regresses.
     expect((text.match(/^v /gm) ?? []).length).toBe(8);
     expect((text.match(/^f /gm) ?? []).length).toBe(12);
+  });
+
+  it("OBJ → PLY → OBJ preserves vertex and face count (8 v, 12 f)", async () => {
+    const original = fileFromText("cube.obj", makeTinyObj(), "model/obj");
+    const ply = await chain("obj-to-ply", original);
+    const back = await chain("ply-to-obj", ply);
+    const text = await back.text();
+    expect((text.match(/^v /gm) ?? []).length).toBe(8);
+    expect((text.match(/^f /gm) ?? []).length).toBe(12);
+  });
+
+  it("STL → PLY → STL preserves triangle count (12 for unit cube)", async () => {
+    const original = fileFromBytes("cube.stl", makeTinyStl(), "model/stl");
+    const ply = await chain("stl-to-ply", original);
+    const back = await chain("ply-to-stl", ply);
+    const bytes = new Uint8Array(await back.arrayBuffer());
+    expect(new DataView(bytes.buffer).getUint32(80, true)).toBe(12);
+  });
+
+  it("PLY → GLB → PLY preserves face count (via ply-to-glb / glb-to-ply)", async () => {
+    const original = fileFromText("cube.ply", CUBE_PLY_ASCII, "text/plain");
+    const glb = await chain("ply-to-glb", original);
+    const back = await chain("glb-to-ply", glb);
+    const text = await back.text();
+    expect(text).toContain("element vertex 8");
+    expect(text).toContain("element face 12");
+  });
+
+  it("OBJ → glTF → OBJ preserves vertex and face count (8 v, 12 f)", async () => {
+    const original = fileFromText("cube.obj", makeTinyObj(), "model/obj");
+    const gltf = await chain("obj-to-gltf", original);
+    const back = await chain("gltf-to-obj", gltf);
+    const text = await back.text();
+    expect((text.match(/^v /gm) ?? []).length).toBe(8);
+    expect((text.match(/^f /gm) ?? []).length).toBe(12);
+  });
+
+  it("STL → glTF → STL preserves triangle count (12 for unit cube)", async () => {
+    const original = fileFromBytes("cube.stl", makeTinyStl(), "model/stl");
+    const gltf = await chain("stl-to-gltf", original);
+    const back = await chain("gltf-to-stl", gltf);
+    const bytes = new Uint8Array(await back.arrayBuffer());
+    expect(new DataView(bytes.buffer).getUint32(80, true)).toBe(12);
+  });
+
+  it("glTF → PLY → glTF preserves geometry accessors (via gltf-to-ply / ply-to-gltf)", async () => {
+    const original = fileFromText("cube.gltf", makeCubeGltfJson(), "model/gltf+json");
+    const ply = await chain("gltf-to-ply", original);
+    const back = await chain("ply-to-gltf", ply);
+    const doc = JSON.parse(await back.text());
+    expect(doc.asset.version).toBe("2.0");
+    expect(doc.accessors[0].count).toBe(8); // POSITION vertex count survives
+    expect(doc.accessors[1].count).toBe(36); // 12 triangles worth of indices
+  });
+
+  it("glTF → GLB → glTF container repack round-trip keeps the buffer byte-identical", async () => {
+    const original = fileFromText("cube.gltf", makeCubeGltfJson(), "model/gltf+json");
+    const glb = await chain("gltf-to-glb", original);
+    const back = await chain("glb-to-gltf", glb);
+    const inDoc = JSON.parse(makeCubeGltfJson());
+    const outDoc = JSON.parse(await back.text());
+    // Repacks are lossless: same accessors, same materials, and the buffer
+    // payload survives byte-for-byte (modulo 4-byte zero padding).
+    expect(outDoc.accessors).toEqual(inDoc.accessors);
+    expect(outDoc.materials).toEqual(inDoc.materials);
+    const b64 = (uri: string) => uri.slice(uri.indexOf(",") + 1);
+    const inBytes = atob(b64(inDoc.buffers[0].uri));
+    const outBytes = atob(b64(outDoc.buffers[0].uri));
+    expect(outBytes.slice(0, inBytes.length)).toBe(inBytes);
   });
 });
 

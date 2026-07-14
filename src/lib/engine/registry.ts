@@ -1552,6 +1552,52 @@ export const registry: Record<string, ConverterLoader> = {
   "obj-to-glb": () => import("./converters/obj-to-glb").then((m) => m.default),
   "glb-to-obj": () => import("./converters/glb-to-obj").then((m) => m.default),
 
+  // Game-engine / DCC 3D formats (Unreal Engine, Fab, Blender, Maya).
+  // FBX is the Autodesk interchange every Unreal/Fab/Unity asset ships in;
+  // DAE (COLLADA) and 3DS are the legacy DCC formats; PLY is the
+  // scanner/photogrammetry format Blender imports natively; glTF is the
+  // JSON flavor of GLB; USDZ is Apple AR Quick Look. FBX/DAE/3DS parse via
+  // lazily-imported three.js loaders (writing those parsers by hand is not
+  // responsible engineering); PLY and glTF stay hand-written and light.
+  // gltf-to-glb / glb-to-gltf are LOSSLESS container repacks (materials,
+  // animations, extensions preserved); all other routes carry geometry.
+  "fbx-to-obj": () => import("./converters/fbx-to-obj").then((m) => m.default),
+  "fbx-to-stl": () => import("./converters/fbx-to-stl").then((m) => m.default),
+  "fbx-to-glb": () => import("./converters/fbx-to-glb").then((m) => m.default),
+  "fbx-to-gltf": () => import("./converters/fbx-to-gltf").then((m) => m.default),
+  "fbx-to-ply": () => import("./converters/fbx-to-ply").then((m) => m.default),
+  "fbx-to-usdz": () => import("./converters/fbx-to-usdz").then((m) => m.default),
+  "dae-to-obj": () => import("./converters/dae-to-obj").then((m) => m.default),
+  "dae-to-stl": () => import("./converters/dae-to-stl").then((m) => m.default),
+  "dae-to-glb": () => import("./converters/dae-to-glb").then((m) => m.default),
+  "dae-to-gltf": () => import("./converters/dae-to-gltf").then((m) => m.default),
+  "dae-to-ply": () => import("./converters/dae-to-ply").then((m) => m.default),
+  "dae-to-usdz": () => import("./converters/dae-to-usdz").then((m) => m.default),
+  "3ds-to-obj": () => import("./converters/3ds-to-obj").then((m) => m.default),
+  "3ds-to-stl": () => import("./converters/3ds-to-stl").then((m) => m.default),
+  "3ds-to-glb": () => import("./converters/3ds-to-glb").then((m) => m.default),
+  "3ds-to-gltf": () => import("./converters/3ds-to-gltf").then((m) => m.default),
+  "3ds-to-ply": () => import("./converters/3ds-to-ply").then((m) => m.default),
+  "ply-to-obj": () => import("./converters/ply-to-obj").then((m) => m.default),
+  "ply-to-stl": () => import("./converters/ply-to-stl").then((m) => m.default),
+  "ply-to-glb": () => import("./converters/ply-to-glb").then((m) => m.default),
+  "ply-to-gltf": () => import("./converters/ply-to-gltf").then((m) => m.default),
+  "obj-to-ply": () => import("./converters/obj-to-ply").then((m) => m.default),
+  "stl-to-ply": () => import("./converters/stl-to-ply").then((m) => m.default),
+  "glb-to-ply": () => import("./converters/glb-to-ply").then((m) => m.default),
+  "gltf-to-ply": () => import("./converters/gltf-to-ply").then((m) => m.default),
+  "gltf-to-obj": () => import("./converters/gltf-to-obj").then((m) => m.default),
+  "gltf-to-stl": () => import("./converters/gltf-to-stl").then((m) => m.default),
+  "obj-to-gltf": () => import("./converters/obj-to-gltf").then((m) => m.default),
+  "stl-to-gltf": () => import("./converters/stl-to-gltf").then((m) => m.default),
+  "gltf-to-glb": () => import("./converters/gltf-to-glb").then((m) => m.default),
+  "glb-to-gltf": () => import("./converters/glb-to-gltf").then((m) => m.default),
+  "obj-to-usdz": () => import("./converters/obj-to-usdz").then((m) => m.default),
+  "stl-to-usdz": () => import("./converters/stl-to-usdz").then((m) => m.default),
+  "glb-to-usdz": () => import("./converters/glb-to-usdz").then((m) => m.default),
+  "gltf-to-usdz": () => import("./converters/gltf-to-usdz").then((m) => m.default),
+  "glb-to-3mf": () => import("./converters/glb-to-3mf").then((m) => m.default),
+
   // DICOM medical imaging. Every X-ray, CT, MRI, ultrasound, mammogram,
   // PET scan from every modern PACS is DICOM. Browser-only conversion
   // is the HIPAA story: patient data never leaves the radiologist's

@@ -603,6 +603,45 @@ export const validateGlb: Validator = async ({ blob, minSize = 12 }) => {
   assertMagicBytes(head, [0x67, 0x6c, 0x54, 0x46], "glTF Binary");
 };
 
+export const validateGltfJson: Validator = async ({ blob, minSize = 2 }) => {
+  // glTF (JSON flavor): must parse as JSON and declare glTF 2.x
+  assertMinSize(blob, minSize, "glTF JSON");
+  const text = await readText(blob);
+  let doc: { asset?: { version?: string } };
+  try {
+    doc = JSON.parse(text);
+  } catch {
+    throw new Error("glTF output is not valid JSON");
+  }
+  if (!doc.asset?.version?.startsWith("2")) {
+    throw new Error(`glTF output has asset.version ${doc.asset?.version}, expected 2.x`);
+  }
+};
+
+export const validatePly: Validator = async ({ blob, minSize = 20 }) => {
+  // PLY: 'ply' magic line, declared format, and a terminated header
+  assertMinSize(blob, minSize, "PLY");
+  const text = await readText(blob);
+  if (!text.startsWith("ply")) throw new Error("PLY output is missing the ply magic line");
+  if (!/format (ascii|binary_little_endian|binary_big_endian) 1\.0/.test(text)) {
+    throw new Error("PLY output is missing the format declaration");
+  }
+  if (!text.includes("end_header")) throw new Error("PLY output header is not terminated");
+};
+
+export const validateUsdz: Validator = async ({ blob, minSize = 64 }) => {
+  // USDZ: a zip archive (PK magic) whose first entry is a .usd/.usda/.usdc
+  assertMinSize(blob, minSize, "USDZ");
+  const head = await readBytes(blob, 64);
+  assertMagicBytes(head.subarray(0, 4), [0x50, 0x4b, 0x03, 0x04], "USDZ (zip)");
+  // Local file header: filename length at offset 26 (u16 LE), name at 30
+  const nameLen = head[26] | (head[27] << 8);
+  const name = new TextDecoder().decode(head.subarray(30, Math.min(30 + nameLen, 64)));
+  if (!/\.usd[azc]?$/.test(name)) {
+    throw new Error(`USDZ first zip entry should be a usd file, got "${name}"`);
+  }
+};
+
 export const validateYaml: Validator = async ({ blob, minSize = 1 }) => {
   assertMinSize(blob, minSize, "YAML");
   const text = await readText(blob);
@@ -1095,6 +1134,9 @@ const BY_MIME: Record<string, Validator> = {
   "application/sla": validateStlBinary,
   "model/obj": validateObj,
   "model/gltf-binary": validateGlb,
+  "model/gltf+json": validateGltfJson,
+  "model/ply": validatePly,
+  "model/vnd.usdz+zip": validateUsdz,
 
   "audio/mpeg": validateMp3,
   "audio/mp3": validateMp3,
@@ -1207,6 +1249,9 @@ const BY_MIME: Record<string, Validator> = {
 
 // Extension-keyed fallback, used when toMime is generic (octet-stream)
 const BY_EXT: Record<string, Validator> = {
+  gltf: validateGltfJson,
+  ply: validatePly,
+  usdz: validateUsdz,
   ase: validateAse,
   aco: validateAco,
   gpl: validateGpl,

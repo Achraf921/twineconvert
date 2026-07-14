@@ -457,6 +457,7 @@ const withReverses = classifications.map((c) => ({
 // genuinely tested, not just what lives in the canonically-named file.
 const TEST_FILE_GLOBS = [
   "tests/round-trip.test.ts",
+  "tests/converters-mesh3d.test.ts",
   "tests/converters-text.test.ts",
   "tests/converters-comprehensive.test.ts",
   "tests/converters-music-sheet.test.ts",

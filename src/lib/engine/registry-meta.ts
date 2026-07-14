@@ -8886,6 +8886,443 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
     "toMime": "model/obj",
     "maxFileSizeBytes": 104857600
   },
+  "fbx-to-obj": {
+    "label": "FBX → OBJ",
+    "accept": [
+      ".fbx"
+    ],
+    "fromMime": [
+      "application/octet-stream"
+    ],
+    "toMime": "model/obj",
+    "maxFileSizeBytes": 209715200
+  },
+  "fbx-to-stl": {
+    "label": "FBX → STL",
+    "accept": [
+      ".fbx"
+    ],
+    "fromMime": [
+      "application/octet-stream"
+    ],
+    "toMime": "model/stl",
+    "maxFileSizeBytes": 209715200
+  },
+  "fbx-to-glb": {
+    "label": "FBX → GLB",
+    "accept": [
+      ".fbx"
+    ],
+    "fromMime": [
+      "application/octet-stream"
+    ],
+    "toMime": "model/gltf-binary",
+    "maxFileSizeBytes": 209715200
+  },
+  "fbx-to-gltf": {
+    "label": "FBX → glTF",
+    "accept": [
+      ".fbx"
+    ],
+    "fromMime": [
+      "application/octet-stream"
+    ],
+    "toMime": "model/gltf+json",
+    "maxFileSizeBytes": 209715200
+  },
+  "fbx-to-ply": {
+    "label": "FBX → PLY",
+    "accept": [
+      ".fbx"
+    ],
+    "fromMime": [
+      "application/octet-stream"
+    ],
+    "toMime": "model/ply",
+    "maxFileSizeBytes": 209715200
+  },
+  "fbx-to-usdz": {
+    "label": "FBX → USDZ",
+    "accept": [
+      ".fbx"
+    ],
+    "fromMime": [
+      "application/octet-stream"
+    ],
+    "toMime": "model/vnd.usdz+zip",
+    "maxFileSizeBytes": 209715200
+  },
+  "dae-to-obj": {
+    "label": "DAE → OBJ",
+    "accept": [
+      ".dae"
+    ],
+    "fromMime": [
+      "model/vnd.collada+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "model/obj",
+    "maxFileSizeBytes": 104857600
+  },
+  "dae-to-stl": {
+    "label": "DAE → STL",
+    "accept": [
+      ".dae"
+    ],
+    "fromMime": [
+      "model/vnd.collada+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "model/stl",
+    "maxFileSizeBytes": 104857600
+  },
+  "dae-to-glb": {
+    "label": "DAE → GLB",
+    "accept": [
+      ".dae"
+    ],
+    "fromMime": [
+      "model/vnd.collada+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "model/gltf-binary",
+    "maxFileSizeBytes": 104857600
+  },
+  "dae-to-gltf": {
+    "label": "DAE → glTF",
+    "accept": [
+      ".dae"
+    ],
+    "fromMime": [
+      "model/vnd.collada+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "model/gltf+json",
+    "maxFileSizeBytes": 104857600
+  },
+  "dae-to-ply": {
+    "label": "DAE → PLY",
+    "accept": [
+      ".dae"
+    ],
+    "fromMime": [
+      "model/vnd.collada+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "model/ply",
+    "maxFileSizeBytes": 104857600
+  },
+  "dae-to-usdz": {
+    "label": "DAE → USDZ",
+    "accept": [
+      ".dae"
+    ],
+    "fromMime": [
+      "model/vnd.collada+xml",
+      "application/xml",
+      "text/xml"
+    ],
+    "toMime": "model/vnd.usdz+zip",
+    "maxFileSizeBytes": 104857600
+  },
+  "3ds-to-obj": {
+    "label": "3DS → OBJ",
+    "accept": [
+      ".3ds"
+    ],
+    "fromMime": [
+      "application/x-3ds",
+      "image/x-3ds",
+      "application/octet-stream"
+    ],
+    "toMime": "model/obj",
+    "maxFileSizeBytes": 104857600
+  },
+  "3ds-to-stl": {
+    "label": "3DS → STL",
+    "accept": [
+      ".3ds"
+    ],
+    "fromMime": [
+      "application/x-3ds",
+      "image/x-3ds",
+      "application/octet-stream"
+    ],
+    "toMime": "model/stl",
+    "maxFileSizeBytes": 104857600
+  },
+  "3ds-to-glb": {
+    "label": "3DS → GLB",
+    "accept": [
+      ".3ds"
+    ],
+    "fromMime": [
+      "application/x-3ds",
+      "image/x-3ds",
+      "application/octet-stream"
+    ],
+    "toMime": "model/gltf-binary",
+    "maxFileSizeBytes": 104857600
+  },
+  "3ds-to-gltf": {
+    "label": "3DS → glTF",
+    "accept": [
+      ".3ds"
+    ],
+    "fromMime": [
+      "application/x-3ds",
+      "image/x-3ds",
+      "application/octet-stream"
+    ],
+    "toMime": "model/gltf+json",
+    "maxFileSizeBytes": 104857600
+  },
+  "3ds-to-ply": {
+    "label": "3DS → PLY",
+    "accept": [
+      ".3ds"
+    ],
+    "fromMime": [
+      "application/x-3ds",
+      "image/x-3ds",
+      "application/octet-stream"
+    ],
+    "toMime": "model/ply",
+    "maxFileSizeBytes": 104857600
+  },
+  "ply-to-obj": {
+    "label": "PLY → OBJ",
+    "accept": [
+      ".ply"
+    ],
+    "fromMime": [
+      "application/octet-stream",
+      "text/plain"
+    ],
+    "toMime": "model/obj",
+    "maxFileSizeBytes": 209715200
+  },
+  "ply-to-stl": {
+    "label": "PLY → STL",
+    "accept": [
+      ".ply"
+    ],
+    "fromMime": [
+      "application/octet-stream",
+      "text/plain"
+    ],
+    "toMime": "model/stl",
+    "maxFileSizeBytes": 209715200
+  },
+  "ply-to-glb": {
+    "label": "PLY → GLB",
+    "accept": [
+      ".ply"
+    ],
+    "fromMime": [
+      "application/octet-stream",
+      "text/plain"
+    ],
+    "toMime": "model/gltf-binary",
+    "maxFileSizeBytes": 209715200
+  },
+  "ply-to-gltf": {
+    "label": "PLY → glTF",
+    "accept": [
+      ".ply"
+    ],
+    "fromMime": [
+      "application/octet-stream",
+      "text/plain"
+    ],
+    "toMime": "model/gltf+json",
+    "maxFileSizeBytes": 209715200
+  },
+  "obj-to-ply": {
+    "label": "OBJ → PLY",
+    "accept": [
+      ".obj"
+    ],
+    "fromMime": [
+      "model/obj",
+      "text/plain"
+    ],
+    "toMime": "model/ply",
+    "maxFileSizeBytes": 104857600
+  },
+  "stl-to-ply": {
+    "label": "STL → PLY",
+    "accept": [
+      ".stl"
+    ],
+    "fromMime": [
+      "model/stl",
+      "application/octet-stream"
+    ],
+    "toMime": "model/ply",
+    "maxFileSizeBytes": 104857600
+  },
+  "glb-to-ply": {
+    "label": "GLB → PLY",
+    "accept": [
+      ".glb"
+    ],
+    "fromMime": [
+      "model/gltf-binary",
+      "application/octet-stream"
+    ],
+    "toMime": "model/ply",
+    "maxFileSizeBytes": 209715200
+  },
+  "gltf-to-ply": {
+    "label": "glTF → PLY",
+    "accept": [
+      ".gltf"
+    ],
+    "fromMime": [
+      "model/gltf+json",
+      "application/json"
+    ],
+    "toMime": "model/ply",
+    "maxFileSizeBytes": 104857600
+  },
+  "gltf-to-obj": {
+    "label": "glTF → OBJ",
+    "accept": [
+      ".gltf"
+    ],
+    "fromMime": [
+      "model/gltf+json",
+      "application/json"
+    ],
+    "toMime": "model/obj",
+    "maxFileSizeBytes": 104857600
+  },
+  "gltf-to-stl": {
+    "label": "glTF → STL",
+    "accept": [
+      ".gltf"
+    ],
+    "fromMime": [
+      "model/gltf+json",
+      "application/json"
+    ],
+    "toMime": "model/stl",
+    "maxFileSizeBytes": 104857600
+  },
+  "obj-to-gltf": {
+    "label": "OBJ → glTF",
+    "accept": [
+      ".obj"
+    ],
+    "fromMime": [
+      "model/obj",
+      "text/plain"
+    ],
+    "toMime": "model/gltf+json",
+    "maxFileSizeBytes": 104857600
+  },
+  "stl-to-gltf": {
+    "label": "STL → glTF",
+    "accept": [
+      ".stl"
+    ],
+    "fromMime": [
+      "model/stl",
+      "application/octet-stream"
+    ],
+    "toMime": "model/gltf+json",
+    "maxFileSizeBytes": 104857600
+  },
+  "gltf-to-glb": {
+    "label": "glTF → GLB",
+    "accept": [
+      ".gltf"
+    ],
+    "fromMime": [
+      "model/gltf+json",
+      "application/json"
+    ],
+    "toMime": "model/gltf-binary",
+    "maxFileSizeBytes": 209715200
+  },
+  "glb-to-gltf": {
+    "label": "GLB → glTF",
+    "accept": [
+      ".glb"
+    ],
+    "fromMime": [
+      "model/gltf-binary",
+      "application/octet-stream"
+    ],
+    "toMime": "model/gltf+json",
+    "maxFileSizeBytes": 209715200
+  },
+  "obj-to-usdz": {
+    "label": "OBJ → USDZ",
+    "accept": [
+      ".obj"
+    ],
+    "fromMime": [
+      "model/obj",
+      "text/plain"
+    ],
+    "toMime": "model/vnd.usdz+zip",
+    "maxFileSizeBytes": 104857600
+  },
+  "stl-to-usdz": {
+    "label": "STL → USDZ",
+    "accept": [
+      ".stl"
+    ],
+    "fromMime": [
+      "model/stl",
+      "application/octet-stream"
+    ],
+    "toMime": "model/vnd.usdz+zip",
+    "maxFileSizeBytes": 104857600
+  },
+  "glb-to-usdz": {
+    "label": "GLB → USDZ",
+    "accept": [
+      ".glb"
+    ],
+    "fromMime": [
+      "model/gltf-binary",
+      "application/octet-stream"
+    ],
+    "toMime": "model/vnd.usdz+zip",
+    "maxFileSizeBytes": 209715200
+  },
+  "gltf-to-usdz": {
+    "label": "glTF → USDZ",
+    "accept": [
+      ".gltf"
+    ],
+    "fromMime": [
+      "model/gltf+json",
+      "application/json"
+    ],
+    "toMime": "model/vnd.usdz+zip",
+    "maxFileSizeBytes": 104857600
+  },
+  "glb-to-3mf": {
+    "label": "GLB → 3MF",
+    "accept": [
+      ".glb"
+    ],
+    "fromMime": [
+      "model/gltf-binary",
+      "application/octet-stream"
+    ],
+    "toMime": "model/3mf",
+    "maxFileSizeBytes": 209715200
+  },
   "dicom-to-json": {
     "label": "DICOM → JSON",
     "accept": [
