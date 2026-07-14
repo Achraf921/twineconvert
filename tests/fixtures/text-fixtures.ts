@@ -494,6 +494,30 @@ Best,
 Alice
 `,
 
+  // EML with a MIME attachment. postal-mime returns attachment content as an
+  // ArrayBuffer (not a Uint8Array), which used to crash the parser; this
+  // fixture keeps that path exercised in CI.
+  emlWithAttachment: `Date: Mon, 1 Jan 2024 12:00:00 +0000
+From: Alice <alice@example.com>
+To: Bob <bob@example.com>
+Subject: Report attached
+Message-ID: <test2@example.com>
+Content-Type: multipart/mixed; boundary="BOUNDARY123"
+
+--BOUNDARY123
+Content-Type: text/plain; charset=utf-8
+
+Hi Bob, see the attached CSV.
+
+--BOUNDARY123
+Content-Type: text/csv; name="data.csv"
+Content-Disposition: attachment; filename="data.csv"
+
+a,b
+1,2
+--BOUNDARY123--
+`,
+
   // ---- Color converter fixtures (one value per line) ----
   rgbList: `rgb(255, 0, 0)
 rgb(0, 255, 0)

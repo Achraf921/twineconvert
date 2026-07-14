@@ -1,7 +1,7 @@
 import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
-import { parseDicom, dicomPixelsToRgba } from "../util/dicom";
+import { parseDicom, loadDicomPixels, dicomPixelsToRgba } from "../util/dicom";
 
 /**
  * DICOM → JPG. Same medical-imaging decode path as dicom-to-png with
@@ -27,7 +27,7 @@ const dicomToJpg: Converter = {
     opts?.onProgress?.(0.1);
     let jpegBlob: Blob;
     try {
-      const file = parseDicom(await input.arrayBuffer());
+      const file = await loadDicomPixels(parseDicom(await input.arrayBuffer()));
       const { rgba, width, height } = dicomPixelsToRgba(file);
       opts?.onProgress?.(0.5);
 

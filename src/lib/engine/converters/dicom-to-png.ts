@@ -1,7 +1,7 @@
 import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
 import { swapExtension } from "../util/canvas-encode";
-import { parseDicom, dicomPixelsToRgba } from "../util/dicom";
+import { parseDicom, loadDicomPixels, dicomPixelsToRgba } from "../util/dicom";
 
 /**
  * dicom-to-png. Renders the first frame of a DICOM file as a PNG by
@@ -29,7 +29,7 @@ const dicomToPng: Converter = {
     opts?.onProgress?.(0.1);
     let pngBlob: Blob;
     try {
-      const file = parseDicom(await input.arrayBuffer());
+      const file = await loadDicomPixels(parseDicom(await input.arrayBuffer()));
       const { rgba, width, height } = dicomPixelsToRgba(file);
       opts?.onProgress?.(0.5);
 

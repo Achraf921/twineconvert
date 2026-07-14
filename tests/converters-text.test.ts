@@ -592,6 +592,17 @@ describe("text-format converter smoke tests", () => {
     await expectTextStartsWith(result.blob, "From ");
   });
 
+  it("eml-to-csv handles an email with a MIME attachment (no undefined-slice crash)", async () => {
+    // postal-mime hands attachment content back as an ArrayBuffer, which the
+    // parser used to treat as a Uint8Array -> `undefined.slice(...)` crash on
+    // every email that carried an attachment. See email-parse.ts:toArrayBuffer.
+    const input = fileFromText("test.eml", FIXTURES.emlWithAttachment, "message/rfc822");
+    const result = await run("eml-to-csv", input);
+    await expectCsvShape(result.blob, ["from", "to", "subject"]);
+    const text = await result.blob.text();
+    expect(text).toContain("Report attached");
+  });
+
   // ===== Color palette =====
   it("hex-to-gpl converts a hex list to a GIMP palette", async () => {
     const input = fileFromText("colors.txt", FIXTURES.hexList, "text/plain");

@@ -37,15 +37,30 @@ export interface ParsedEmailAttachment {
 }
 
 function attachmentToOurs(a: PostalAttachment): ParsedEmailAttachment {
-  // postal-mime uses Uint8Array for binary content; we hand callers a
-  // plain ArrayBuffer so they can construct Blobs without a copy step.
-  const data = a.content as Uint8Array;
-  const buf = data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength) as ArrayBuffer;
+  // postal-mime's Attachment.content is `ArrayBuffer | Uint8Array | string`
+  // depending on the part's encoding: binary parts come back as ArrayBuffer
+  // (the common case), some as a Uint8Array view, and text parts as a string.
+  // Hand callers a plain ArrayBuffer regardless of which shape we got.
   return {
     filename: a.filename ?? "attachment",
     mimeType: a.mimeType ?? "application/octet-stream",
-    content: buf,
+    content: toArrayBuffer(a.content),
   };
+}
+
+/** Normalize postal-mime's ArrayBuffer | Uint8Array | string content to an ArrayBuffer. */
+function toArrayBuffer(content: ArrayBuffer | Uint8Array | string): ArrayBuffer {
+  if (typeof content === "string") {
+    return new TextEncoder().encode(content).buffer as ArrayBuffer;
+  }
+  if (content instanceof Uint8Array) {
+    return content.buffer.slice(
+      content.byteOffset,
+      content.byteOffset + content.byteLength,
+    ) as ArrayBuffer;
+  }
+  // Already an ArrayBuffer.
+  return content;
 }
 
 function postalToOurs(email: PostalEmail): ParsedEmail {

@@ -49,6 +49,7 @@
     "hcl2-parser": "^1.0.3",
     "html2canvas": "^1.4.1",
     "ini": "^6.0.0",
+    "jpeg-lossless-decoder-js": "^2.1.2",
     "js-yaml": "^4.1.1",
     "json5": "^2.2.3",
     "jspdf": "^4.2.1",

@@ -1,6 +1,6 @@
 import type { Converter } from "../types";
 import { ConvertFailedError } from "../types";
-import { parseDicom, dicomPixelsToRgba } from "../util/dicom";
+import { parseDicom, loadDicomPixels, dicomPixelsToRgba } from "../util/dicom";
 import { imagesToPdf, pdfFilename } from "../util/image-to-pdf";
 
 /**
@@ -27,7 +27,7 @@ const dicomToPdf: Converter = {
     opts?.onProgress?.(0.1);
     let pdfBlob: Blob;
     try {
-      const file = parseDicom(await input.arrayBuffer());
+      const file = await loadDicomPixels(parseDicom(await input.arrayBuffer()));
       const { rgba, width, height } = dicomPixelsToRgba(file);
       opts?.onProgress?.(0.4);
 

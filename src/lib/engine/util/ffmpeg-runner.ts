@@ -22,28 +22,77 @@ import type { FFmpeg } from "@ffmpeg/ffmpeg";
 
 const CORE_BASE = "/ffmpeg";
 
-let ffmpegPromise: Promise<FFmpeg> | null = null;
+/**
+ * The subset of the FFmpeg API the runner touches. Kept as an interface so the
+ * instance factory can be swapped for a fake in unit tests (real ffmpeg.wasm
+ * only runs in a browser/worker).
+ */
+export interface FFmpegLike {
+  on(event: "progress", handler: (e: { progress: number }) => void): void;
+  off(event: "progress", handler: (e: { progress: number }) => void): void;
+  writeFile(name: string, data: Uint8Array): Promise<unknown>;
+  exec(args: string[]): Promise<unknown>;
+  readFile(name: string): Promise<Uint8Array | string>;
+  deleteFile(name: string): Promise<unknown>;
+  terminate?(): void;
+}
 
-async function getFFmpeg(): Promise<FFmpeg> {
+let ffmpegPromise: Promise<FFmpegLike> | null = null;
+
+async function buildFFmpeg(): Promise<FFmpegLike> {
+  const { FFmpeg } = await import("@ffmpeg/ffmpeg");
+  const { toBlobURL } = await import("@ffmpeg/util");
+  const instance = new FFmpeg();
+
+  // toBlobURL fetches the file and rewraps it as a same-origin blob: URL.
+  // Required because the worker created by .load() can't fetch
+  // cross-origin script URLs in many browsers.
+  const [coreURL, wasmURL] = await Promise.all([
+    toBlobURL(`${CORE_BASE}/ffmpeg-core.js`, "text/javascript"),
+    toBlobURL(`${CORE_BASE}/ffmpeg-core.wasm`, "application/wasm"),
+  ]);
+
+  await instance.load({ coreURL, wasmURL });
+  return instance as unknown as FFmpegLike;
+}
+
+let instanceFactory: () => Promise<FFmpegLike> = buildFFmpeg;
+
+/** Test seam: swap the instance factory and drop any cached instance. */
+export function __setFFmpegFactoryForTest(
+  factory: (() => Promise<FFmpegLike>) | null,
+): void {
+  instanceFactory = factory ?? buildFFmpeg;
+  ffmpegPromise = null;
+}
+
+async function getFFmpeg(): Promise<FFmpegLike> {
   if (!ffmpegPromise) {
-    ffmpegPromise = (async () => {
-      const { FFmpeg } = await import("@ffmpeg/ffmpeg");
-      const { toBlobURL } = await import("@ffmpeg/util");
-      const instance = new FFmpeg();
-
-      // toBlobURL fetches the file and rewraps it as a same-origin blob: URL.
-      // Required because the worker created by .load() can't fetch
-      // cross-origin script URLs in many browsers.
-      const [coreURL, wasmURL] = await Promise.all([
-        toBlobURL(`${CORE_BASE}/ffmpeg-core.js`, "text/javascript"),
-        toBlobURL(`${CORE_BASE}/ffmpeg-core.wasm`, "application/wasm"),
-      ]);
-
-      await instance.load({ coreURL, wasmURL });
-      return instance;
-    })();
+    ffmpegPromise = instanceFactory();
   }
   return ffmpegPromise;
+}
+
+/**
+ * Discard the cached instance after a failed conversion.
+ *
+ * ffmpeg.wasm shares one module + one in-memory filesystem across every
+ * conversion. A failing exec can `abort()` the underlying wasm module, after
+ * which every subsequent call on that instance rejects immediately. Because we
+ * cache the instance for the life of the page, one bad file used to poison the
+ * whole session: a batch of hundreds of files would fail-fast in seconds, all
+ * with the same error and zero successes (observed in production: single
+ * sessions with 300-500 ogg-to-mp3 errors and no successes). Dropping the
+ * cached instance here means the next queued job rebuilds a clean one, so a
+ * single bad file no longer cascades across the batch.
+ */
+function discardFFmpeg(instance: FFmpegLike): void {
+  if (ffmpegPromise) ffmpegPromise = null;
+  try {
+    instance.terminate?.();
+  } catch {
+    // Already dead; nothing to clean up.
+  }
 }
 
 export interface FFmpegConvertOptions {
@@ -123,7 +172,17 @@ async function runOne(input: File | Blob, opts: FFmpegConvertOptions): Promise<B
     }
 
     return new Blob([buf], { type: opts.outputMime });
+  } catch (err) {
+    // A failed/aborted exec can leave the shared wasm module unusable. Drop the
+    // cached instance so the next queued job (e.g. the rest of a batch) rebuilds
+    // a clean one instead of inheriting the poison. See discardFFmpeg.
+    discardFFmpeg(instance);
+    throw err;
   } finally {
-    instance.off("progress", progressHandler);
+    try {
+      instance.off("progress", progressHandler);
+    } catch {
+      // Instance may already be terminated; ignore.
+    }
   }
 }
