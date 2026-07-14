@@ -8822,7 +8822,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "text/plain"
     ],
     "toMime": "image/svg+xml",
-    "maxFileSizeBytes": 26214400
+    "maxFileSizeBytes": 52428800
   },
   "dxf-to-json": {
     "label": "DXF → JSON",
@@ -8835,7 +8835,7 @@ export const REGISTRY_META: Record<string, ConverterMeta> = {
       "text/plain"
     ],
     "toMime": "application/json",
-    "maxFileSizeBytes": 26214400
+    "maxFileSizeBytes": 52428800
   },
   "stl-to-glb": {
     "label": "STL → GLB",

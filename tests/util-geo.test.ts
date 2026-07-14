@@ -212,3 +212,15 @@ describe("geo: edge cases and tolerance", () => {
     expect(parseGeoJson(`{"type":"FeatureCollection","features":[]}`).features).toEqual([]);
   });
 });
+
+describe("parseKml malformed XML", () => {
+  it("gives an actionable error instead of the parser's internal one", async () => {
+    const { parseKml } = await import("../src/lib/engine/util/geo");
+    // A truncated document is one of the shapes that makes fast-xml-parser
+    // throw its internal errors (production showed "readTagExp returned
+    // undefined at position N"); the wrap must translate whatever it says.
+    const bad = "<kml><Document><Placemark><name>A</";
+    expect(() => parseKml(bad)).toThrow(/malformed XML/);
+    expect(() => parseKml(bad)).toThrow(/unescaped/);
+  });
+});

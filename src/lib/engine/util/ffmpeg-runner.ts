@@ -29,7 +29,9 @@ const CORE_BASE = "/ffmpeg";
  */
 export interface FFmpegLike {
   on(event: "progress", handler: (e: { progress: number }) => void): void;
+  on(event: "log", handler: (e: { message: string }) => void): void;
   off(event: "progress", handler: (e: { progress: number }) => void): void;
+  off(event: "log", handler: (e: { message: string }) => void): void;
   writeFile(name: string, data: Uint8Array): Promise<unknown>;
   exec(args: string[]): Promise<unknown>;
   readFile(name: string): Promise<Uint8Array | string>;
@@ -68,7 +70,15 @@ export function __setFFmpegFactoryForTest(
 
 async function getFFmpeg(): Promise<FFmpegLike> {
   if (!ffmpegPromise) {
-    ffmpegPromise = instanceFactory();
+    const loading = instanceFactory();
+    ffmpegPromise = loading;
+    // A failed LOAD must not poison future conversions either: the old code
+    // cached a rejected promise forever, so one flaky 30MB wasm download made
+    // every later conversion in the session fail instantly. Clear the cache
+    // on rejection so the next job retries the load from scratch.
+    loading.catch(() => {
+      if (ffmpegPromise === loading) ffmpegPromise = null;
+    });
   }
   return ffmpegPromise;
 }
@@ -145,14 +155,35 @@ async function runOne(input: File | Blob, opts: FFmpegConvertOptions): Promise<B
   };
   instance.on("progress", progressHandler);
 
+  // Keep a small tail of ffmpeg's own log so failures carry the REAL cause
+  // (unsupported codec, corrupt stream, ...) instead of an opaque wrapper.
+  const logTail: string[] = [];
+  const logHandler = ({ message }: { message: string }) => {
+    if (typeof message !== "string" || message.trim() === "") return;
+    logTail.push(message.trim());
+    if (logTail.length > 12) logTail.shift();
+  };
+  instance.on("log", logHandler);
+
   try {
     await instance.writeFile(opts.inputName, await fetchFile(input));
-    await instance.exec([
+    const exitCode = await instance.exec([
       "-i",
       opts.inputName,
       ...opts.args,
       opts.outputName,
     ]);
+
+    // ffmpeg.wasm's exec resolves with the process exit code instead of
+    // throwing on failure. The old code ignored it and stumbled into an
+    // opaque FS error when reading the missing output file; surface the
+    // real failure with ffmpeg's own last log lines instead.
+    if (typeof exitCode === "number" && exitCode !== 0) {
+      const detail = logTail.slice(-4).join(" | ");
+      throw new Error(
+        `FFmpeg exited with code ${exitCode}${detail ? `: ${detail}` : ""}`,
+      );
+    }
 
     const data = await instance.readFile(opts.outputName);
     // readFile returns Uint8Array (binary mode) or string (utf8). We always
@@ -181,6 +212,7 @@ async function runOne(input: File | Blob, opts: FFmpegConvertOptions): Promise<B
   } finally {
     try {
       instance.off("progress", progressHandler);
+      instance.off("log", logHandler);
     } catch {
       // Instance may already be terminated; ignore.
     }

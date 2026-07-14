@@ -32,7 +32,7 @@ const mp3ToM4r: Converter = {
         onProgress: (p) => opts?.onProgress?.(0.05 + p * 0.93),
       });
     } catch (err) {
-      throw new ConvertFailedError("FFmpeg MP3→M4R failed", err);
+      throw new ConvertFailedError(err instanceof Error && err.message ? `FFmpeg MP3→M4R failed: ${err.message}` : "FFmpeg MP3→M4R failed", err);
     }
     opts?.onProgress?.(1);
     return { blob, filename: swapExtension(input.name, "m4r") };

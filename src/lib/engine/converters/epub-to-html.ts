@@ -42,7 +42,7 @@ ${inner}
 </body>
 </html>`;
     } catch (err) {
-      throw new ConvertFailedError("Could not parse EPUB", err);
+      throw new ConvertFailedError(err instanceof Error && err.message ? `Could not parse EPUB: ${err.message}` : "Could not parse EPUB", err);
     }
     opts?.onProgress?.(1);
     return {

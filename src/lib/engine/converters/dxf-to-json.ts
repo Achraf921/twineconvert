@@ -9,7 +9,7 @@ const dxfToJson: Converter = {
   fromMime: ["image/vnd.dxf", "application/dxf", "text/plain"],
   accept: [".dxf"],
   toMime: "application/json",
-  maxFileSizeBytes: 25 * 1024 * 1024,
+  maxFileSizeBytes: 50 * 1024 * 1024,
 
   async convert(input, opts) {
     opts?.onProgress?.(0.1);

@@ -34,7 +34,7 @@ const mp4ToGif: Converter = {
         onProgress: (p) => opts?.onProgress?.(0.05 + p * 0.93),
       });
     } catch (err) {
-      throw new ConvertFailedError("FFmpeg MP4→GIF failed", err);
+      throw new ConvertFailedError(err instanceof Error && err.message ? `FFmpeg MP4→GIF failed: ${err.message}` : "FFmpeg MP4→GIF failed", err);
     }
     opts?.onProgress?.(1);
     return { blob, filename: swapExtension(input.name, "gif") };

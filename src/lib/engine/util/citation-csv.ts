@@ -114,6 +114,17 @@ const FIELD_ALIASES: Record<string, ReadableField> = {
   ty: "type", t1: "title", a1: "authors", y1: "year", jf: "journal",
   jo: "journal", ja: "journal", do: "doi", sp: "pages", kw: "keywords",
   pb: "publisher", n2: "abstract", ur: "url",
+
+  // ClinicalTrials.gov search-export columns (real PostHog footgun: users
+  // download trial lists as CSV and cite them). "NCT Number" is the trial's
+  // registry accession, mapped to id so it survives as the citation key.
+  nctnumber: "id",
+  studytitle: "title",
+  studyurl: "url",
+  briefsummary: "abstract",
+  conditions: "keywords",
+  startdate: "date",
+  sponsor: "publisher",
 };
 
 /** Fields whose presence makes a CSV recognisably a citation table. */

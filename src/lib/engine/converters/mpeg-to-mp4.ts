@@ -28,7 +28,7 @@ const mpegToMp4: Converter = {
         onProgress: (p) => opts?.onProgress?.(0.05 + p * 0.93),
       });
     } catch (err) {
-      throw new ConvertFailedError("FFmpeg MPEG→MP4 failed", err);
+      throw new ConvertFailedError(err instanceof Error && err.message ? `FFmpeg MPEG→MP4 failed: ${err.message}` : "FFmpeg MPEG→MP4 failed", err);
     }
     opts?.onProgress?.(1);
     return { blob, filename: swapExtension(input.name, "mp4") };

@@ -79,7 +79,21 @@ const xmlBuilder = new XMLBuilder({
 // ---- KML ------------------------------------------------------------------
 
 export function parseKml(text: string): FeatureCollection {
-  const root = xmlParser.parse(text);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let root: any;
+  try {
+    root = xmlParser.parse(text);
+  } catch (err) {
+    // fast-xml-parser throws internal-sounding errors ("readTagExp returned
+    // undefined at position N") on malformed XML, typically an unescaped
+    // < or & inside a description. Translate to something actionable.
+    const detail = err instanceof Error ? err.message : String(err);
+    throw new Error(
+      `The KML contains malformed XML that could not be parsed (${detail}). ` +
+        "Common cause: an unescaped < or & inside a name or description. " +
+        "Re-export the file from your maps tool or fix the reported position in a text editor.",
+    );
+  }
   const doc = root?.kml?.Document ?? root?.kml ?? {};
   const placemarks: unknown[] = doc.Placemark ?? [];
   const features: Feature[] = [];

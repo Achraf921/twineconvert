@@ -37,7 +37,7 @@ const movToGif: Converter = {
         onProgress: (p) => opts?.onProgress?.(0.05 + p * 0.93),
       });
     } catch (err) {
-      throw new ConvertFailedError("FFmpeg MOV→GIF failed", err);
+      throw new ConvertFailedError(err instanceof Error && err.message ? `FFmpeg MOV→GIF failed: ${err.message}` : "FFmpeg MOV→GIF failed", err);
     }
     opts?.onProgress?.(1);
     return { blob, filename: swapExtension(input.name, "gif") };

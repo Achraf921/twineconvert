@@ -31,11 +31,18 @@ function input(): Blob {
   return new Blob([new Uint8Array([1, 2, 3, 4])], { type: "audio/ogg" });
 }
 
-/** A fake FFmpeg whose exec throws when `poison` is set, mimicking an abort. */
-function fakeInstance(poison: boolean): FFmpegLike {
+/**
+ * A fake FFmpeg. `poison` makes exec throw (mimicking a wasm abort);
+ * `exitCode` makes exec resolve with a non-zero status after emitting a log
+ * line, mimicking how ffmpeg.wasm reports per-file conversion failures.
+ */
+function fakeInstance(poison: boolean, exitCode = 0): FFmpegLike {
   let dead = false;
+  const logHandlers: Array<(e: { message: string }) => void> = [];
   return {
-    on() {},
+    on(event: string, handler: (e: never) => void) {
+      if (event === "log") logHandlers.push(handler as (e: { message: string }) => void);
+    },
     off() {},
     async writeFile() {
       if (dead) throw new Error("FS error: instance terminated");
@@ -43,6 +50,12 @@ function fakeInstance(poison: boolean): FFmpegLike {
     async exec() {
       if (dead) throw new Error("called exec() on a terminated instance");
       if (poison) throw new Error("Aborted(). Build with -sASSERTIONS for more info.");
+      if (exitCode !== 0) {
+        for (const h of logHandlers) {
+          h({ message: "in.ogg: Invalid data found when processing input" });
+        }
+        return exitCode;
+      }
       return 0;
     },
     async readFile() {
@@ -53,7 +66,7 @@ function fakeInstance(poison: boolean): FFmpegLike {
     terminate() {
       dead = true;
     },
-  };
+  } as FFmpegLike;
 }
 
 afterEach(() => {
@@ -95,5 +108,32 @@ describe("ffmpeg-runner instance recovery", () => {
     await ffmpegConvert(input(), OPTS);
 
     expect(builds).toBe(1);
+  });
+
+  it("retries the load after a failed wasm download instead of caching the rejection", async () => {
+    // Production signature: one flaky 30MB core download used to poison the
+    // whole session, since the rejected load promise stayed cached forever.
+    let attempts = 0;
+    __setFFmpegFactoryForTest(async () => {
+      attempts += 1;
+      if (attempts === 1) throw new Error("failed to fetch ffmpeg-core.wasm");
+      return fakeInstance(false);
+    });
+
+    await expect(ffmpegConvert(input(), OPTS)).rejects.toThrow(/ffmpeg-core/);
+    // Second conversion must retry the load and succeed.
+    const out = await ffmpegConvert(input(), OPTS);
+    expect(out.size).toBeGreaterThan(0);
+    expect(attempts).toBe(2);
+  });
+
+  it("surfaces ffmpeg's exit code and log tail when a conversion fails", async () => {
+    // ffmpeg.wasm exec RESOLVES with a non-zero exit code on failure. The old
+    // runner ignored it and hit an opaque FS error on the missing output.
+    __setFFmpegFactoryForTest(async () => fakeInstance(false, 1));
+
+    await expect(ffmpegConvert(input(), OPTS)).rejects.toThrow(
+      /exited with code 1.*Invalid data found/,
+    );
   });
 });

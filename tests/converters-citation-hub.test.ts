@@ -1540,3 +1540,28 @@ describe("cff-validate", () => {
     expect(out).toMatch(/^Invalid:/);
   });
 });
+
+describe("csv-to-ris: ClinicalTrials.gov search-export CSV", () => {
+  // Real PostHog failure (8x/wk): users download a trial list from
+  // clinicaltrials.gov and the columns are NCT Number / Study Title /
+  // Study URL / Brief Summary etc., none of which matched an alias.
+  const header =
+    "NCT Number,Study Title,Study URL,Acronym,Study Status,Brief Summary," +
+    "Conditions,Interventions,Sponsor,Phases,Enrollment,Start Date,Completion Date";
+  const row =
+    'NCT01234567,"Aspirin for Primary Prevention of Cardiovascular Events",' +
+    'https://clinicaltrials.gov/study/NCT01234567,ASPREV,COMPLETED,' +
+    '"Randomized trial of low-dose aspirin in adults without prior events.",' +
+    '"Cardiovascular Diseases","Drug: Aspirin","Example University",PHASE3,1000,2019-03-01,2023-11-30';
+
+  it("maps the registry columns to citation fields", async () => {
+    const ris = await (
+      await run("csv-to-ris", f("trials.csv", `${header}\n${row}\n`, "text/csv"))
+    ).blob.text();
+    expect(ris).toContain("TI  - Aspirin for Primary Prevention of Cardiovascular Events");
+    expect(ris).toContain("UR  - https://clinicaltrials.gov/study/NCT01234567");
+    expect(ris).toContain("AB  - Randomized trial of low-dose aspirin");
+    expect(ris).toContain("KW  - Cardiovascular Diseases");
+    expect(ris).toContain("2019"); // year extracted from Start Date
+  });
+});
